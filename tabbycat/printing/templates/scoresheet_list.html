@@ -10,7 +10,7 @@
       {% endblocktrans %}
       <small class="text-muted d-md-inline d-none">{{ subtitle }}</small>
     </div>
-    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#editMotionsModal">
+    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editMotionsModal">
       {% trans "Edit Motion(s)" %}
     </button>
   </div>
@@ -38,8 +38,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">{% trans "Edit Ballot Motions" %}</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">{% trans "&times;" %}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">

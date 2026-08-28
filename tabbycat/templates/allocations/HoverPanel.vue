@@ -266,7 +266,7 @@ const panelRows = computed(() => [topRow.value, bottomRow.value])
         <div
           v-for="(row, idx) in panelRows"
           :key="idx"
-          class="list-group-item flex-horizontal pl-2 flex-justify"
+          class="list-group-item flex-horizontal ps-2 flex-justify"
         >
           <div class="flex-align-start">
             <hover-panel-group :groups="row['left']" />

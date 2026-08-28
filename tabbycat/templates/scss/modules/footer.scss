@@ -20,8 +20,8 @@ body {
   height: $footer-height;
 
   a {
-    border-bottom: 1px solid theme-color("secondary");
-    color: theme-color("dark");
+    border-bottom: 1px solid $secondary;
+    color: $dark;
   }
 }
 

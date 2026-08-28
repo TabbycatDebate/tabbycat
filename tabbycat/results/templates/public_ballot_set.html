@@ -73,7 +73,7 @@
           {% endif %}
         </h4>
 
-        <div class="row pl-3 pt-3 p-0">
+        <div class="row ps-3 pt-3 p-0">
 
           {% for team in sheet.teams %}
             <div class="col-6 list-group mb-3">
@@ -82,11 +82,11 @@
                 <li class="list-group-item">
                   <strong>{{ position.name }}</strong>
                   {% person_display_name position.speaker %}
-                  <span class="badge mr-2 badge-secondary float-right">
+                  <span class="badge me-2 text-bg-secondary float-end">
                     {{ position.score }}
                   </span>
                   {% if pref.speaker_ranks != 'none' %}
-                    <span class="badge mr-2 badge-secondary float-right">
+                    <span class="badge me-2 text-bg-secondary float-end">
                       {{ position.rank }}
                     </span>
                   {% endif %}
@@ -115,7 +115,7 @@
                       <em>Total for {{ name }} ({{ side }})</em>
                     {% endblocktrans %}
                   {% endif %}
-                  <span class="badge mr-2 badge-secondary float-right">
+                  <span class="badge me-2 text-bg-secondary float-end">
                     {{ team.total }}
                   </span>
                 {% else %}
@@ -128,7 +128,7 @@
                       <em>{{ name }} ({{ side }})</em>
                     {% endblocktrans %}
                   {% endif %}
-                  <span class="badge badge-secondary float-right">
+                  <span class="badge text-bg-secondary float-end">
                     {% if team.rank is not None %}
                       {{ team.rank|ordinal }}
                     {% else %}

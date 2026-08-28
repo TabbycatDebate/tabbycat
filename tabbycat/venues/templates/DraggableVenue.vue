@@ -93,7 +93,7 @@ const onVenueMouseLeave = () => {
   >
     <template #number>
       <span>
-        <small class="pl-2 vue-draggable-muted ">{{ item.priority }}</small>
+        <small class="ps-2 vue-draggable-muted ">{{ item.priority }}</small>
       </span>
     </template>
     <template #title>

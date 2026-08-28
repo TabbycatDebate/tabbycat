@@ -1,12 +1,12 @@
 {% load add_field_css debate_tags i18n team_name_for_data_entry %}
 
-<div class="card pr-0 mr-0 position" {% if forloop.parentloop.first %}id="team-{{ team.team.id }}"{% endif %}>
+<div class="card pe-0 me-0 position" {% if forloop.parentloop.first %}id="team-{{ team.team.id }}"{% endif %}>
   <div class="list-group list-group-flush">
 
     <div class="list-group-item pb-0">
       <div class="row">
         <!-- team-name class used by unknown sides switcher -->
-        <div class="col mr-auto card-title pl-md-2 pl-1 {{ team.side_code }}-team-name">
+        <div class="col me-auto card-title ps-md-2 ps-1 {{ team.side_code }}-team-name">
           {% team_name_for_data_entry team.team use_team_code_names %}
         </div>
         {% if team.forfeit and forloop.parentloop.first %}
@@ -15,7 +15,7 @@
             {{ team.forfeit.errors }}
           </div>
         {% endif %}
-        <div class="col-auto card-subtitle text-muted text-right pt-2 pr-md-2 pr-1">
+        <div class="col-auto card-subtitle text-muted text-end pt-2 pe-md-2 pe-1">
           <h6>{{ team.side_name }}</h6>
         </div>
       </div>
@@ -28,7 +28,7 @@
     <div class="list-group-item">
       <div class="row">
 
-        <div class="col-6 flex-column flex-md-row mr-0 col-mr-auto pl-md-2 pl-1 btn-group">
+        <div class="col-6 flex-column flex-md-row me-0 col-mr-auto ps-md-2 ps-1 btn-group">
 
           <button class="btn btn-outline-secondary btn-no-hover" readonly>
             {% if pref.teams_in_debate != 4 %}{% trans "Result" %}{% else %}{% trans "Rank" %}{% endif %}
@@ -46,7 +46,7 @@
 
         <div class="col d-none d-md-block"></div>
 
-        <div class="col-6 col-md-4 btn-group pr-md-2 pr-1">
+        <div class="col-6 col-md-4 btn-group pe-md-2 pe-1">
           <button name="{{ team.side_code }}_total"
                   class="btn btn-block btn-secondary btn-no-hover {{ team.side_code }}_total" readonly>00</button>
         </div>

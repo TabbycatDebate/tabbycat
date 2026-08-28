@@ -50,7 +50,7 @@
                   {{ category }} Break
                 {% endblocktrans %}
               {% blocktrans trimmed with size=category.break_size %}
-              <span class="badge float-right badge-light">
+              <span class="badge float-end text-bg-light">
                 {{ size }} Spots
               </span>
               {% endblocktrans %}
@@ -61,7 +61,7 @@
 
               <div class="list-group-item">
                 <div class="d-flex justify-content-end">
-                  <span class="mr-auto">{% trans "Teams Eligible" %}</span>
+                  <span class="me-auto">{% trans "Teams Eligible" %}</span>
                   <strong>{{ category.eligible }}/{{ teams_in_tournament }}</strong>
                 </div>
                 {% include "components/progress-bar.html" with value=category.eligible total=teams_in_tournament type="secondary" %}
@@ -73,7 +73,7 @@
 
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
-                    <span class="mr-auto">{% trans "Breaking" %}</span>
+                    <span class="me-auto">{% trans "Breaking" %}</span>
                     <strong>{{ category.breaking }}</strong>
                   </div>
                   {% include "components/progress-bar.html" with value=category.breaking type="success" %}
@@ -81,7 +81,7 @@
 
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
-                    <span class="mr-auto">{% trans "Excluded" %}</span>
+                    <span class="me-auto">{% trans "Excluded" %}</span>
                     <strong>{{ category.excluded }}</strong>
                   </div>
                   {% include "components/progress-bar.html" with value=category.excluded type="warning" %}
@@ -89,7 +89,7 @@
 
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
-                    <span class="mr-auto">{% trans "Eligible" %}</span>
+                    <span class="me-auto">{% trans "Eligible" %}</span>
                     <strong>{{ category.eligible }}</strong>
                   </div>
                   {% include "components/progress-bar.html" with value=category.eligible type="info" %}

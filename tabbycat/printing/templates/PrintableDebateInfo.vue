@@ -140,7 +140,7 @@ const motionsAccountingForBlanks = computed(() => {
               <div class="text-center pb-2">
                 {{ tct('Circle %s', [choice_type]) }}
               </div>
-              <div class="d-flex text-monospace">
+              <div class="d-flex font-monospace">
                 <div
                   v-for="motion in motionsAccountingForBlanks"
                   class="db-align-horizontal-center db-align-vertical-start
@@ -188,7 +188,7 @@ const motionsAccountingForBlanks = computed(() => {
             <div class="text-center pb-2">
               {{ tct('Circle %s', [choice_type]) }}
             </div>
-            <div class="d-flex text-monospace">
+            <div class="d-flex font-monospace">
               <div
                 v-for="motion in motionsAccountingForBlanks"
                 class="db-align-horizontal-center db-align-vertical-start
@@ -215,7 +215,7 @@ const motionsAccountingForBlanks = computed(() => {
           >
             <div
               v-for="choice_type in ['1', '2', '3', ]"
-              class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
+              class="flex-fill db-fill-in strong me-3 pt-3 mt-2"
             >
               {{ tct('%s:', [choice_type]) }}
             </div>

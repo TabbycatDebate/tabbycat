@@ -107,14 +107,14 @@ const unallocatedItems = container.unallocatedItems
         <template #default-highlights>
           <button
             class="btn conflictable conflicts-toolbar hover-adjudicator"
-            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
             :title="gettext('This adjudicator or team has an unmet room constraint.')"
           >
             {{ gettext('Constraint') }}
           </button>
           <button
             class="btn panel-incomplete"
-            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
             :title="gettext('Debate has no room.')"
           >
             {{ gettext('Incomplete') }}

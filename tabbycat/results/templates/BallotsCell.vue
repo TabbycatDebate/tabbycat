@@ -53,7 +53,7 @@ const ballotText = (ballot) => {
 
 <template>
   <td>
-    <div class="ballot-cell pr-2">
+    <div class="ballot-cell pe-2">
       <div
         v-for="ballot in cellData.ballots"
         :key="ballot.id"
@@ -76,7 +76,7 @@ const ballotText = (ballot) => {
         <span
           v-else
           class="ballot-link"
-          data-toggle="tooltip"
+          data-bs-toggle="tooltip"
           :title="gettext('You cannot confirm this ballot because you entered it')"
         >
           <del v-if="ballot.discarded">
@@ -89,7 +89,7 @@ const ballotText = (ballot) => {
 
         <!-- Ballot metadata -->
         <span class="small text-muted ballot-info">
-          <span class="text-monospace">{{ ballot.short_time }}</span>&nbsp;
+          <span class="font-monospace">{{ ballot.short_time }}</span>&nbsp;
           <span
             v-if="ballot.private_url"
             class="text-info"

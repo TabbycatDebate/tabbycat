@@ -48,7 +48,7 @@ const liveness = computed(() => {
 </script>
 
 <template>
-  <div class="d-flex border-bottom bg-white">
+  <div class="d-flex border-bottom bg-body">
     <slot
       v-if="!isElimination"
       name="bracket"
@@ -56,7 +56,7 @@ const liveness = computed(() => {
       <div
         v-if="debateOrPanel.bracket >= 0"
         class="flex-1-25 flex-truncate d-flex border-right"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext(`The debate's bracket`)"
       >
         <div class="align-self-center flex-fill text-center">
@@ -66,7 +66,7 @@ const liveness = computed(() => {
       <div
         v-else
         class="flex-2 flex-truncate d-flex border-right"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext(`The bracket range of the hypothetical debate`)"
       >
         <div class="align-self-center flex-fill text-center">
@@ -84,7 +84,7 @@ const liveness = computed(() => {
       <div
         v-if="debateOrPanel.bracket >= 0"
         class="flex-1-25 flex-truncate d-flex border-right"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext(`The debate's room rank (break rank of highest-ranked team)`)"
       >
         <div class="align-self-center flex-fill text-center">
@@ -99,7 +99,7 @@ const liveness = computed(() => {
       <div
         v-if="debateOrPanel.bracket >= 0"
         class="flex-1-25 flex-truncate border-right d-flex"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext(`The total number of live break categories across
               all teams`)"
       >
@@ -110,7 +110,7 @@ const liveness = computed(() => {
       <div
         v-else
         class="flex-1-25 flex-truncate border-right d-flex"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext(`The maximum possible number of live teams in
               the hypothetical debate for the open category`)"
       >
@@ -122,7 +122,7 @@ const liveness = computed(() => {
     <slot name="importance">
       <div
         class="flex-1-25 flex-truncate border-right d-flex"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext(`This debate's priority`)"
       >
         <div class="align-self-center flex-fill text-center">

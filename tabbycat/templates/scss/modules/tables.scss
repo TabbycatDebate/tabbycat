@@ -8,7 +8,7 @@
 
 .table {
   font-size: $font-size-sm;
-  background: $alt-bg; // For when tables blow out on mobile
+  background: var(--bs-body-bg); // For when tables blow out on mobile
   margin-bottom: 0; // Handled by the container elements
 
   th {
@@ -46,7 +46,7 @@ thead,
 
   font-size: $font-size-base;
   line-height: $font-size-base;
-  background: $alt-bg; // Fixed header needs a background while scrolling
+  background: var(--bs-body-bg); // Fixed header needs a background while scrolling
   min-height: 40px; // Must accomodate vue-sort key without resizing
   position: sticky;
   inset-block-start: 0;
@@ -198,7 +198,7 @@ thead,
 
   // For highlighting bracket boundaries
   &.highlight-row {
-    border-top: 3px solid theme-color("info");
+    border-top: 3px solid $info;
   }
 
   // For highlighting boundaries between metrics in "draw with details"

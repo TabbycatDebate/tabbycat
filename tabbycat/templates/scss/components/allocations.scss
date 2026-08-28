@@ -4,14 +4,14 @@
 
 // For ModalForAllocating.vue
 .bg-bg {
-  background-color: $body-bg; // Need contrast with button sections, so can't use white
+  background-color: var(--bs-body-bg); // Need contrast with button sections, so can't use white
 }
 
 // For InlineAdjudicator.vue
 .inline-adjudicator {
   height: 100%;
   position: relative;
-  border: 5px solid $white;
+  border: 5px solid var(--bs-body-bg);
 
   &:hover { // Need to override conflict hovers
     background: $purple !important;
@@ -41,7 +41,7 @@
 .inline-team {
   height: 100%; // Need to fill space
   position: relative; // Need to allow for the seen marker
-  border: 5px solid $white; // Placeholder; so doesn't resize with highlights
+  border: 5px solid var(--bs-body-bg); // Placeholder; so doesn't resize with highlights
 
   &:hover { // Need to override conflict hovers
     background: $purple !important;
@@ -152,7 +152,7 @@
 .draw-row {
   @extend .flex-horizontal;
 
-  background: #fff; // Need to compensate for lack of table background
+  background: var(--bs-body-bg); // Need to compensate for lack of table background
   border-left: 1px solid $input-border-color;
   border-right: 1px solid $input-border-color;
 }
@@ -164,13 +164,13 @@
   border-bottom: 2px solid $table-border-color;
 
   &.droppable-cell {
-    border-bottom-color: #fff; // Have more contrast in drag/drop UIs
+    border-bottom-color: var(--bs-body-bg); // Have more contrast in drag/drop UIs
   }
 }
 
 .thead {
   border-bottom: 2px solid $table-border-color;
-  padding-bottom: $table-cell-padding;
+  padding-bottom: $table-cell-padding-y;
 }
 
 .flex-cell {
@@ -255,7 +255,7 @@
 
   > .conflictable {
     // Team cells need some border state for in panel conflicts
-    border-color: #fff;
+    border-color: var(--bs-body-bg);
     border-width: 4px;
     border-style: solid;
 

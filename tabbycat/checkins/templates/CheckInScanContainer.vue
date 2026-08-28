@@ -34,7 +34,7 @@ const playSound = (elementID) => {
 const finishCheckIn = (payload) => {
   const checkin = payload.checkins[0]
   const substitutions = [checkin.time, checkin.identifier, checkin.owner_name]
-  const msg = tct('<span class="text-monospace">%s checked in %s:</span> %s', substitutions)
+  const msg = tct('<span class="font-monospace">%s checked in %s:</span> %s', substitutions)
   window.$?.fn?.showAlert?.('success', msg, 0)
   playSound('finishedScanSound')
 }
@@ -200,7 +200,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="list-group-item pb-3">
       <div class="d-flex">
-        <div class="flex-fill pr-2">
+        <div class="flex-fill pe-2">
           <button
             v-if="!liveScanning"
             class="btn btn-block btn-success"
@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
         </div>
         <div
           v-if="!sound"
-          class="flex-fill pl-2"
+          class="flex-fill ps-2"
         >
           <button
             class="btn btn-block btn-success"
@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
       <div
         v-if="liveScanning"
         id="scanCanvas"
-        class="scan-container ml-auto mt-3 mr-auto"
+        class="scan-container ms-auto mt-3 me-auto"
       />
     </div>
     <!-- extra items for error messages -->

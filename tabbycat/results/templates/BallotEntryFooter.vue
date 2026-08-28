@@ -61,7 +61,7 @@ const invalidate = () => {
         <h4 class="card-title mt-0 mb-2 d-inline-block">
           Ballot Status
         </h4>
-        <h4 class="text-secondary float-right">
+        <h4 class="text-secondary float-end">
           <small>only the confirmed ballot set will affect this debate's result</small>
         </h4>
       </div>
@@ -111,7 +111,7 @@ const invalidate = () => {
         <h4 class="card-title mt-0 mb-2 d-inline-block">
           Debate Status
         </h4>
-        <h4 class="text-secondary float-right">
+        <h4 class="text-secondary float-end">
           <small>all debates must be confirmed to complete the round</small>
         </h4>
       </div>

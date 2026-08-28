@@ -44,6 +44,14 @@ $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 
+// Semantic color variables (must be set before bootstrap imports derive from them)
+$primary:                 $purple;
+$secondary:               $gray-600;
+$success:                 $green;
+$info:                    $blue;
+$warning:                 $orange;
+$danger:                  $red;
+
 // Key Colors
 $body-bg:                 #f8fafc;
 $body-color:              $gray-900; // Gray-900 equivalent; for body text
@@ -71,3 +79,46 @@ $input-btn-padding-y:       0.625rem;
 $input-btn-padding-y-sm:    0.3125rem;
 
 $navbar-light-hover-color:  $purple;
+
+// Restore BS4 link behavior (BS5 defaults to underline + derives color from $blue)
+$link-color:                $purple;
+$link-decoration:           none;
+$link-hover-decoration:     underline;
+
+// Focus ring (BS5.3): tint focus highlight with the primary brand color
+$focus-ring-width:           0.2rem;
+$focus-ring-opacity:         0.25;
+$focus-ring-color:           rgba($purple, $focus-ring-opacity);
+$focus-ring-blur:            0;
+$input-btn-focus-color:      rgba($purple, $focus-ring-opacity);
+$input-btn-focus-width:      $focus-ring-width;
+$input-btn-focus-box-shadow: 0 0 0 $input-btn-focus-width $input-btn-focus-color;
+
+//------------------------------------------------------------------------------
+// BS4→BS5 spacing compatibility overrides
+// BS5 changed many default padding/margin values; restore BS4 defaults
+//------------------------------------------------------------------------------
+
+// Grid gutter (BS4: 30px, BS5: 1.5rem/24px)
+$grid-gutter-width:         30px;
+
+// Navbar (BS4: 1rem horizontal padding, BS5: 0)
+$navbar-padding-x:          1rem;
+
+// List group items (BS4: .75rem 1.25rem, BS5: .5rem 1rem)
+$list-group-item-padding-y: 0.75rem;
+$list-group-item-padding-x: 1.25rem;
+
+// Cards (BS4: .75rem/.1.25rem, BS5: 1rem/1rem)
+$card-spacer-y:             0.75rem;
+$card-spacer-x:             1.25rem;
+$card-cap-padding-y:        0.75rem;
+$card-cap-padding-x:        1.25rem;
+
+// Dropdowns (BS4: 1.5rem horizontal, BS5: 1rem)
+$dropdown-item-padding-x:   1.5rem;
+
+// Popovers (BS4: tighter padding, BS5: 1rem everywhere)
+$popover-header-padding-x:  0.75rem;
+$popover-body-padding-y:    0.5rem;
+$popover-body-padding-x:    0.75rem;

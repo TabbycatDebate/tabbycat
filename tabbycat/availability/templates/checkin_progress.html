@@ -15,7 +15,7 @@
 
     <div class="list-group-item">
       <div class="d-flex justify-content-end">
-        <span class="mr-auto">{{ round.name }}</span>
+        <span class="me-auto">{{ round.name }}</span>
         <strong>{{ info.in_now }}/{{ info.total }}</strong>
       </div>
       {% include "components/progress-bar.html" with value=info.in_now total=info.total type="success" %}
@@ -24,7 +24,7 @@
     {% if info.in_before is not None %}
       <div class="list-group-item">
         <div class="d-flex justify-content-end">
-          <span class="mr-auto">{{ round.prev.name }}</span>
+          <span class="me-auto">{{ round.prev.name }}</span>
           <strong>{{ info.in_before }}/{{ info.total }}</strong>
         </div>
         {% include "components/progress-bar.html" with value=info.in_before total=info.total type="info" %}

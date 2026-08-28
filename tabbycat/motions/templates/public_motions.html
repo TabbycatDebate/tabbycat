@@ -18,17 +18,17 @@
           {% with motion=r_motion.motion %}
             <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center">
               {% if pref.enable_motions %}
-                <div class="badge badge-info mr-3 d-none d-md-block">
+                <div class="badge text-bg-info me-3 d-none d-md-block">
                   {{ r_motion.seq }}
                 </div>
               {% endif %}
-              <div class="mr-auto pr-3 lead">
+              <div class="me-auto pe-3 lead">
                 {{ motion.text }}
               </div>
               {% if motion.info_slide %}
                 <div class="pt-md-0 pt-2">
                   <button class="btn btn-sm btn-secondary btn-block"
-                          data-toggle="modal" data-target="#info_{{ motion.id }}">
+                          data-bs-toggle="modal" data-bs-target="#info_{{ motion.id }}">
                     {% trans "View Info Slide" %}
                   </button>
                   {% include 'motions_info.html' %}

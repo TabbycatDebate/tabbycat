@@ -87,28 +87,28 @@ const { moveAdjudicator, swapPanels, showShard, showAllocate, showPrioritise } =
         <template #default-highlights>
           <button
             class="btn conflictable conflicts-toolbar hover-histories-2-ago"
-            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
             :title="'Has judged this team or with this adjudicator previously'"
           >
             {{ gettext('Seen') }}
           </button>
           <button
             class="btn conflictable conflicts-toolbar hover-institution"
-            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
             :title="'Is from the same institution as this team or panelist.'"
           >
             {{ gettext('Institution') }}
           </button>
           <button
             class="btn conflictable conflicts-toolbar hover-adjudicator"
-            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
             :title="'Has a nominated conflict with this team or panelist.'"
           >
             {{ gettext('Conflict') }}
           </button>
           <button
             class="btn panel-incomplete"
-            data-toggle="tooltip"
+            data-bs-toggle="tooltip"
             :title="'Panel is missing a chair or enough adjudicators for a voting majority.'"
           >
             {{ gettext('Missing') }}

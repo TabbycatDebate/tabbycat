@@ -1,6 +1,6 @@
 {% load add_field_css %}
 
-<div class="form-group {% if hide_label %}pt-2{% endif %}
+<div class="mb-3 {% if hide_label %}pt-2{% endif %}
             {% if double %}col-lg-6{% endif %}
             {% if triple %}col-lg-4{% endif %}
             {% if quadruple %}col-lg-3{% endif %}">
@@ -11,7 +11,11 @@
     </label>
   {% endif %}
 
-  {% if field|is_choice_widget %}
+  {% if field|is_checkbox %}
+    <div class="form-check form-switch">
+      {{ field|addcss:"form-check-input" }}
+    </div>
+  {% elif field|is_choice_widget %}
     {{ field }}
   {% else %}
     {{ field|addcss:"form-control" }}

@@ -43,7 +43,7 @@ h6,
 
 // Mostly for hiding it in extra lines on table cells
 .hide-underline {
-  border-bottom: 2px solid #fff;
+  border-bottom: 2px solid var(--bs-body-bg);
 }
 
 .subtitle {
@@ -66,19 +66,8 @@ h6,
 }
 
 .list-group-item.active a {
-  color: $alt-bg; // If using a bg color; ensure the links aren't the same color
+  color: $white; // If using a bg color; ensure the links aren't the same color
   text-decoration: underline;
 }
 
-// Bootstrap only displays up to .display-4; long motions need more options
-.display-5 {
-  @extend .display-4;
-
-  font-size: 3rem;
-}
-
-.display-6 {
-  @extend .display-4;
-
-  font-size: 2.5rem;
-}
+// BS5 natively provides .display-5 and .display-6

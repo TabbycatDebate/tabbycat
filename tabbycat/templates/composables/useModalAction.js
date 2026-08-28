@@ -21,7 +21,8 @@ export function useModalAction ({ modalRef = null, contextOfAction = null } = {}
 
   const resetModal = () => {
     if (modal.value) {
-      window.$?.(modal.value).modal('hide')
+      const instance = window.bootstrap?.Modal.getInstance(modal.value)
+      instance?.hide()
     }
   }
 

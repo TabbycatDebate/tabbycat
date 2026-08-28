@@ -22,7 +22,7 @@
           {% blocktrans trimmed with speaker=top_speak.speaker round=top_speak.debate_team.debate.round.abbreviation %}
           {{ speaker }} in {{ round }}
           {% endblocktrans %}
-          <span class="badge badge-secondary float-right">{{ top_speak.score|floatformat }}</span>
+          <span class="badge text-bg-secondary float-end">{{ top_speak.score|floatformat }}</span>
         </li>
       {% empty %}
         <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -41,7 +41,7 @@
           {% blocktrans trimmed with speaker=bottom_speak.speaker round=bottom_speak.debate_team.debate.round.abbreviation %}
           {{ speaker }} in {{ round }}
           {% endblocktrans %}
-          <span class="badge badge-secondary float-right">{{ bottom_speak.score|floatformat }}</span>
+          <span class="badge text-bg-secondary float-end">{{ bottom_speak.score|floatformat }}</span>
         </li>
       {% empty %}
       <li class="list-group-item">{% trans "No data yet" %}</li>{% endfor %}
@@ -60,7 +60,7 @@
             {% blocktrans trimmed with team=top_margin.debate_team.team.short_name opp=top_margin.debate_team.opponent.team.short_name round=top_margin.debate_team.debate.round.abbreviation %}
             {{ team }} vs {{ opp }} in {{ round }}
             {% endblocktrans %}
-            <span class="badge badge-secondary float-right">{{ top_margin.margin|floatformat }}</span>
+            <span class="badge text-bg-secondary float-end">{{ top_margin.margin|floatformat }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -81,7 +81,7 @@
             {% blocktrans trimmed with team=bottom_margin.debate_team.team.short_name opp=bottom_margin.debate_team.opponent.team.short_name round=bottom_margin.debate_team.debate.round.abbreviation %}
             {{ team }} vs {{ opp }} in {{ round }}
             {% endblocktrans %}
-            <span class="badge badge-secondary float-right">{{ bottom_margin.margin|floatformat }}</span>
+            <span class="badge text-bg-secondary float-end">{{ bottom_margin.margin|floatformat }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -102,7 +102,7 @@
             {% blocktrans trimmed with team=top_score.debate_team.team.short_name round=top_score.debate_team.debate.round.abbreviation %}
             {{ team }} in {{ round }}
             {% endblocktrans %}
-            <span class="badge badge-secondary float-right">{{ top_score.score }}</span>
+            <span class="badge text-bg-secondary float-end">{{ top_score.score }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -123,7 +123,7 @@
             {% blocktrans trimmed with team=bottom_score.debate_team.team.short_name round=bottom_score.debate_team.debate.round.abbreviation %}
             {{ team }} in {{ round }}
             {% endblocktrans %}
-            <span class="badge badge-secondary float-right">{{ bottom_score.score }}</span>
+            <span class="badge text-bg-secondary float-end">{{ bottom_score.score }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -146,7 +146,7 @@
               {{ round.abbreviation }}
               {% if not forloop.last %}, {% endif %}
             {% endfor %}
-            <span class="badge badge-secondary float-right">{{ top_motion.ballotsubmission__count }}</span>
+            <span class="badge text-bg-secondary float-end">{{ top_motion.ballotsubmission__count }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -161,7 +161,7 @@
               {{ round.abbreviation }}
               {% if not forloop.last %}, {% endif %}
             {% endfor %}
-            <span class="badge badge-secondary float-right">{{ bottom_motion.ballotsubmission__count }}</span>
+            <span class="badge text-bg-secondary float-end">{{ bottom_motion.ballotsubmission__count }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>
@@ -180,7 +180,7 @@
         {% for round_speak in round_speaks %}
           <li class="list-group-item">
             {{ round_speak.round }}
-            <span class="badge badge-secondary float-right">{{ round_speak.score|floatformat }}</span>
+            <span class="badge text-bg-secondary float-end">{{ round_speak.score|floatformat }}</span>
           </li>
         {% empty %}
           <li class="list-group-item">{% trans "No data yet" %}</li>

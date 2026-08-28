@@ -1,7 +1,7 @@
 {% if alone %}<div class="list-group">{% endif %}
 
   <a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
-   {% if data_toggle %}data-toggle="{{ data_toggle }}"{% endif %} {% if data_target %}data-target="{{ data_target }}"{% endif %}
+   {% if data_toggle %}data-bs-toggle="{{ data_toggle }}"{% endif %} {% if data_target %}data-bs-target="{{ data_target }}"{% endif %}
    class="{% if not child %}list-group-item {% endif %}list-group-item-action
    {% if to_complete %}
     bg-{% if type %}{{ type }}{% else %}primary{% endif %} text-white
@@ -11,7 +11,7 @@
 
     <div class="row align-items-center">
 
-      <div class="col-auto pr-1">
+      <div class="col-auto pe-1">
         {% if icon %}
           <i data-feather="{{ icon }}"></i>
         {% elif to_complete %}
@@ -23,7 +23,7 @@
         {% endif %}
       </div>
 
-      <div class="col pl-0 pr-0">
+      <div class="col ps-0 pe-0">
 
         {% if extra %}
           <h5>{{ text|safe }}</h5>
@@ -38,7 +38,7 @@
 
       </div>
 
-      <div class="col-auto pr-1">
+      <div class="col-auto pe-1">
         <i data-feather="chevron-right"></i>
       </div>
 

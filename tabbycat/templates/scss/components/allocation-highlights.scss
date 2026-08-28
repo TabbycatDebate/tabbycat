@@ -40,11 +40,11 @@
   }
 
   &.hover-histories-5-ago {
-    @include hover-highlights(lighten($conflict-history-base, 40%), theme-color('dark'));
+    @include hover-highlights(lighten($conflict-history-base, 40%), $dark);
   }
 
   &.hover-histories-6-ago {
-    @include hover-highlights(lighten($conflict-history-base, 44%), theme-color('dark'));
+    @include hover-highlights(lighten($conflict-history-base, 44%), $dark);
   }
 
   &.hover-histories-7-ago,
@@ -56,7 +56,7 @@
   &.hover-histories-13-ago,
   &.hover-histories-14-ago,
   &.hover-histories-15-ago {
-    @include hover-highlights(lighten($conflict-history-base, 46%), theme-color('dark'));
+    @include hover-highlights(lighten($conflict-history-base, 46%), $dark);
   }
 
   // Must be below histories (to take precedence)

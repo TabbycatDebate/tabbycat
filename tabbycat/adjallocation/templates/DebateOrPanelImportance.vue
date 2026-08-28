@@ -49,7 +49,7 @@ const importanceDescription = computed(() => {
 
     <div
       v-if="showTooltip"
-      class="tooltip top tooltip-vue mt-5 ml-3"
+      class="tooltip top tooltip-vue mt-5 ms-3"
       role="tooltip"
     >
       <div class="tooltip-arrow" />

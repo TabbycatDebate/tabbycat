@@ -26,7 +26,7 @@ span.emoji {
 //------------------------------------------------------------------------------
 
 .adj-symbol {
-  @extend .text-monospace;
+  @extend .font-monospace;
 
   color: $gray-700; // not black; but not too gray
   font-style: normal;
@@ -44,23 +44,23 @@ span.emoji {
 
   // Icons should have brighter colors (using text-success is too dull)
   &.text-success {
-    color: theme-color("success");
+    color: $success;
   }
 
   &.text-danger {
-    color: theme-color("danger");
+    color: $danger;
   }
 
   &.text-warning {
-    color: theme-color("warning");
+    color: $warning;
   }
 
   &.text-info {
-    color: theme-color("info");
+    color: $info;
   }
 
   &.text-primary {
-    color: theme-color("primary");
+    color: $primary;
   }
 }
 

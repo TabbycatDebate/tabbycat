@@ -43,7 +43,7 @@
 }
 
 .progress-empty span {
-  color: #000; // If its showing 0/x make the text visible and not flush
+  color: var(--bs-body-color); // If its showing 0/x make the text visible and not flush
   margin-left: 10px;
 }
 

@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 .navbar-light {
-  background: $navbar-light-bg;
+  background: var(--bs-body-bg);
   border-bottom: 1px solid $navbar-light-border;
   border-top: 1px solid $navbar-light-border;
 
@@ -31,7 +31,7 @@
   background: none;
 
   &:hover {
-    color: theme-color("primary"); // Keep consistent with top level
+    color: $primary; // Keep consistent with top level
   }
   // Override standard dropdown highlights
   &.active,
@@ -76,6 +76,7 @@
   border-radius: 0;
   border-left: 0;
   border-right: 0;
+  border-color: darken($sidebar-bg, 5%);
   padding: 0;
 
   a,
@@ -84,7 +85,7 @@
     display: block;
 
     &:hover {
-      color: lighten(theme-color("primary"), 15%);
+      color: lighten($primary, 15%);
       text-decoration: none;
     }
 
@@ -158,23 +159,23 @@
 }
 
 .circle-done {
-  stroke: lighten(theme-color("success"), 20);
-  fill: theme-color("success");
+  stroke: lighten($success, 20%);
+  fill: $success;
 }
 
 .circle-todo {
-  stroke: lighten(theme-color("warning"), 20);
-  fill: theme-color("warning");
+  stroke: lighten($warning, 20%);
+  fill: $warning;
 }
 
 .circle-current {
-  stroke: lighten(theme-color("info"), 20);
-  fill: theme-color("info");
+  stroke: lighten($info, 20%);
+  fill: $info;
 }
 
 .circle-later {
-  stroke: lighten(theme-color("secondary"), 20);
-  fill: theme-color("secondary");
+  stroke: lighten($secondary, 20%);
+  fill: $secondary;
 }
 
 //------------------------------------------------------------------------------
@@ -308,7 +309,6 @@
     z-index: $z_2;
   }
 
-  .admin-sidebar .list-group .collapse.in,
   .admin-sidebar .list-group .collapsing,
   .admin-sidebar .list-group .collapse.show {
     z-index: $z_2;

@@ -9,13 +9,11 @@
 //------------------------------------------------------------------------------
 
 // Layout Colors
-$alt-bg:                  #fff;     // For tables etc
 $table-bg-hover:          #e3e3e3;
 $sidebar-bg:              #333c47;  // Matches that of Jet
 $sidebar-muted-text:      $gray-400;
 $droppable-bg:            $gray-200;
-$navbar-light-bg:         $alt-bg; // Footer and Top Navbar
-$navbar-light-border:     $gray-200; // Footer and Top Navbar
+$navbar-light-border:     $gray-200; // Footer and Top Navbar border
 
 // Gender Highlights
 $male:                    #36b6c0;
@@ -64,8 +62,8 @@ $alpha-ranking-8:           hsla(0, 0%, 50%, 1);
 $small-font-size: 80%;
 
 // Team Positions
-$aff:                     theme-color("info");
-$neg:                     theme-color("danger");
+$aff:                     $info;
+$neg:                     $danger;
 
 // BP colors designed according to a perceptual color wheel primaries as sides
 // i.e. red/green and yellow/blue opposites
@@ -96,7 +94,7 @@ $footer-height: 175px;
 // For diversity and allocation highlights
 @mixin hover-highlights($baseColor, $textColor: #fff) {
   background-color: $baseColor;
-  border-color: darken($baseColor, 5);
+  border-color: darken($baseColor, 5%);
   color: $textColor;
 
   h4,

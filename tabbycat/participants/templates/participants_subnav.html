@@ -14,13 +14,13 @@
     {% trans "Gender Diversity" %}
   </a>
   <a class="btn btn-outline-primary {% if adj_req_nav %}active{% endif %}"
-     href="{% tournamenturl 'participants-adj-rule' %}" data-toggle="tooltip" title="{% trans '' %}">
+     href="{% tournamenturl 'participants-adj-rule' %}" data-bs-toggle="tooltip" title="{% trans '' %}">
     {% trans "Adjudicator Rule" %}
   </a>
 </div>
 <div class="btn-group btn-group">
   {% if email_sent %}
-    <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+    <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
   {% else %}
     <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-primary">
   {% endif %}

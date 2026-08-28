@@ -121,12 +121,12 @@ onMounted(() => {
       <div class="list-group list-group-flush">
         <div class="list-group-item pt-4">
           <h4
-            class="card-title float-left mt-0 mb-2"
+            class="card-title float-start mt-0 mb-2"
             v-html="sheet.title"
           />
           <div
             v-if="sheet.subtitle !== ''"
-            class="badge badge-secondary float-right ml-2 mt-1"
+            class="badge text-bg-secondary float-end ms-2 mt-1"
           >
             <p class="mb-0">
               {{ sheet.subtitle }}

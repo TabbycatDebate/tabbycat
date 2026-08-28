@@ -26,15 +26,15 @@
   <div class="row pb-3 mt-2">
     {% if motion.ndebates > 0 %}
 
-      <div class="col text-left h6">
-        <span class="text-aff pr-1 d-md-inline d-block">
+      <div class="col text-start h6">
+        <span class="text-aff pe-1 d-md-inline d-block">
           {% blocktrans trimmed with side=side_names.0 count count=motion.s0_wins %}
             {{ count }} {{ side }} win
           {% plural %}
             {{ count }} {{ side }} wins
           {% endblocktrans %}
         </span>
-        <span class="text-neg pr-1 d-md-inline d-block">
+        <span class="text-neg pe-1 d-md-inline d-block">
           {% blocktrans trimmed with side=side_names.1 count count=motion.s1_wins %}
             {{ count }} {{ side }} win
           {% plural %}
@@ -43,7 +43,7 @@
         </span>
       </div>
 
-      <div class="col-auto h6 text-muted" data-toggle="tooltip" title="{{ motion.χ2_info }}">
+      <div class="col-auto h6 text-muted" data-bs-toggle="tooltip" title="{{ motion.χ2_info }}">
         {{ motion.χ2_label }}
       </div>
 
@@ -86,15 +86,15 @@
     <div class="row pb-3 mt-2">
       {% if motion.s0_vetoes or motion.s1_vetoes %}
 
-        <div class="col text-left h6">
-          <span class="text-aff pr-1 d-md-inline d-block">
+        <div class="col text-start h6">
+          <span class="text-aff pe-1 d-md-inline d-block">
             {% blocktrans trimmed with side=side_names.0 count count=motion.s0_vetoes %}
               {{ count }} {{ side }} veto
             {% plural %}
               {{ count }} {{ side }} vetoes
             {% endblocktrans %}
           </span>
-          <span class="text-neg pr-1 d-md-inline d-block">
+          <span class="text-neg pe-1 d-md-inline d-block">
             {% blocktrans trimmed with side=side_names.1 count count=motion.s1_vetoes %}
               {{ count }} {{ side }} veto
             {% plural %}
@@ -103,13 +103,13 @@
           </span>
         </div>
 
-        <div class="col-auto h6 text-muted" data-toggle="tooltip" title="{{ motion.veto_χ2_info }}">
+        <div class="col-auto h6 text-muted" data-bs-toggle="tooltip" title="{{ motion.veto_χ2_info }}">
           {{ motion.veto_χ2_label }}
         </div>
 
       {% else %}
 
-        <div class="col text-muted text-right h6">
+        <div class="col text-muted text-end h6">
           {% trans "No teams vetoed this motion" %}
         </div>
 

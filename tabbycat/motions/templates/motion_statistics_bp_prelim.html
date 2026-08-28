@@ -4,7 +4,7 @@
 
 {% if motion.ndebates > 0 %}
 
-  <div class="row no-gutters">
+  <div class="row g-0">
 
     <div class="col-12 col-md-6 mb-2 px-2">
       <div class="progress">
@@ -41,7 +41,7 @@
 
   </div>
 
-  <div class="row no-gutters">
+  <div class="row g-0">
     <div class="col-md-12 mb-2 px-2">
       <div class="progress">
         {% for side, average, width in motion.averages %}
@@ -66,7 +66,7 @@
     </div>
   </div>
 
-  <div class="row no-gutters">
+  <div class="row g-0">
 
     {% for side, counts_dict in motion.counts_by_side %}
 
@@ -82,7 +82,7 @@
             {% endblocktrans %}
 
             <div class="progress-bar progress-points-{{ points }}"
-                 style="width: {{ percentage|unlocalize }}%" data-toggle="tooltip"
+                 style="width: {{ percentage|unlocalize }}%" data-bs-toggle="tooltip"
                  title="{{ tooltip_text }}">
               {% if count > 0 %}
                 <span class="d-none d-md-inline">

@@ -61,7 +61,7 @@ const id = 'confirmAllocateModal'
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center p-4 bg-bg">
-          <p class="font-italic small">
+          <p class="fst-italic small">
             {{ introText }}
           </p>
 
@@ -86,7 +86,7 @@ const id = 'confirmAllocateModal'
                 >
                   {{ loading ? gettext('Loading...') : gettext('Smart Allocate') }}
                 </button>
-                <p class="font-italic small mt-1 mb-1">
+                <p class="fst-italic small mt-1 mb-1">
                   {{ gettext(`Allocates preformed panels to debates of similar priority level, while avoiding conflicts.`) }}
                 </p>
               </div>
@@ -98,7 +98,7 @@ const id = 'confirmAllocateModal'
                 >
                   {{ loading ? gettext('Loading...') : gettext('Direct Allocate') }}
                 </button>
-                <p class="font-italic small mt-1 mb-1">
+                <p class="fst-italic small mt-1 mb-1">
                   {{ gettext(`Allocates panels in exact order going from top to bottom (ignoring debate priority and conflicts.)`) }}
                 </p>
               </div>
@@ -107,7 +107,7 @@ const id = 'confirmAllocateModal'
               v-if="!forPanels && !extra.hasPreformedPanels"
               class="list-group-item p-3"
             >
-              <p class="font-italic mb-0">
+              <p class="fst-italic mb-0">
                 {{ gettext(`No preformed panels exist for this round. You can create some by going to Setup, and then Preformed Panels.`) }}
               </p>
             </div>
@@ -138,7 +138,7 @@ const id = 'confirmAllocateModal'
                 The score required to be allocated as voting panellist ({{ settings.draw_rules__adj_min_voting_score }}) is
                 lower than the minimum  adjudicator score ({{ extra.adjMinScore }}).
               </div>
-              <div class="text-left py-3">
+              <div class="text-start py-3">
                 <div class="form-group row">
                   <div class="col-sm-3">
                     <input
@@ -222,7 +222,7 @@ const id = 'confirmAllocateModal'
               >
                 {{ loading ? gettext('Loading...') : gettext('Auto-Allocate Adjudicators') }}
               </button>
-              <p class="font-italic small">
+              <p class="fst-italic small">
                 {{ gettext(`The allocator creates stronger panels for debates that were given
                                   higher importances. If importances have not been set it will allocate
                                   stronger panels to debates in higher brackets.`) }}

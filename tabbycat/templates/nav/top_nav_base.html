@@ -9,8 +9,8 @@
   {% if all_tournaments.count > 1 or user.is_authenticated %}
     <div class="nav-item dropdown">
 
-      <button class="btn btn-link mr-2 p-0 navbar-brand dropdown-toggle" id="tournamentdrop"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-link me-2 p-0 navbar-brand dropdown-toggle" id="tournamentdrop"
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {% if on_local %}
           {% include "nav/logo_local.html" with width=33 height=33 alt=logo_alt %}
         {% else %}
@@ -85,13 +85,13 @@
     </div>
   {% endif %}
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsed-main-nav" aria-controls="collapsed-main-nav" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsed-main-nav" aria-controls="collapsed-main-nav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse pt-3 pt-md-0 pb-2 pb-md-0" id="collapsed-main-nav">
 
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav me-auto">
 
       {% if user_role == "assistant" %}
         {% include "nav/assistant_nav.html" %}

@@ -19,7 +19,7 @@
        style="width: 100%; height: 95vh;">
     <div>
       {% if infos %}
-        <button class="btn btn-lg btn-info btn-block mb-5" data-toggle="modal" data-target="#infoPop">
+        <button class="btn btn-lg btn-info btn-block mb-5" data-bs-toggle="modal" data-bs-target="#infoPop">
           {% blocktrans trimmed with round=round.name count ninfos=infos|length %}
             Reveal Info Slide for {{ round }}
           {% plural %}
@@ -27,7 +27,7 @@
           {% endblocktrans %}
         </button>
       {% endif %}
-      <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
+      <button class="btn btn-lg btn-success btn-block" data-bs-toggle="modal" data-bs-target="#motionPop">
         {% blocktrans trimmed with round=round.name count nmotions=motions|length %}
           Reveal Motion for {{ round }}
         {% plural %}

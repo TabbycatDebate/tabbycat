@@ -2,7 +2,7 @@
 
 <div class="list-group-item d-inline-block">
 
-  <a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
+  <a href="#rh{{ r.id }}" data-bs-toggle="collapse" data-bs-parent="#sidebar" aria-expanded="false"
      class="{% if round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r.is_current %}circle-current
@@ -16,7 +16,7 @@
 
   <div class="collapse {% if r == round and round_nav %}show{% endif %}" id="rh{{ r.id }}">
 
-    <a href="{% roundurl 'availability-index' r %}" data-parent="#rh{{ r.id }}"
+    <a href="{% roundurl 'availability-index' r %}" data-bs-parent="#rh{{ r.id }}"
        class="list-group-item {% if availability_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
         {% if r.completed %} circle-done
@@ -25,7 +25,7 @@
         {% else %} circle-later{% endif %}"></i>{% trans "Availability" %}
     </a>
 
-    <a href="{% roundurl 'draw' r %}" data-parent="#rh{{ r.id }}"
+    <a href="{% roundurl 'draw' r %}" data-bs-parent="#rh{{ r.id }}"
        class="list-group-item {% if draw_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
         {% if r.completed %} circle-done
@@ -34,7 +34,7 @@
         {% else %} circle-todo{% endif %}"></i>{% trans "Draw" %}
     </a>
 
-    <a href="{% roundurl 'draw-display' r %}" data-parent="#rh{{ r.id }}"
+    <a href="{% roundurl 'draw-display' r %}" data-bs-parent="#rh{{ r.id }}"
       class="list-group-item {% if display_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
         {% if r.completed %} circle-done
@@ -44,7 +44,7 @@
         {% else %} circle-todo{% endif %}"></i>{% trans "Display" %}
     </a>
 
-    <a href="{% roundurl 'results-round-list' r %}" data-parent="#rh{{ r.id }}"
+    <a href="{% roundurl 'results-round-list' r %}" data-bs-parent="#rh{{ r.id }}"
        class="list-group-item {% if results_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
         {% if r.completed %} circle-done

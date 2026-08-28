@@ -67,10 +67,10 @@ const hideHovers = () => {
     @mouseleave="hideHovers"
   >
     <slot>
-      <h4 class="mb-0 py-1 text-monospace vc-draggable-number vc-number">
+      <h4 class="mb-0 py-1 font-monospace vc-draggable-number vc-number">
         <slot name="number" />
       </h4>
-      <div class="py-1 pl-2 pr-2 d-flex flex-column flex-truncate">
+      <div class="py-1 ps-2 pe-2 d-flex flex-column flex-truncate">
         <h5 class="mb-0 vc-title text-truncate">
           <slot name="title" />
         </h5>

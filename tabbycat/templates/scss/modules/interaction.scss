@@ -11,14 +11,14 @@
 }
 
 // Specific styling for tooltips/popovers
-[data-toggle='tooltip'],
-[data-toggle="popover"],
+[data-bs-toggle='tooltip'],
+[data-bs-toggle="popover"],
 .hover-target {
 
   &:hover {
     cursor: help; // for tooltips
     span {
-      border-color: theme-color("primary");
+      border-color: $primary;
     }
   }
 
@@ -55,11 +55,6 @@
 
   .list-group-item {
     padding: 0.5rem 0.75rem;
-  }
-
-  .bs-tether-element-attached-top::after,
-  .bs-tether-element-attached-top::before {
-    left: 25%;
   }
 }
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
@@ -177,7 +172,7 @@
 
 .spinning {
   animation: spin 1s infinite linear;
-  color: theme-color("primary");
+  color: $primary;
 }
 @keyframes spin {
 
@@ -213,7 +208,7 @@
 @keyframes flash-animation {
 
   from {
-    color: theme-color("success");
+    color: $success;
   }
 
   to {

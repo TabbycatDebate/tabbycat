@@ -1,31 +1,34 @@
 export function useModalError () {
   const showErrorAlert = (message, error, title,
     classOverride = false, titleOverride = false, messageOverride = false) => {
-    const $ = window.$ || window.jQuery
-    if (!$) {
-      throw new Error('jQuery is required for showErrorAlert')
-    }
+    const modalEl = document.getElementById('modalAlert')
+    if (!modalEl) return
 
-    $('#modalAlert').modal()
+    const bs = window.bootstrap
+    bs.Modal.getOrCreateInstance(modalEl).show()
+
+    const header = modalEl.querySelector('.modal-header')
+    const body = modalEl.querySelector('.modal-body')
+
     if (title === null) {
-      $('#modalAlert').find('.modal-header').text('Save Failed')
+      header.textContent = 'Save Failed'
     } else if (titleOverride) {
-      $('#modalAlert').find('.modal-header').text(title)
+      header.textContent = title
     } else {
-      $('#modalAlert').find('.modal-header').text(`Save Failed due to ${title}`)
+      header.textContent = `Save Failed due to ${title}`
     }
     if (classOverride) {
-      $('#modalAlert').find('.modal-header').removeClass('text-danger')
-      $('#modalAlert').find('.modal-header').addClass(classOverride)
+      header.classList.remove('text-danger')
+      header.classList.add(classOverride)
     } else {
-      $('#modalAlert').find('.modal-header').addClass('text-danger')
+      header.classList.add('text-danger')
     }
     if (messageOverride) {
-      $('#modalAlert').find('.modal-body').text(message)
+      body.textContent = message
     } else {
-      $('#modalAlert').find('.modal-body').text(`Failed to save a change to ${message} because
+      body.textContent = `Failed to save a change to ${message} because
           ${error}. You should now refresh this page to ensure the data is up to date and then
-          retry the action. If the problem persists please get in touch with the developers.`)
+          retry the action. If the problem persists please get in touch with the developers.`
     }
   }
 

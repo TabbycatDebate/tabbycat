@@ -8,7 +8,7 @@
   <a class="btn btn-outline-primary" href="{% tournamenturl 'admin-checkin-prescan' %}">
     {% trans "Check-In Ballots" %}
   </a>
-  <a class="btn btn-outline-primary" href="" data-toggle="modal" data-target="#ironSpeeches">
+  <a class="btn btn-outline-primary" href="" data-bs-toggle="modal" data-bs-target="#ironSpeeches">
     {% trans "Recent 'Iron-Persons'" %}
   </a>
 
@@ -18,8 +18,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">{% trans "Teams who have recently missed a speaker" %}</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>
         </div>
         <div class="list-group">

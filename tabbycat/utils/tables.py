@@ -299,7 +299,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
 
         if highlight:
-            cell['class'] += ' font-weight-bold table-secondary'
+            cell['class'] += ' fw-bold table-secondary'
         if subtext:
             cell['subtext'] = subtext
 

@@ -116,13 +116,13 @@ onMounted(() => {
           <span v-if="isNew">New Ballot Set</span>
           <span v-if="!isNew">Edit Ballot Set</span>
         </h4>
-        <div class="badge badge-secondary float-right ml-2 mt-1">
+        <div class="badge text-bg-secondary float-end ms-2 mt-1">
           {{ debate }}
         </div>
-        <div class="badge badge-secondary float-right ml-2 mt-1">
+        <div class="badge text-bg-secondary float-end ms-2 mt-1">
           {{ round }}
         </div>
-        <div class="badge badge-secondary float-right ml-2 mt-1">
+        <div class="badge text-bg-secondary float-end ms-2 mt-1">
           {{ venue }}
         </div>
       </div>
@@ -136,7 +136,7 @@ onMounted(() => {
           <label>Selected Motion</label>
           <select
             v-model="selectedMotion"
-            class="required custom-select form-control"
+            class="required form-select form-control"
             :disabled="!isNew && !isAdmin"
             tabindex="1"
             @change="setSelected()"
@@ -180,7 +180,7 @@ onMounted(() => {
             <label>{{ team }}'s Veto</label>
             <select
               v-model="motionVetoes[team]['value']"
-              class="required custom-select form-control"
+              class="required form-select form-control"
               :disabled="!isNew && !isAdmin"
               :tabindex="index + 1"
               @change="setVetoed(team)"
@@ -209,7 +209,7 @@ onMounted(() => {
         >
           <select
             v-model="ironStatus"
-            class="required custom-select form-control"
+            class="required form-select form-control"
             :disabled="!isNew && !isAdmin"
             :tabindex="4"
             @change="setIron()"

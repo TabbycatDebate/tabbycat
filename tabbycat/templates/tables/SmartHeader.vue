@@ -24,7 +24,7 @@ const showTooltip = (event) => {
   <th
     :class="['vue-sortable', 'sort-' + header.key]"
     :title="header.tooltip"
-    :data-toggle="header.tooltip ? 'tooltip' : null"
+    :data-bs-toggle="header.tooltip ? 'tooltip' : null"
     @click="resort(header.key)"
     @hover="header.tooltip ? showTooltip : null"
   >
@@ -48,7 +48,7 @@ const showTooltip = (event) => {
         <span>{{ header.title }}</span>
       </div>
 
-      <div :class="['mr-auto', sortClasses(header['key'])]">
+      <div :class="['me-auto', sortClasses(header['key'])]">
         <i data-feather="chevrons-down" />
         <i data-feather="chevrons-up" />
       </div>

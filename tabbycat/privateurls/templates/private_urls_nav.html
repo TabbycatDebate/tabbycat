@@ -19,7 +19,7 @@
     {% if to_email_exists %}
       <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-primary">
     {% else %}
-      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
+      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
     {% endif %}
       {% trans "Email URLs" %}
     </a>
@@ -28,14 +28,14 @@
     <div class="btn-group">
       <form action="{% tournamenturl 'privateurls-generate' %}" method="POST">
       {% csrf_token %}
-      <button class="btn btn-outline-success" id="generateRandomisedUrls" type="submit" data-toggle="tooltip" title="{% trans "This button only generates private URLs for participants who do not already have one." %}">
+      <button class="btn btn-outline-success" id="generateRandomisedUrls" type="submit" data-bs-toggle="tooltip" title="{% trans "This button only generates private URLs for participants who do not already have one." %}">
         {% trans "Generate URLs" %}
       </button>
       </form>
     </div>
   {% else %}
     <div class="btn-group">
-      <button class="btn btn-outline-secondary" id="generateRandomisedUrls" data-toggle="tooltip" title="{% trans "All participants already have private URLs." %}">
+      <button class="btn btn-outline-secondary" id="generateRandomisedUrls" data-bs-toggle="tooltip" title="{% trans "All participants already have private URLs." %}">
         {% trans "Generate URLs" %}
       </button>
     </div>

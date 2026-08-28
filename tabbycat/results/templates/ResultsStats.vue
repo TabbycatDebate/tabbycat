@@ -38,7 +38,7 @@ const statusWidths = computed(() => {
               class="progress-bar bg-secondary"
               role="progressbar"
               :style="{ width: checksWidths.checked }"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="checks.checked + ' ' + gettext('Checked-In')"
             >
               <i data-feather="x" />&nbsp;&nbsp;{{ checks.checked }}
@@ -47,7 +47,7 @@ const statusWidths = computed(() => {
               class="progress-bar bg-dark"
               role="progressbar"
               :style="{ width: checksWidths.missing }"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="checks.missing + ' ' + gettext('Not Checked-In')"
             >
               <i data-feather="circle" />&nbsp;&nbsp;{{ checks.missing }}
@@ -64,7 +64,7 @@ const statusWidths = computed(() => {
               class="progress-bar bg-danger"
               role="progressbar"
               :style="{ width: statusWidths.none }"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="statuses.none + ' ' + gettext('Unknown')"
             >
               <i data-feather="x" />&nbsp;&nbsp;{{ statuses.none }}
@@ -73,7 +73,7 @@ const statusWidths = computed(() => {
               class="progress-bar bg-warning"
               role="progressbar"
               :style="{ width: statusWidths.postponed }"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="statuses.postponed + ' ' + gettext('Postponed')"
             >
               <i data-feather="pause" />&nbsp;&nbsp;{{ statuses.postponed }}
@@ -82,7 +82,7 @@ const statusWidths = computed(() => {
               class="progress-bar bg-info"
               role="progressbar"
               :style="{ width: statusWidths.draft }"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="statuses.draft + ' ' + gettext('Unconfirmed')"
             >
               <i data-feather="circle" />&nbsp;&nbsp;{{ statuses.draft }}
@@ -91,7 +91,7 @@ const statusWidths = computed(() => {
               class="progress-bar bg-success"
               role="progressbar"
               :style="{ width: statusWidths.confirmed }"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="statuses.confirmed + ' ' + gettext('Confirmed')"
             >
               <i data-feather="check" />&nbsp;&nbsp;{{ statuses.confirmed }}

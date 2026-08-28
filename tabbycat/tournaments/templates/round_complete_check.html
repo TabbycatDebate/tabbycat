@@ -15,7 +15,7 @@
 
 
   {% if emails_sent %}
-    <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+    <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-secondary" data-bs-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
   {% else %}
     <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-primary active">
   {% endif %}

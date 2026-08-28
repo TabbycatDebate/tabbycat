@@ -44,43 +44,43 @@
       {% csrf_token %}
       {% if previous_unconfirmed %}
         <button class="btn btn-warning" id="createDraw"
-          data-toggle="tooltip" title="{% blocktrans trimmed with round=round.prev.name %}{{ previous_unconfirmed }} debates from
+          data-bs-toggle="tooltip" title="{% blocktrans trimmed with round=round.prev.name %}{{ previous_unconfirmed }} debates from
           {{ round }} do not have a completed ballot — this may lead to a draw that fails or is incorrect{% endblocktrans %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif availability_info.teams.in_now == 0 %}
         <button class="btn btn-danger disabled"
-          data-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been marked as available." %}">
+          data-bs-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been marked as available." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif availability_info.adjs.in_now == 0 %}
         <button class="btn btn-danger disabled"
-          data-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been marked as available." %}">
+          data-bs-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been marked as available." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif availability_info.venues.in_now == 0 %}
         <button class="btn btn-warning" id="createDraw"
-          data-toggle="tooltip" title="{% trans "No rooms are marked as available. You can still generate the draw and assign rooms later." %}">
+          data-bs-toggle="tooltip" title="{% trans "No rooms are marked as available. You can still generate the draw and assign rooms later." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif min_venues > availability_info.venues.in_now %}
         <button class="btn btn-warning" id="createDraw"
-          data-toggle="tooltip" title="{% trans "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly." %}">
+          data-bs-toggle="tooltip" title="{% trans "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif min_adjudicators > availability_info.adjs.in_now %}
         <button class="btn btn-warning" id="createDraw"
-          data-toggle="tooltip" title="{% trans "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly." %}">
+          data-bs-toggle="tooltip" title="{% trans "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif pref.teams_in_debate == 2 and not availability_info.teams.in_now|divisibleby:2  %}
         <button class="btn btn-warning" id="createDraw"
-          data-toggle="tooltip" title="{% trans "There is an uneven number of teams marked as available — the draw may not generate properly." %}">
+          data-bs-toggle="tooltip" title="{% trans "There is an uneven number of teams marked as available — the draw may not generate properly." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% elif pref.teams_in_debate == 4 and not availability_info.teams.in_now|divisibleby:4  %}
         <button class="btn btn-warning" id="createDraw"
-          data-toggle="tooltip" title="{% trans "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly." %}">
+          data-bs-toggle="tooltip" title="{% trans "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly." %}">
           {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
         </button>
       {% else %}
@@ -137,10 +137,10 @@
   {% if not round.prev and round.draw_type == round.DrawType.POWERPAIRED %}
     <div class="alert alert-info">
       <div class="row align-items-center">
-        <div class="col-auto pr-1">
+        <div class="col-auto pe-1">
           <i data-feather="alert-circle"></i>
         </div>
-        <div class="col pl-0 pr-0">
+        <div class="col ps-0 pe-0">
           {% blocktrans trimmed %}
             This is the first round, but its draw type is <strong>{{ draw_type }}</strong>.
             Did you intend for it to be <strong>Random</strong> or <strong>Seeded</strong> instead?
@@ -205,16 +205,16 @@
   {% if has_seeds and round.draw_type == round.DrawType.RANDOM %}
     <div class="alert alert-warning" id="seeded-draw-alert">
       <div class="row align-items-center">
-        <div class="col-auto pr-1">
+        <div class="col-auto pe-1">
           <i data-feather="alert-circle"></i>
         </div>
-        <div class="col pl-0 pr-0">
+        <div class="col ps-0 pe-0">
           {% blocktrans trimmed %}
             One or more teams have a <strong>seed</strong> assigned, but this round's draw type
             is not <strong>Seeded</strong>.
           {% endblocktrans %}
         </div>
-        <div class="col-auto pl-2">
+        <div class="col-auto ps-2">
           <button class="btn btn-sm btn-warning" id="set-seeded-draw-btn" onclick="setSeededDrawType()">
             {% trans "Set draw type to Seeded" %}
           </button>

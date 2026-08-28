@@ -21,8 +21,14 @@
               {{ preference.errors }}
             {% endif %}
           </div>
-          <div class="col-md col-12 form-group">
-            {{ preference|addcss:"form-control" }}
+          <div class="col-md col-12 mb-3">
+            {% if preference|is_checkbox %}
+              <div class="form-check form-switch">
+                {{ preference|addcss:"form-check-input" }}
+              </div>
+            {% else %}
+              {{ preference|addcss:"form-control" }}
+            {% endif %}
           </div>
         </div>
       </li>

@@ -68,16 +68,16 @@ const blindValidationFail = () => {
 </script>
 
 <template>
-  <div class="card pr-0 mr-0 m-2">
+  <div class="card pe-0 me-0 m-2">
     <div class="list-group list-group-flush">
       <div class="list-group-item pb-0">
         <div class="row">
           <!-- team-name class used by unknown sides switcher -->
           <div
-            class="col mr-auto card-title pl-md-2 pl-1"
+            class="col me-auto card-title ps-md-2 ps-1"
             v-html="team.name"
           />
-          <div class="col-auto card-subtitle text-muted text-right pt-2 pr-md-2 pr-1">
+          <div class="col-auto card-subtitle text-muted text-end pt-2 pe-md-2 pe-1">
             <h6>{{ team.position }}</h6>
           </div>
         </div>
@@ -101,7 +101,7 @@ const blindValidationFail = () => {
 
       <div class="list-group-item">
         <div class="row">
-          <div class="col offset-md-2 mb-0 pr-md-2 pr-1 pl-1">
+          <div class="col offset-md-2 mb-0 pe-md-2 pe-1 ps-1">
             <div class="btn-group d-flex">
               <button
                 tabindex="-1"
@@ -112,7 +112,7 @@ const blindValidationFail = () => {
               </button>
               <button
                 tabindex="-1"
-                :class="['btn btn-no-hover flex-grow-1 text-monospace border-right-0 ', rankClasses[teamRank]]"
+                :class="['btn btn-no-hover flex-grow-1 font-monospace border-right-0 ', rankClasses[teamRank]]"
                 readonly
               >
                 {{ rankLabels[teamRank] }}
@@ -126,7 +126,7 @@ const blindValidationFail = () => {
               </button>
               <button
                 tabindex="-1"
-                :class="['btn btn-no-hover flex-grow-1 text-monospace', rankClasses[teamRank]]"
+                :class="['btn btn-no-hover flex-grow-1 font-monospace', rankClasses[teamRank]]"
                 readonly
               >
                 <span v-if="teamMargin >= 0">+</span>{{ teamMargin }}
@@ -134,7 +134,7 @@ const blindValidationFail = () => {
             </div>
           </div>
 
-          <div class="col-3 form-group pr-1 pl-1">
+          <div class="col-3 form-group pe-1 ps-1">
             <button
               tabindex="-1"
               :class="['btn btn-block btn-no-hover', rankClasses[teamRank]]"

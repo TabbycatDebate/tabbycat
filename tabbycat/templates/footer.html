@@ -60,8 +60,17 @@
       <div class="col mt-2">
         <ul class="nav justify-content-center">
           <li class="nav-item p-2">
+            <i data-feather="sun" class="theme-icon-light" style="display:none"></i>
+            <i data-feather="moon" class="theme-icon-dark" style="display:none"></i>
+            <i data-feather="monitor" class="theme-icon-auto" style="display:none"></i>
+            <a class="nav-link p-0 d-inline-block" href="#" id="theme-toggle"
+               role="button" aria-label="{% trans 'Toggle theme' %}" title="{% trans 'Toggle theme' %}">
+              {% trans "Theme" %}
+            </a>
+          </li>
+          <li class="nav-item p-2">
             <i data-feather="globe"></i>
-            <a class="nav-link p-0 d-inline-block" href="#" data-toggle="modal" data-target="#setLanguageModal">
+            <a class="nav-link p-0 d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#setLanguageModal">
               {% trans "Language" as local_language_label %}
               Language {% if LANGUAGE_CODE != 'en' and local_language_label != "Language" %} / {{ local_language_label }}{% endif %}
             </a>
@@ -108,14 +117,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{% trans "Change Language" %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
         </button>
       </div>
       <div class="modal-body">
         <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
           <input name="next" type="hidden" value="{{ redirect_to }}">
-          <select name="language" class="custom-select">
+          <select name="language" class="form-select">
               {% get_available_languages as LANGUAGES %}
               {% get_language_info_list for LANGUAGES as languages %}
               {% for language in languages %}

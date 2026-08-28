@@ -55,16 +55,14 @@ const copyTableTrigger = (i) => {
           type="search"
           :placeholder="gettext('Find in Table')"
         >
-        <div class="input-group-append">
-          <span class="input-group-text"><i data-feather="search" /></span>
-        </div>
+        <span class="input-group-text"><i data-feather="search" /></span>
         <div
           v-for="(table, i) in tablesData"
           :key="i"
         >
           <button
-            class="btn btn-light border ml-2"
-            data-toggle="tooltip"
+            class="btn btn-light border ms-2"
+            data-bs-toggle="tooltip"
             title="Copy table data to clipboard in a CSV format"
             @click.prevent="copyTableTrigger(i)"
           >
@@ -82,9 +80,9 @@ const copyTableTrigger = (i) => {
     >
       <div
         :id="getTableId(i)"
-        class="card table-container pl-1"
+        class="card table-container ps-1"
       >
-        <div class="card-body pl-3 pr-0 py-2">
+        <div class="card-body ps-3 pe-0 py-2">
           <h4
             v-if="table.title"
             class="card-title mt-1 mb-2"

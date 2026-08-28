@@ -166,10 +166,10 @@ onBeforeUnmount(() => {
       :drop-context="{ 'assignment': null, 'position': null }"
     >
       <section class="mb-1 d-flex">
-        <div class="small mt-2 pl-1 text-muted text-unselectable">
+        <div class="small mt-2 ps-1 text-muted text-unselectable">
           <span
             v-for="(value, key) in sorts"
-            :class="['pr-2', value.active ? 'font-weight-bold' : 'hoverable']"
+            :class="['pe-2', value.active ? 'fw-bold' : 'hoverable']"
             @click="setSort(key)"
           >{{ gettext(value.label) }}</span>
         </div>
@@ -185,13 +185,13 @@ onBeforeUnmount(() => {
         </div>
         <div class="small text-muted mt-2 mx-1 text-unselectable">
           <span
-            :class="['', !showUnavailable ? 'font-weight-bold' : 'hoverable']"
+            :class="['', !showUnavailable ? 'fw-bold' : 'hoverable']"
             @click="showUnavailable = false"
           >
             Show Available ({{ filteredAvailable.length }})
           </span>
           <span
-            :class="['pl-2', showUnavailable ? 'font-weight-bold' : 'hoverable']"
+            :class="['ps-2', showUnavailable ? 'fw-bold' : 'hoverable']"
             @click="showUnavailable = true"
           >
             Show All ({{ filteredAll.length }})

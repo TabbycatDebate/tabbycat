@@ -28,6 +28,9 @@
 @import 'components/diversity-highlights';
 @import 'components/allocation-highlights';
 
+// Dark mode overrides (must come last)
+@import 'modules/dark-mode';
+
 //------------------------------------------------------------------------------
 // To Refactor
 //------------------------------------------------------------------------------

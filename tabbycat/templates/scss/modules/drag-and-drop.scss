@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 .vue-draggable {
-  background: #fff;
+  background: var(--bs-body-bg);
   border: 4px solid $gray-600;
   border-radius: $border-radius;
   overflow: hidden; // Need to cut off text (because it doesn't wrap)
@@ -63,7 +63,7 @@
   }
 
   &.vue-droppable-locked {
-    background: #fff;
+    background: var(--bs-body-bg);
     position: relative; // For the spinner
   }
 }
@@ -103,10 +103,10 @@
 
     .panel-handle {
       display: flex;
-      background: #fff;
+      background: var(--bs-body-bg);
 
       .feather {
-        color: #000; // for the icon
+        color: var(--bs-body-color); // for the icon
       }
     }
 
@@ -136,7 +136,7 @@
 // Inheritance hack below to address double-hovering when using draggable panels
 .vue-droppable-enter,
 .vue-droppable-enter .panel-incomplete {
-  background: theme-color("success") !important;
+  background: $success !important;
 }
 
 //------------------------------------------------------------------------------

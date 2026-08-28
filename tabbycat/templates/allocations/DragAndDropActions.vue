@@ -39,7 +39,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
         <a
           :href="extra.backUrl"
           class="btn btn-outline-primary"
-          data-toggle="tooltip"
+          data-bs-toggle="tooltip"
           data-placement="bottom"
           :title="extra.backLabel"
         >
@@ -73,8 +73,8 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
       <div class="dropdown">
         <button
           id="dropdownMenuOffset"
-          class="btn btn-sm ml-2 btn-outline-primary dropdown-toggle"
-          data-toggle="dropdown"
+          class="btn btn-sm ms-2 btn-outline-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
           title="Sort the draw"
         >
           <i data-feather="list" />
@@ -121,7 +121,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
     <div class="btn-group btn-group-sm">
       <button
         class="btn btn-outline-secondary disabled d-xl-inline d-none"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="('Key for the color highlights.')"
       >
         <i data-feather="help-circle" />
@@ -130,7 +130,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
         <slot name="default-highlights" />
         <button
           class="btn btn-dark"
-          data-toggle="tooltip"
+          data-bs-toggle="tooltip"
           :title="('Has not been marked as available for this round or has been allocated twice.')"
         >
           {{ gettext('Unavailable') }}
@@ -153,7 +153,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
         @click="store.toggleHighlight(highlightKey)"
       >
         <span><i :data-feather="highlight.active ? 'eye-off' : 'eye'" /></span>
-        <span class="pl-1">{{ gettext(titleCase(highlightKey)) }}</span>
+        <span class="ps-1">{{ gettext(titleCase(highlightKey)) }}</span>
       </button>
     </div>
   </nav>

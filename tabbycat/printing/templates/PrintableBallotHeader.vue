@@ -38,7 +38,7 @@ const { gettext, tct } = useDjangoI18n()
 
     <div
       v-if="ballot.venue === '' || ballot.venue === null"
-      class="ml-auto"
+      class="ms-auto"
     >
       <span v-if="ballot.barcode">
         {{ tct('ID %s,', [ballot.barcode]) }}
@@ -52,7 +52,7 @@ const { gettext, tct } = useDjangoI18n()
 
     <div
       v-else
-      class="ml-auto "
+      class="ms-auto "
     >
       <span v-if="ballot.barcode">{{ tct('ID %s,', [ballot.barcode]) }}</span>
       {{ ballot.venue.display_name }}

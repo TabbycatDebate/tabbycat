@@ -61,7 +61,7 @@ watch(() => props.lastSaved, () => {
 <template>
   <button
     :class="['btn px-0 border-primary text-primary d-xl-inline vc-auto-save', animationClass]"
-    data-toggle="tooltip"
+    data-bs-toggle="tooltip"
     data-placement="bottom"
     :title="gettext('The time of the last saved change (changes are automatically saved)')"
   >

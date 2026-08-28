@@ -35,8 +35,108 @@
   }
 }
 
-.btn[data-toggle='tooltip'] span {
+.btn[data-bs-toggle='tooltip'] span {
   border-bottom: 0; // Need to prevent dashed lines in glyphicons in btns
+}
+
+//------------------------------------------------------------------------------
+// BS4 compatibility (classes removed in BS5)
+//------------------------------------------------------------------------------
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+// BS5 dropped .btn-block; restore until template usages are migrated to .w-100
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+// BS5 picks .btn-* text color via color-contrast(). For Tabbycat's lighter
+// theme colors that flips to black; BS4 always rendered white. Restore white.
+.btn-success,
+.btn-warning,
+.btn-info {
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-color: #fff;
+  --bs-btn-disabled-color: #fff;
+}
+
+// BS5 sets .list-group-item padding/border/color via CSS vars declared only on
+// .list-group; orphan items (e.g. inside .card without .list-group) lose all of
+// these. Restore fallback values so orphan items render BS4-equivalent.
+.list-group-item {
+  padding: var(--bs-list-group-item-padding-y, 0.75rem) var(--bs-list-group-item-padding-x, 1.25rem);
+  color: var(--bs-list-group-color, var(--bs-body-color));
+  background-color: var(--bs-list-group-bg, var(--bs-body-bg));
+  border: var(--bs-list-group-border-width, var(--bs-border-width)) solid var(--bs-list-group-border-color, var(--bs-border-color));
+}
+
+// Restore the BS4 between-item separation: hide the leading border so consecutive
+// items share a single divider (BS5 normally handles this via .list-group rules).
+.card > .list-group-item:first-child,
+.card > form > .list-group-item:first-child {
+  border-top: 0;
+}
+
+.card > .list-group-item,
+.card > form > .list-group-item {
+  border-right: 0;
+  border-left: 0;
+}
+
+.card > .list-group-item:last-child,
+.card > form > .list-group-item:last-child {
+  border-bottom: 0;
+}
+
+// BS5 dropped .card-deck; replicate BS4 behavior (equal-width sibling cards)
+.card-deck {
+  display: flex;
+  flex-direction: column;
+
+  .card {
+    margin-bottom: 15px;
+  }
+  @include media-breakpoint-up(sm) {
+    flex-flow: row wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+
+    .card {
+      flex: 1 0 0%;
+      margin-right: 15px;
+      margin-bottom: 0;
+      margin-left: 15px;
+    }
+  }
+}
+
+// BS5 dropped .card-columns; replicate BS4 masonry layout via CSS columns
+.card-columns {
+
+  .card {
+    margin-bottom: $card-spacer-y;
+  }
+  @include media-breakpoint-up(sm) {
+    column-count: 3;
+    column-gap: 1.25rem;
+    orphans: 1;
+    widows: 1;
+
+    .card {
+      display: inline-block;
+      width: 100%;
+    }
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -64,11 +164,26 @@ input[type="range"] {
 }
 
 // Choice widget labels (radios/checkboxes) don't need the extra padding
-.list-group-item {
+.list-group-item { // stylelint-disable-line no-duplicate-selectors
 
   .form-check label,
   label.form-check-label {
     padding-top: 0;
+  }
+
+  // Large centered toggle switches for preference forms
+  .form-check.form-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding-left: 3.5em;
+
+    .form-check-input {
+      width: 3em;
+      height: 1.5em;
+      margin-top: 0;
+    }
   }
 }
 
@@ -84,7 +199,7 @@ input[type="range"] {
 // Inline form errors from django
 .errorlist,
 label.error {
-  color: theme-color("danger");
+  color: $danger;
   margin: 0;
   padding: 0;
   list-style-type: none;

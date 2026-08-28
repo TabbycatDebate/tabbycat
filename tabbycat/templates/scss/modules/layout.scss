@@ -13,7 +13,7 @@
 
   .main {
     @extend .col-12;
-    @extend .pl-3;
+    @extend .ps-3;
     // padding-right: 0;
   }
 }
@@ -22,19 +22,15 @@
 // Lists
 //------------------------------------------------------------------------------
 
-// Override some boostrap color defaults and automatically add color variations
+// Ensure links inside alerts and colored text are visually distinct
 @each $color, $value in $theme-colors {
 
-  .alert-#{$color},
-  .text-#{$color} {
-
-    a {
-      @include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
-
-      text-decoration: underline;
-      background: none;
-      font-weight: bold;
-    }
+  .alert-#{$color} a,
+  .text-#{$color} a {
+    color: inherit;
+    text-decoration: underline;
+    background: none;
+    font-weight: bold;
   }
 }
 
@@ -57,6 +53,4 @@
   }
 }
 
-.gap-3 {
-  gap: $spacer;
-}
+// .gap-3 is now a built-in BS5 utility

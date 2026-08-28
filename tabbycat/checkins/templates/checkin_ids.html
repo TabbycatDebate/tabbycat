@@ -15,7 +15,7 @@
 
             <div class="list-group-item">
               <div class="d-flex justify-content-end">
-                <span class="mr-auto">{% trans "With identifiers" %}</span>
+                <span class="me-auto">{% trans "With identifiers" %}</span>
                 <strong>{{ check_info.in }}/{{ check_info.total }}</strong>
               </div>
               {% include "components/progress-bar.html" with value=check_info.in total=check_info.total type="success" %}

@@ -50,10 +50,10 @@ const hidePanelHoverConflicts = () => {
     :drag-payload="getPanelDragPayload()"
     class="mx-1 d-flex flex-fill align-items-stretch align-items-center draggable-panel"
   >
-    <div :class="['panel-stats small text-monospace text-center', panelIsDragging ? 'd-none' : '']">
+    <div :class="['panel-stats small font-monospace text-center', panelIsDragging ? 'd-none' : '']">
       <div
         class="py-1"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext('Average score of panel (excluding trainees)')"
       >
         <span v-if="averageScore">{{ averageScore }}</span>
@@ -64,7 +64,7 @@ const hidePanelHoverConflicts = () => {
       </div>
       <div
         class="py-1"
-        data-toggle="tooltip"
+        data-bs-toggle="tooltip"
         :title="gettext('Average score of voting majority in panel')"
       >
         <span v-if="averageVotingScore">{{ averageVotingScore }}</span>

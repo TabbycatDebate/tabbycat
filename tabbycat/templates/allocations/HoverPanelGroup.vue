@@ -7,7 +7,7 @@ defineProps({ groups: Array })
     <template v-if="groups !== null && groups.length > 0">
       <div
         v-for="group in groups"
-        class="btn-group btn-group-sm mr-2"
+        class="btn-group btn-group-sm me-2"
       >
         <button
           v-for="item in group"

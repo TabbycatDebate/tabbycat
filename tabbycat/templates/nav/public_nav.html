@@ -49,7 +49,7 @@
   {% if pref.enable_motion_reuse %}
     <li class="nav-item dropdown {% if motions_nav %}active{% endif %}">
       <a class="nav-link dropdown-toggle" href="#" id="motionsDrop"
-         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {% trans "Motions Tab" %}
       </a>
       <div class="dropdown-menu" aria-labelledby="motionsDrop">
@@ -68,7 +68,7 @@
 {% if pref.public_draw == 'all-released' and not pref.team_tab_released %}
   <li class="nav-item dropdown {% if draw_nav %}active{% endif %}">
     <a class="nav-link dropdown-toggle" href="#" id="drawsDrop"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       {% trans "Draws" %}
     </a>
     <div class="dropdown-menu draw-dropdown-menu" aria-labelledby="drawsDrop">
@@ -111,7 +111,7 @@
 {% if pref.public_results and tournament.rounds_with_released_results %}
   <li class="nav-item dropdown {% if results_nav %}active{% endif %}">
     <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        {% trans "Results" %}
     </a>
     <div class="dropdown-menu" aria-labelledby="roundsDrop">
@@ -129,7 +129,7 @@
 
   <li class="nav-item dropdown {% if break_nav %}active{% endif %}">
     <a class="nav-link dropdown-toggle" href="#" id="breakdrop"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       {% trans "Break" %}
     </a>
     <div class="dropdown-menu" aria-labelledby="breakdrop">
@@ -198,7 +198,7 @@
   {% elif tournament.current_rounds|length > 1 %}
     <li class="nav-item dropdown {% if enter_ballots_nav %}active{% endif %}">
       <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
-         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          {% trans "Enter Ballot" %}
       </a>
       <div class="dropdown-menu" aria-labelledby="roundsDrop">

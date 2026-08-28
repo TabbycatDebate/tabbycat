@@ -38,7 +38,7 @@ const { getFeatherIcon } = useFeatherIcon(icon)
     <!-- Links and modals -->
     <div
       v-if="cellData.link || cellData.modal"
-      :data-toggle="cellData.tooltip ? tooltip : ''"
+      :data-bs-toggle="cellData.tooltip ? tooltip : ''"
       :title="cellData.tooltip"
     >
       <a
@@ -52,7 +52,7 @@ const { getFeatherIcon } = useFeatherIcon(icon)
       </a>
       <a
         v-if="cellData.modal"
-        :data-target="cellData.modal"
+        :data-bs-target="cellData.modal"
       >
         <span
           class="tooltip-trigger"
@@ -68,7 +68,7 @@ const { getFeatherIcon } = useFeatherIcon(icon)
     <!-- Standard -->
     <div
       v-else
-      :data-toggle="cellData.tooltip ? tooltip : ''"
+      :data-bs-toggle="cellData.tooltip ? tooltip : ''"
       :title="cellData.tooltip"
     >
       <span

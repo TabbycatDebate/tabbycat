@@ -18,7 +18,7 @@
   </a>
 
   <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
-     data-toggle="modal" data-target="#editStartTime">
+     data-bs-toggle="modal" data-bs-target="#editStartTime">
     {% if round.starts_at %}
       {% blocktrans trimmed with start_time=round.starts_at %}
         Debates start at {{ start_time }}

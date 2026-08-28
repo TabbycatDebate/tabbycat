@@ -1,0 +1,301 @@
+//------------------------------------------------------------------------------
+// Dark Mode Overrides
+// BS5.3 handles most components via data-bs-theme="dark".
+// These overrides cover Tabbycat-specific colors that BS5 doesn't know about.
+//------------------------------------------------------------------------------
+
+[data-bs-theme="dark"] {
+
+  //----------------------------------------------------------------------------
+  // Softer accent colors for dark backgrounds (lightly lifted + desaturated)
+  //----------------------------------------------------------------------------
+
+  $dm-primary: desaturate(lighten($purple, 12%), 10%);
+  $dm-success: desaturate(lighten($green, 10%), 20%);
+  $dm-info: desaturate(lighten($blue, 10%), 15%);
+  $dm-warning: desaturate(lighten($orange, 8%), 15%);
+  $dm-danger: desaturate(lighten($red, 10%), 10%);
+  $dm-link-hover: lighten($dm-primary, 8%);
+
+  --bs-primary: #{$dm-primary};
+  --bs-primary-rgb: #{red($dm-primary)}, #{green($dm-primary)}, #{blue($dm-primary)};
+  --bs-success: #{$dm-success};
+  --bs-success-rgb: #{red($dm-success)}, #{green($dm-success)}, #{blue($dm-success)};
+  --bs-info: #{$dm-info};
+  --bs-info-rgb: #{red($dm-info)}, #{green($dm-info)}, #{blue($dm-info)};
+  --bs-warning: #{$dm-warning};
+  --bs-warning-rgb: #{red($dm-warning)}, #{green($dm-warning)}, #{blue($dm-warning)};
+  --bs-danger: #{$dm-danger};
+  --bs-danger-rgb: #{red($dm-danger)}, #{green($dm-danger)}, #{blue($dm-danger)};
+  --bs-link-color: #{$dm-primary};
+  --bs-link-color-rgb: #{red($dm-primary)}, #{green($dm-primary)}, #{blue($dm-primary)};
+  --bs-link-hover-color: #{$dm-link-hover};
+  --bs-link-hover-color-rgb: #{red($dm-link-hover)}, #{green($dm-link-hover)}, #{blue($dm-link-hover)};
+
+  // Buttons — use the softer dm-* palette
+  @each $name, $dm in (primary: $dm-primary, success: $dm-success, info: $dm-info, warning: $dm-warning, danger: $dm-danger) {
+    .btn-#{$name} {
+      --bs-btn-bg: #{$dm};
+      --bs-btn-border-color: #{$dm};
+      --bs-btn-hover-bg: #{darken($dm, 6%)};
+      --bs-btn-hover-border-color: #{darken($dm, 6%)};
+      --bs-btn-active-bg: #{darken($dm, 12%)};
+      --bs-btn-active-border-color: #{darken($dm, 12%)};
+      --bs-btn-color: #fff;
+      --bs-btn-hover-color: #fff;
+      --bs-btn-active-color: #fff;
+    }
+  }
+  @each $name, $dm in (primary: $dm-primary, success: $dm-success, info: $dm-info, warning: $dm-warning, danger: $dm-danger) {
+    .text-bg-#{$name} {
+      background-color: #{$dm} !important;
+    }
+
+    .alert-#{$name} {
+      --bs-alert-bg: #{rgba($dm, 0.15)};
+      --bs-alert-color: #{lighten($dm, 15%)};
+      --bs-alert-border-color: #{rgba($dm, 0.3)};
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Navbar & Footer
+  //----------------------------------------------------------------------------
+
+  .navbar-light {
+    background: var(--bs-body-bg);
+    border-color: var(--bs-border-color);
+  }
+
+  .navbar .dropdown-menu .dropdown-item {
+    color: var(--bs-body-color);
+
+    &:hover {
+      color: var(--bs-primary);
+      background-color: var(--bs-tertiary-bg);
+    }
+
+    &.active,
+    &:focus {
+      color: var(--bs-body-color);
+    }
+  }
+
+  .footer a {
+    border-bottom-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+  }
+
+  //----------------------------------------------------------------------------
+  // Sidebar (already dark; just ensure consistency)
+  //----------------------------------------------------------------------------
+
+  .admin-sidebar > .list-group > .list-group-item {
+    background: $sidebar-bg;
+  }
+
+  .fake-sidebar .list-group-item {
+    background: $sidebar-bg;
+  }
+
+  //----------------------------------------------------------------------------
+  // Tables
+  //----------------------------------------------------------------------------
+
+  .table {
+    background: var(--bs-body-bg);
+  }
+
+  thead,
+  .thead {
+    background: var(--bs-body-bg);
+  }
+
+  .table > tbody > tr:hover td {
+    background-color: var(--bs-tertiary-bg);
+
+    .hide-underline {
+      border-bottom-color: var(--bs-tertiary-bg);
+    }
+  }
+
+  .table.hide-hover > tbody > tr:hover td .hide-underline {
+    border-bottom-color: var(--bs-border-color);
+  }
+
+  //----------------------------------------------------------------------------
+  // Allocations
+  //----------------------------------------------------------------------------
+
+  .panel-incomplete .btn {
+    color: var(--bs-body-color);
+  }
+
+  //----------------------------------------------------------------------------
+  // Drag and drop
+  //----------------------------------------------------------------------------
+
+  .vue-droppable {
+    background: var(--bs-secondary-bg);
+  }
+
+  .draggable-panel.vue-draggable {
+    border-color: var(--bs-border-color);
+
+    &:hover .panel-handle {
+      background: var(--bs-secondary-bg);
+
+      .feather {
+        color: var(--bs-body-color);
+      }
+    }
+
+    .panel-handle:hover {
+      background: var(--bs-primary);
+
+      .feather {
+        color: #fff;
+      }
+    }
+  }
+
+  .vue-draggable:hover .vc-title,
+  .vue-draggable:hover .vue-draggable:hover .vc-title,
+  .vue-draggable:hover .vue-draggable-dragging .vc-title {
+    color: #fff;
+  }
+
+  //----------------------------------------------------------------------------
+  // Buttons with outline
+  //----------------------------------------------------------------------------
+  @each $color, $value in $theme-colors {
+    .btn-outline-#{$color} {
+      background-color: transparent;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Forms
+  //----------------------------------------------------------------------------
+
+  .errorlist,
+  label.error {
+    color: var(--bs-danger);
+  }
+
+  .checkInForm {
+    border-color: var(--bs-border-color);
+  }
+
+  //----------------------------------------------------------------------------
+  // Popovers & tooltips
+  //----------------------------------------------------------------------------
+
+  .popover {
+    --bs-popover-bg: var(--bs-body-bg);
+  }
+
+  .tooltip-trigger {
+    border-bottom-color: var(--bs-border-color);
+  }
+
+  //----------------------------------------------------------------------------
+  // Slideover info panel
+  //----------------------------------------------------------------------------
+
+  .slideover-info {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  //----------------------------------------------------------------------------
+  // D3 graphs / datavis
+  //----------------------------------------------------------------------------
+
+  .d3-graph {
+
+    .axis path,
+    .axis line {
+      stroke: var(--bs-border-color);
+    }
+  }
+
+  .d3-feedback-trend {
+
+    .tick line,
+    .axis line {
+      stroke: var(--bs-border-color);
+    }
+  }
+
+  .d3-hover-black:hover {
+    fill: var(--bs-body-color);
+  }
+
+  //----------------------------------------------------------------------------
+  // Progress bars
+  //----------------------------------------------------------------------------
+
+  .progress-empty span {
+    color: var(--bs-body-color);
+  }
+
+  .progress-points-3 {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+  }
+
+  .progress-points-2 {
+    background: rgba(255, 255, 255, 0.7);
+    color: #000;
+  }
+
+  .progress-points-1 {
+    background: rgba(255, 255, 255, 0.5);
+    color: #000;
+  }
+
+  .progress-points-0 {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+  }
+
+  //----------------------------------------------------------------------------
+  // Interaction
+  //----------------------------------------------------------------------------
+
+  .item-submit:hover {
+    background-color: var(--bs-tertiary-bg) !important;
+  }
+
+  //----------------------------------------------------------------------------
+  // Active list-group items
+  //----------------------------------------------------------------------------
+
+  .list-group-item.active a {
+    color: var(--bs-body-bg);
+  }
+
+  //----------------------------------------------------------------------------
+  // Text color utilities (use lighter accents)
+  //----------------------------------------------------------------------------
+
+  .text-primary {
+    color: var(--bs-primary) !important;
+  }
+
+  .text-success {
+    color: var(--bs-success) !important;
+  }
+
+  .text-info {
+    color: var(--bs-info) !important;
+  }
+
+  .text-warning {
+    color: var(--bs-warning) !important;
+  }
+
+  .text-danger {
+    color: var(--bs-danger) !important;
+  }
+}

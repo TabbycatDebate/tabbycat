@@ -1,8 +1,15 @@
 {% load static statici18n i18n debate_tags %}<!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" data-bs-theme="light">
 <head>
 
+  <script>
+    (function() {
+      var mode = localStorage.getItem('tabbycat-theme') || 'auto';
+      var dark = mode === 'dark' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,7 +38,7 @@
   {% endblock %}
 
 
-  <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2">
+  <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="icon" type="image/png" href="{% static 'logo-32x32.png' %}" sizes="32x32" />
   <link rel="icon" type="image/png" href="{% static 'logo-16x16.png' %}" sizes="16x16" />
   <link rel="mask-icon" href="{% static 'safari-tab.svg' %}" color="rgb(102, 61, 160)">
@@ -40,7 +47,7 @@
   {% block extra-head %}{% endblock %}
 
   {% if not hmr %}
-  <link href="{% static 'vue/js/app.js' %}" rel=preload as=script>
+  <link rel="modulepreload" href="{% static 'vue/js/app.js' %}">
   {% endif %}
 
   {% if not debug %}<!-- Analytics -->
@@ -77,17 +84,17 @@
     {% if user_role == "admin" %}
       <!-- Fake full height for menu -->
       <div class="row">
-        <div class="col-md-2 col-1 float-left pl-0 pr-lg-3 pr-md-3 pr-0 d-none d-sm-block width fake-sidebar">
+        <div class="col-md-2 col-1 float-start ps-0 pe-lg-3 pe-md-3 pe-0 d-none d-sm-block width fake-sidebar">
           <div class="list-group-item"></div>
         </div>
       </div>
 
       <!-- Insert a second level column structure for a side nav -->
       <div class="row">
-        <div class="admin-sidebar col-md-2 col-1 float-left pl-0 pr-md-3 pr-0 collapse width show">
+        <div class="admin-sidebar col-md-2 col-1 float-start ps-0 pe-md-3 pe-0 collapse width show">
           {% block sidebar %}{% include "nav/admin_nav.html" %}{% endblock %}
         </div>
-        <main class="col-md-10 col-11 float-left pl-md-0 pl-3 main">
+        <main class="col-md-10 col-11 float-start ps-md-0 ps-3 main">
     {% endif %}
 
     {% block header %}
@@ -221,6 +228,54 @@
     {% endif %}
 
   {% endblock js %}
+
+  <script>
+    (function() {
+      var toggle = document.getElementById('theme-toggle');
+      if (!toggle) return;
+
+      var modes = ['light', 'dark', 'auto'];
+
+      function resolveTheme(mode) {
+        if (mode === 'auto')
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        return mode;
+      }
+
+      function getMode() {
+        return localStorage.getItem('tabbycat-theme') || 'auto';
+      }
+
+      function updateIcons(mode) {
+        var scope = toggle.parentElement || document;
+        var light = scope.querySelector('.theme-icon-light');
+        var dark = scope.querySelector('.theme-icon-dark');
+        var auto = scope.querySelector('.theme-icon-auto');
+        if (light) light.style.display = mode === 'light' ? '' : 'none';
+        if (dark) dark.style.display = mode === 'dark' ? '' : 'none';
+        if (auto) auto.style.display = mode === 'auto' ? '' : 'none';
+      }
+
+      function applyMode(mode) {
+        document.documentElement.setAttribute('data-bs-theme', resolveTheme(mode));
+        updateIcons(mode);
+      }
+
+      applyMode(getMode());
+
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        var current = getMode();
+        var next = modes[(modes.indexOf(current) + 1) % modes.length];
+        localStorage.setItem('tabbycat-theme', next);
+        applyMode(next);
+      });
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+        if (getMode() === 'auto') applyMode('auto');
+      });
+    })();
+  </script>
 
 </body>
 </html>

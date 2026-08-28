@@ -23,8 +23,8 @@ const updateStatus = (e) => {
 
 <template>
   <div :class="['flex-3 flex-truncate d-flex', !confirmed ? 'bg-danger text-white' : '']">
-    <div class="align-self-center flex-fill pl-3 ">
-      <label class="form-check-label m-0 pl-3 ">
+    <div class="align-self-center flex-fill ps-3 ">
+      <label class="form-check-label m-0 ps-3 ">
         <input
           type="checkbox"
           class="form-check-input"

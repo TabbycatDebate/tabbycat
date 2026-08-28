@@ -79,7 +79,7 @@ const titleCasePosition = computed(() => {
 
       <div
         v-if="roundInfo.showDigits"
-        class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border"
+        class="db-flex-item-2 align-items-center d-flex pe-1 small db-bottom-border"
       >
         <div
           class="db-flex-item-2 db-padding-horizontal text-secondary"
@@ -107,7 +107,7 @@ const titleCasePosition = computed(() => {
             class="flex-grow-1 db-align-vertical-center db-align-horizontal-center"
           >
             <span
-              class="db-circle text-monospace"
+              class="db-circle font-monospace"
               v-html="ord"
             />
           </div>
@@ -129,7 +129,7 @@ const titleCasePosition = computed(() => {
 
     <div
       v-if="roundInfo.showDigits"
-      class="db-flex-item-2 align-items-center d-flex pr-1 small"
+      class="db-flex-item-2 align-items-center d-flex pe-1 small"
     >
       <div class="db-flex-item-2 db-padding-horizontal text-secondary">
         {{ gettext('Circle the last digit of the team\'s total:') }}

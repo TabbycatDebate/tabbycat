@@ -163,7 +163,7 @@ const massSelect = (state, type) => {
               v-if="roundInfo.prev"
               class="btn btn-primary"
               type="button"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="gettext(`Set all the availabilities to exactly match
                                      what they were in the previous round.`)"
               @click="copyFromPrevious"
@@ -173,7 +173,7 @@ const massSelect = (state, type) => {
             <button
               class="btn btn-primary"
               type="button"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="gettext('Set all availabilities to exactly match check-ins.')"
               @click="setFromCheckIns(true, true)"
             >
@@ -182,7 +182,7 @@ const massSelect = (state, type) => {
             <button
               class="btn btn-primary"
               type="button"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="gettext(`Set people who are checked in as available
                                      (leave people not checked in unchanged)`)"
               @click="setFromCheckIns(true, false)"
@@ -192,7 +192,7 @@ const massSelect = (state, type) => {
             <button
               class="btn btn-primary"
               type="button"
-              data-toggle="tooltip"
+              data-bs-toggle="tooltip"
               :title="gettext(`Set people who are not checked in as unavailable
                                      (leave people who are checked in unchanged)`)"
               @click="setFromCheckIns(false, true)"

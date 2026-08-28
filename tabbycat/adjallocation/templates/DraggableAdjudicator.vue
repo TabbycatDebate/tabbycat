@@ -148,7 +148,7 @@ const scoreB = computed(() => {
   >
     <template #number>
       <span>
-        <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
+        <small class="ps-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
       </span>
     </template>
     <template #title>

@@ -9,7 +9,7 @@
         {{ motion.text }} <small class="text-muted d-md-inline d-none">({{ motion.reference }})</small>
         {% if motion.nrounds > 0 %}
           {% for m_round in motion.rounds.all %}
-            <span class="badge mr-2 float-right badge-light">
+            <span class="badge me-2 float-end text-bg-light">
               {{ m_round.abbreviation }}
             </span>
           {% endfor %}
@@ -17,8 +17,8 @@
       </h4>
 
       {% if motion.info_slide %}
-        <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0 hover-target"
-              data-toggle="modal" data-target="#info_{{ motion.id }}">
+        <span class="h6 badge text-bg-light text-secondary mx-auto mb-3 mt-0 hover-target"
+              data-bs-toggle="modal" data-bs-target="#info_{{ motion.id }}">
           {% trans "View Info Slide" %}
         </span>
         {% include 'motions_info.html' %}

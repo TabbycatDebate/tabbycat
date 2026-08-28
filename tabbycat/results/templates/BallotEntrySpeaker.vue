@@ -130,16 +130,16 @@ onMounted(async () => {
       class="row"
     >
       <div
-        class="col-2 d-flex align-items-center mb-0 pl-2 pr-0 h6 text-muted"
+        class="col-2 d-flex align-items-center mb-0 ps-2 pe-0 h6 text-muted"
         v-html="blindReveal ? 'Re-Entry of ' + speaker.position : speaker.position"
       />
 
-      <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
+      <div class="col mb-0 pe-md-1 pe-md-2 pe-1 ps-1 form-group">
         <select
           v-model="speakerNameShadow"
           :disabled="blindReveal"
           v-bind="selectAttributes"
-          :class="['custom-select mb-2', !blindSpeakerMatches && blindReveal ? 'is-invalid bg-dark text-white' : '',
+          :class="['form-select mb-2', !blindSpeakerMatches && blindReveal ? 'is-invalid bg-dark text-white' : '',
                    blindSpeakerMatches && blindReveal ? 'is-valid' : '']"
         >
           <option
@@ -181,14 +181,14 @@ onMounted(async () => {
           <span class="mt-2" />
           <label
             :for="'dupeCheck' + speaker.position"
-            :class="['ml-2 hoverable', blindDuplicateMatches ? '' : 'text-danger']"
+            :class="['ms-2 hoverable', blindDuplicateMatches ? '' : 'text-danger']"
           >
             Mark as a duplicate speech
           </label>
         </div>
       </div>
 
-      <div class="col-3 form-group pr-1 pl-1">
+      <div class="col-3 form-group pe-1 ps-1">
         <input
           v-model.number="speakerScoreShadow"
           :class="['form-control mb-2', !blindScoreMatches && blindReveal ? 'is-invalid bg-dark text-white' : '',
@@ -209,17 +209,17 @@ onMounted(async () => {
       class="row"
     >
       <div
-        :class="['col-2 d-flex align-items-center mb-0 pl-2 pr-0 h6',
+        :class="['col-2 d-flex align-items-center mb-0 ps-2 pe-0 h6',
                  blindEntry ? 'text-primary' : 'text-muted']"
       >
         <span v-if="blindEntry">Draft</span>
         <span v-if="!blindEntry">{{ speaker.position }}</span>
       </div>
 
-      <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
+      <div class="col mb-0 pe-md-1 pe-md-2 pe-1 ps-1 form-group">
         <select
           v-model="speakerName"
-          :class="['custom-select', speakerError ? 'border-danger text-danger' : '',
+          :class="['form-select', speakerError ? 'border-danger text-danger' : '',
                    !blindSpeakerMatches && blindEntry ? 'is-invalid' : '',
                    blindSpeakerMatches && blindEntry ? 'is-valid' : '']"
           v-bind="selectAttributes"
@@ -253,14 +253,14 @@ onMounted(async () => {
           <span class="mt-2" />
           <label
             :for="'check' + speaker.position"
-            :class="['ml-2 hoverable', blindDuplicateMatches ? '' : 'text-danger']"
+            :class="['ms-2 hoverable', blindDuplicateMatches ? '' : 'text-danger']"
           >
             Mark as a duplicate speech
           </label>
         </div>
       </div>
 
-      <div class="col-3 form-group pr-1 pl-1">
+      <div class="col-3 form-group pe-1 ps-1">
         <input
           v-model.number="speakerScore"
           :class="['form-control', scoreError ? 'border-danger text-danger' : '',

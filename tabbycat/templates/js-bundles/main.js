@@ -3,8 +3,9 @@ import { createApp, defineAsyncComponent } from 'vue'
 import { createPinia } from 'pinia'
 import * as Sentry from '@sentry/vue';
 import feather from 'feather-icons'
-import 'bootstrap' // Import bootstrap javascript plugins
+import * as bootstrap from 'bootstrap'
 const $ = window.jQuery
+window.bootstrap = bootstrap
 
 // Generic Templates
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
@@ -50,13 +51,13 @@ $.fn.extend({
   showAlert: function (alerttype, message, timeout) {
     $('#messages-container').prepend(`
       <div id='alertdiv' class='alert alert-${alerttype} fade show'>
-        <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-        <span aria-hidden='true'>&times;</span></button>${message}
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>${message}
       </div>`)
     if (timeout && timeout !== 0) {
-      // this will automatically close the alert and remove this if the users don't within in 5s
       setTimeout(() => {
-        $('#alertdiv').alert('close')
+        const alertEl = document.getElementById('alertdiv')
+        if (alertEl) bootstrap.Alert.getOrCreateInstance(alertEl).close()
       }, timeout)
     }
   },
@@ -95,8 +96,8 @@ function disabledTriggeredForm (triggeredForm) {
 
 $(document).ready(() => {
   // Enable hover tooltips for all elements
-  $('[data-toggle=tooltip]').tooltip({
-    html: true,
+  document.querySelectorAll('[data-bs-toggle=tooltip]').forEach(el => {
+    new bootstrap.Tooltip(el, { html: true })
   })
 
   // Feather shim for icons

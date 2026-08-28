@@ -575,38 +575,38 @@ const forAdmin = toRef(props, 'forAdmin')
       class="card mt-1"
     >
       <div class="card-body p-0">
-        <div class="row no-gutters">
+        <div class="row g-0">
           <div class="col-12 col-md-3 col-lg-2 d-flex flex-nowrap align-items-center">
-            <div class="mr-auto strong my-1 px-2">
+            <div class="me-auto strong my-1 px-2">
               {{ grouper }}
             </div>
             <button
               v-if="forAdmin && statusForGroup(entities) === false"
-              class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              class="btn btn-info my-1 me-1 px-2 align-self-stretch btn-sm hoverable p-1"
               @click="checkInOrOutGroup(entities, true)"
             >
               {{ gettext('✓ All') }}
             </button>
             <button
               v-if="forAdmin && statusForGroup(entities) === true"
-              class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              class="btn btn-secondary my-1 me-1 px-2 align-self-stretch btn-sm hoverable p-1"
               @click="checkInOrOutGroup(entities, false)"
             >
               {{ gettext('☓ All') }}
             </button>
           </div>
 
-          <div class="col-12 col-md-9 col-lg-10 pt-md-1 pl-md-0 pl-1">
-            <div class="row no-gutters">
+          <div class="col-12 col-md-9 col-lg-10 pt-md-1 ps-md-0 ps-1">
+            <div class="row g-0">
               <div
                 v-for="entity in entities"
                 :key="entity.id"
                 class="col-lg-3 col-md-4 col-6 check-in-person"
               >
-                <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
+                <div class="row g-0 h6 mb-0 pb-1 pe-1 p-0 text-white">
                   <div
                     :class="['col p-2 text-truncate ', getEntityStatusClass(entity)]"
-                    data-toggle="tooltip"
+                    data-bs-toggle="tooltip"
                     :title="getToolTipForEntity(entity)"
                   >
                     {{ entity.name }}
@@ -657,7 +657,7 @@ const forAdmin = toRef(props, 'forAdmin')
                     <div
                       v-if="!entity.identifier[0]"
                       class="col-auto p-2 btn-secondary text-white text-center"
-                      data-toggle="tooltip"
+                      data-bs-toggle="tooltip"
                       :title="gettext('This person does not have a check-in identifier so they can\'t be checked in')"
                     >
                       ?
