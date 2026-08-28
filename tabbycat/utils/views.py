@@ -11,6 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, View
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 
+from .tables import BaseTableBuilder
+
 logger = logging.getLogger(__name__)
 
 
@@ -62,10 +64,9 @@ class VueTableTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         tables = self.get_tables()
 
-        tables_dicts = [tb.jsondict() for tb in tables if tb is not None]
+        tables_dicts = [tb.jsondict() if isinstance(tb, BaseTableBuilder) else tb for tb in tables if tb is not None]
         kwargs["tables_data"] = json.dumps(tables_dicts)
 
-        kwargs["tables_count"] = list(range(len(tables)))
         kwargs["tables_orientation"] = self.tables_orientation
         return super().get_context_data(**kwargs)
 

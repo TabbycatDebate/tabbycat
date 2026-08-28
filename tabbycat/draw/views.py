@@ -1,3 +1,4 @@
+import copy
 import datetime
 import json
 import logging
@@ -5,12 +6,14 @@ import unicodedata
 from itertools import combinations, product
 from zoneinfo import ZoneInfo
 
-from django.conf import settings
 from django.contrib import messages
+from django.core.cache import cache
 from django.db import DatabaseError, transaction
 from django.db.models import OuterRef, Subquery
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.cache import get_cache_key
 from django.utils.functional import cached_property
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
@@ -64,6 +67,16 @@ from .types import DebateSide
 logger = logging.getLogger(__name__)
 
 
+def invalidate_draw_release_caches(tournament, request):
+    """Invalidate page cache for PublicDrawForCurrentRoundsView and TournamentPublicHomeView
+    when the draw is released or unreleased, so the public sees updated content."""
+    fake_request = copy.deepcopy(request)
+    fake_request.method = 'GET'
+    for view_name in ('tournament-public-index', 'draw-public-current-rounds'):
+        fake_request.path = reverse(view_name, kwargs={'tournament_slug': tournament.slug})
+        cache.delete(get_cache_key(fake_request))
+
+
 class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
     """Base class for views showing a draw table to the public in some way.
     Subclasses are *not* necessarily public views; they may be admin/assistant
@@ -111,7 +124,6 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         return round.debate_set_with_prefetches()
 
     def get_tables(self):
-
         # If the view has debates specified specifically, use those in a single table
         if hasattr(self, 'get_debates'):
             table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
@@ -230,6 +242,17 @@ class PublicDrawForCurrentRoundsView(PublicDrawMixin, BaseDisplayDrawForCurrentR
 
     def is_page_enabled(self, tournament):
         return tournament.pref('public_draw') == 'current'
+
+    def get_tables(self):
+        cached_tables = []
+        for round in self.rounds:  # Only return cached tables if all rounds are cached
+            if cached_table := cache.get('public_draw_table.%s.%s' % (round.id, self.request.LANGUAGE_CODE)):
+                cached_tables.append(cached_table)
+            else:
+                break
+        else:
+            return json.dumps(cached_tables)
+        return super().get_tables()
 
 
 # ==============================================================================
@@ -812,10 +835,12 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.draw_status = Round.Status.RELEASED
         self.round.save()
         self.log_action()
-
-        if settings.ENABLE_PUSH_NOTIFICATIONS:
-            self.send_push_notifications()
-
+        cache.set(
+            'public_draw_table.%s.%s' % (self.round.id, request.LANGUAGE_CODE),
+            json.dumps([t.jsondict() for t in PublicDrawForCurrentRoundsView(tournament=self.tournament, request=request).get_tables()]),
+            30, # 30 seconds
+        )
+        invalidate_draw_release_caches(self.tournament, request)
         messages.success(request, _("Released the draw."))
         return super().post(request, *args, **kwargs)
 
@@ -879,6 +904,12 @@ class DrawTeamsReleaseView(DrawStatusEdit):
         self.round.draw_status = Round.Status.TEAMS_RELEASED
         self.round.save()
         self.log_action()
+        cache.set(
+            'public_draw_table.%s.%s' % (self.round.id, request.LANGUAGE_CODE),
+            json.dumps([t.jsondict() for t in PublicDrawForCurrentRoundsView(tournament=self.tournament, request=request).get_tables()]),
+            30, # 30 seconds
+        )
+        invalidate_draw_release_caches(self.tournament, request)
 
         messages.success(request, _("Released the draw (teams only)."))
         return super().post(request, *args, **kwargs)
@@ -897,6 +928,7 @@ class DrawUnreleaseView(DrawStatusEdit):
         self.round.draw_status = Round.Status.CONFIRMED
         self.round.save()
         self.log_action()
+        invalidate_draw_release_caches(self.tournament, request)
         messages.success(request, _("Unreleased the draw."))
         return super().post(request, *args, **kwargs)
 
