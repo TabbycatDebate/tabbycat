@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:49\n"
+"PO-Revision-Date: 2025-08-23 16:31\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -458,7 +458,7 @@ msgstr "Institución:"
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
 msgid "Unaffiliated"
-msgstr ""
+msgstr "Independiente"
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html

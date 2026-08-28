@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2021-01-17 20:56\n"
+"PO-Revision-Date: 2025-12-01 16:31\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: ../../install/wsl.rst:7
 msgid "Is this the best installation method for you?"
-msgstr ""
+msgstr "Je to pro vás nejlepší způsob instalace?"
 
 #: ../../install/wsl.rst:10
 msgid "In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`"

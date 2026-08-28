@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"PO-Revision-Date: 2025-08-23 16:31\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -20,59 +20,59 @@ msgstr ""
 
 #: printing/templates/feedback_list.html
 msgid "Feedback Forms"
-msgstr "Formularios de Feedback"
+msgstr "Formularios de comentarios"
 
 #: printing/templates/feedback_list.html
 #, python-format
 msgid "Printable Feedback Forms for %(round)s"
-msgstr "Formularios de Feedback imprimibles para %(round)s"
+msgstr "Formularios de comentarios imprimibles para %(round)s"
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for either teams or adjudicators to answer."
-msgstr "Ninguna pregunta de feedback ha sido añadidas para que jueces o equipos respondan."
+msgstr "Ninguna pregunta de comentarios ha sido añadida para que las personas juezas o los equipos respondan."
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for teams to answer."
-msgstr "Ninguna pregunta de feedback ha sido añadida para que equipos respondan."
+msgstr "Ninguna pregunta de comentarios ha sido añadida para que los equipos respondan."
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for adjudicators to answer."
-msgstr "Ninguna pregunta de feedback ha sido añadida para que jueces respondan."
+msgstr "Ninguna pregunta de comentarios ha sido añadida para que las personas juezas respondan."
 
 #: printing/templates/feedback_list.html
 #, python-format
 msgid "%(first_sentence)s Check the <a href=\"https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
-msgstr ""
+msgstr "%(first_sentence)s Revisa la <a href=\"https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentación</a> para obtener información sobre cómo añadirlas (si no, estos formularios van a estar bastante vacíos)."
 
 #: printing/templates/feedback_list.html
 msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
-msgstr ""
+msgstr "No hay formatos de comentarios disponibles - ¿quizás las personas juezas no han sido asignadas?"
 
 #: printing/templates/printables_list.html
 msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
-msgstr ""
+msgstr "Usa Ctrl+P para imprimir o guardar en PDF. Asegúrate de establecer la <strong>orientación de página</strong> adecuada, deshabilitar <strong>encabezados/piés de página</strong> y habilitar <strong>fondos de página</strong>. Esto funciona mejor en Chrome."
 
 #: printing/templates/randomised_url_sheets.html
 #, python-format
 msgid "Printable %(sheet)s URLs"
-msgstr ""
+msgstr "URLs %(sheet)s imprimibles"
 
 #: printing/templates/randomised_url_sheets.html
 msgid "This page is designed to be printed as double-sided A4 sheets, with the outside facing side showing the participant name and the inside facing side showing the URL. Use CTRL-P to print; for best results use Chrome."
-msgstr ""
+msgstr "Esta página está diseñada para ser impresa en hojas A4 por lado y lado, con la cara externa mostrando el nombre de la participante, y la cara interna mostrando la URL. Usa Ctrl+P para imprimir; usa Chrome para mejores resultados."
 
 #: printing/templates/randomised_url_sheets.html
 #, python-format
 msgid "Private URL for %(name)s (%(group)s)"
-msgstr ""
+msgstr "URL privada para %(name)s (%(group)s)"
 
 #: printing/templates/randomised_url_sheets.html
 msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
-msgstr ""
+msgstr "Por favor pon un marcador en la siguiente URL, la usarás para enviar formularios durante del torneo:"
 
 #: printing/templates/scoresheet_list.html
 msgid "Printable Scoresheets"
-msgstr ""
+msgstr "Hojas de puntuación imprimibles"
 
 #: printing/templates/scoresheet_list.html
 #, python-format
@@ -81,15 +81,15 @@ msgstr "para %(round)s"
 
 #: printing/templates/scoresheet_list.html
 msgid "Edit Motion(s)"
-msgstr ""
+msgstr "Editar Moción(es)"
 
 #: printing/templates/scoresheet_list.html
 msgid "There are no scoresheets available — perhaps the round has not been drawn?"
-msgstr ""
+msgstr "No hay hojas de puntuación disponibles - ¿quizás la ronda no ha sido generada?"
 
 #: printing/templates/scoresheet_list.html
 msgid "Edit Ballot Motions"
-msgstr ""
+msgstr "Editar Mociones de Balota"
 
 #: printing/templates/scoresheet_list.html
 msgid "&times;"
@@ -97,19 +97,19 @@ msgstr ""
 
 #: printing/templates/scoresheet_list.html
 msgid "Editing motions here will not save them permanently — it will only update the text used in the printed ballots below. This can be useful if using placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print ballots with correct motions."
-msgstr ""
+msgstr "Editar mociones acá no las guardará permanentemente - solo actualizará el texto usado en las balotas imprimidas abajo. Esto puede ser útil para usar mociones que solo marquen la posición (para asegurar confidencialidad) en Tabbycat, pero seguirás queriendo imprimir balotas con mociones correctas."
 
 #: printing/templates/scoresheet_list.html
 msgid "Motion"
-msgstr ""
+msgstr "Moción"
 
 #: printing/templates/scoresheet_list.html
 msgid "Changes to motions will update in the displayed ballots automatically"
-msgstr ""
+msgstr "Cambios en las mociones se actualizarán automáticamente en las balotas visualizadas"
 
 #: printing/templates/scoresheet_list.html
 msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
-msgstr ""
+msgstr "Los discursos duran x minutos, el rango de puntaje de persona oradora va de x a x. Tienes x minutos para adjudicar el debate."
 
 #: printing/views.py
 msgid "Overall Score"
@@ -117,7 +117,7 @@ msgstr "Puntaje general"
 
 #: printing/views.py
 msgid "Unaffiliated"
-msgstr ""
+msgstr "Independiente"
 
 #: printing/views.py
 msgid "Team"

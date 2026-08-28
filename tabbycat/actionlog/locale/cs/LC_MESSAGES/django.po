@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"PO-Revision-Date: 2026-01-31 22:42\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -147,19 +147,19 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Created debate"
-msgstr ""
+msgstr "Debata vytvořena"
 
 #: actionlog/models.py
 msgid "Edited debate"
-msgstr ""
+msgstr "Debata upravena"
 
 #: actionlog/models.py
 msgid "Auto-prioritized debate importance"
-msgstr ""
+msgstr "Důležitost debat přiřazena automaticky"
 
 #: actionlog/models.py
 msgid "Edited debate importance"
-msgstr ""
+msgstr "Důležitost debaty upravena"
 
 #: actionlog/models.py
 msgid "Saved divisions"
@@ -167,63 +167,63 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Confirmed draw"
-msgstr ""
+msgstr "Los potvrzen"
 
 #: actionlog/models.py
 msgid "Created draw"
-msgstr ""
+msgstr "Los vytvořen"
 
 #: actionlog/models.py
 msgid "Regenerated draw"
-msgstr ""
+msgstr "Los znovu vygenerován"
 
 #: actionlog/models.py
 msgid "Released draw"
-msgstr ""
+msgstr "Los zveřejněn"
 
 #: actionlog/models.py
 msgid "Unreleased draw"
-msgstr ""
+msgstr "Los zneveřejněn"
 
 #: actionlog/models.py
 msgid "Created feedback question"
-msgstr ""
+msgstr "Otázka ke zpětné vazbě vytvořena"
 
 #: actionlog/models.py
 msgid "Edited feedback question"
-msgstr ""
+msgstr "Otázka ke zpětné vazbě upravena"
 
 #: actionlog/models.py
 msgid "Saved feedback"
-msgstr ""
+msgstr "Zpětná vazba uložena"
 
 #: actionlog/models.py
 msgid "Submitted feedback from the public form"
-msgstr ""
+msgstr "Zpětná vazba odevzdaná z veřejného formuláře"
 
 #: actionlog/models.py
 msgid "Created institution"
-msgstr ""
+msgstr "Instituce vytvořena"
 
 #: actionlog/models.py
 msgid "Edited institution"
-msgstr ""
+msgstr "Instituce upravena"
 
 #: actionlog/models.py
 msgid "Saved a matchup manual edit"
-msgstr ""
+msgstr "Manuální úprava debaty uložena"
 
 #: actionlog/models.py
 msgid "Added/edited motion"
-msgstr ""
+msgstr "Teze přidána/upravena"
 
 #: actionlog/models.py
 msgid "Released motions"
-msgstr ""
+msgstr "Teze zveřejněny"
 
 #: actionlog/models.py
 msgid "Unreleased motions"
-msgstr ""
+msgstr "Teze zneveřejněny"
 
 #: actionlog/models.py
 msgid "Edited tournament options"
@@ -411,7 +411,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "user"
-msgstr ""
+msgstr "uživatel"
 
 #: actionlog/models.py
 msgid "IP address"

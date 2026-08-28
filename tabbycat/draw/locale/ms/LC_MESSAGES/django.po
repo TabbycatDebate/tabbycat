@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:52\n"
+"PO-Revision-Date: 2026-02-27 16:10\n"
 "Last-Translator: \n"
 "Language-Team: Malay\n"
 "Language: ms_MY\n"
@@ -136,7 +136,7 @@ msgstr ""
 #: draw/generator/elimination.py
 #, python-format
 msgid "There are only %d teams breaking in this category; there need to be at least two to generate an elimination round draw."
-msgstr ""
+msgstr "Ada hanya %d pasukan yang akan mara dalam kategori ini; perlu ada sekurang-kurangnya dua untuk menghasilkan undian pusingan kalah-mati."
 
 #: draw/generator/elimination.py
 #, python-format

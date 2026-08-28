@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"PO-Revision-Date: 2026-07-06 07:34\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -176,8 +176,8 @@ msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s ilerledi. (%(percent
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
-msgstr[0] "%(side)sdan %(ndebates)s takımdan %(eliminated)s elendi. (%(percentage)s%%)"
-msgstr[1] "%(side)sdan %(ndebates)s takımdan %(eliminated)s elendi. (%(percentage)s%%)"
+msgstr[0] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
+msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
