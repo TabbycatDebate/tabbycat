@@ -3,10 +3,11 @@ import logging
 from contextlib import contextmanager
 from unittest import expectedFailure
 
+from django.conf import settings
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.cache import cache
-from django.test import tag, TestCase
+from django.test import override_settings, tag, TestCase
 from django.urls import reverse
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -271,6 +272,13 @@ class BaseMinimalTournamentTestCase(TestCase):
 
 
 @tag('selenium') # Tagged so we can exclude from CI
+@override_settings( # StaticLiveServerTestCase uses debug static file paths
+    STORAGES=settings.STORAGES | {
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    },
+)
 class SeleniumTestCase(StaticLiveServerTestCase):
     """Used to verify rendered html and javascript functionality on the site as
     rendered. Opens a Chrome window and checks for JS/DOM state on the fixture
