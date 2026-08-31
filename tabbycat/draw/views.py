@@ -948,7 +948,10 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
         table = TabbycatTableBuilder(view=self)
         table.add_team_columns(teams)
-        headers = [escape(round.abbreviation) for round in rounds]
+        headers = [
+            {'key': f'round_{round.id}', 'title': escape(round.abbreviation)}
+            for round in rounds
+        ]
 
         if not getattr(self, 'for_admin', False):
             # Public page: unchanged read-only pre-allocation display.
