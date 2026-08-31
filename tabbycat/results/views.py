@@ -1010,7 +1010,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
 
     def get_median_overview(self):
         """View-only preview of the merged, median-aggregated result, shown
-        only when the KPDP median scoring preference is on and there's an
+        only when the Karl Popper median scoring preference is on and there's an
         actual panel (2+ voting adjudicators) to aggregate across."""
         result = self.result
         if self.tournament.pref('score_aggregation_function') != 'median':

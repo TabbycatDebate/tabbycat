@@ -97,7 +97,7 @@ class MarginIncludesDissent(BooleanPreference):
 @tournament_preferences_registry.register
 class ScoreAggregationFunction(ChoicePreference):
     help_text = _("How is the speaker's score from a debate judged by multiple judges "
-        "calculated: Mean (default), or Median (required by KPDP rules).")
+        "calculated: Mean (default), or Median (required by Karl Popper rules).")
     verbose_name = _("Panel score aggregation function")
     section = scoring
     name = 'score_aggregation_function'
@@ -1098,7 +1098,7 @@ class SplitVotingBallots(BooleanPreference):
 @tournament_preferences_registry.register
 class AllowSelfSplitBallots(BooleanPreference):
     help_text = _("Allow a solo adjudicator (no panel) to declare their own decision as a "
-        "2:1 split rather than unanimous, per KPDP rules.")
+        "2:1 split rather than unanimous, per Karl Popper rules.")
     verbose_name = _("Allow self-split ballots for solo adjudicators")
     section = data_entry
     name = 'allow_self_split_ballots'

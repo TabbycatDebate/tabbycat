@@ -23,7 +23,7 @@ class PublicResultsForRoundViewTestCase(ConditionalTableViewTestsMixin, TestCase
 
 class MergeLatestBallotsMedianOverviewTest(TestCase):
     """Tests the view-only median-aggregation preview shown on the "Merge
-    Ballots" pages, a KPDP compliance quality-of-life feature. It should only
+    Ballots" pages, a Karl Popper compliance quality-of-life feature. It should only
     appear when median scoring is on and there's an actual panel (2+ voting
     adjudicators) to aggregate across, and should never affect saved data."""
 

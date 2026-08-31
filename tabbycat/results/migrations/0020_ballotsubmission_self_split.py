@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('results', '0018_ballotsubmission_forfeit'),
+        ('results', '0019_scorecriterion_speech_type'),
     ]
 
     operations = [
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='self_split',
             field=models.BooleanField(
                 default=False,
-                help_text='For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per KPDP rules.',
+                help_text='For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per Karl Popper rules.',
                 verbose_name='self-declared split',
             ),
         ),

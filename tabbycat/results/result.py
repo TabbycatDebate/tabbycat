@@ -612,7 +612,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
     def _is_self_split(self):
         """True if this is a solo-adjudicated debate where the adjudicator has
-        declared their decision as a 2:1 split rather than unanimous (KPDP rules)."""
+        declared their decision as a 2:1 split rather than unanimous (Karl Popper rules)."""
         return len(self.scoresheets) == 1 and getattr(self.ballotsub, 'self_split', False)
 
     @_requires_decision(None)

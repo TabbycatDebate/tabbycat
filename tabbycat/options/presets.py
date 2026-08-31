@@ -621,12 +621,11 @@ class PublicSpeaking(PreferencesPreset):
     standings__team_standings_precedence       = ['speaks_avg']
 
 
-class KPDPPreferences(PreferencesPreset):
-    name         = _("KPDP Rules")
+class KarlPopperPreferences(PreferencesPreset):
+    name         = _("Karl Popper")
     show_in_list = True
     description  = _("3 vs 3 with no reply speeches, median scoring, self-split "
-        "ballots, and a penalty-weighted draw. Used by debatovani.cz for KPDP-format "
-        "tournaments.")
+        "ballots, and a penalty-weighted draw.")
 
     # Scoring
     scoring__score_min                         = Decimal('50')
