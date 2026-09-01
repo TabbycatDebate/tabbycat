@@ -19,6 +19,13 @@ class TestRandomDrawGenerator(unittest.TestCase):
     teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
+    def test_pullup_penalty_option(self):
+        default = DrawGenerator(2, "random", DUMMY_TEAMS, None)
+        overridden = DrawGenerator(2, "random", DUMMY_TEAMS, None, pullup_penalty=10)
+
+        self.assertEqual(default.options["pullup_penalty"], 0)
+        self.assertEqual(overridden.options["pullup_penalty"], 10)
+
     def test_invalid_option(self):
         teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
 
