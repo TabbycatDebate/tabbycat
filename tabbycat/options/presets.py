@@ -459,7 +459,7 @@ class WSDCPreferences(AustralsPreferences):
         ),
     )
 
-    # Rules source = https://www.wsdcdebating.org/_files/ugd/669183_399cb065fe31455b9371bd8dfdf7e0d1.pdf
+    # Rules source: https://www.wsdcdebating.org/_files/ugd/669183_713c6d981c374df989d1d1d7854d2cd3.pdf
     # Score (strictly specified in the rules)
     scoring__score_min                         = Decimal('60')
     scoring__score_max                         = Decimal('80')
@@ -473,10 +473,10 @@ class WSDCPreferences(AustralsPreferences):
     motions__enable_motions                    = False
     debate_rules__side_names                   = 'prop-opp'
     # Draws (exact mechanism is up to the host)
-    # Draw source = https://www.wsdcdebating.org/_files/ugd/669183_acd9f3bd3ab3482ebead22ae0da74fa7.pdf
+    # Draw source: https://www.wsdcdebating.org/_files/ugd/669183_31ca1b6263694aa7b36a7008d0e54b95.pdf
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True # Rule 3.9
-    draw_rules__draw_pairing_method            = 'fold' # Rule 3.8
+    draw_rules__draw_pairing_method            = 'random' # Rule 3.8
     draw_rules__draw_odd_bracket               = 'pullup_top' # Rule 3.7
     draw_rules__max_times_per_side             = 5
     # Tabbycat currently does not support WSDC-style pull up and so not fully support WSDC-style draw creation.
