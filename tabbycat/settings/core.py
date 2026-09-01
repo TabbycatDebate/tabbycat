@@ -199,6 +199,9 @@ TEMPLATES = [
                     'django.template.loaders.app_directories.Loader',
                 ]),
             ],
+            'builtins': [
+                'notifications.templatetags.email_math',  # arithmetic helpers for email templates
+            ],
         }
     },
 ]

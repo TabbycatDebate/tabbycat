@@ -4,7 +4,8 @@ from unittest.mock import patch
 from django.test import TestCase
 
 from options.fields import EMPTY_CHOICE
-from options.presets import APDAPreferences, get_preset_from_slug, PreferencesPreset
+from options.presets import APDAPreferences, get_preset_from_slug, PreferencesPreset, WSDCPreferences
+from results.models import ScoreCriterion
 from tournaments.models import Round, Tournament
 
 
@@ -190,4 +191,38 @@ class TestPresets(TestCase):
         APDAPreferences.save(tournament)
         first = tournament.round_set.get(seq=1)
         self.assertEqual(first.draw_type, Round.DrawType.SEEDED)
+        tournament.delete()
+
+    def test_wsdc_save_creates_score_criteria(self):
+        tournament = self.set_up_tournament()
+
+        WSDCPreferences.save(tournament)
+
+        criteria = list(tournament.scorecriterion_set.order_by('seq'))
+        self.assertEqual(
+            [(c.name, c.speech_type, c.min_score, c.max_score, c.step, c.required) for c in criteria],
+            [
+                ('Style', ScoreCriterion.SpeechType.SUBSTANTIVE, 24, 32, 0.5, True),
+                ('Content', ScoreCriterion.SpeechType.SUBSTANTIVE, 24, 32, 0.5, True),
+                ('Strategy', ScoreCriterion.SpeechType.SUBSTANTIVE, 12, 16, 0.5, True),
+                ('POIs', ScoreCriterion.SpeechType.SUBSTANTIVE, -2, 2, 0.5, False),
+                ('Style', ScoreCriterion.SpeechType.REPLY, 12, 16, 0.5, True),
+                ('Content', ScoreCriterion.SpeechType.REPLY, 12, 16, 0.5, True),
+                ('Strategy', ScoreCriterion.SpeechType.REPLY, 6, 8, 0.5, True),
+            ],
+        )
+        tournament.delete()
+
+    def test_wsdc_score_criteria_action_is_idempotent(self):
+        tournament = self.set_up_tournament()
+        WSDCPreferences.save(tournament)
+        criterion_ids = list(tournament.scorecriterion_set.order_by('seq').values_list('id', flat=True))
+
+        WSDCPreferences.save(tournament)
+
+        self.assertEqual(
+            list(tournament.scorecriterion_set.order_by('seq').values_list('id', flat=True)),
+            criterion_ids,
+        )
+        self.assertFalse(WSDCPreferences._wsdc_score_criteria_would_change(tournament))
         tournament.delete()

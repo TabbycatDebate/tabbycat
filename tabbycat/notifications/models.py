@@ -57,6 +57,8 @@ class BulkNotification(models.Model):
         TEAM_DRAW = 'r', _("team draw released")
         INSTITUTION_REG = 'i', _("institution registration")
         SLOTS_ALLOCATED = 's', _("participant slots allocated")
+        USER_INVITE = 'v', _("user invitation")
+        INSTITUTION_CUSTOM = 'ic', _("custom institution message")
         CUSTOM = '', _("custom message")
 
     event = models.CharField(max_length=20, choices=EventType.choices,

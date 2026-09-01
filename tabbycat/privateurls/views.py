@@ -93,9 +93,13 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         return table
 
     def get_speakers_table(self) -> TabbycatTableBuilder:
-        speakers = Speaker.objects.filter(team__tournament=self.tournament)
+        speakers = Speaker.objects.select_related('team').prefetch_related('team__speaker_set').filter(team__tournament=self.tournament)
         table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="name")
         table.add_speaker_columns(speakers, categories=False)
+        table.add_column(
+            {'key': 'team', 'tooltip': _("Team"), 'icon': 'users'},
+            [table._team_cell(speaker.team, show_emoji=True) for speaker in speakers],
+        )
         self.add_url_columns(table, speakers, self.request)
 
         return table
