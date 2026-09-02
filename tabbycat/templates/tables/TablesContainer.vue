@@ -1,6 +1,7 @@
 <script setup>
 import SmartTable from './SmartTable.vue'
 import { computed, ref } from 'vue'
+import AutoSaveCounter from '../allocations/AutoSaveCounter.vue'
 import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 
 const props = defineProps({
@@ -12,8 +13,13 @@ const emit = defineEmits(['toggle-checked'])
 
 const { gettext } = useDjangoI18n()
 const filterKey = ref('')
+const lastSaved = ref(null)
 
 const tableRefs = ref({})
+
+const hasAjaxSelectCells = computed(() => props.tablesData.some(table =>
+  table.data.some(row => row.some(cell => cell.component === 'ajax-select-cell')),
+))
 
 const setTableRef = (i) => (el) => {
   if (el) {
@@ -71,6 +77,11 @@ const copyTableTrigger = (i) => {
             <i data-feather="clipboard" />
           </button>
         </div>
+        <auto-save-counter
+          v-if="hasAjaxSelectCells"
+          class="ml-2"
+          :last-saved="lastSaved"
+        />
       </div>
     </div>
 
@@ -107,6 +118,7 @@ const copyTableTrigger = (i) => {
             :empty-title="table.empty_title"
             :highlight-column="table.highlight_column"
             :external-filter-key="filterKey"
+            @saved="lastSaved = $event"
             @toggle-checked="emit('toggle-checked', $event)"
           />
         </div>

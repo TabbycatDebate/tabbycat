@@ -234,14 +234,14 @@ class SideAllocationsEditingTest(CompletedTournamentTestMixin, TestCase):
         table = tables[0]
 
         headers = [h['key'] for h in table['head']]
-        target_index = headers.index(self.target_round.abbreviation)
-        source_index = headers.index(self.source_round.abbreviation)
+        target_index = headers.index(f'round_{self.target_round.id}')
+        source_index = headers.index(f'round_{self.source_round.id}')
 
         target_cell = table['data'][0][target_index]
         source_cell = table['data'][0][source_index]
 
-        self.assertEqual(target_cell.get('component'), 'side-cell')
-        self.assertNotEqual(source_cell.get('component'), 'side-cell')
+        self.assertEqual(target_cell.get('component'), 'ajax-select-cell')
+        self.assertNotEqual(source_cell.get('component'), 'ajax-select-cell')
 
     def test_update_single_preallocation_set_and_clear(self):
         team = self.tournament.team_set.first()
@@ -277,36 +277,26 @@ class SideAllocationsEditingTest(CompletedTournamentTestMixin, TestCase):
         return dict(DebateTeam.objects.filter(
             debate__round=self.source_round).values_list('team_id', 'side'))
 
-    def test_bulk_apply_same_side(self):
+    def test_bulk_apply_side(self):
         source_sides = self._source_sides()
         self.assertTrue(source_sides)  # sanity check the fixture actually has data here
-
-        response = self.client.post(self.reverse_url('draw-side-allocations-bulk'), data={
-            'target_round_id': self.target_round.id,
-            'source_round_id': self.source_round.id,
-            'direction': 'same',
-        })
-        self.assertEqual(response.status_code, 302)
-
-        for team_id, side in source_sides.items():
-            self.assertEqual(
-                TeamSideAllocation.objects.get(round=self.target_round, team_id=team_id).side, side)
-
-    def test_bulk_apply_opposite_side(self):
-        source_sides = self._source_sides()
         teams_in_debate = self.tournament.pref('teams_in_debate')
 
-        response = self.client.post(self.reverse_url('draw-side-allocations-bulk'), data={
-            'target_round_id': self.target_round.id,
-            'source_round_id': self.source_round.id,
-            'direction': 'opposite',
-        })
-        self.assertEqual(response.status_code, 302)
+        for direction in ('same', 'opposite'):
+            with self.subTest(direction=direction):
+                response = self.client.post(self.reverse_url('draw-side-allocations-bulk'), data={
+                    'target_round_id': self.target_round.id,
+                    'source_round_id': self.source_round.id,
+                    'direction': direction,
+                })
+                self.assertEqual(response.status_code, 302)
 
-        for team_id, side in source_sides.items():
-            expected = opposite_side(side, teams_in_debate)
-            self.assertEqual(
-                TeamSideAllocation.objects.get(round=self.target_round, team_id=team_id).side, expected)
+                for team_id, side in source_sides.items():
+                    expected = opposite_side(side, teams_in_debate) if direction == 'opposite' else side
+                    self.assertEqual(
+                        TeamSideAllocation.objects.get(round=self.target_round, team_id=team_id).side,
+                        expected,
+                    )
 
     def test_bulk_apply_skips_team_with_no_result_in_source_round(self):
         bye_team = self.tournament.team_set.first()
@@ -351,18 +341,15 @@ class SideAllocationsEditingTest(CompletedTournamentTestMixin, TestCase):
             stage=Round.Stage.PRELIMINARY, draw_type=Round.DrawType.POWERPAIRED,
         )
 
-    def test_context_offers_all_undrawn_rounds_as_targets(self):
+    def test_bulk_apply_can_target_a_further_undrawn_round(self):
         round5 = self._add_further_undrawn_round()
+        source_sides = self._source_sides()
 
         response = self.client.get(self.reverse_url('draw-side-allocations'))
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(
             [r.id for r in response.context['target_round_choices']],
             [self.target_round.id, round5.id])
-
-    def test_bulk_apply_can_target_a_further_undrawn_round(self):
-        round5 = self._add_further_undrawn_round()
-        source_sides = self._source_sides()
 
         response = self.client.post(self.reverse_url('draw-side-allocations-bulk'), data={
             'target_round_id': round5.id,

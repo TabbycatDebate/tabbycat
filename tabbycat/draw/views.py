@@ -932,6 +932,7 @@ class SetRoundStartTimeView(DrawStatusEdit):
 class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
     page_title = gettext_lazy("Side Pre-Allocations")
+    page_emoji = '🔄'
 
     def get_table(self):
         teams = self.tournament.team_set.all()
@@ -948,22 +949,19 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
         table = TabbycatTableBuilder(view=self)
         table.add_team_columns(teams)
-        headers = [
-            {'key': f'round_{round.id}', 'title': escape(round.abbreviation)}
-            for round in rounds
-        ]
 
         if not getattr(self, 'for_admin', False):
             # Public page: unchanged read-only pre-allocation display.
-            data = [[tsas.get((team.id, round.seq), "—") for round in rounds] for team in teams]
-            table.add_columns(headers, data)
+            for round_ in rounds:
+                header = {'key': f'round_{round_.id}', 'title': escape(round_.abbreviation)}
+                data = [tsas.get((team.id, round_.seq), "—") for team in teams]
+                table.add_column(header, data)
             return table
 
         # Admin page: rounds with a generated draw show the team's actual
         # side (read-only, since editing the pre-allocation at that point is
         # a no-op); the first round without a draw yet is editable; any
-        # further undrawn rounds fall back to the plain "—" placeholder
-        # (editing those is a documented stretch goal, not v1).
+        # further undrawn rounds show their pre-allocation read-only.
         editable_round = next((r for r in rounds if r.draw_status == Round.Status.NONE), None)
         drawn_round_ids = [r.id for r in rounds if r.draw_status != Round.Status.NONE]
 
@@ -974,38 +972,39 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
                 actual_sides[(dt.team_id, dt.debate.round_id)] = dt.side
 
         side_options = [
-            {'value': side, 'label': get_side_name(self.tournament, side, 'full').capitalize()}
+            {'value': side, 'label': get_side_name(self.tournament, side, 'abbr')}
             for side in self.tournament.sides
         ]
         update_url = reverse_tournament('draw-side-allocations-update', self.tournament)
 
-        data = []
-        for team in teams:
-            row = []
-            for round_ in rounds:
-                if editable_round is not None and round_.id == editable_round.id:
-                    row.append({
-                        'component': 'side-cell',
+        for round_ in rounds:
+            header = {'key': f'round_{round_.id}', 'title': escape(round_.abbreviation)}
+            if round_.draw_status == Round.Status.NONE:
+                if round_ == editable_round:
+                    data = [{
+                        'component': 'ajax-select-cell',
                         'value': tsa_values.get((team.id, round_.id)),
                         'options': side_options,
-                        'unallocatedLabel': _("Unallocated"),
-                        'teamId': team.id,
-                        'roundId': round_.id,
+                        'blankLabel': _("Unallocated"),
                         'saveURL': update_url,
-                    })
-                elif round_.draw_status != Round.Status.NONE:
-                    side = actual_sides.get((team.id, round_.id))
-                    text = get_side_name(self.tournament, side, 'abbr') if side is not None else "—"
-                    row.append({'text': text})
+                        'saveMessage': _("Set side pre-allocation"),
+                        'payload': {'team_id': team.id, 'round_id': round_.id},
+                        'payloadKey': 'side',
+                    } for team in teams]
                 else:
                     # A further undrawn round (not the immediately-next one):
                     # not editable inline, but may already carry a
                     # pre-allocation set via the bulk-apply tool, so show it
                     # read-only rather than always "—".
-                    row.append({'text': tsas.get((team.id, round_.seq), "—")})
-            data.append(row)
+                    data = [tsas.get((team.id, round_.seq), "—") for team in teams]
+            else:
+                data = []
+                for team in teams:
+                    side = actual_sides.get((team.id, round_.id))
+                    text = get_side_name(self.tournament, side, 'abbr') if side is not None else "—"
+                    data.append({'text': text})
 
-        table.add_columns(headers, data)
+            table.add_column(header, data)
         return table
 
 
