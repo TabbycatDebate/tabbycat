@@ -2,6 +2,7 @@ import logging
 
 from django.test import TestCase
 
+from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -657,6 +658,26 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
         self.assertEqual(adj, self.adjs[0])  # The solo chair adjudicator
         self.assertTrue(split)
 
+    def test_self_split_does_not_mark_trainees_as_split(self):
+        testdata = self.testdata['solo']
+
+        def set_self_split_and_add_trainee(result):
+            result.ballotsub.self_split = True
+            result.ballotsub.save()
+            DebateAdjudicator.objects.create(
+                debate=self.debate,
+                adjudicator=self.adjs[1],
+                type=DebateAdjudicator.TYPE_TRAINEE,
+            )
+
+        self.save_complete_result(testdata, post_create=set_self_split_and_add_trainee)
+
+        splits_by_adj = {
+            adj: split for adj, adjtype, split in self.get_result().adjudicators_with_splits()
+        }
+        self.assertTrue(splits_by_adj[self.adjs[0]])
+        self.assertFalse(splits_by_adj[self.adjs[1]])
+
     def test_solo_default_behavior_unchanged(self):
         """Regression test: solo adjudicator without self_split unchanged.
 
@@ -729,6 +750,9 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
                                        msg=f"AFF position {pos} score mismatch")
                 self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
                                        msg=f"NEG position {pos} score mismatch")
+
+        self.assertAlmostEqual(sum(expected_aff_scores), self._get_teamscore_in_db(DebateSide.AFF).score)
+        self.assertAlmostEqual(sum(expected_neg_scores), self._get_teamscore_in_db(DebateSide.NEG).score)
 
     @with_preference('scoring', 'score_aggregation_function', 'median')
     @with_preference('scoring', 'margin_includes_dissenters', True)

@@ -65,6 +65,19 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def median_or_rounded_up_mean(values):
+    values = list(values)
+    if len(values) % 2 == 1:
+        return median(values)
+    return math.ceil(mean(values))
+
+
+SCORE_AGGREGATORS = {
+    'mean': mean,
+    'median': median_or_rounded_up_mean,
+}
+
+
 class ResultError(RuntimeError):
     pass
 
@@ -654,7 +667,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         majority = self.majority_adjudicators()
         self_split = self._is_self_split()
         for adj, adjtype in self.debate.adjudicators.with_positions():
-            split = (adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE) or self_split
+            split = adjtype != AdjudicatorAllocation.POSITION_TRAINEE and (adj not in majority or self_split)
             yield adj, adjtype, split
 
     def as_dicts(self):
@@ -1178,15 +1191,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     # --------------------------------------------------------------------------
 
     def _score_aggregator(self):
-        def median_or_rounded_up_mean(values):
-            values = list(values)
-            if len(values) % 2 == 1:
-                return median(values)
-            return math.ceil(mean(values))
-
-        if self.tournament.pref('score_aggregation_function') == 'median':
-            return median_or_rounded_up_mean
-        return mean
+        return SCORE_AGGREGATORS[self.tournament.pref('score_aggregation_function')]
 
     def teamscorebyadj_field_margin(self, adj, side):
         if len(self.sides) > 2:
@@ -1196,18 +1201,17 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     def teamscorebyadj_field_score(self, adj, side):
         return self.scoresheets[adj].get_total(side)
 
-    def _teamscore_score_component(self, adj, side):
-        if self.tournament.pref('teamscore_includes_ghosts'):
-            return self.scoresheets[adj].get_total(side)
-        return sum(self.get_score(adj, side, pos) for pos in self.positions if not self.get_ghost(side, pos))
-
     def teamscore_field_score(self, side):
         # Should be decision-decorated
         if not self.is_complete():
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
-        return self._score_aggregator()(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
+        return sum(
+            self.speakerscore_field_score(side, pos)
+            for pos in self.positions
+            if self.tournament.pref('teamscore_includes_ghosts') or not self.get_ghost(side, pos)
+        )
 
     def teamscore_field_has_ghost(self, side):
         return any(self.ghosts[side].values())
@@ -1222,6 +1226,14 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
+        if self.criteria:
+            score = 0
+            for criterion in self.criteria:
+                if not criterion.applies_to_position(position, self.reply_position):
+                    continue
+                criterion_score = self.speakercriterionscore_field_score(side, position, criterion)
+                score += criterion_score * type(criterion_score)(criterion.weight)
+            return score
         return self._score_aggregator()(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
 
     def speakercriterionscore_field_score(self, side, pos, criterion):
