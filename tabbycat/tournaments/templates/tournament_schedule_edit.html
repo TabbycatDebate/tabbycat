@@ -1,20 +1,28 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
+{% load i18n %}
 
 {% block head-title %}<span class="emoji">⌛</span> {% trans "Schedule" %}{% endblock %}
 {% block page-title %}⌛{% trans "Schedule" %}{% endblock %}
 
 {% block content %}
 
-{% blocktrans trimmed asvar p1 %}
-This page allows you to set the public schedule for the tournament.
-{% endblocktrans %}
-
-
-
-{% include "components/explainer-card.html" with type="info" %}
-
-{% trans "Save Schedule" as save_text %}
-{% include "components/formset.html" with quadruple=True %}
+  <form method="POST" id="schedule-form">
+    {% csrf_token %}
+    <div id="vueMount">
+      <schedule-editor-container :initial-data="scheduleEditorData"></schedule-editor-container>
+    </div>
+  </form>
 
 {% endblock content %}
+
+{% block js %}
+
+  {{ schedule_editor_data|json_script:"schedule-editor-data" }}
+  <script>
+    window.vueData = {
+      scheduleEditorData: JSON.parse(document.getElementById('schedule-editor-data').textContent),
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock js %}

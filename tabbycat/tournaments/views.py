@@ -1,6 +1,7 @@
 import json
 import logging
 from collections import OrderedDict
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib import messages
@@ -8,6 +9,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
+from django.utils import formats, timezone
+from django.utils.encoding import force_str
 from django.utils.html import format_html_join
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext_lazy as _
@@ -432,7 +435,7 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
         kwargs = super().get_formset_factory_kwargs()
         kwargs.update({
             'form': self.form_class,
-            'extra': 3 * int(can_edit),
+            'extra': 0,
             'can_delete': can_edit,
         })
         return kwargs
@@ -453,7 +456,97 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
         return formset
 
     def get_formset_queryset(self):
-        return self.tournament.scheduleevent_set.all()
+        return self.tournament.scheduleevent_set.select_related('round')
+
+    @staticmethod
+    def _serialize_datetime(value):
+        if not value:
+            return {'date': '', 'time': '', 'raw': None}
+
+        if isinstance(value, datetime):
+            if timezone.is_aware(value):
+                value = timezone.localtime(value)
+            return {
+                'date': value.date().isoformat(),
+                'time': value.strftime('%H:%M'),
+                'raw': None,
+            }
+        if isinstance(value, str):
+            try:
+                parsed = datetime.fromisoformat(value)
+            except ValueError:
+                return {'date': '', 'time': '', 'raw': value}
+            if timezone.is_aware(parsed):
+                parsed = timezone.localtime(parsed)
+            return {
+                'date': parsed.date().isoformat(),
+                'time': parsed.strftime('%H:%M'),
+                'raw': None,
+            }
+        return {'date': '', 'time': '', 'raw': force_str(value)}
+
+    def _serialize_schedule_form(self, form, index):
+        start = self._serialize_datetime(form['start_time'].value())
+        end = self._serialize_datetime(form['end_time'].value())
+        errors = {
+            field: [force_str(error) for error in field_errors]
+            for field, field_errors in form.errors.items()
+            if field != '__all__'
+        }
+        can_delete = 'DELETE' in form.fields
+
+        return {
+            'formIndex': index,
+            'id': force_str(form['id'].value() or ''),
+            'tournament': force_str(form['tournament'].value() or self.tournament.pk),
+            'type': force_str(form['type'].value() or ScheduleEvent.Types.OTHER),
+            'title': force_str(form['title'].value() or ''),
+            'startDate': start['date'],
+            'startTime': start['time'],
+            'startRaw': start['raw'],
+            'endDate': end['date'],
+            'endTime': end['time'],
+            'endRaw': end['raw'],
+            'round': force_str(form['round'].value() or ''),
+            'deleted': bool(form['DELETE'].value()) if can_delete else False,
+            'errors': errors,
+            'nonFieldErrors': [force_str(error) for error in form.non_field_errors()],
+        }
+
+    def _serialize_schedule_editor(self, formset, can_edit):
+        empty_form = formset.empty_form
+        return {
+            'events': [
+                self._serialize_schedule_form(form, index)
+                for index, form in enumerate(formset.forms)
+            ],
+            'management': {
+                'prefix': formset.prefix,
+                'totalForms': formset.total_form_count(),
+                'initialForms': formset.initial_form_count(),
+                'minNumForms': force_str(formset.management_form['MIN_NUM_FORMS'].value() or 0),
+                'maxNumForms': force_str(formset.management_form['MAX_NUM_FORMS'].value() or 1000),
+            },
+            'typeChoices': [
+                [force_str(value), force_str(label)]
+                for value, label in empty_form.fields['type'].choices
+            ],
+            'roundChoices': [
+                [force_str(value), force_str(label)]
+                for value, label in empty_form.fields['round'].choices
+            ],
+            'defaultEventType': ScheduleEvent.Types.OTHER,
+            'tournamentId': force_str(self.tournament.pk),
+            'canEdit': can_edit,
+            'timezoneLabel': get_current_timezone_name(),
+            'nonFormErrors': [force_str(error) for error in formset.non_form_errors()],
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
+        context['schedule_editor_data'] = self._serialize_schedule_editor(context['formset'], can_edit)
+        return context
 
     def formset_valid(self, formset):
         instances = formset.save(commit=False)
@@ -488,12 +581,30 @@ class PublicScheduleView(PublicTournamentPageMixin, VueTableTemplateView):
     page_title = _("Tournament Schedule")
     page_emoji = '⏳'
     cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
+    tables_orientation = 'rows'
 
-    def get_table(self):
-        events = self.tournament.scheduleevent_set.all()
-        table = TabbycatTableBuilder(view=self, sort_key='start_time')
-        table.add_schedule_event_columns(events)
-        return table
+    def get_tables(self):
+        events = self.tournament.scheduleevent_set.select_related('round')
+        events_by_day = OrderedDict()
+        for event in events:
+            day = timezone.localtime(event.start_time).date()
+            events_by_day.setdefault(day, []).append(event)
+
+        if not events_by_day:
+            table = TabbycatTableBuilder(view=self, sort_key='start_time')
+            table.add_schedule_event_columns([], include_date=False)
+            return [table]
+
+        tables = []
+        for day, day_events in events_by_day.items():
+            table = TabbycatTableBuilder(
+                view=self,
+                title=formats.date_format(day, format='DATE_FORMAT', use_l10n=True),
+                sort_key='start_time',
+            )
+            table.add_schedule_event_columns(day_events, include_date=False)
+            tables.append(table)
+        return tables
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -323,6 +323,13 @@ class RoundWeightForm(Form):
 
 class ScheduleEventForm(ModelForm):
 
+    round = RoundField(
+        queryset=Round.objects.none(),
+        required=False,
+        label=_("Round"),
+        help_text=_("If the event belongs to a specific round, which round"),
+    )
+
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['tournament'].initial = tournament
@@ -333,6 +340,6 @@ class ScheduleEventForm(ModelForm):
         fields = ('tournament', 'type', 'title', 'start_time', 'end_time', 'round')
         widgets = {
             'tournament': HiddenInput(),
-            'start_time': DateTimeInput(attrs={'type': 'datetime-local'}),
-            'end_time':   DateTimeInput(attrs={'type': 'datetime-local'}),
+            'start_time': DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+            'end_time':   DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
         }
