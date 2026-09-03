@@ -96,34 +96,13 @@ You can set this in the **feedback paths** option under *Setup* >
 - The submissions expected when calculating feedback progress and highlighting
   missing feedback
 
-The feedback paths option only affects feedback from adjudicators. Teams are
-assumed to give feedback on the orallist, and they are encouraged to do
-so through hints on the online and printable feedback forms, but there is
-nothing technically preventing them from submitting feedback from any
-adjudicator on their panel.
-
-Feedback in elimination rounds
-------------------------------
-
-The feedback paths option, and the corresponding option for teams, each come in
-two versions: one that applies to the preliminary rounds, and one that applies to
-the elimination rounds. This lets you collect feedback during outrounds — which
-can give adjudication cores a fuller picture when making allocation decisions for
-later outrounds — while using different rules from those used in the preliminary
-rounds, or none at all.
-
-Both elimination round options **default to collecting no feedback**, which
-matches how Tabbycat behaved before these options existed. To collect feedback
-during outrounds, set *Allow and expect feedback to be submitted by, elimination
-rounds* and/or *Expect feedback to be submitted by teams on, elimination rounds*
-under *Setup* > *Configuration* > *Feedback*.
-
-.. note:: Feedback submitted during elimination rounds is recorded and shown in
-  the feedback tables and on each adjudicator's feedback page, and it counts
-  towards feedback progress. It does **not** count towards adjudicators' scores,
-  and it is not included in the statistics on the feedback overview page. This is
-  deliberate: outround feedback tends to be noisier, so it is collected for
-  reference without disturbing the scores used by the automated allocation.
+The feedback paths option only affects feedback from adjudicators. The
+**allow and expect feedback to be submitted by teams on** option separately
+controls team feedback. Teams can be guided to the orallist, allowed or
+expected to give feedback on all voting adjudicators, or allowed or expected
+to give feedback on all adjudicators including trainees. The options that only
+expect feedback on the orallist still permit multiple submissions without
+counting each panel member as a separate expectation in feedback progress.
 
 .. admonition:: Advanced users
   :class: tip

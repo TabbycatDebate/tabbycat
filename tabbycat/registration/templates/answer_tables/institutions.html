@@ -4,6 +4,11 @@
 {% block page-subnav-sections %}<div class="btn-group flex-wrap"></div>{% endblock %}
 {% block page-subnav-actions %}
 <div class="btn-group flex-wrap">
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'reg-email-coaches' %}">
+    {% trans "Email Coaches" %}
+  </a>
+</div>
+<div class="btn-group flex-wrap">
   <a class="btn btn-outline-primary" href="{% tournamenturl 'reg-slot-transfer-approval' %}">
     {% trans "Slot transfers" %}
   </a>

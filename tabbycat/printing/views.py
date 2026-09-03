@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateView
 from qrcode.image import svg
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
-from adjfeedback.utils import expected_feedback_targets, feedback_from_teams_pref, feedback_paths_pref
+from adjfeedback.utils import expected_feedback_targets, team_feedback_allowed_targets
 from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
 from draw.models import DebateTeam
@@ -76,7 +76,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         if len(debate.adjudicators) == 0:
             return []
 
-        team_paths = feedback_from_teams_pref(self.tournament, self.round)
+        team_paths = team_feedback_allowed_targets(self.tournament.pref('feedback_from_teams'))
         ballots = []
 
         if team_paths == 'orallist' and debate.adjudicators.chair:
@@ -85,11 +85,14 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         elif team_paths == 'all-adjs':
             for target in debate.adjudicators.all():
                 ballots.append(self.construct_info(debate.venue, team, _("Team"), target, ""))
+        elif team_paths == 'all-voting-adjs':
+            for target in debate.adjudicators.voting():
+                ballots.append(self.construct_info(debate.venue, team, _("Team"), target, ""))
 
         return ballots
 
     def get_adj_feedbacks(self, debate):
-        adj_paths = feedback_paths_pref(self.tournament, self.round)
+        adj_paths = self.tournament.pref('feedback_paths')
         ballots = []
 
         debateadjs = debate.debateadjudicator_set.all()

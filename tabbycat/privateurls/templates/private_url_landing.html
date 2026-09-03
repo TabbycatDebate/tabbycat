@@ -84,7 +84,7 @@
     {% endif %}
 
     {% if pref.participant_feedback == 'private-urls' %}
-        {% if not object.adjudicator and pref.feedback_from_teams != 'no-one' or not object.adjudicator and pref.feedback_from_teams_elim != 'no-one' or object.adjudicator and pref.feedback_paths != 'no-adjs' or object.adjudicator and pref.feedback_paths_elim != 'no-adjs' %}
+        {% if not object.adjudicator and pref.feedback_from_teams != 'no-one' or object.adjudicator and pref.feedback_paths != 'no-adjs' %}
           {% trans "Submit Feedback" as text %}
           {% if object.adjudicator %}
             {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}

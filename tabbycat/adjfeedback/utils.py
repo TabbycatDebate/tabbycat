@@ -8,23 +8,22 @@ from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
 from options.preferences import FeedbackPaths
-from tournaments.models import Round
 
 logger = logging.getLogger(__name__)
 
 
-def feedback_paths_pref(tournament, rd):
-    """Returns the feedback paths preference applying to the round `rd`."""
-    if rd.stage == Round.Stage.ELIMINATION:
-        return tournament.pref('feedback_paths_elim')
-    return tournament.pref('feedback_paths')
+def team_feedback_allowed_targets(feedback_from_teams):
+    if feedback_from_teams in ['all-adjs-allowed', 'all-adjs']:
+        return 'all-adjs'
+    if feedback_from_teams in ['all-voting-adjs-allowed', 'all-voting-adjs']:
+        return 'all-voting-adjs'
+    return feedback_from_teams
 
 
-def feedback_from_teams_pref(tournament, rd):
-    """Returns the team feedback preference applying to the round `rd`."""
-    if rd.stage == Round.Stage.ELIMINATION:
-        return tournament.pref('feedback_from_teams_elim')
-    return tournament.pref('feedback_from_teams')
+def team_feedback_expected_targets(feedback_from_teams):
+    if feedback_from_teams in ['all-voting-adjs-allowed', 'all-adjs-allowed']:
+        return 'orallist'
+    return feedback_from_teams
 
 
 def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
@@ -50,8 +49,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     """
 
     if feedback_paths is None:
-        rd = debateadj.debate.round
-        feedback_paths = feedback_paths_pref(rd.tournament, rd)
+        feedback_paths = debateadj.debate.round.tournament.pref('feedback_paths')
     if feedback_paths not in [o[0] for o in FeedbackPaths.choices]:
         logger.error("Unrecognised preference: %s", feedback_paths)
 
@@ -93,8 +91,6 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 def get_feedback_overview(t, adjudicators):
     """Collates feedback statistics for the feedback overview."""
 
-    # Deliberately prelims only: feedback from elimination rounds is recorded and
-    # displayed, but doesn't count towards adjudicators' scores.
     # Use the highest seq among parallel current prelims so all panels are included.
     seq_lim = t.current_round_seq_limit
     until_proxy = SimpleNamespace(seq=seq_lim) if seq_lim else t.current_round

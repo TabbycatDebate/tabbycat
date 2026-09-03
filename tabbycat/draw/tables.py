@@ -238,6 +238,9 @@ class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
         return self.position_cost_func(pos, before) ** self.exponent
 
     def get_pullup_cost(self, team, bracket_level):
+        info = self.standings.get_standing(team)
+        team.points = next(info.itermetrics(), 0) or 0
+        team.npullups = info.metrics.get('npullups', 0)
         return BPHungarianDrawGenerator.get_pullup_cost(team, bracket_level, self.pullup_penalty)
 
     def get_assignment_cost(self, pos, team, bracket_level):

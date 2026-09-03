@@ -28,6 +28,7 @@ class Permission(TextChoices):
 
     VIEW_TEAMS = 'view.team', _("view teams")
     ADD_TEAMS = 'add.team', _("add teams")
+    DELETE_SPEAKER = 'delete.speaker', _("delete speakers")
     VIEW_DECODED_TEAMS = 'view.teamname', _("view decoded team names")
     VIEW_ANONYMOUS = 'view.anonymous', _("View names of anonymized participants")
     VIEW_ADJUDICATORS = 'view.adj', _("view adjudicators")
@@ -160,6 +161,7 @@ class Permission(TextChoices):
     VIEW_REGISTRATION = 'view.registration', _("view registration responses")
     EDIT_REGISTRATION = 'edit.registration', _("edit registration responses")
     CONFIRM_REGISTRATION = 'confirm.registration', _("confirm registration responses")
+    EDIT_REGISTRATION_SLOTS = 'edit.registration.slots', _("edit institution slot allocations")
 
 
 permission_type = Union[Permission, bool]

@@ -740,6 +740,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 widget=forms.NumberInput(attrs={'class': 'number'}),
                 tournament=self.tournament,
                 required=False,
+                disabled=self.criteria.exists(),
             )
             for criterion in self.criteria_for_position(pos):
                 self.fields[self._fieldname_criterion_score(side, pos, criterion)] = forms.DecimalField(
@@ -934,6 +935,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
         """Adds the speaker score fields:
          - <side>_score_a#_s#,  one for each score
         """
+        has_criteria = self.criteria.exists()
+        # Criterion totals are display-only; their component fields are validated instead.
+        derived_score_options = {'min_value': None, 'max_value': None} if has_criteria else {}
         for side, pos in product(self.sides, self.positions):
             scorefield = ReplyScoreField if (pos == self.reply_position) else SubstantiveScoreField
             for adj in self.adjudicators:
@@ -941,7 +945,8 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     widget=forms.NumberInput(attrs={'class': 'number'}),
                     tournament=self.tournament,
                     required=False,
-                    disabled=self.criteria.exists(),
+                    disabled=has_criteria,
+                    **derived_score_options,
                 )
                 for criterion in self.criteria_for_position(pos):
                     self.fields[self._fieldname_criterion_score(adj, side, pos, criterion)] = forms.DecimalField(

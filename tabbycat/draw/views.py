@@ -460,7 +460,9 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
         metrics = self.tournament.pref('team_standings_precedence')
-        generator = TeamStandingsGenerator(metrics[0:1], ())
+        pullup_penalty = self.tournament.pref('draw_pullup_penalty')
+        extra_metrics = ['npullups'] if pullup_penalty > 0 else []
+        generator = TeamStandingsGenerator(metrics[0:1], (), extra_metrics=extra_metrics)
         standings = generator.generate(teams, round=self.round.prev)
         draw_table = PositionBalanceReportDrawTableBuilder(view=self)
         draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)

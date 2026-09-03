@@ -1,4 +1,5 @@
 import logging
+import unicodedata
 from warnings import warn
 
 from django.contrib.contenttypes.fields import GenericRelation
@@ -184,6 +185,10 @@ class Person(models.Model):
         if tournament.pref('participant_code_names') == 'off':
             return self.name
         return self.code_name
+
+    @property
+    def normalized_name(self):
+        return unicodedata.normalize('NFKD', self.name)
 
 
 class Coach(Person):
