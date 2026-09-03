@@ -2,6 +2,7 @@ import logging
 
 from django.test import TestCase
 
+from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
@@ -597,6 +598,213 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
         for side in self.SIDES:
             self.assertEqual(nadjs, self._get_teamscore_in_db(side).votes_possible)
             self.assertEqual(nadjs, result.teamscore_field_votes_possible(side))
+
+    def test_self_split_votes_given_and_possible(self):
+        """Test that solo adjudicator with self_split=True gives 2 votes for winner, 1 for loser.
+
+        Without self_split: winner gets 1/1 vote, loser gets 0/1.
+        With self_split: winner gets 2/3 votes, loser gets 1/3.
+        This confirms the feature modifies voting totals as expected.
+        """
+        testdata = self.testdata['solo']
+
+        def set_self_split(result):
+            result.ballotsub.self_split = True
+            result.ballotsub.save()
+
+        self.save_complete_result(testdata, post_create=set_self_split)
+
+        result = self.get_result()
+        scoresheet_type = 'high-required'
+        winner = testdata[scoresheet_type]['winner']
+
+        # Winner should have votes_given=2, votes_possible=3
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(2, self._get_teamscore_in_db(winner).votes_given)
+            self.assertEqual(3, self._get_teamscore_in_db(winner).votes_possible)
+            self.assertEqual(2, result.teamscore_field_votes_given(winner))
+            self.assertEqual(3, result.teamscore_field_votes_possible(winner))
+
+        # Loser should have votes_given=1, votes_possible=3
+        loser = DebateSide.AFF if winner == DebateSide.NEG else DebateSide.NEG
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(1, self._get_teamscore_in_db(loser).votes_given)
+            self.assertEqual(3, self._get_teamscore_in_db(loser).votes_possible)
+            self.assertEqual(1, result.teamscore_field_votes_given(loser))
+            self.assertEqual(3, result.teamscore_field_votes_possible(loser))
+
+    def test_self_split_adjudicators_with_splits(self):
+        """Test that solo adjudicator with self_split=True is marked as split=True.
+
+        Without self_split: solo adjudicator has split=False (trivially unanimous).
+        With self_split: solo adjudicator has split=True (self-declared split).
+        """
+        testdata = self.testdata['solo']
+
+        def set_self_split(result):
+            result.ballotsub.self_split = True
+            result.ballotsub.save()
+
+        self.save_complete_result(testdata, post_create=set_self_split)
+
+        result = self.get_result()
+
+        # Get the adjudicators with splits generator
+        adjs_with_splits = list(result.adjudicators_with_splits())
+
+        # Should have exactly one adjudicator marked as split=True
+        self.assertEqual(len(adjs_with_splits), 1)
+        adj, adjtype, split = adjs_with_splits[0]
+        self.assertEqual(adj, self.adjs[0])  # The solo chair adjudicator
+        self.assertTrue(split)
+
+    def test_self_split_does_not_mark_trainees_as_split(self):
+        testdata = self.testdata['solo']
+
+        def set_self_split_and_add_trainee(result):
+            result.ballotsub.self_split = True
+            result.ballotsub.save()
+            DebateAdjudicator.objects.create(
+                debate=self.debate,
+                adjudicator=self.adjs[1],
+                type=DebateAdjudicator.TYPE_TRAINEE,
+            )
+
+        self.save_complete_result(testdata, post_create=set_self_split_and_add_trainee)
+
+        splits_by_adj = {
+            adj: split for adj, adjtype, split in self.get_result().adjudicators_with_splits()
+        }
+        self.assertTrue(splits_by_adj[self.adjs[0]])
+        self.assertFalse(splits_by_adj[self.adjs[1]])
+
+    def test_solo_default_behavior_unchanged(self):
+        """Regression test: solo adjudicator without self_split unchanged.
+
+        Confirms the feature is opt-in and doesn't change default behavior.
+        Without self_split (the default), should be 1/1 vote for winner, 0/1 for loser.
+        With self_split=False: split=False for the adjudicator.
+        """
+        testdata = self.testdata['solo']
+        self.save_complete_result(testdata)  # No post_create callback, self_split stays False
+
+        result = self.get_result()
+        scoresheet_type = 'high-required'
+        winner = testdata[scoresheet_type]['winner']
+
+        # Without self_split, winner should have votes_given=1, votes_possible=1
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(1, self._get_teamscore_in_db(winner).votes_given)
+            self.assertEqual(1, self._get_teamscore_in_db(winner).votes_possible)
+            self.assertEqual(1, result.teamscore_field_votes_given(winner))
+            self.assertEqual(1, result.teamscore_field_votes_possible(winner))
+
+        # Loser should have votes_given=0, votes_possible=1
+        loser = DebateSide.AFF if winner == DebateSide.NEG else DebateSide.NEG
+        with suppress_logs('results.result', logging.WARNING):
+            self.assertEqual(0, self._get_teamscore_in_db(loser).votes_given)
+            self.assertEqual(1, self._get_teamscore_in_db(loser).votes_possible)
+            self.assertEqual(0, result.teamscore_field_votes_given(loser))
+            self.assertEqual(1, result.teamscore_field_votes_possible(loser))
+
+        # Adjudicators with splits should yield split=False
+        adjs_with_splits = list(result.adjudicators_with_splits())
+        self.assertEqual(len(adjs_with_splits), 1)
+        adj, adjtype, split = adjs_with_splits[0]
+        self.assertFalse(split)
+
+    # ==========================================================================
+    # Median aggregation tests
+    # ==========================================================================
+
+    @with_preference('scoring', 'score_aggregation_function', 'median')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @standard_test
+    def test_median_aggregation_odd_panel(self, result, testdata, scoresheet_type):
+        """Test median aggregation with odd-sized panels (uses true median)."""
+        # With 3 adjudicators and margin_includes_dissenters=True, all are included (odd),
+        # so the aggregator should use the true median
+        if testdata['num_adjs'] != 3:
+            self.skipTest("This test is for 3-adjudicator panels")
+
+        # Only test 'high' testdata for now (has well-known expected values)
+        if testdata != self.testdata.get('high'):
+            self.skipTest("This test is only defined for 'high' testdata")
+
+        # For 'high' testdata with 3 adjs:
+        # AFF pos 1: [75.0, 74.0, 75.0] -> sorted [74, 75, 75] -> median = 75.0
+        # AFF pos 2: [76.0, 75.0, 75.0] -> sorted [75, 75, 76] -> median = 75.0
+        # AFF pos 3: [74.0, 76.0, 75.0] -> sorted [74, 75, 76] -> median = 75.0
+        # AFF pos 4 (reply): [38.0, 37.0, 37.5] -> sorted [37, 37.5, 38] -> median = 37.5
+        expected_aff_scores = [75.0, 75.0, 75.0, 37.5]
+
+        # NEG pos 1: [76.0, 77.0, 76.0] -> sorted [76, 76, 77] -> median = 76.0
+        # NEG pos 2: [73.0, 74.0, 78.0] -> sorted [73, 74, 78] -> median = 74.0
+        # NEG pos 3: [75.0, 74.0, 77.0] -> sorted [74, 75, 77] -> median = 75.0
+        # NEG pos 4 (reply): [37.5, 38.0, 37.0] -> sorted [37, 37.5, 38] -> median = 37.5
+        expected_neg_scores = [76.0, 74.0, 75.0, 37.5]
+
+        for pos, (aff_expected, neg_expected) in enumerate(zip(expected_aff_scores, expected_neg_scores), start=1):
+            with suppress_logs('results.result', logging.WARNING):
+                self.assertAlmostEqual(aff_expected, self._get_speakerscore_in_db(DebateSide.AFF, pos).score,
+                                       msg=f"AFF position {pos} score mismatch")
+                self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
+                                       msg=f"NEG position {pos} score mismatch")
+
+        self.assertAlmostEqual(sum(expected_aff_scores), self._get_teamscore_in_db(DebateSide.AFF).score)
+        self.assertAlmostEqual(sum(expected_neg_scores), self._get_teamscore_in_db(DebateSide.NEG).score)
+
+    @with_preference('scoring', 'score_aggregation_function', 'median')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    def test_median_aggregation_even_panel(self):
+        """Test median aggregation with even-sized panels (uses ceil(mean) fallback).
+
+        margin_includes_dissenters=True is essential here: it makes
+        relevant_adjudicators() return *both* adjudicators (a genuinely
+        even-length input), so this actually exercises the ceil(mean(...))
+        fallback branch of _score_aggregator(). If only the majority
+        adjudicator were included (margin_includes_dissenters=False), the
+        input would collapse to a single (odd) value and this test would not
+        distinguish the fallback from the trivial odd-panel case.
+
+        The 'even' testdata's per-adjudicator scores are:
+          AFF: adj0=[80.0, 74.0, 35.5], adj1=[80.0, 79.0, 37.5]
+          NEG: adj0=[79.0, 76.0, 39.0], adj1=[73.0, 71.0, 39.5]
+        Several of these positions have a non-whole mean (e.g. AFF pos 2:
+        mean(74.0, 79.0) = 76.5), so ceil(mean(...)) is verifiably distinct
+        from what a naive statistics.median (which would average the two
+        middle values, giving 76.5, not 77.0) would produce.
+        """
+        testdata = self.testdata['even']
+        self.save_complete_result(testdata)
+
+        # AFF pos 1: mean(80.0, 80.0) = 80.0 -> ceil = 80.0
+        # AFF pos 2: mean(74.0, 79.0) = 76.5 -> ceil = 77.0
+        # AFF pos 3 (reply): mean(35.5, 37.5) = 36.5 -> ceil = 37.0
+        expected_aff_scores = [80.0, 77.0, 37.0]
+
+        # NEG pos 1: mean(79.0, 73.0) = 76.0 -> ceil = 76.0
+        # NEG pos 2: mean(76.0, 71.0) = 73.5 -> ceil = 74.0
+        # NEG pos 3 (reply): mean(39.0, 39.5) = 39.25 -> ceil = 40.0
+        expected_neg_scores = [76.0, 74.0, 40.0]
+
+        for pos, (aff_expected, neg_expected) in enumerate(zip(expected_aff_scores, expected_neg_scores), start=1):
+            with suppress_logs('results.result', logging.WARNING):
+                self.assertAlmostEqual(aff_expected, self._get_speakerscore_in_db(DebateSide.AFF, pos).score,
+                                       msg=f"AFF position {pos} score mismatch")
+                self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
+                                       msg=f"NEG position {pos} score mismatch")
+
+    @with_preference('scoring', 'score_aggregation_function', 'mean')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @standard_test
+    def test_mean_aggregation_regression(self, result, testdata, scoresheet_type):
+        """Regression test: ensure mean aggregation (default) still works as before."""
+        for side, totals in zip(self.SIDES, testdata['common']['everyone_scores']):
+            for pos, score in enumerate(totals, start=1):
+                with suppress_logs('results.result', logging.WARNING):
+                    self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
+                    self.assertAlmostEqual(score, result.speakerscore_field_score(side, pos))
 
     # ==========================================================================
     # Irregular operation

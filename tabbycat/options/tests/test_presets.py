@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.test import TestCase
 
 from options.fields import EMPTY_CHOICE
-from options.presets import APDAPreferences, get_preset_from_slug, PreferencesPreset, WSDCPreferences
+from options.presets import APDAPreferences, get_preset_from_slug, KarlPopperPreferences, PreferencesPreset, WSDCPreferences
 from results.models import ScoreCriterion
 from tournaments.models import Round, Tournament
 
@@ -66,6 +66,17 @@ class TestPresets(TestCase):
             self.assertTrue(pref in form.fields)
             self.assertEqual(form[pref].initial, new_val)
             self.assertEqual(form[pref].changed, True)
+
+        tournament.delete()
+
+    def test_karl_popper_preset(self):
+        tournament = self.set_up_tournament()
+        form = KarlPopperPreferences.get_form(tournament)
+
+        self.assertEqual(KarlPopperPreferences.name, "Karl Popper")
+        self.assertEqual(form['scoring__score_aggregation_function'].initial, 'median')
+        self.assertEqual(form['data_entry__allow_self_split_ballots'].initial, True)
+        self.assertEqual(form['draw_rules__draw_pairing_method'].initial, 'adjacent')
 
         tournament.delete()
 

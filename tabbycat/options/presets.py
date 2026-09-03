@@ -621,6 +621,76 @@ class PublicSpeaking(PreferencesPreset):
     standings__team_standings_precedence       = ['speaks_avg']
 
 
+class KarlPopperPreferences(PreferencesPreset):
+    name         = _("Karl Popper")
+    show_in_list = True
+    description  = _("3 vs 3 with no reply speeches, median scoring, self-split "
+        "ballots, and a penalty-weighted draw.")
+
+    # Scoring
+    scoring__score_min                         = Decimal('50')
+    scoring__score_max                         = Decimal('100')
+    scoring__margin_includes_dissenters        = True
+    scoring__score_aggregation_function        = 'median'
+    # Debate Rules
+    debate_rules__teams_in_debate              = 2
+    debate_rules__substantive_speakers         = 3
+    debate_rules__side_names                   = 'aff-neg'
+    debate_rules__ballots_per_debate_prelim    = 'per-adj'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__require_substantive_for_reply = False
+    debate_rules__winners_in_ballots           = 'high-points'
+    debate_rules__preparation_time             = 60
+    debate_rules__enable_forfeits              = True
+    motions__enable_motions                    = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motion_reuse               = True
+    # Draw Rules (penalty-weighted, as with APDA)
+    draw_rules__draw_odd_bracket               = 'pullup_random'
+    draw_rules__draw_pairing_method            = 'adjacent'
+    draw_rules__draw_avoid_conflicts           = 'graph'
+    draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'
+    draw_rules__draw_pullup_penalty            = 100
+    draw_rules__bye_team_results               = 'points'
+    draw_rules__bye_team_selection             = 'lowest'
+    draw_rules__adj_min_voting_score           = 1.0
+    draw_rules__adj_conflict_penalty           = 10000
+    draw_rules__adj_history_penalty            = 1
+    draw_rules__preformed_panel_mismatch_penalty = 10
+    draw_rules__team_institution_penalty       = 100
+    draw_rules__team_history_penalty           = 10000
+    draw_rules__pullup_debates_penalty         = 100
+    draw_rules__side_penalty                   = 10000
+    # Standings Rules
+    standings__standings_missed_debates        = 2
+    standings__team_standings_precedence       = ['wins', 'num_adjs', 'wbw', 'speaks_sum', 'draw_strength']
+    standings__team_standings_extra_metrics    = ['speaks_ind_avg']
+    # Feedback Rules
+    feedback__adj_max_score                    = 6.0
+    feedback__feedback_paths                   = 'no-adjs'
+    feedback__feedback_from_teams              = 'all-adjs'
+    feedback__show_unaccredited                = True
+    # Participant Data Entry -- leave the "Participant Data Entry" dropdown set
+    # to "Disabled" when using this preset, since it sets ballots and feedback
+    # to different methods and either dropdown option would overwrite that.
+    data_entry__participant_ballots            = 'private-urls'
+    data_entry__participant_feedback           = 'public'
+    data_entry__public_checkins_submit         = True
+    data_entry__individual_ballots             = True
+    data_entry__allow_self_split_ballots       = True
+    # Public Features -- leave the "Public Configuration" dropdown set to
+    # "Disable Public Information" when using this preset, for the same reason.
+    public_features__public_participants       = True
+    public_features__public_institutions_list  = True
+    public_features__public_draw               = 'current'
+    public_features__public_motions            = True
+    public_features__public_record             = False
+    # UI Options
+    ui_options__show_team_institutions         = False
+    ui_options__show_adjudicator_institutions  = True
+
+
 class PublicInformation(PreferencesPreset):
     name         = _("Public Information Options")
     show_in_list = False

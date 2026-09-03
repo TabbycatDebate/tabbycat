@@ -591,7 +591,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         a['adj'].institution is not None:
                     descriptors.append(escape(a['adj'].institution.code))
                 if a.get('split', False):
-                    descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
+                    if getattr(debate.confirmed_ballot, 'self_split', False):
+                        descriptors.append("<span class='text-danger'>" + _("self-declared split") + "</span>")
+                    else:
+                        descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
                 text = escape_if_unsafe(a['adj'].get_public_name(self.tournament))
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""

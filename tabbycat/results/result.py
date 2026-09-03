@@ -39,9 +39,10 @@ A few notes on error checking:
 """
 
 import logging
+import math
 from functools import wraps
 from itertools import product
-from statistics import mean
+from statistics import mean, median
 from typing import TYPE_CHECKING, Union
 
 from django.utils.translation import gettext_lazy as _
@@ -62,6 +63,19 @@ if TYPE_CHECKING:
     from .models import SpeakerScore, SpeakerScoreByAdj
 
 logger = logging.getLogger(__name__)
+
+
+def median_or_rounded_up_mean(values):
+    values = list(values)
+    if len(values) % 2 == 1:
+        return median(values)
+    return math.ceil(mean(values))
+
+
+SCORE_AGGREGATORS = {
+    'mean': mean,
+    'median': median_or_rounded_up_mean,
+}
 
 
 class ResultError(RuntimeError):
@@ -609,11 +623,20 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def teamscore_field_win(self, side):
         return side == self._winner
 
+    def _is_self_split(self):
+        """True if this is a solo-adjudicated debate where the adjudicator has
+        declared their decision as a 2:1 split rather than unanimous (Karl Popper rules)."""
+        return len(self.scoresheets) == 1 and getattr(self.ballotsub, 'self_split', False)
+
     @_requires_decision(None)
     def teamscore_field_votes_given(self, side):
+        if self._is_self_split():
+            return 2 if side == self._winner else 1
         return len(self._adjs_by_side[side])
 
     def teamscore_field_votes_possible(self, side):
+        if self._is_self_split():
+            return 3
         return len(self.scoresheets)
 
     def teamscore_field_has_ghost(self, side):
@@ -642,8 +665,9 @@ class DebateResultByAdjudicator(BaseDebateResult):
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
         majority = self.majority_adjudicators()
+        self_split = self._is_self_split()
         for adj, adjtype in self.debate.adjudicators.with_positions():
-            split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
+            split = adjtype != AdjudicatorAllocation.POSITION_TRAINEE and (adj not in majority or self_split)
             yield adj, adjtype, split
 
     def as_dicts(self):
@@ -1166,6 +1190,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     # Model fields
     # --------------------------------------------------------------------------
 
+    def _score_aggregator(self):
+        return SCORE_AGGREGATORS[self.tournament.pref('score_aggregation_function')]
+
     def teamscorebyadj_field_margin(self, adj, side):
         if len(self.sides) > 2:
             return None
@@ -1174,18 +1201,17 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     def teamscorebyadj_field_score(self, adj, side):
         return self.scoresheets[adj].get_total(side)
 
-    def _teamscore_score_component(self, adj, side):
-        if self.tournament.pref('teamscore_includes_ghosts'):
-            return self.scoresheets[adj].get_total(side)
-        return sum(self.get_score(adj, side, pos) for pos in self.positions if not self.get_ghost(side, pos))
-
     def teamscore_field_score(self, side):
         # Should be decision-decorated
         if not self.is_complete():
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
-        return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
+        return sum(
+            self.speakerscore_field_score(side, pos)
+            for pos in self.positions
+            if self.tournament.pref('teamscore_includes_ghosts') or not self.get_ghost(side, pos)
+        )
 
     def teamscore_field_has_ghost(self, side):
         return any(self.ghosts[side].values())
@@ -1200,7 +1226,15 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
+        if self.criteria:
+            score = 0
+            for criterion in self.criteria:
+                if not criterion.applies_to_position(position, self.reply_position):
+                    continue
+                criterion_score = self.speakercriterionscore_field_score(side, position, criterion)
+                score += criterion_score * type(criterion_score)(criterion.weight)
+            return score
+        return self._score_aggregator()(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
 
     def speakercriterionscore_field_score(self, side, pos, criterion):
         # Should be decision-decorated
@@ -1208,7 +1242,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
+        return self._score_aggregator()(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
 
     def speakercriterionscorebyadj_field_score(self, adjudicator, side, pos, criterion):
         return self.scoresheets[adjudicator].get_criterion_score(side, pos, criterion)
