@@ -27,6 +27,11 @@
       The current <a href="{{ option_url }}" class="alert-link">feedback configuration</a> disallows adjudicators to submit feedback on other members of the panel (including trainees).
     {% endblocktrans %}
   {% endif %}
+  {% if pref.feedback_paths_rounds == 'all' or pref.feedback_from_teams_rounds == 'all' %}
+    {% blocktrans trimmed asvar p2 %}
+      Feedback is also being collected during elimination rounds. Such feedback is recorded and displayed, but does not count towards the scores and statistics shown on this page.
+    {% endblocktrans %}
+  {% endif %}
   {% include "components/explainer-card.html" with type="info" %}
 
   {% if nadjs_outside_range > 0 %}
