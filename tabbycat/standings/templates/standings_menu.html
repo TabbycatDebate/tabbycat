@@ -28,7 +28,7 @@
 </div>
 
 <div class="btn-group flex-wrap">
-  {% if tournament.speakercategory_set.all.count > 0 or pref.reply_scores_enabled or tournament.scorecriterion_set.all.count > 0 %}
+  {% if tournament.speakercategory_set.all.count > 0 or pref.reply_scores_enabled or tournament.substantive_score_criteria %}
     <div class="btn btn-outline-primary disabled">{% trans "Speakers" %}</div>
   {% endif %}
   <a class="btn btn-outline-primary {% if standings_speaker_nav %}active{% endif %}"
@@ -55,7 +55,7 @@
       {% trans "Replies" %}
     </a>
   {% endif %}
-  {% for criterion in tournament.scorecriterion_set.all %}
+  {% for criterion in tournament.substantive_score_criteria %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-criterion' round=current_round criterion=criterion.seq %}">
       {% blocktrans trimmed with criterion=criterion.name %}

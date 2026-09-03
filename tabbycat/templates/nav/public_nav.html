@@ -41,7 +41,7 @@
   </li>
 {% endif %}
 {% if pref.criterion_tabs_released %}
-  {% for criterion in tournament.scorecriterion_set.all %}
+  {% for criterion in tournament.substantive_score_criteria %}
     <li class="nav-item">
       <a class="nav-link" href="{% tournamenturl 'standings-public-tab-criterion' criterion=criterion.seq %}">
         {% blocktrans trimmed with criterion=criterion.name %}

@@ -1,7 +1,7 @@
 import logging
 
 from django.core.exceptions import ValidationError
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from adjallocation.models import DebateAdjudicator
@@ -18,7 +18,6 @@ from utils.tests import suppress_logs
 
 from ..speakers import (AverageCriterionScoreMetricAnnotator, SpeakerStandingsGenerator,
     TotalCriterionScoreMetricAnnotator)
-from ..views import CriterionStandingsView
 
 
 class TestCriterionStandings(TestCase):
@@ -75,9 +74,9 @@ class TestCriterionStandings(TestCase):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()
         self.tournament.delete()
 
-    def get_standings(self, metrics, extra_metrics=(), replies=False):
+    def get_standings(self, metrics, extra_metrics=()):
         generator = SpeakerStandingsGenerator(metrics, ('rank',), extra_metrics,
-            tournament=self.tournament, replies=replies)
+            tournament=self.tournament)
         with suppress_logs('standings.metrics', logging.INFO):
             return generator.generate(
                 Speaker.objects.filter(team__tournament=self.tournament),
@@ -168,11 +167,9 @@ class TestCriterionStandings(TestCase):
         self.assertEqual([m['abbr'] for m in standings.metrics_info()],
             ["Avg", "Content Avg"])
 
-    def test_criteria_scoped_to_the_speeches_of_the_standings(self):
-        """Criterion metrics count the speeches the standings are over, as the
-        other speaker metrics do: substantives for speaker standings, the reply
-        for reply standings. A criterion's own speech_type doesn't enter into
-        it, since a criterion is only ever scored on speeches it applies to."""
+    def test_criteria_count_substantive_speeches_only(self):
+        """Criterion metrics count the substantive speeches, as the other
+        speaker standings metrics do, whatever the criterion's speech_type."""
         self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
         self.tournament.preferences['debate_rules__substantive_speakers'] = 3
 
@@ -187,15 +184,30 @@ class TestCriterionStandings(TestCase):
         SpeakerCriterionScore.objects.create(speaker_score=reply_score,
             criterion=self.style, score=18)
 
+        # The substantive speeches only (30 and 32), not the reply's 18.
         style_key = AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)
-
-        # Speaker standings: the substantive speeches only (30 and 32), not 18.
         standings = self.get_standings((style_key,))
         self.assertEqual(standings.get_standing(self.speaker1).metrics[style_key], 31)
 
-        # Reply standings: the reply speech only.
-        reply_standings = self.get_standings((style_key,), replies=True)
-        self.assertEqual(reply_standings.get_standing(self.speaker1).metrics[style_key], 18)
+    def test_reply_only_criterion_has_no_tab(self):
+        """These standings are over substantive speeches, so a criterion scored
+        only on replies gets no tab of its own."""
+        self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
+        self.tournament.preferences['debate_rules__substantive_speakers'] = 3
+        self.tournament.preferences['tab_release__criterion_tabs_released'] = True
+
+        reply = ScoreCriterion.objects.create(tournament=self.tournament,
+            name="Rebuttal", seq=3, weight=1, min_score=0, max_score=20, step=1,
+            speech_type=ScoreCriterion.SpeechType.REPLY)
+
+        url = reverse_tournament('standings-public-tab-criterion', self.tournament,
+            kwargs={'criterion': reply.seq})
+        with suppress_logs('django.request', logging.WARNING):
+            response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+        self.assertNotIn(reply, self.tournament.substantive_score_criteria)
+        self.assertIn(self.style, self.tournament.substantive_score_criteria)
 
     def test_public_tab_respects_release_preference(self):
         url = reverse_tournament('standings-public-tab-criterion', self.tournament,
@@ -270,103 +282,3 @@ class TestCriterionStandings(TestCase):
         with suppress_logs('django.request', logging.WARNING):
             response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
-
-
-class TestReplyCriterionStandings(TestCase):
-    """Tests the tab for a criterion scored only on reply speeches.
-
-    In formats like WSDC the reply is given by one of the substantive speakers,
-    so the substantive speech count usually clears the eligibility threshold
-    anyway. These tests cover the case it doesn't: a speaker who gives replies
-    without giving substantives, whose substantive count says nothing about how
-    many replies they gave."""
-
-    def setUp(self):
-        self.tournament = Tournament.objects.create(slug="replycriteriontest",
-            name="Reply criterion test")
-        self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
-        self.tournament.preferences['debate_rules__substantive_speakers'] = 3
-        self.tournament.preferences['standings__standings_missed_replies'] = 1
-        # Set explicitly: this is the threshold that would exclude a speaker who
-        # gives replies but no substantives, if the tab counted substantives.
-        self.tournament.preferences['standings__standings_missed_debates'] = 1
-        self.tournament.preferences['tab_release__criterion_tabs_released'] = True
-
-        self.team1 = Team.objects.create(tournament=self.tournament, reference="1",
-            use_institution_prefix=False)
-        self.team2 = Team.objects.create(tournament=self.tournament, reference="2",
-            use_institution_prefix=False)
-        self.speaker1 = Speaker.objects.create(team=self.team1, name="Speaker 1")
-        self.speaker2 = Speaker.objects.create(team=self.team2, name="Speaker 2")
-
-        self.reply_criterion = ScoreCriterion.objects.create(tournament=self.tournament,
-            name="Rebuttal", seq=1, weight=1, min_score=0, max_score=20, step=1,
-            speech_type=ScoreCriterion.SpeechType.REPLY)
-
-        adj = Adjudicator.objects.create(tournament=self.tournament, name="Adjudicator")
-        reply_scores = {self.speaker1: [16, 17], self.speaker2: [18, 19]}
-
-        for i in [1, 2]:
-            rd = Round.objects.create(tournament=self.tournament, seq=i, schedule_group=i,
-                completed=True)
-            debate = Debate.objects.create(round=rd)
-            dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF)
-            dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
-            DebateAdjudicator.objects.create(debate=debate, adjudicator=adj,
-                type=DebateAdjudicator.TYPE_CHAIR)
-            ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True)
-            TeamScore.objects.create(debate_team=dt1, ballot_submission=ballotsub,
-                margin=+2, points=1, score=100, win=True, votes_given=1, votes_possible=1)
-            TeamScore.objects.create(debate_team=dt2, ballot_submission=ballotsub,
-                margin=-2, points=0, score=100, win=False, votes_given=0, votes_possible=1)
-
-            # Each speaker only gives the reply, as a reply speaker typically would.
-            for speaker, dt in [(self.speaker1, dt1), (self.speaker2, dt2)]:
-                ss = SpeakerScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
-                    speaker=speaker, position=self.tournament.reply_position, score=38)
-                SpeakerCriterionScore.objects.create(speaker_score=ss,
-                    criterion=self.reply_criterion, score=reply_scores[speaker][i - 1])
-
-    def tearDown(self):
-        DebateTeam.objects.filter(team__tournament=self.tournament).delete()
-        self.tournament.delete()
-
-    def get_ranks(self):
-        """Returns each speaker's rank on the criterion tab, as None if unranked.
-
-        This drives the view directly rather than fetching the page, because the
-        public tab pages are wrapped in `cache_page` and a cached response has no
-        template context to read the table out of."""
-        view = CriterionStandingsView()
-        view.request = RequestFactory().get('/')
-        view.kwargs = {
-            'tournament_slug': self.tournament.slug,
-            'round_seq': self.tournament.round_set.order_by('seq').last().seq,
-            'criterion': self.reply_criterion.seq,
-        }
-        view.object = self.reply_criterion
-        with suppress_logs('standings.metrics', logging.INFO):
-            standings, rounds = view.get_standings()
-        return {info.speaker: info.rankings.get('rank') for info in standings}
-
-    def test_reply_speakers_are_ranked(self):
-        """A speaker who only ever gives the reply has no substantive speeches,
-        so ranking against the missed-debates count would leave them unranked."""
-        ranks = self.get_ranks()
-        self.assertIsNotNone(ranks[self.speaker1])
-        self.assertIsNotNone(ranks[self.speaker2])
-
-    def test_ranked_by_reply_criterion_scores(self):
-        ranks = self.get_ranks()
-        self.assertEqual(ranks[self.speaker2], (1, False))  # 18, 19
-        self.assertEqual(ranks[self.speaker1], (2, False))  # 16, 17
-
-    def test_missing_replies_excludes_speaker_from_ranking(self):
-        """A speaker below the reply threshold is listed but not ranked."""
-        self.tournament.preferences['standings__standings_missed_replies'] = 0
-        SpeakerScore.objects.filter(speaker=self.speaker1,
-            debate_team__debate__round__seq=2).delete()
-
-        ranks = self.get_ranks()
-        self.assertEqual(ranks[self.speaker2], (1, False))
-        self.assertIsNone(ranks[self.speaker1])

@@ -301,10 +301,11 @@ class BaseCriterionMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
         return (cls.name_format % {'criterion': cls.criterion_name}).capitalize()
 
     def get_annotation_filter(self, round):
-        # `replies` (inherited) restricts this to the reply or the substantive
-        # speeches, per the standings being generated, rather than to the
-        # criterion's own speech_type: a criterion scored on both kinds of
-        # speech appears in each, counting only that page's speeches.
+        # The inherited filter restricts this to the substantive speeches, as
+        # for the other speaker metrics. The criterion's own speech_type
+        # doesn't narrow it further: a criterion is only ever scored on the
+        # speeches it applies to, and one scored only on replies has no
+        # standings of its own.
         return super().get_annotation_filter(round) & Q(
             speakerscore__speakercriterionscore__criterion=self.criterion)
 
@@ -338,16 +339,13 @@ def is_criterion_metric_key(key):
     return False
 
 
-def criterion_metric_annotator_classes(tournament, standalone_criterion=None, replies=False):
+def criterion_metric_annotator_classes(tournament, standalone_criterion=None):
     """Returns the metric annotator classes for every score criterion in the
     tournament, keyed by metric key. Each binds its criterion, so that they can
     be used like the classes in SpeakerStandingsGenerator's static dict.
 
     `standalone_criterion`, if given, is the criterion whose page this is, and
-    so whose metrics should be labelled without repeating its name.
-
-    `replies` says whether these standings are over reply speeches, and is
-    passed through to the annotators as for the other speaker metrics."""
+    so whose metrics should be labelled without repeating its name."""
     classes = {}
     for criterion in tournament.scorecriterion_set.all():
         for base in (AverageCriterionScoreMetricAnnotator, TotalCriterionScoreMetricAnnotator):
@@ -357,7 +355,6 @@ def criterion_metric_annotator_classes(tournament, standalone_criterion=None, re
                 'key': key,
                 'criterion_name': criterion.name,
                 'standalone': criterion == standalone_criterion,
-                'replies': replies,
             })
     return classes
 
@@ -411,13 +408,13 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     tournament_field = 'team__tournament'
 
     def __init__(self, metrics, rankings, extra_metrics=(), tournament=None,
-            standalone_criterion=None, replies=False, **options):
+            standalone_criterion=None, **options):
         # Score criteria are per-tournament rows, so their annotator classes
         # can't live in the class-level dict; build them per instance.
         if tournament is not None:
             self.metric_annotator_classes = {
                 **self.metric_annotator_classes,
-                **criterion_metric_annotator_classes(tournament, standalone_criterion, replies),
+                **criterion_metric_annotator_classes(tournament, standalone_criterion),
             }
         super().__init__(metrics, rankings, extra_metrics, **options)
 
