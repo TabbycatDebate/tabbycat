@@ -1,11 +1,14 @@
 import logging
 
+from django.core.exceptions import ValidationError
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
+from options.fields import EMPTY_CHOICE
+from options.forms import tournament_preference_form_builder
 from participants.models import Adjudicator, Speaker, Team
 from results.models import (BallotSubmission, ScoreCriterion, SpeakerCriterionScore,
     SpeakerScore, TeamScore)
@@ -72,9 +75,9 @@ class TestCriterionStandings(TestCase):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()
         self.tournament.delete()
 
-    def get_standings(self, metrics, extra_metrics=()):
+    def get_standings(self, metrics, extra_metrics=(), replies=False):
         generator = SpeakerStandingsGenerator(metrics, ('rank',), extra_metrics,
-            tournament=self.tournament)
+            tournament=self.tournament, replies=replies)
         with suppress_logs('standings.metrics', logging.INFO):
             return generator.generate(
                 Speaker.objects.filter(team__tournament=self.tournament),
@@ -165,46 +168,34 @@ class TestCriterionStandings(TestCase):
         self.assertEqual([m['abbr'] for m in standings.metrics_info()],
             ["Avg", "Content Avg"])
 
-    def test_speech_type_scoped_criteria(self):
-        """A criterion restricted to substantive or reply speeches must only
-        aggregate over those speeches."""
+    def test_criteria_scoped_to_the_speeches_of_the_standings(self):
+        """Criterion metrics count the speeches the standings are over, as the
+        other speaker metrics do: substantives for speaker standings, the reply
+        for reply standings. A criterion's own speech_type doesn't enter into
+        it, since a criterion is only ever scored on speeches it applies to."""
         self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
         self.tournament.preferences['debate_rules__substantive_speakers'] = 3
-
-        substantive = ScoreCriterion.objects.create(tournament=self.tournament,
-            name="Substantive only", seq=3, weight=1, min_score=0, max_score=40, step=1,
-            speech_type=ScoreCriterion.SpeechType.SUBSTANTIVE)
-        reply = ScoreCriterion.objects.create(tournament=self.tournament,
-            name="Reply only", seq=4, weight=1, min_score=0, max_score=20, step=1,
-            speech_type=ScoreCriterion.SpeechType.REPLY)
 
         rd = self.tournament.round_set.get(seq=1)
         dt = DebateTeam.objects.get(debate__round=rd, team=self.team1)
         ballotsub = BallotSubmission.objects.get(debate__round=rd)
 
-        # speaker1 already has a position-1 speech from setUp; score both new
-        # criteria on it, plus a reply speech.
-        subst_score = SpeakerScore.objects.get(speaker=self.speaker1, debate_team=dt, position=1)
-        SpeakerCriterionScore.objects.create(speaker_score=subst_score,
-            criterion=substantive, score=30)
-        SpeakerCriterionScore.objects.create(speaker_score=subst_score, criterion=reply, score=5)
-
+        # speaker1 already has a position-1 speech from setUp, scored 30 on
+        # style; give them a reply speech scored on style too.
         reply_score = SpeakerScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
             speaker=self.speaker1, position=self.tournament.reply_position, score=38)
         SpeakerCriterionScore.objects.create(speaker_score=reply_score,
-            criterion=reply, score=18)
-        SpeakerCriterionScore.objects.create(speaker_score=reply_score,
-            criterion=substantive, score=99)
+            criterion=self.style, score=18)
 
-        subst_key = AverageCriterionScoreMetricAnnotator.build_key(substantive.seq)
-        reply_key = AverageCriterionScoreMetricAnnotator.build_key(reply.seq)
-        standings = self.get_standings((subst_key,), (reply_key,))
-        info = standings.get_standing(self.speaker1)
+        style_key = AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)
 
-        # The 99 on the reply speech and the 5 on the substantive speech must
-        # both be excluded, since those criteria don't apply to those positions.
-        self.assertEqual(info.metrics[subst_key], 30)
-        self.assertEqual(info.metrics[reply_key], 18)
+        # Speaker standings: the substantive speeches only (30 and 32), not 18.
+        standings = self.get_standings((style_key,))
+        self.assertEqual(standings.get_standing(self.speaker1).metrics[style_key], 31)
+
+        # Reply standings: the reply speech only.
+        reply_standings = self.get_standings((style_key,), replies=True)
+        self.assertEqual(reply_standings.get_standing(self.speaker1).metrics[style_key], 18)
 
     def test_public_tab_respects_release_preference(self):
         url = reverse_tournament('standings-public-tab-criterion', self.tournament,
@@ -243,6 +234,34 @@ class TestCriterionStandings(TestCase):
         with suppress_logs('django.request', logging.WARNING):
             response = self.client.get(url, {'metrics': 'criterion_avg_99'})
         self.assertEqual(response.status_code, 400)
+
+    def test_criterion_metric_can_be_saved_as_a_preference(self):
+        """The criteria are per-tournament, so they can't be in the static
+        choices the preference declares; validation must let them through."""
+        key = AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)
+        self.tournament.preferences['standings__speaker_standings_precedence'] = [key]
+        self.assertEqual(self.tournament.pref('speaker_standings_precedence'), [key])
+
+        total = TotalCriterionScoreMetricAnnotator.build_key(self.content.seq)
+        self.tournament.preferences['standings__speaker_standings_extra_metrics'] = [total]
+        self.assertEqual(self.tournament.pref('speaker_standings_extra_metrics'), [total])
+
+    def test_preferences_form_accepts_criterion_metric(self):
+        key = AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)
+        FormClass = tournament_preference_form_builder(  # noqa: N806
+            instance=self.tournament, section='standings')
+        form = FormClass(data={
+            'standings__speaker_standings_precedence_0': key,
+            'standings__speaker_standings_precedence_1': EMPTY_CHOICE,
+            'standings__speaker_standings_precedence_2': EMPTY_CHOICE,
+            'standings__speaker_standings_precedence_3': EMPTY_CHOICE,
+        })
+        form.is_valid()
+        self.assertNotIn('standings__speaker_standings_precedence', form.errors)
+
+    def test_preferences_reject_invalid_metric(self):
+        with self.assertRaises(ValidationError):
+            self.tournament.preferences['standings__speaker_standings_precedence'] = ['not_a_metric']
 
     def test_public_tab_unknown_criterion_404s(self):
         self.tournament.preferences['tab_release__criterion_tabs_released'] = True

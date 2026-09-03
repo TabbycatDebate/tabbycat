@@ -4,7 +4,7 @@ from django.db.models import F, Prefetch
 
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
-from results.models import ScoreCriterion, SpeakerScore, TeamScore
+from results.models import SpeakerScore, TeamScore
 
 logger = logging.getLogger(__name__)
 
@@ -84,11 +84,8 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False, crit
         speaker_scores = speaker_scores.filter(
             speakercriterionscore__criterion=criterion,
         ).annotate(criterion_score=F('speakercriterionscore__score'))
-        if criterion.speech_type == ScoreCriterion.SpeechType.REPLY:
-            speaker_scores = speaker_scores.filter(position=tournament.reply_position)
-        elif criterion.speech_type == ScoreCriterion.SpeechType.SUBSTANTIVE:
-            speaker_scores = speaker_scores.filter(position__lte=tournament.last_substantive_position)
-    elif replies:
+
+    if replies:
         speaker_scores = speaker_scores.filter(position=tournament.reply_position)
     else:
         speaker_scores = speaker_scores.filter(position__lte=tournament.last_substantive_position)

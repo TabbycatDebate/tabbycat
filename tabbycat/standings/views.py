@@ -207,6 +207,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     missable_preference = None
     missable_field = None
     standalone_criterion = None
+    replies = False
 
     def get_standings(self):
         if self.round is None:
@@ -223,7 +224,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         rank_filter = self.get_rank_filter()
         generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
             tournament=self.tournament, standalone_criterion=self.standalone_criterion,
-            rank_filter=rank_filter)
+            replies=self.replies, rank_filter=rank_filter)
         standings = generator.generate(speakers, round=self.round)
 
         rounds = self.get_rounds()
@@ -382,6 +383,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     missable_preference = 'standings_missed_replies'
     missable_field = 'replies_count'
+    replies = True
 
     def get_speakers(self):
         if self.tournament.reply_position is None:
@@ -431,20 +433,23 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
         return self.object
 
     @property
-    def is_reply_criterion(self):
+    def replies(self):
+        """A criterion scored only on replies gives a tab over reply speeches;
+        every other criterion's tab is over substantives, as the ordinary
+        speaker standings are."""
         return self.object.speech_type == ScoreCriterion.SpeechType.REPLY
 
     @property
     def missable_preference(self):
-        # A reply-only criterion is scored on the reply speech, so eligibility
-        # should follow replies given. Usually the reply speaker gives
-        # substantives too, but a speaker who only ever replies would otherwise
-        # be excluded from the tab for a criterion they were scored on.
-        return 'standings_missed_replies' if self.is_reply_criterion else 'standings_missed_debates'
+        # Eligibility follows the speeches the tab is over. Usually a reply
+        # speaker gives substantives too, but a speaker who only ever replies
+        # would otherwise be excluded from the tab for a criterion they were
+        # scored on.
+        return 'standings_missed_replies' if self.replies else 'standings_missed_debates'
 
     @property
     def missable_field(self):
-        return 'replies_count' if self.is_reply_criterion else 'count'
+        return 'replies_count' if self.replies else 'count'
 
     def get_speakers(self):
         return Speaker.objects.filter(
@@ -453,7 +458,7 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
         ).distinct()
 
     def get_metrics(self):
-        count_metric = 'replies_count' if self.is_reply_criterion else 'count'
+        count_metric = 'replies_count' if self.replies else 'count'
         return (AverageCriterionScoreMetricAnnotator.build_key(self.object.seq),), (
             TotalCriterionScoreMetricAnnotator.build_key(self.object.seq), count_metric)
 
@@ -467,7 +472,8 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
         return []
 
     def add_round_results(self, standings, rounds):
-        add_speaker_round_results(standings, rounds, self.tournament, criterion=self.object)
+        add_speaker_round_results(standings, rounds, self.tournament,
+            replies=self.replies, criterion=self.object)
         # The per-round columns hold criterion scores, so they follow the
         # criterion's own step rather than the tournament's speaker score step.
         if self.object.step % 1 == 0:
@@ -479,7 +485,7 @@ class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiv
                         info.scores[i] = int(info.scores[i])
 
     def populate_result_missing(self, standings):
-        if not self.is_reply_criterion:
+        if not self.replies:
             return super().populate_result_missing(standings)
         # Only one speaker per team gives the reply, so a speaker without a
         # score hasn't necessarily missed anything; follow the reply standings.

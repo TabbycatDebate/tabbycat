@@ -200,11 +200,12 @@ public, enable **Release score criteria tabs to public** in the **Tab release**
 section of the tournament settings. Note that this releases the tabs for *all*
 criteria; it isn't currently possible to release them individually.
 
-Criteria that apply only to substantive or only to reply speeches are aggregated
-over just those speeches, matching how they're scored on the ballot. A tab for a
-reply-only criterion also uses the **replies missable for standings eligibility**
-setting rather than its substantive equivalent, so that a speaker who gives
-replies without giving substantive speeches is still ranked on it.
+As with the other speaker metrics, criterion metrics count only the speeches the
+standings are over: substantive speeches in the speaker standings, and the reply
+speech in the tab for a criterion scored only on replies. Such a tab also uses
+the **replies missable for standings eligibility** setting rather than its
+substantive equivalent, so that a speaker who gives replies without giving
+substantive speeches is still ranked on it.
 
 
 Motion balance
