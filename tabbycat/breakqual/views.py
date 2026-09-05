@@ -411,10 +411,18 @@ class PublicEliminationBracketView(PublicTournamentPageMixin, SingleObjectFromTo
             break_rank__isnull=False,
         ).order_by('break_rank').select_related('team')
 
+        # Only link through to record pages if the tournament publishes them.
+        link_records = tournament.pref('public_record')
+
         breaking_teams_data = [
             {
                 'break_rank': bt.break_rank,
-                'team': {'id': bt.team_id, 'short_name': bt.team.short_name},
+                'team': {
+                    'id': bt.team_id,
+                    'short_name': bt.team.short_name,
+                    'url': reverse_tournament('participants-public-team-record', tournament,
+                        kwargs={'pk': bt.team_id}) if link_records else None,
+                },
             }
             for bt in breaking_teams
         ]
