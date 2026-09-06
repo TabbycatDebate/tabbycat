@@ -6,6 +6,15 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
   const sortOrder = ref(defaultSortOrder || '')
   const filterKey = ref('')
 
+  // Earlier column sorts remain tie-breakers when the primary column changes.
+  const sortHistory = ref([])
+  watch([sortKey, sortOrder], ([key, order]) => {
+    const normalizedKey = String(key || '').toLowerCase()
+    sortHistory.value = normalizedKey
+      ? [{ key: normalizedKey, order }, ...sortHistory.value.filter(item => item.key !== normalizedKey)]
+      : []
+  }, { immediate: true, flush: 'sync' })
+
   const updateSorting = (newSortKey) => {
     if (sortKey.value === newSortKey) {
       sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
@@ -37,26 +46,32 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
       return sortableData.value
     }
 
-    const sorted = sortableData.value.slice(0).sort((a, b) => {
-      const aCellData = getSortableProperty(a, orderedHeaderIndex)
-      const bCellData = getSortableProperty(b, orderedHeaderIndex)
-      if (aCellData === '' && bCellData === '') {
-        return 0
-      } else if (aCellData === '') {
-        return 1
-      } else if (bCellData === '') {
-        return -1
+    const criteria = sortHistory.value.map(item => ({
+      ...item,
+      index: _.findIndex(headers.value, head => String(head.key).toLowerCase() === item.key),
+    })).filter(item => item.index !== -1)
+    return sortableData.value.slice(0).sort((a, b) => {
+      for (const { index, order } of criteria) {
+        const aCellData = getSortableProperty(a, index)
+        const bCellData = getSortableProperty(b, index)
+        let comparison = 0
+        if (aCellData === '' && bCellData === '') {
+          comparison = 0
+        } else if (aCellData === '') {
+          comparison = 1
+        } else if (bCellData === '') {
+          comparison = -1
+        } else if (_.isString(aCellData) || _.isString(bCellData)) {
+          comparison = String(aCellData).localeCompare(String(bCellData), undefined, { sensitivity: 'base' })
+        } else {
+          comparison = Number(aCellData) - Number(bCellData)
+        }
+        if (comparison) {
+          return order === 'desc' ? -comparison : comparison
+        }
       }
-      if (_.isString(aCellData) || _.isString(bCellData)) {
-        return String(aCellData).localeCompare(String(bCellData), undefined, { sensitivity: 'base' })
-      }
-      return Number(aCellData) - Number(bCellData)
+      return 0
     })
-
-    if (sortOrder.value === 'desc') {
-      return sorted.reverse()
-    }
-    return sorted
   })
 
   const dataFilteredByKey = computed(() => {
