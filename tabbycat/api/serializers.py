@@ -1071,6 +1071,7 @@ class VenueCategorySerializer(serializers.ModelSerializer):
 
 class ScheduleEventSerializer(serializers.ModelSerializer):
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-scheduleevent-detail')
+    display_title = serializers.CharField(read_only=True)
     round = fields.TournamentHyperlinkedRelatedField(
         view_name='api-round-detail',
         lookup_field='seq',
