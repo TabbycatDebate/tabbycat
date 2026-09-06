@@ -7,6 +7,7 @@ from django.db.models import Count, Prefetch, Q
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
+from adjfeedback.testers import get_tested_rounds
 from options.preferences import FeedbackPaths
 
 logger = logging.getLogger(__name__)
@@ -111,11 +112,13 @@ def get_feedback_overview(t, adjudicators):
                 debate__round__in=rounds).select_related('debate__round')),
     ).annotate(debates=Count('debateadjudicator'))
     annotated_adjs_by_id = {adj.id: adj for adj in annotated_adjs}
+    tested_rounds = get_tested_rounds(t)
 
     for adj in adjudicators:
         annotated_adj = annotated_adjs_by_id[adj.id]
         adj.debates = annotated_adj.debates
-        adj.feedback_data = feedback_stats(annotated_adj, rounds)
+        adj.feedback_data = feedback_stats(annotated_adj, rounds,
+                                           tested_rounds.get(adj.id, set()))
         adj.feedback_count = feedback_count(annotated_adj)
         adj.feedback_variance = feedback_variance(annotated_adj, rounds)
 
@@ -135,7 +138,7 @@ def feedback_count(adj):
     return len(adj.adjfeedback_for_rounds)
 
 
-def feedback_stats(adj, rounds):
+def feedback_stats(adj, rounds, tested_rounds=frozenset()):
     """Collates the feedback statistics for an adjudicator. Assumes
     adj.adjfeedback_for_rounds and adj.debateadj_for_rounds are populated as in
     get_feedback_overview()."""
@@ -166,6 +169,7 @@ def feedback_stats(adj, rounds):
                 'y': round(mean(scores), 2),  # average score
                 'position_class': adj_classes[debateadjs_by_round[r].type],
                 'position': debateadjs_by_round[r].get_type_display(),
+                'tested': r.id in tested_rounds,
             })
 
     return feedback_data

@@ -111,6 +111,7 @@ class Permission(TextChoices):
     EDIT_FEEDBACK_CONFIRM = 'edit.feedbackconfirm', _("toggle confirm feedback")
     VIEW_FEEDBACK_UNSUBMITTED = 'view.feedbackunsubmitted', _("view feedback unsubmitted tab")
     ADD_FEEDBACK = 'add.feedback', _("add feedback")
+    EDIT_ADJ_TESTER = 'edit.adj.tester', _("edit adjudicator tester status")
     VIEW_ADJ_BREAK = 'view.adj.break', _("view adjudicator break")
     EDIT_ADJ_BREAK = 'edit.adj.break', _("edit adjudicator break")
     EDIT_FEEDBACKQUESTION = 'edit.feedbackquestion', _("edit feedback questions")
