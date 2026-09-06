@@ -23,6 +23,20 @@ const hoveringPopOver = ref(false)
 const popperInstance = ref(null)
 const uid = ref(Math.floor(Math.random() * 1000000))
 
+// Touch devices emit a compatibility mouse sequence after a tap
+// (mouseover/mouseenter, then mouseout/mouseleave). Letting those reach the
+// hover handlers closes a popover the tap has just opened, within a few
+// milliseconds, so a tap appears to do nothing at all.
+const lastPointerType = ref('mouse')
+
+const notePointerType = (event) => {
+  if (event?.pointerType) {
+    lastPointerType.value = event.pointerType
+  }
+}
+
+const isTouchPointer = () => ['touch', 'pen'].includes(lastPointerType.value)
+
 const setHoveringPopOver = (value) => {
   hoveringPopOver.value = value
 }
@@ -35,12 +49,16 @@ const hidePopOver = (force = false) => {
 }
 
 const togglePopOver = (event) => {
-  if (event && (event.pointerType === 'touch' || event.pointerType === 'pen')) {
-    if (showingPopOver.value) {
-      setTimeout(() => hidePopOver(), 150)
-    } else {
-      showingPopOver.value = true
-    }
+  notePointerType(event)
+  if (!isTouchPointer()) {
+    return
+  }
+  if (showingPopOver.value) {
+    setTimeout(() => hidePopOver(true), 150)
+  } else {
+    // Same path as hovering: register so other popovers close, and let the
+    // placement be recalculated, which cannot happen while it is hidden.
+    showPopOver()
   }
 }
 
@@ -48,6 +66,28 @@ const showPopOver = () => {
   registerPopover(uid.value)
   popperInstance.value?.setOptions?.({ placement: 'bottom' })
   showingPopOver.value = true
+}
+
+const onHoverEnter = () => {
+  if (isTouchPointer()) {
+    return
+  }
+  showPopOver()
+}
+
+const onHoverLeave = () => {
+  if (isTouchPointer()) {
+    return
+  }
+  hidePopOver()
+}
+
+const onPopOverLeave = () => {
+  if (isTouchPointer()) {
+    return
+  }
+  setHoveringPopOver(false)
+  hidePopOver()
 }
 
 watch(activePopoverUid, () => {
@@ -80,12 +120,14 @@ onBeforeUnmount(() => {
   <div
     ref="container"
     class="touch-target"
+    @pointerenter="notePointerType"
+    @pointerdown="notePointerType"
     @pointerup="togglePopOver"
   >
     <div
       class="hover-target"
-      @mouseenter="showPopOver"
-      @mouseleave="hidePopOver"
+      @mouseenter="onHoverEnter"
+      @mouseleave="onHoverLeave"
     >
       <slot>
         {{ cellData.content }}
@@ -97,7 +139,7 @@ onBeforeUnmount(() => {
         class="popover bs-popover-bottom"
         role="tooltip"
         @mouseenter="setHoveringPopOver(true)"
-        @mouseleave="setHoveringPopOver(false); hidePopOver()"
+        @mouseleave="onPopOverLeave"
       >
         <div class="popover-header d-flex">
           <h6
