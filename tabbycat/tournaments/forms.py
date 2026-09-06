@@ -1,6 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
-from django.forms import CharField, ChoiceField, DateTimeInput, Form, HiddenInput, ModelChoiceField, ModelForm
+from django.forms import CharField, ChoiceField, DateTimeInput, Form, ModelChoiceField, ModelForm
 from django.forms.fields import IntegerField, NumberInput
 from django.forms.models import ModelChoiceIterator
 from django.utils.html import escape
@@ -332,14 +332,12 @@ class ScheduleEventForm(ModelForm):
 
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['tournament'].initial = tournament
         self.fields['round'].queryset = tournament.round_set.all()
 
     class Meta:
         model = ScheduleEvent
-        fields = ('tournament', 'type', 'title', 'start_time', 'end_time', 'round')
+        fields = ('type', 'title', 'start_time', 'end_time', 'round')
         widgets = {
-            'tournament': HiddenInput(),
             'start_time': DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
             'end_time':   DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
         }

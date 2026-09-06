@@ -428,8 +428,6 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
     edit_permission = Permission.EDIT_EVENTS
     view_permission = Permission.VIEW_EVENTS
 
-    same_view = 'tournament-set-schedule'
-
     def get_formset_factory_kwargs(self):
         can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         kwargs = super().get_formset_factory_kwargs()
@@ -498,7 +496,6 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
         return {
             'formIndex': index,
             'id': force_str(form['id'].value() or ''),
-            'tournament': force_str(form['tournament'].value() or self.tournament.pk),
             'type': force_str(form['type'].value() or ScheduleEvent.Types.OTHER),
             'title': force_str(form['title'].value() or ''),
             'startDate': start['date'],
@@ -536,7 +533,6 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
                 for value, label in empty_form.fields['round'].choices
             ],
             'defaultEventType': ScheduleEvent.Types.OTHER,
-            'tournamentId': force_str(self.tournament.pk),
             'canEdit': can_edit,
             'timezoneLabel': get_current_timezone_name(),
             'nonFormErrors': [force_str(error) for error in formset.non_form_errors()],
@@ -565,9 +561,6 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
             f"Saved {nsaved} event(s), deleted {ndeleted}.",
         )
 
-        if "add_more" in self.request.POST:
-            return redirect_tournament(self.same_view, self.tournament)
-
         return super().formset_valid(formset)
 
     def get_success_url(self):
@@ -580,7 +573,6 @@ class PublicScheduleView(PublicTournamentPageMixin, VueTableTemplateView):
     public_page_preference = 'public_schedule'
     page_title = _("Tournament Schedule")
     page_emoji = '⏳'
-    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
     tables_orientation = 'rows'
 
     def get_tables(self):

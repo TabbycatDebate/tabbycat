@@ -52,7 +52,6 @@ class SetTournamentScheduleViewTest(TestCase):
             'form-INITIAL_FORMS': '0',
             'form-MIN_NUM_FORMS': '0',
             'form-MAX_NUM_FORMS': '1000',
-            'form-0-tournament': str(self.tournament.pk),
             'form-0-type': ScheduleEvent.Types.BRIEFING,
             'form-0-title': 'Opening briefing',
             'form-0-start_time': '2026-08-15T09:00',
@@ -62,6 +61,7 @@ class SetTournamentScheduleViewTest(TestCase):
 
         self.assertRedirects(response, self.url)
         event = ScheduleEvent.objects.get(tournament=self.tournament)
+        self.assertEqual(event.tournament, self.tournament)
         self.assertEqual(event.title, 'Opening briefing')
         self.assertEqual(event.type, ScheduleEvent.Types.BRIEFING)
 

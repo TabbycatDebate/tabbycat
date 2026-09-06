@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+import { useDjangoFormset } from '../../templates/composables/useDjangoFormset.js'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 
 const UNDATED_DAY = '__undated__'
@@ -6,22 +7,22 @@ const UNDATED_DAY = '__undated__'
 export function useScheduleEditor (initialData) {
   const { gettext, ngettext, tct } = useDjangoI18n()
   const locale = document.documentElement.lang || undefined
-  const events = ref(initialData.events.map(event => ({
+  const normalizeEvent = event => ({
     ...event,
     errors: { ...event.errors },
     nonFieldErrors: [...event.nonFieldErrors],
-  })))
-  const mode = ref('edit')
+  })
+  const {
+    addForm,
+    canAdd,
+    deletedForms: deletedEvents,
+    deleteForm,
+    findForm: findEvent,
+    nextFormIndex,
+    visibleForms: visibleEvents,
+  } = useDjangoFormset(initialData.events, initialData.management, normalizeEvent)
   const newDay = ref('')
   const dirty = ref(false)
-  const submitting = ref(false)
-  const toast = ref('')
-  const nextFormIndex = ref(Number(initialData.management.totalForms))
-  let toastTimeout = null
-
-  const visibleEvents = computed(() => events.value.filter(event => !event.deleted))
-  const deletedEvents = computed(() => events.value.filter(event => event.deleted))
-  const canAdd = computed(() => nextFormIndex.value < Number(initialData.management.maxNumForms))
 
   const dateTimeValue = (event, kind) => {
     const raw = event[`${kind}Raw`]
@@ -60,8 +61,6 @@ export function useScheduleEditor (initialData) {
       }))
   })
 
-  const findEvent = formIndex => events.value.find(event => event.formIndex === formIndex)
-
   const choiceLabel = (choices, value) => choices.find(choice => String(choice[0]) === String(value))?.[1] || ''
 
   const automaticTitle = event => {
@@ -70,16 +69,11 @@ export function useScheduleEditor (initialData) {
     return [round, type].filter(Boolean).join(' — ') || gettext('Untitled event')
   }
 
-  const displayTitle = event => event.title.trim() || automaticTitle(event)
-
-  const escapeHtml = value => String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll('\'', '&#039;')
-
   const localDate = date => new Date(`${date}T12:00:00`)
+
+  const dayFormatter = new Intl.DateTimeFormat(locale, { day: 'numeric' })
+  const weekdayFormatter = new Intl.DateTimeFormat(locale, { weekday: 'long' })
+  const monthYearFormatter = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' })
 
   const formatDay = date => {
     if (date === UNDATED_DAY) {
@@ -87,28 +81,14 @@ export function useScheduleEditor (initialData) {
         number: '?',
         weekday: gettext('Needs a date'),
         monthYear: gettext('Correct the start time below'),
-        full: gettext('Needs a date'),
       }
     }
     const value = localDate(date)
     return {
-      number: new Intl.DateTimeFormat(locale, { day: 'numeric' }).format(value),
-      weekday: new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(value),
-      monthYear: new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(value),
-      full: new Intl.DateTimeFormat(locale, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }).format(value),
+      number: dayFormatter.format(value),
+      weekday: weekdayFormatter.format(value),
+      monthYear: monthYearFormatter.format(value),
     }
-  }
-
-  const formatTime = (date, time) => {
-    if (!date || !time) return '—'
-    return new Intl.DateTimeFormat(locale, {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(`${date}T${time}`))
   }
 
   const duration = event => {
@@ -132,40 +112,6 @@ export function useScheduleEditor (initialData) {
   const eventCountLabel = count => {
     const format = ngettext('%s event', '%s events', count)
     return window.interpolate(format, [count])
-  }
-
-  const previewTables = computed(() => days.value
-    .filter(day => day.date !== UNDATED_DAY)
-    .map(day => ({
-      head: [
-        { title: gettext('Event'), key: 'event' },
-        { title: gettext('Start Time'), key: 'start_time' },
-        { title: gettext('End Time'), key: 'end_time' },
-      ],
-      data: day.events.map(event => [
-        { text: escapeHtml(displayTitle(event)) },
-        {
-          text: formatTime(event.startDate, event.startTime),
-          sort: new Date(dateTimeValue(event, 'start')).getTime(),
-        },
-        {
-          text: event.endTime ? formatTime(event.endDate, event.endTime) : '',
-          sort: event.endTime ? new Date(dateTimeValue(event, 'end')).getTime() : '',
-        },
-      ]),
-      title: formatDay(day.date).full,
-      subtitle: '',
-      empty_title: gettext('No Data Available'),
-      class: '',
-      sort_key: 'start_time',
-      sort_order: 'asc',
-      highlight_column: null,
-    })))
-
-  const showToast = message => {
-    toast.value = message
-    window.clearTimeout(toastTimeout)
-    toastTimeout = window.setTimeout(() => { toast.value = '' }, 2200)
   }
 
   const markDirty = () => {
@@ -216,9 +162,7 @@ export function useScheduleEditor (initialData) {
   }
 
   const makeEvent = (date, source = null) => ({
-    formIndex: nextFormIndex.value++,
     id: '',
-    tournament: String(source?.tournament || initialData.tournamentId),
     type: source?.type || initialData.defaultEventType,
     title: source?.title || '',
     startDate: source?.startDate || date,
@@ -228,15 +172,13 @@ export function useScheduleEditor (initialData) {
     endTime: source?.endTime || '',
     endRaw: null,
     round: source?.round || '',
-    deleted: false,
     errors: {},
     nonFieldErrors: [],
   })
 
   const addEvent = date => {
     if (!initialData.canEdit || !canAdd.value || !date || date === UNDATED_DAY) return null
-    const event = makeEvent(date)
-    events.value.push(event)
+    const event = addForm(makeEvent(date))
     markDirty()
     return event
   }
@@ -249,17 +191,14 @@ export function useScheduleEditor (initialData) {
   const duplicateEvent = formIndex => {
     const source = findEvent(formIndex)
     if (!source || !canAdd.value) return
-    events.value.push(makeEvent(source.startDate, source))
+    addForm(makeEvent(source.startDate, source))
     markDirty()
-    showToast(gettext('Event duplicated.'))
   }
 
   const deleteEvent = formIndex => {
-    const event = findEvent(formIndex)
+    const event = deleteForm(formIndex)
     if (!event) return
-    event.deleted = true
     markDirty()
-    showToast(gettext('Event deleted.'))
   }
 
   const reorderEvent = (sourceIndex, targetIndex, placeAfter) => {
@@ -283,7 +222,6 @@ export function useScheduleEditor (initialData) {
       clearFieldErrors(event, 'end_time')
     })
     markDirty()
-    showToast(gettext('Event moved; its time slot was updated.'))
   }
 
   const reorderWithKeyboard = (formIndex, direction) => {
@@ -295,37 +233,26 @@ export function useScheduleEditor (initialData) {
     if (target) reorderEvent(formIndex, target.formIndex, direction > 0)
   }
 
-  const beginSubmit = () => {
-    submitting.value = true
-  }
-
   return {
     UNDATED_DAY,
     addDay,
     addEvent,
     automaticTitle,
-    beginSubmit,
     canAdd,
     dateTimeValue,
     days,
     deletedEvents,
     deleteEvent,
     dirty,
-    displayTitle,
     duplicateEvent,
     duration,
     eventCountLabel,
     formatDay,
-    markDirty,
-    mode,
     moveEventDate,
     newDay,
     nextFormIndex,
-    previewTables,
     reorderEvent,
     reorderWithKeyboard,
-    submitting,
-    toast,
     updateEvent,
     visibleEvents,
   }
