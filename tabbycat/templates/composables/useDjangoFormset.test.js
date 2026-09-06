@@ -7,6 +7,7 @@ test('keeps stable form indices and deleted forms when adding replacements', () 
     { formIndex: 0, title: 'First', deleted: false },
     { formIndex: 1, title: 'Second', deleted: false },
   ], {
+    prefix: 'form',
     totalForms: 2,
     maxNumForms: 2,
   })
@@ -18,6 +19,7 @@ test('keeps stable form indices and deleted forms when adding replacements', () 
   const replacement = formset.addForm({ title: 'Replacement' })
 
   assert.equal(replacement.formIndex, 2)
+  assert.equal(formset.fieldName(replacement.formIndex, 'title'), 'form-2-title')
   assert.equal(formset.nextFormIndex.value, 3)
   assert.deepEqual(formset.visibleForms.value.map(form => form.formIndex), [1, 2])
   assert.deepEqual(formset.deletedForms.value.map(form => form.formIndex), [0])

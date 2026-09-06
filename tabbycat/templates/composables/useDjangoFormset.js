@@ -12,6 +12,7 @@ export function useDjangoFormset (initialForms, management, normalizeForm = form
   const canAdd = computed(() => !Number.isFinite(maximumForms) || visibleForms.value.length < maximumForms)
 
   const findForm = formIndex => forms.value.find(form => form.formIndex === formIndex)
+  const fieldName = (formIndex, field) => `${management.prefix}-${formIndex}-${field}`
 
   const addForm = values => {
     if (!canAdd.value) return null
@@ -39,6 +40,7 @@ export function useDjangoFormset (initialForms, management, normalizeForm = form
     nextFormIndex,
     addForm,
     deleteForm,
+    fieldName,
     findForm,
   }
 }

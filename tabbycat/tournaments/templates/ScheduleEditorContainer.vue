@@ -6,35 +6,30 @@ import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 import ScheduleEditorEventRow from './ScheduleEditorEventRow.vue'
 import { useScheduleEditor } from './useScheduleEditor.js'
 
-const props = defineProps({ initialData: Object })
+const { initialData } = defineProps({ initialData: Object })
+const { canEdit, management, nonFormErrors, timezoneLabel } = initialData
 const { gettext, tct } = useDjangoI18n()
 const newDayInput = ref(null)
 const submitting = ref(false)
 let scheduleForm = null
 
+const editor = useScheduleEditor(initialData)
 const {
   UNDATED_DAY,
   addDay,
   addEvent,
-  automaticTitle,
   canAdd,
   dateTimeValue,
   days,
   deletedEvents,
-  deleteEvent,
   dirty,
-  duplicateEvent,
-  duration,
   eventCountLabel,
+  fieldName,
   formatDay,
-  moveEventDate,
   newDay,
   nextFormIndex,
-  reorderEvent,
-  reorderWithKeyboard,
-  updateEvent,
   visibleEvents,
-} = useScheduleEditor(props.initialData)
+} = editor
 
 const displayDays = computed(() => days.value.map(day => {
   const formatted = formatDay(day.date)
@@ -45,7 +40,17 @@ const displayDays = computed(() => days.value.map(day => {
 }))
 
 const focusEvent = event => nextTick(() => {
-  document.getElementById(`id_${props.initialData.management.prefix}-${event.formIndex}-type`)?.focus()
+  document.getElementById(`id_${fieldName(event.formIndex, 'type')}`)?.focus()
+})
+
+const deletedFormValues = event => ({
+  id: event.id,
+  type: event.type,
+  title: event.title,
+  start_time: dateTimeValue(event, 'start'),
+  end_time: dateTimeValue(event, 'end'),
+  round: event.round,
+  DELETE: 'on',
 })
 
 const handleAddDay = () => {
@@ -84,60 +89,32 @@ onBeforeUnmount(() => {
 <template>
   <div class="schedule-editor">
     <django-formset-management
-      :management="initialData.management"
+      :management="management"
       :total-forms="nextFormIndex"
     />
 
     <div class="d-none">
       <template
-        v-for="scheduleEvent in deletedEvents"
-        :key="scheduleEvent.formIndex"
+        v-for="event in deletedEvents"
+        :key="event.formIndex"
       >
         <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-id`"
+          v-for="(value, field) in deletedFormValues(event)"
+          :key="field"
+          :name="fieldName(event.formIndex, field)"
           type="hidden"
-          :value="scheduleEvent.id"
-        >
-        <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-type`"
-          type="hidden"
-          :value="scheduleEvent.type"
-        >
-        <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-title`"
-          type="hidden"
-          :value="scheduleEvent.title"
-        >
-        <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-start_time`"
-          type="hidden"
-          :value="dateTimeValue(scheduleEvent, 'start')"
-        >
-        <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-end_time`"
-          type="hidden"
-          :value="dateTimeValue(scheduleEvent, 'end')"
-        >
-        <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-round`"
-          type="hidden"
-          :value="scheduleEvent.round"
-        >
-        <input
-          :name="`${initialData.management.prefix}-${scheduleEvent.formIndex}-DELETE`"
-          type="hidden"
-          value="on"
+          :value="value"
         >
       </template>
     </div>
 
     <div
-      v-if="initialData.nonFormErrors.length"
+      v-if="nonFormErrors.length"
       class="alert alert-danger"
     >
       <ul class="mb-0">
         <li
-          v-for="error in initialData.nonFormErrors"
+          v-for="error in nonFormErrors"
           :key="error"
         >
           {{ error }}
@@ -154,7 +131,7 @@ onBeforeUnmount(() => {
               class="mr-1"
               name="clock"
             />
-            {{ tct('Times shown in %s', [initialData.timezoneLabel]) }}
+            {{ tct('Times shown in %s', [timezoneLabel]) }}
           </span>
           <span
             v-if="dirty"
@@ -162,7 +139,7 @@ onBeforeUnmount(() => {
           >{{ gettext('Unsaved changes.') }}</span>
         </div>
         <div
-          v-if="initialData.canEdit"
+          v-if="canEdit"
           class="schedule-add-day d-flex align-items-center"
         >
           <label
@@ -207,7 +184,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <button
-          v-if="initialData.canEdit && day.date !== UNDATED_DAY"
+          v-if="canEdit && day.date !== UNDATED_DAY"
           class="btn btn-outline-primary btn-sm"
           type="button"
           @click="handleAddEvent(day.date)"
@@ -236,24 +213,11 @@ onBeforeUnmount(() => {
       </div>
 
       <schedule-editor-event-row
-        v-for="scheduleEvent in day.events"
-        :key="scheduleEvent.formIndex"
-        :event="scheduleEvent"
+        v-for="event in day.events"
+        :key="event.formIndex"
+        :event="event"
         :day-date="day.date"
-        :can-edit="initialData.canEdit"
-        :prefix="initialData.management.prefix"
-        :type-choices="initialData.typeChoices"
-        :round-choices="initialData.roundChoices"
-        :automatic-title="automaticTitle(scheduleEvent)"
-        :duration="duration(scheduleEvent)"
-        :start-date-time="dateTimeValue(scheduleEvent, 'start')"
-        :end-date-time="dateTimeValue(scheduleEvent, 'end')"
-        @delete-event="deleteEvent"
-        @duplicate-event="duplicateEvent"
-        @move-date="moveEventDate"
-        @reorder="reorderEvent"
-        @reorder-keyboard="reorderWithKeyboard"
-        @update-event="updateEvent"
+        :editor="editor"
       />
     </section>
 

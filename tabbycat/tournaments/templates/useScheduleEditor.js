@@ -17,6 +17,7 @@ export function useScheduleEditor (initialData) {
     canAdd,
     deletedForms: deletedEvents,
     deleteForm,
+    fieldName,
     findForm: findEvent,
     nextFormIndex,
     visibleForms: visibleEvents,
@@ -247,6 +248,7 @@ export function useScheduleEditor (initialData) {
     duplicateEvent,
     duration,
     eventCountLabel,
+    fieldName,
     formatDay,
     moveEventDate,
     newDay,
@@ -255,5 +257,8 @@ export function useScheduleEditor (initialData) {
     reorderWithKeyboard,
     updateEvent,
     visibleEvents,
+    canEdit: initialData.canEdit,
+    roundChoices: initialData.roundChoices,
+    typeChoices: initialData.typeChoices,
   }
 }

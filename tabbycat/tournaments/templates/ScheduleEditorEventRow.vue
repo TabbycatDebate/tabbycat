@@ -8,34 +8,37 @@ import { useDraggable } from '../../templates/composables/useDraggable.js'
 const props = defineProps({
   event: Object,
   dayDate: String,
-  canEdit: Boolean,
-  prefix: String,
-  typeChoices: Array,
-  roundChoices: Array,
-  automaticTitle: String,
-  duration: Object,
-  startDateTime: String,
-  endDateTime: String,
+  editor: Object,
 })
 
-const emit = defineEmits([
-  'delete-event',
-  'duplicate-event',
-  'move-date',
-  'reorder',
-  'reorder-keyboard',
-  'update-event',
-])
-
 const { gettext } = useDjangoI18n()
+const {
+  automaticTitle: getAutomaticTitle,
+  canEdit,
+  dateTimeValue,
+  deleteEvent,
+  duplicateEvent,
+  duration: getDuration,
+  fieldName: getFieldName,
+  moveEventDate,
+  reorderEvent,
+  reorderWithKeyboard,
+  roundChoices,
+  typeChoices,
+  updateEvent,
+} = props.editor
 const dateInput = ref(null)
 const dropPosition = ref(null)
-const fieldName = field => `${props.prefix}-${props.event.formIndex}-${field}`
+const fieldName = field => getFieldName(props.event.formIndex, field)
 const fieldId = field => `id_${fieldName(field)}`
 const fieldErrors = field => props.event.errors[field] || []
+const automaticTitle = computed(() => getAutomaticTitle(props.event))
+const duration = computed(() => getDuration(props.event))
+const startDateTime = computed(() => dateTimeValue(props.event, 'start'))
+const endDateTime = computed(() => dateTimeValue(props.event, 'end'))
 
 const dragOptions = {
-  get locked () { return !props.canEdit },
+  locked: !canEdit,
   get dragPayload () {
     return { formIndex: props.event.formIndex, dayDate: props.dayDate }
   },
@@ -48,7 +51,7 @@ const rowClasses = computed(() => ({
   'schedule-row-drop-after': dropPosition.value === 'after',
 }))
 
-const update = (field, value) => emit('update-event', props.event.formIndex, field, value)
+const update = (field, value) => updateEvent(props.event.formIndex, field, value)
 
 const openDatePicker = () => {
   if (typeof dateInput.value?.showPicker === 'function') {
@@ -81,7 +84,7 @@ const onDrop = event => {
   try {
     const payload = JSON.parse(event.dataTransfer.getData('text'))
     if (payload.dayDate === props.dayDate) {
-      emit('reorder', payload.formIndex, props.event.formIndex, dropPosition.value === 'after')
+      reorderEvent(payload.formIndex, props.event.formIndex, dropPosition.value === 'after')
     }
   } catch {}
   dropPosition.value = null
@@ -90,7 +93,7 @@ const onDrop = event => {
 const onKeyboardReorder = event => {
   if (!['ArrowUp', 'ArrowDown'].includes(event.key)) return
   event.preventDefault()
-  emit('reorder-keyboard', props.event.formIndex, event.key === 'ArrowUp' ? -1 : 1)
+  reorderWithKeyboard(props.event.formIndex, event.key === 'ArrowUp' ? -1 : 1)
 }
 </script>
 
@@ -288,7 +291,7 @@ const onKeyboardReorder = event => {
           tabindex="-1"
           aria-hidden="true"
           :value="event.startDate"
-          @change="emit('move-date', event.formIndex, $event.target.value)"
+          @change="moveEventDate(event.formIndex, $event.target.value)"
         >
       </span>
       <button
@@ -296,7 +299,7 @@ const onKeyboardReorder = event => {
         type="button"
         :title="gettext('Duplicate event')"
         :aria-label="gettext('Duplicate event')"
-        @click="emit('duplicate-event', event.formIndex)"
+        @click="duplicateEvent(event.formIndex)"
       >
         <feather-icon name="copy" />
       </button>
@@ -305,7 +308,7 @@ const onKeyboardReorder = event => {
         type="button"
         :title="gettext('Delete event')"
         :aria-label="gettext('Delete event')"
-        @click="emit('delete-event', event.formIndex)"
+        @click="deleteEvent(event.formIndex)"
       >
         <feather-icon name="trash-2" />
       </button>
