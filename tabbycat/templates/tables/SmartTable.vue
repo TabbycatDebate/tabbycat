@@ -5,6 +5,7 @@ import { computed, defineAsyncComponent, toRef } from 'vue'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import CheckCell from '../tables/CheckCell.vue'
+import AjaxSelectCell from '../tables/AjaxSelectCell.vue'
 import BallotsCell from '../../results/templates/BallotsCell.vue'
 import { useSortableTable } from '../composables/useSortableTable.js'
 
@@ -27,7 +28,7 @@ const props = defineProps({
   externalFilterKey: String,
 })
 
-const emit = defineEmits(['toggle-checked'])
+const emit = defineEmits(['saved', 'toggle-checked'])
 
 const rows = computed(() => {
   const rows = []
@@ -53,10 +54,16 @@ const headers = computed(() => {
 
 const sortableData = computed(() => rows.value)
 
+const getCellValue = (cell) => {
+  if (cell.component === 'ajax-select-cell') {
+    return cell.value ?? ''
+  }
+  return _.isUndefined(cell.sort) ? cell.text : cell.sort
+}
+
 const getSortableProperty = (row, orderedHeaderIndex) => {
   const cell = row[orderedHeaderIndex]
-  const cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
-  return cellData
+  return getCellValue(cell)
 }
 
 const {
@@ -92,7 +99,10 @@ const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
 const copyTableData = async () => {
   const content = props.tableContent.map(row =>
     row.reduce((acc, cell, index) => {
-      acc[props.tableHeaders[index].key] = (cell.text ? cell.text.replace(/<[^>]*>?/gm, '') : '')
+      const value = cell.component === 'ajax-select-cell' ? cell.value : cell.text
+      acc[props.tableHeaders[index].key] = typeof value === 'string'
+        ? value.replace(/<[^>]*>?/gm, '')
+        : (value ?? '')
       return acc
     }, {}),
   )
@@ -106,6 +116,7 @@ defineExpose({ copyTableData })
 const componentMap = {
   SmartCell,
   'check-cell': CheckCell,
+  'ajax-select-cell': AjaxSelectCell,
   'ballots-cell': BallotsCell,
   'feedback-trend': FeedbackTrend,
 }
@@ -146,6 +157,7 @@ const resolveCellComponent = (cellData) => {
             v-for="(cellData, cellIndex) in row"
             :key="cellIndex"
             :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
+            @saved="emit('saved', $event)"
             @toggle-checked="emit('toggle-checked', $event)"
           />
         </tr>

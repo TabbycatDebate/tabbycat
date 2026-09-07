@@ -65,7 +65,8 @@ export function useAjax (onSaveSuccess) {
         }
       },
       success: function (data) {
-        if (JSON.parse(data).status === 503) {
+        const dataResponse = typeof data === 'string' ? JSON.parse(data) : data
+        if (dataResponse.status === 503) {
           this.error('', '', '503 Service Unavailable')
         } else {
           if (onSaveSuccess) {
@@ -73,7 +74,6 @@ export function useAjax (onSaveSuccess) {
           }
           console.debug(`AJAX: Saved ${message}`)
           console.debug('DEBUG: JSON ajaxSave success data:', data)
-          const dataResponse = JSON.parse(data)
           if (completeFunction !== null) {
             completeFunction(dataResponse, payload, returnPayload)
           }
