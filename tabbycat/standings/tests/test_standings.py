@@ -112,6 +112,32 @@ class TestTrivialStandings(TestCase):
     def test_speaks_stddev(self):
         self._base_metric_test({'speaks_stddev': [.5, .5]})
 
+    def test_score_metrics_ignore_float_noise(self):
+        for team, score in ((self.team1, 75.1), (self.team2, 75.1 + 1e-12)):
+            TeamScore.objects.filter(debate_team__team=team).update(score=score, margin=score)
+        for metric in ('speaks_sum', 'speaks_avg', 'speaks_stddev', 'margin_sum', 'margin_avg', 'draw_strength_speaks'):
+            with self.subTest(metric=metric):
+                standings = self.get_standings(TeamStandingsGenerator((metric,), ('rank',)))
+                for team in (self.team1, self.team2):
+                    self.assertEqual(standings.get_standing(team).rankings['rank'], (1, True))
+
+    def test_individual_score_average_ignores_float_noise(self):
+        self.set_up_speaker_scores(1)
+        for team, score in ((self.team1, 75.1), (self.team2, 75.1 + 1e-12)):
+            SpeakerScore.objects.filter(debate_team__team=team).update(score=score)
+        standings = self.get_standings(TeamStandingsGenerator(('speaks_ind_avg',), ('rank',)))
+        for team in (self.team1, self.team2):
+            self.assertEqual(standings.get_standing(team).rankings['rank'], (1, True))
+
+    def test_score_average_preserves_sub_display_differences(self):
+        TeamScore.objects.filter(debate_team__team=self.team1).update(score=75)
+        TeamScore.objects.filter(debate_team__team=self.team2).update(score=75 + .1 / 30)
+        standings = self.get_standings(TeamStandingsGenerator(('speaks_avg',), ('rank',)))
+        first, second = [standings.get_standing(team) for team in (self.team1, self.team2)]
+        self.assertEqual(format(first.metrics['speaks_avg'], '.2f'), format(second.metrics['speaks_avg'], '.2f'))
+        self.assertEqual(first.rankings['rank'], (2, False))
+        self.assertEqual(second.rankings['rank'], (1, False))
+
     def test_draw_strength(self):
         # losing team has faced winning team twice, so draw strength is 2 * 2 = 4
         self._base_metric_test({'draw_strength': [0, 4]})
