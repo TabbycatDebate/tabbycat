@@ -23,7 +23,7 @@
     "render-worker": "python manage.py runworker notifications adjallocation venues",
     "docs": "sphinx-autobuild docs docs/_build/html --port 7999",
     "lint": "pre-commit run --all-files",
-    "test": "node --test tabbycat/templates/composables/tests/*.test.js"
+    "test": "node --test"
   },
   "dependencies": {
     "@babel/cli": "^7.16.0",

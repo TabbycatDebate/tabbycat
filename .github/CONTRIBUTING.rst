@@ -46,7 +46,8 @@ Development
 Frontend table tests
 --------------------
 
-Run ``npm test`` to exercise the Vue table composables without a Django server.
+Run ``npm test`` to run all frontend Node tests discovered through the standard
+``*.test.js`` naming convention, without a Django server.
 Sorting a new column keeps earlier column sorts as tie-breakers, in the order
 most recently selected. Descending order must preserve rows that compare equal,
 and sorting must not mutate the source rows. These tests also run in Django CI.
