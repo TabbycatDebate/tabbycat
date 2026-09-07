@@ -28,7 +28,11 @@ urlpatterns = [
     path('registration/',           include('registration.urls_public')),
 
     # Public Schedule
-    path('schedule/',               views.PublicScheduleView.as_view(), name='tournament-public-schedule'),
+    path('schedule/', include([
+        path('', views.PublicScheduleView.as_view(), name='tournament-public-schedule'),
+        path('calendar.ics', views.PublicScheduleICalendarView.as_view(),
+            name='tournament-public-schedule-ical'),
+    ])),
 
     # Application URLs for admin pages
     path('admin/allocations/',      include('adjallocation.urls')),

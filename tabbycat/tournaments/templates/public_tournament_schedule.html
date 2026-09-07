@@ -1,11 +1,22 @@
 {% extends 'tables/base_vue_table.html' %}
-{% load i18n %}
+{% load debate_tags i18n %}
 
 {% block content %}
 {% blocktrans trimmed asvar p1 %}
 Schedule is in time zone: {{ schedule_timezone_label }}
 {% endblocktrans %}
+{% tournamenturl 'tournament-public-schedule-ical' as calendar_url %}
+{% blocktrans trimmed asvar p2 %}
+Download the iCalendar file to add these events to your calendar app.
+{% endblocktrans %}
 {% include "components/explainer-card.html" with type="info" %}
+
+<p>
+  <a class="btn btn-outline-primary" href="{{ calendar_url }}">
+    <i data-feather="calendar"></i>
+    {% trans "Add schedule to calendar" %}
+  </a>
+</p>
 
 
 {{ block.super }}
