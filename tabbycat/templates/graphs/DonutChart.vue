@@ -21,9 +21,9 @@ function InitChart (vueContext) {
     },${vueContext.radius + vueContext.padding})`)
 
   const path = svg.selectAll('path')
-    .data(pie(vueContext.graphData.reverse()))
+    .data(pie([...vueContext.graphData].reverse()))
     .enter().append('path')
-    .attr('class', (d, i) => `hoverable ${vueContext.colorclass(vueContext.graphData[i].label)}`)
+    .attr('class', d => `hoverable ${vueContext.colorclass(d.data.label)}`)
     .style('stroke', 'white')
     .style('stroke-width', '1')
     .attr('d', arc)
@@ -33,13 +33,11 @@ function InitChart (vueContext) {
     .style('opacity', 0)
 
   path.on('mouseover', function (event, d) {
-    const e = path.nodes()
-    const i = e.indexOf(this)
     tooltip.html(`<div class='tooltip-inner'>${
-      vueContext.graphData[i].count} ${
-      vueContext.percentage(vueContext.graphData[i].count)
+      d.data.count} ${
+      vueContext.percentage(d.data.count)
     }<br>${
-      vueContext.nicelabel(vueContext.graphData[i].label)
+      vueContext.nicelabel(d.data.label)
     }</div>`)
       .style('left', `${event.pageX}px`)
       .style('top', `${event.pageY - 28}px`)
@@ -78,7 +76,7 @@ const colorclass = (label) => {
   if (props.regions === undefined) {
     return `gender-display gender-${label.toLowerCase()}`
   }
-  return `region-display region-${label}`
+  return `region-display region-${props.regions.find(region => region.id === label).seq}`
 }
 
 const nicelabel = (label) => {
@@ -89,7 +87,7 @@ const nicelabel = (label) => {
   } else if (label === 'Unknown') {
     return 'Unspecified or unrecorded'
   }
-  return props.regions[label].name
+  return props.regions.find(region => region.id === label).name
 }
 
 const percentage = (quantity) => {
