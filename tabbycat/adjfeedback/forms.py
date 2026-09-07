@@ -18,7 +18,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
-from .utils import expected_feedback_targets, team_feedback_allowed_targets
+from .utils import expected_feedback_targets, feedback_stages, team_feedback_allowed_targets
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +151,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
         debate__round__seq__lte=tournament.current_round_seq_limit,
-        debate__round__stage=Round.Stage.PRELIMINARY,
+        debate__round__stage__in=feedback_stages(tournament, 'feedback_paths_rounds'),
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
             'debate__debateadjudicator_set',
@@ -223,7 +223,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
         round__seq__lte=tournament.current_round_seq_limit,
-        round__stage=Round.Stage.PRELIMINARY,
+        round__stage__in=feedback_stages(tournament, 'feedback_from_teams_rounds'),
     ).order_by('-round__seq').prefetch_related(Prefetch(
         'debateadjudicator_set',
         queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(
