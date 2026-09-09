@@ -77,11 +77,6 @@
       {% trans "Configures sending notifications, such as emails confirming ballot submissions or team points" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📧" text=title extra=description %}
 
-      {% tournamenturl 'options-tournament-section' section='global' as url %}
-      {% trans "Global Settings" as title %}
-      {% trans "Settings which can affect all tournaments on the site" as description %}
-      {% include "components/item-action.html" with type="primary" emoji="🌏" text=title extra=description %}
-
     </ul>
   </div>
 
