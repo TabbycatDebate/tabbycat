@@ -50,6 +50,16 @@ def fill_scoresheet_randomly(scoresheet, tournament, nattempts=1000):
 
         if scoresheet.uses_scores:
             for side, pos in product(scoresheet.sides, scoresheet.positions):
+                # With criteria, the speech score is derived from them and
+                # set_score() is a no-op, so score each criterion instead.
+                if scoresheet.criteria:
+                    for criterion in scoresheet.criteria_for_position(pos):
+                        start = criterion.min_score / criterion.step
+                        stop = criterion.max_score / criterion.step
+                        score = random.randint(start, stop) * criterion.step
+                        scoresheet.set_criterion_score(side, pos, criterion, score)
+                    continue
+
                 if pos == tournament.reply_position:
                     step = tournament.pref('reply_score_step')
                     start = tournament.pref('reply_score_min') / step

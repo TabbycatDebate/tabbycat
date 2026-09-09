@@ -8,7 +8,7 @@ from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import (BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference,
     IntegerPreference, LongStringPreference, MultipleChoicePreference, StringPreference)
 
-from standings.speakers import SpeakerStandingsGenerator
+from standings.speakers import is_criterion_metric_key, SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
@@ -755,6 +755,13 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     default = []
 
 
+def validate_speaker_metric_choices(parent, value):
+    """Runs the standard choice validation, but lets score criterion metrics
+    through: they're per-tournament, so they can't be in the static choices the
+    preference declares (the form adds them for the tournament being edited)."""
+    parent.validate([v for v in value if not is_criterion_metric_key(v)])
+
+
 @tournament_preferences_registry.register
 class SpeakerStandingsPrecedence(MultiValueChoicePreference):
     help_text = _("Metrics to use to rank speakers (see documentation for further details)")
@@ -767,7 +774,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
     default = ['average']
 
     def validate(self, value):
-        super().validate(value)
+        validate_speaker_metric_choices(super(), value)
         validate_metric_duplicates(SpeakerStandingsGenerator, value)
 
 
@@ -781,6 +788,9 @@ class SpeakerStandingsExtraMetrics(MultiValueChoicePreference):
     nfields = 5
     allow_empty = True
     default = ['stdev', 'count']
+
+    def validate(self, value):
+        validate_speaker_metric_choices(super(), value)
 
 
 # ==============================================================================
@@ -830,6 +840,15 @@ class RepliesTabReleased(BooleanPreference):
     verbose_name = _("Release replies tab to public")
     section = tab_release
     name = 'replies_tab_released'
+    default = False
+
+
+@tournament_preferences_registry.register
+class CriterionTabsReleased(BooleanPreference):
+    help_text = _("Enables public display of the per-criterion speaker tabs, e.g. a tab of the top speakers by 'Style'. Intended for use after the tournament.")
+    verbose_name = _("Release score criteria tabs to public")
+    section = tab_release
+    name = 'criterion_tabs_released'
     default = False
 
 

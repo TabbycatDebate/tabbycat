@@ -27,6 +27,9 @@ urlpatterns = [
         path('reply/',
             views.ReplyStandingsView.as_view(),
             name='standings-reply'),
+        path('criterion/<int:criterion>/',
+            views.CriterionStandingsView.as_view(),
+            name='standings-criterion'),
 
         path('diversity/',
             views.DiversityStandingsView.as_view(),
