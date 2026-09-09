@@ -121,8 +121,8 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         # Set up the brackets
         for p, b in b2.items():
             for i, x in enumerate(b):
-                if isinstance(x[-1], str) and len(x) > 2:
-                    flags = [x[-1]]
+                if isinstance(x[-1], (str, list)) and len(x) > 2:
+                    flags = [x[-1]] if isinstance(x[-1], str) else x[-1]
                     x = x[:-1]
                 else:
                     flags = None
@@ -150,8 +150,8 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_intermediate_brackets_avoid_conflicts_1(self):
         brackets = OrderedDict([
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
-            (3, [(6, 'C'), (7, 'D'), (8, 'A', 10), (9, 'B', 10)]),
-            (2, [(10, 'D', 8, 9, 'bub_dn_hist'), (11, 'A', 'bub_dn_accom'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (3, [(6, 'C', 'pullup'), (7, 'D'), (8, 'A', 10), (9, 'B', 10)]),
+            (2, [(10, 'D', 8, 9, 'bub_dn_hist'), (11, 'A', ['bub_dn_accom', 'pullup']), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
             (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
@@ -167,8 +167,8 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_intermediate_brackets_avoid_conflicts_2(self):
         brackets = OrderedDict([
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
-            (3, [(6, 'C'), (7, 'D'), (8, 'A', 'bub_up_accom'), (9, 'B', 10, 'bub_up_hist')]),
-            (2, [(10, 'D', 9), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (3, [(6, 'C', 'pullup'), (7, 'D'), (8, 'A', 'bub_up_accom'), (9, 'B', 10, 'bub_up_hist')]),
+            (2, [(10, 'D', 9, 'pullup'), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
             (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
@@ -184,8 +184,8 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_intermediate_brackets_avoid_conflicts_3(self):
         brackets = OrderedDict([
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
-            (3, [(6, 'C'), (7, 'D'), (8, 'D'), (9, 'B', 10)]),
-            (2, [(10, 'D', 9, 'bub_dn_hist'), (11, 'A', 'bub_dn_accom'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (3, [(6, 'C', 'pullup'), (7, 'D'), (8, 'D'), (9, 'B', 10)]),
+            (2, [(10, 'D', 9, 'bub_dn_hist'), (11, 'A', ['bub_dn_accom', 'pullup']), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
             (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
@@ -201,8 +201,8 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_intermediate_brackets_avoid_conflicts_none(self):
         brackets = OrderedDict([
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A'), (5, 'C', 12)]),
-            (3, [(6, 'B'), (7, 'D'), (8, 'D'), (9, 'B')]),
-            (2, [(10, 'D'), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (3, [(6, 'B', 'pullup'), (7, 'D'), (8, 'D'), (9, 'B')]),
+            (2, [(10, 'D', 'pullup'), (11, 'A'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
             (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
@@ -218,8 +218,8 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_intermediate_brackets_avoid_conflicts_exhaust(self):
         brackets = OrderedDict([
             (4, [(1, 'A'), (2, 'B'), (3, 'C'), (4, 'A', 'bub_up_accom'), (5, 'C', 12, 'bub_up_inst')]),
-            (3, [(6, 'C'), (7, 'D'), (8, 'D'), (9, 'B', 10, 'no_bub_updn')]),
-            (2, [(10, 'D', 9), (11, 'B'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
+            (3, [(6, 'C', 'pullup'), (7, 'D'), (8, 'D'), (9, 'B', 10, 'no_bub_updn')]),
+            (2, [(10, 'D', 9, 'pullup'), (11, 'B'), (12, 'C', 5), (13, 'B'), (14, 'C', 15)]),
             (1, [(15, 'C', 14), (16, 'C')]),
         ])
         expected = OrderedDict([
@@ -403,7 +403,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
          (5, 20, [], [], [], False),
          (10, 21, [], [], [], False),
          (16, 26, [], [], ["bub_up_hist"], True),
-         (19, 13, [], ["bub_up_accom"], [], False)]]
+         (19, 13, [], ["bub_up_accom"], ['pullup'], False)]]
 
     expected[3] = [dict(
         odd_bracket="intermediate1", pairing_method="fold", avoid_conflicts="off", side_allocations="preallocated"),
