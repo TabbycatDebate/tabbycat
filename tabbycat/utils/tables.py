@@ -125,8 +125,8 @@ class BaseTableBuilder:
         - `data` must be an iterable of booleans.
         """
         cells = [{
-            'icon': 'check' if datum else '',
             'sort':  1 if datum else 2,
+            'text': '✔️' if datum else '',
         } for datum in data]
         self.add_column(header, cells)
 
