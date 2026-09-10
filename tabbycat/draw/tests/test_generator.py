@@ -390,16 +390,16 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
 
     expected[2] = [dict(
         odd_bracket="intermediate_bubble_up_down", pairing_method="slide", avoid_conflicts="one_up_one_down", side_allocations="balance"),
-        [(12, 2, [], [], [], True),
+        [(12, 2, [], [], ['pullup'], True),
          (3, 17, [], [], [], True),  # institution conflict, but swapping
                              # would give history conflict
          (11, 14, ["1u1d_inst"], [], [], True),
          (6, 4, ["1u1d_other"], [], [], False),
-         (8, 7, [], [], [], True),
+         (8, 7, [], [], ['pullup'], True),
          (9, 22, [], [], [], True),
          (15, 23, [], [], [], True),
          (18, 24, [], [], [], False),
-         (1, 25, [], [], [], False),
+         (1, 25, [], ['pullup'], [], False),
          (5, 20, [], [], [], False),
          (10, 21, [], [], [], False),
          (16, 26, [], [], ["bub_up_hist"], True),
