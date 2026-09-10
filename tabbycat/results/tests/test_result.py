@@ -6,7 +6,7 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
-from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, SpeakerScoreByAdj, TeamScore
 from results.result import ConsensusDebateResultWithScores, DebateResultByAdjudicatorWithScores, ResultError    # absolute import to keep logger's name consistent
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
@@ -794,6 +794,48 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
                                        msg=f"AFF position {pos} score mismatch")
                 self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
                                        msg=f"NEG position {pos} score mismatch")
+
+    @with_preference('scoring', 'score_aggregation_function', 'median')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    def test_median_aggregation_with_criteria(self):
+        """Aggregate criteria before deriving speaker and team totals."""
+        criteria = [
+            ScoreCriterion.objects.create(
+                tournament=self.tournament, name=name, seq=seq, weight=1,
+                min_score=0, max_score=50, step=1,
+            )
+            for seq, name in enumerate(("Content", "Style"), start=1)
+        ]
+        blank_result = self.save_blank_result(nadjs=3, nspeakers=2)
+        result = self.debate_result_class(blank_result.ballotsub, criteria=criteria)
+
+        for side, team in zip(self.SIDES, self.teams):
+            speakers = team.speaker_set.all()[:2]
+            for pos, speaker in enumerate(speakers, start=1):
+                result.set_speaker(side, pos, speaker)
+            result.set_speaker(side, 3, speakers[0])
+
+        # For AFF, each criterion has a median of 40, while the per-adjudicator
+        # totals are 70, 70, and 80 (median 70). NEG follows the same pattern
+        # one point lower per criterion.
+        for side, offset in ((DebateSide.AFF, 0), (DebateSide.NEG, -1)):
+            criterion_scores = ((30 + offset, 40 + offset),
+                                (40 + offset, 30 + offset),
+                                (40 + offset, 40 + offset))
+            for adj, scores in zip(self.adjs, criterion_scores):
+                for pos in result.positions:
+                    for criterion, score in zip(criteria, scores):
+                        result.set_criterion_score(adj, side, pos, criterion, score)
+
+        self.assertEqual(40, result.speakercriterionscore_field_score(DebateSide.AFF, 1, criteria[0]))
+        self.assertEqual(40, result.speakercriterionscore_field_score(DebateSide.AFF, 1, criteria[1]))
+        self.assertEqual(80, result.speakerscore_field_score(DebateSide.AFF, 1))
+        self.assertEqual(240, result.teamscore_field_score(DebateSide.AFF))
+
+        self.assertEqual(39, result.speakercriterionscore_field_score(DebateSide.NEG, 1, criteria[0]))
+        self.assertEqual(39, result.speakercriterionscore_field_score(DebateSide.NEG, 1, criteria[1]))
+        self.assertEqual(78, result.speakerscore_field_score(DebateSide.NEG, 1))
+        self.assertEqual(234, result.teamscore_field_score(DebateSide.NEG))
 
     @with_preference('scoring', 'score_aggregation_function', 'mean')
     @with_preference('scoring', 'margin_includes_dissenters', True)

@@ -1201,12 +1201,21 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     def teamscorebyadj_field_score(self, adj, side):
         return self.scoresheets[adj].get_total(side)
 
+    def _teamscore_score_component(self, adj, side):
+        if self.tournament.pref('teamscore_includes_ghosts'):
+            return self.scoresheets[adj].get_total(side)
+        return sum(self.get_score(adj, side, pos) for pos in self.positions if not self.get_ghost(side, pos))
+
     def teamscore_field_score(self, side):
         # Should be decision-decorated
         if not self.is_complete():
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
+        if self.tournament.pref('score_aggregation_function') == 'mean':
+            # Preserve the historical calculation for the default aggregation
+            # method. Summing aggregated speeches is only needed for medians.
+            return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
         return sum(
             self.speakerscore_field_score(side, pos)
             for pos in self.positions
@@ -1227,6 +1236,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
         if self.criteria:
+            # Aggregate criteria separately so the saved speaker score remains
+            # the weighted sum of the saved aggregate criterion scores. This is
+            # significant for medians, which are not distributive over sums.
             score = 0
             for criterion in self.criteria:
                 if not criterion.applies_to_position(position, self.reply_position):
