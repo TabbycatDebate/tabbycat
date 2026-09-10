@@ -35,6 +35,41 @@ class PerAdjudicatorBallotSetFormTests(TestCase):
         )
         self.ballotsub = BallotSubmission(debate=self.debate)
 
+    def enable_self_split_ballots(self):
+        self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-adj'
+        self.tournament.preferences['data_entry__allow_self_split_ballots'] = True
+
+    def test_self_split_field_shown_for_solo_adjudicator(self):
+        self.enable_self_split_ballots()
+
+        form = PerAdjudicatorBallotSetForm(self.ballotsub, tabroom=True)
+
+        self.assertIn(form._fieldname_self_split(), form.fields)
+
+    def test_self_split_field_shown_on_solo_individual_ballot(self):
+        self.enable_self_split_ballots()
+        self.ballotsub.single_adj = True
+
+        form = SingleBallotSetForm(self.ballotsub, tabroom=False)
+
+        self.assertIn(form._fieldname_self_split(), form.fields)
+
+    def test_self_split_field_hidden_for_panel_individual_ballot(self):
+        self.enable_self_split_ballots()
+        self.ballotsub.single_adj = True
+        panellist = Adjudicator.objects.create(
+            tournament=self.tournament, name="Panellist", base_score=5,
+        )
+        DebateAdjudicator.objects.create(
+            debate=self.debate,
+            adjudicator=panellist,
+            type=DebateAdjudicator.TYPE_PANEL,
+        )
+
+        form = SingleBallotSetForm(self.ballotsub, tabroom=False)
+
+        self.assertNotIn(form._fieldname_self_split(), form.fields)
+
     def test_derived_criterion_total_does_not_validate_score_range(self):
         ScoreCriterion.objects.create(
             tournament=self.tournament,
@@ -88,6 +123,7 @@ class TestSingleBallotSetFormScoreCriteria(SimpleTestCase):
         self.form.fields = {}
         self.form.using_speaker_ranks = False
         self.form.using_declared_winner = False
+        self.form.allowing_self_split = False
         self.form.declared_winner = 'none'
         self.form.tournament = Mock()
         self.form.tournament.pref.side_effect = {
