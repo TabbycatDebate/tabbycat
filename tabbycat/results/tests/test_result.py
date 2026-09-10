@@ -1,4 +1,5 @@
 import logging
+from statistics import mean
 
 from django.test import TestCase
 
@@ -751,8 +752,10 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
                 self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
                                        msg=f"NEG position {pos} score mismatch")
 
-        self.assertAlmostEqual(sum(expected_aff_scores), self._get_teamscore_in_db(DebateSide.AFF).score)
-        self.assertAlmostEqual(sum(expected_neg_scores), self._get_teamscore_in_db(DebateSide.NEG).score)
+        self.assertAlmostEqual(testdata['common']['everyone_totals'][0],
+                               self._get_teamscore_in_db(DebateSide.AFF).score)
+        self.assertAlmostEqual(testdata['common']['everyone_totals'][1],
+                               self._get_teamscore_in_db(DebateSide.NEG).score)
 
     @with_preference('scoring', 'score_aggregation_function', 'median')
     @with_preference('scoring', 'margin_includes_dissenters', True)
@@ -798,7 +801,7 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
     @with_preference('scoring', 'score_aggregation_function', 'median')
     @with_preference('scoring', 'margin_includes_dissenters', True)
     def test_median_aggregation_with_criteria(self):
-        """Aggregate criteria before deriving speaker and team totals."""
+        """Aggregate criteria for speaker scores, but average team totals."""
         criteria = [
             ScoreCriterion.objects.create(
                 tournament=self.tournament, name=name, seq=seq, weight=1,
@@ -830,12 +833,12 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
         self.assertEqual(40, result.speakercriterionscore_field_score(DebateSide.AFF, 1, criteria[0]))
         self.assertEqual(40, result.speakercriterionscore_field_score(DebateSide.AFF, 1, criteria[1]))
         self.assertEqual(80, result.speakerscore_field_score(DebateSide.AFF, 1))
-        self.assertEqual(240, result.teamscore_field_score(DebateSide.AFF))
+        self.assertEqual(220, result.teamscore_field_score(DebateSide.AFF))
 
         self.assertEqual(39, result.speakercriterionscore_field_score(DebateSide.NEG, 1, criteria[0]))
         self.assertEqual(39, result.speakercriterionscore_field_score(DebateSide.NEG, 1, criteria[1]))
         self.assertEqual(78, result.speakerscore_field_score(DebateSide.NEG, 1))
-        self.assertEqual(234, result.teamscore_field_score(DebateSide.NEG))
+        self.assertEqual(214, result.teamscore_field_score(DebateSide.NEG))
 
     @with_preference('scoring', 'score_aggregation_function', 'mean')
     @with_preference('scoring', 'margin_includes_dissenters', True)
@@ -847,6 +850,10 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
                 with suppress_logs('results.result', logging.WARNING):
                     self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
                     self.assertAlmostEqual(score, result.speakerscore_field_score(side, pos))
+            legacy_team_score = mean(
+                result.scoresheets[adj].get_total(side) for adj in result.relevant_adjudicators()
+            )
+            self.assertAlmostEqual(legacy_team_score, result.teamscore_field_score(side))
 
     # ==========================================================================
     # Irregular operation

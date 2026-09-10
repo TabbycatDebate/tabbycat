@@ -103,7 +103,7 @@ class ScoreAggregationFunction(ChoicePreference):
     name = 'score_aggregation_function'
     choices = (
         ('mean', _("Mean (average)")),
-        ('median', _("Median")),
+        ('median', _("Median (in even-numbered panels, decimals rounded up)")),
     )
     default = 'mean'
 

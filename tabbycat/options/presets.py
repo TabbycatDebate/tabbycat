@@ -622,7 +622,7 @@ class PublicSpeaking(PreferencesPreset):
 
 
 class KarlPopperPreferences(PreferencesPreset):
-    name         = _("Karl Popper")
+    name         = _("Karl Popper (Czechia)")
     show_in_list = True
     description  = _("3 vs 3 with no reply speeches, median scoring, self-split "
         "ballots, and a penalty-weighted draw.")
@@ -647,7 +647,7 @@ class KarlPopperPreferences(PreferencesPreset):
     motions__motion_vetoes_enabled             = False
     motions__enable_motion_reuse               = True
     # Draw Rules (penalty-weighted, as with APDA)
-    draw_rules__draw_odd_bracket               = 'pullup_random'
+    draw_rules__draw_odd_bracket               = 'pullup_top'
     draw_rules__draw_pairing_method            = 'adjacent'
     draw_rules__draw_avoid_conflicts           = 'graph'
     draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'

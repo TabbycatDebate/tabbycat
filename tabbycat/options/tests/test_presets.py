@@ -73,9 +73,10 @@ class TestPresets(TestCase):
         tournament = self.set_up_tournament()
         form = KarlPopperPreferences.get_form(tournament)
 
-        self.assertEqual(KarlPopperPreferences.name, "Karl Popper")
+        self.assertEqual(KarlPopperPreferences.name, "Karl Popper (Czechia)")
         self.assertEqual(form['scoring__score_aggregation_function'].initial, 'median')
         self.assertEqual(form['data_entry__allow_self_split_ballots'].initial, True)
+        self.assertEqual(form['draw_rules__draw_odd_bracket'].initial, 'pullup_top')
         self.assertEqual(form['draw_rules__draw_pairing_method'].initial, 'adjacent')
 
         tournament.delete()

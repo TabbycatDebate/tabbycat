@@ -1212,15 +1212,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
-        if self.tournament.pref('score_aggregation_function') == 'mean':
-            # Preserve the historical calculation for the default aggregation
-            # method. Summing aggregated speeches is only needed for medians.
-            return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
-        return sum(
-            self.speakerscore_field_score(side, pos)
-            for pos in self.positions
-            if self.tournament.pref('teamscore_includes_ghosts') or not self.get_ghost(side, pos)
-        )
+        return mean(self._teamscore_score_component(adj, side) for adj in self.relevant_adjudicators())
 
     def teamscore_field_has_ghost(self, side):
         return any(self.ghosts[side].values())
