@@ -6,14 +6,16 @@ const props = defineProps({
   header: Object,
   sortOrder: String,
   sortKey: String,
+  sortHistory: Array,
 })
 
 const emit = defineEmits(['resort'])
 
 const sortKey = toRef(props, 'sortKey')
 const sortOrder = toRef(props, 'sortOrder')
+const sortHistory = toRef(props, 'sortHistory')
 
-const { resort, sortClasses } = useSortableHeader({ sortKey, sortOrder, emit })
+const { resort, sortClasses, sortPosition } = useSortableHeader({ sortKey, sortOrder, sortHistory, emit })
 
 const showTooltip = (event) => {
   window.$?.(event.target).tooltip('show')
@@ -51,6 +53,7 @@ const showTooltip = (event) => {
       <div :class="['mr-auto', sortClasses(header['key'])]">
         <i data-feather="chevrons-down" />
         <i data-feather="chevrons-up" />
+        <kbd v-if="sortPosition(header.key)">{{ sortPosition(header.key) }}</kbd>
       </div>
     </div>
   </th>

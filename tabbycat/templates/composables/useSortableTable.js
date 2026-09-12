@@ -97,6 +97,7 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
   return {
     sortKey,
     sortOrder,
+    sortHistory,
     filterKey,
     updateSorting,
     dataOrderedByKey,

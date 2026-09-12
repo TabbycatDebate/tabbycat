@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { ref } from 'vue'
+import { useSortableHeader } from '../useSortableHeader.js'
 import { useSortableTable } from '../useSortableTable.js'
 
 function table (rows, defaults = {}) {
@@ -61,4 +62,23 @@ test('the latest column and direction outrank earlier sorts', () => {
   state.updateSorting('name')
   state.updateSorting('name')
   assert.deepEqual(names(state), ['Alpha', 'Bravo', 'Charlie'])
+})
+
+// The same sort history drives tie-breaking and each header's visible priority.
+test('headers display all active priorities and their individual directions', () => {
+  const state = table(rows())
+  const header = useSortableHeader({ ...state, emit: () => {} })
+  assert.equal(header.sortPosition('name'), 0)
+  state.updateSorting('name')
+  state.updateSorting('name')
+  state.updateSorting('score')
+  assert.equal(header.sortPosition('SCORE'), 1)
+  assert.equal(header.sortPosition('name'), 2)
+  assert.match(header.sortClasses('score'), /sort-by-desc/)
+  assert.match(header.sortClasses('name'), /sort-by-asc/)
+  state.updateSorting('name')
+  assert.equal(header.sortPosition('name'), 1)
+  assert.equal(header.sortPosition('score'), 2)
+  assert.match(header.sortClasses('name'), /sort-by-desc/)
+  assert.equal(header.sortPosition('unknown'), 0)
 })
