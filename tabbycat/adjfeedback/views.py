@@ -698,6 +698,7 @@ class SetAdjudicatorTesterStatusView(AdministratorMixin, TournamentMixin, LogAct
             (Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
         adjudicator.is_tester = posted_info['tester']
         adjudicator.save()
+        self.log_action(content_object=adjudicator)
         return JsonResponse(json.dumps(True), safe=False)
 
 
