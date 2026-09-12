@@ -673,32 +673,34 @@ class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
         self.atsh = atsh
 
 
+class BaseJsonAttributeSetView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
+    post_field = None
+    adj_field = None
+
+    def post(self, request, *args, **kwargs):
+        posted_info = json.loads(self.request.body.decode('utf-8'))
+        adjudicator = Adjudicator.objects.get(
+            (Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
+        setattr(adjudicator, self.adj_field, posted_info[self.post_field])
+        adjudicator.save()
+        self.log_action(content_object=adjudicator)
+        return JsonResponse(json.dumps(True), safe=False)
+
+
 class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
     edit_permission = Permission.EDIT_ADJ_BREAK
     action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_BREAK_SET
-
-    def post(self, request, *args, **kwargs):
-        body = self.request.body.decode('utf-8')
-        posted_info = json.loads(body)
-        adjudicator = Adjudicator.objects.get((Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
-        adjudicator.breaking = posted_info['breaking']
-        adjudicator.save()
-        return JsonResponse(json.dumps(True), safe=False)
+    post_field = 'breaking'
+    adj_field = 'breaking'
 
 
 class SetAdjudicatorTesterStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
     edit_permission = Permission.EDIT_ADJ_TESTER
     action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_TESTER_SET
-
-    def post(self, request, *args, **kwargs):
-        posted_info = json.loads(self.request.body.decode('utf-8'))
-        adjudicator = Adjudicator.objects.get(
-            (Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
-        adjudicator.is_tester = posted_info['tester']
-        adjudicator.save()
-        return JsonResponse(json.dumps(True), safe=False)
+    post_field = 'tester'
+    adj_field = 'is_tester'
 
 
 class SetFeedbackWeightView(LogActionMixin, AdministratorMixin, RoundMixin, PostOnlyRedirectView):

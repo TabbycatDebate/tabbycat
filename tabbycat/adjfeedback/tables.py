@@ -32,7 +32,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_tester_checkbox(self, adjudicators):
         tester_header = {
             'key': 'tester',
-            'title': _("Tester"),
+            'icon': 'check-circle',
             'tooltip': _("Whether the adj tests other adjs (click to mark). "
                          "Adjudication core members are always testers"),
         }
