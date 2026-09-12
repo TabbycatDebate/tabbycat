@@ -62,6 +62,7 @@ const getSortableProperty = (row, orderedHeaderIndex) => {
 const {
   sortKey,
   sortOrder,
+  sortHistory,
   updateSorting,
   dataFilteredByKey,
 } = useSortableTable({
@@ -129,6 +130,7 @@ const resolveCellComponent = (cellData) => {
             :header="header"
             :sort-key="sortKey"
             :sort-order="sortOrder"
+            :sort-history="sortHistory"
             @resort="updateSorting"
           />
         </tr>

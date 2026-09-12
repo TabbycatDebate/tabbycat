@@ -78,6 +78,8 @@ For stylesheets, we use `stylelint <https://stylelint.io>`_. The relevant code c
 
     $ pre-commit run stylelint --all-files
 
+Run ``npm test`` for frontend JavaScript tests (``*.test.js``), without a Django server.
+
 For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS <https://standardjs.com>`_ style and the standard recommendation of the vue plugin for eslint. The relevant code can be checked by using::
 
     $ pre-commit run eslint --all-files

@@ -7,6 +7,9 @@ Change Log
 
 *Release date: TBD*
 
+- Show numbered sort priorities in table headers; previous columns remain visible
+  as tie-breakers with their own direction when another column becomes primary.
+
 
 2.11.1
 ------
