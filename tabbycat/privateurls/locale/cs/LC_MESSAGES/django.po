@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"PO-Revision-Date: 2025-12-01 14:28\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -162,7 +162,7 @@ msgstr "Rozhodčí"
 
 #: privateurls/views.py
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
-msgstr ""
+msgstr "Všichni účastníci již mají soukromé URL. Pokud je chcete smazat, použijte "
 
 #: privateurls/views.py
 #, python-format

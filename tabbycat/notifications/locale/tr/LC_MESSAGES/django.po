@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"PO-Revision-Date: 2026-07-06 07:34\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -294,7 +294,7 @@ msgstr "<li>%(side)s: %(team)s (%(points)d puanlı %(speaks)s toplam konuşmacı
 #: notifications/utils.py
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
-msgstr "<li>%(side)s: %(team)s (%(points)s - %(speaks)s toplam konuşmacı)"
+msgstr "<li>%(side)s: %(team)s (%(points)d - %(speaks)s toplam konuşmacı)"
 
 #: notifications/utils.py
 msgid "Win"

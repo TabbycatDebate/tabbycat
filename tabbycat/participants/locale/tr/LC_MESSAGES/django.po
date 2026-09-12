@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:51\n"
+"PO-Revision-Date: 2026-07-06 07:34\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -520,7 +520,7 @@ msgstr "<strong>Uyarı:</strong> Yukarıdaki listede \"tartışma takımı\" nes
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete the selected %(objects_name)s</strong>."
-msgstr "<strong>Uyarı:</strong> Yukarıdaki listede \"tartışma takımı\" nesneleri varsa, <strong>muhtemelen seçili %(objects_name)s</strong> öğesini silmemelisiniz."
+msgstr "<strong>Uyarı:</strong> Yukarıdaki listede \"tartışma takımı\" nesneleri varsa, <strong>muhtemelen seçili %(object_name)s</strong> öğesini silmemelisiniz."
 
 #. Translators: This follows the above sentence in the same paragraph.
 #: participants/templates/admin/participants/delete_debateteam_warning.html
@@ -539,7 +539,7 @@ msgstr "Bu %(object_name)s'i silme konusunda kararlıysanız, lütfen önce yuka
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
-msgstr "Bu %(objects_name)s'i silme konusunda kararlıysanız, lütfen önce yukarıdaki nesneleri silin ve devam etmeden önce \"tartışma takımı\" nesneleri sayfasında göreceğiniz uyarıyı dikkate aldığınızdan emin olun."
+msgstr "Bu %(object_name)s'i silme konusunda kararlıysanız, lütfen önce yukarıdaki nesneleri silin ve devam etmeden önce \"tartışma takımı\" nesneleri sayfasında göreceğiniz uyarıyı dikkate aldığınızdan emin olun."
 
 #: participants/templates/admin/participants/team/change_form.html
 msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
@@ -613,12 +613,12 @@ msgstr "Siz %(aff)s vs %(neg)s için <strong>%(room)s</strong> odada jürilik ya
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <a href=\"%(url)s\"><strong>%(room)s</strong></a>."
-msgstr "%(adjudicator)s, <strong>(%(type)s</strong> %(aff)s ile %(neg)s <a href=\"%(url)s\"><strong>%(room)s</strong></a>. karar veren bir s'dir."
+msgstr "%(adjudicator)s, <strong(%(type)s>/strong< >strong(aff)s ile %(neg)s<a href=\"%(url)s\"><strong>%(room)s</strong></a>. karar veren bir s'dir."
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr "%(adjudicator)s, <strong(%(type)s</strong> %(aff)s ile %(neg)s <strong>%(room)s</strong> karar veren bir s'dir."
+msgstr "%(adjudicator)s, <strong(%(type)s>/strong< >strong(aff)s ile %(neg)s <strong(%(room)s>/strong< > karar veren bir s'dir."
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
@@ -638,7 +638,7 @@ msgstr "%(adjudicator)s <a href=\"%(url)s\"><strong>%(room)s</strong></a> odası
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "%(adjudicator)s is adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr "%(adjudicator)s %(room)s odasındaki %(aff)s vs %(neg)s maçında görev alıyor"
+msgstr "%(adjudicator)s (room)s odasındaki %(aff)s vs %(neg)s maçında görev alıyor"
 
 #: participants/templates/current_round/round_adj.html
 #, python-format
@@ -648,7 +648,7 @@ msgstr "Siz <a href=\"%(url)s\"><strong>%(room)s</strong></a> odasındaki %(aff)
 #: participants/templates/current_round/round_adj.html
 #, python-format
 msgid "You are adjudicating %(aff)s vs %(neg)s in <strong>%(room)s</strong>."
-msgstr "Siz %(room)s odasındaki %(aff)s vs %(neg)s maçında görevlisiniz."
+msgstr "Siz (room)s odasındaki %(aff)s vs %(neg)s maçında görevlisiniz."
 
 #: participants/templates/current_round/round_adj.html
 #, python-format

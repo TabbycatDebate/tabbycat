@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"PO-Revision-Date: 2025-12-01 16:31\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -594,7 +594,7 @@ msgstr "Teze:"
 
 #: participants/templates/current_round/common.html
 msgid "View Info Slide"
-msgstr ""
+msgstr "Zobrazit Info Slide"
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -723,22 +723,22 @@ msgstr ""
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s is debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "%(team)s debatuje jako <strong>%(side)s</strong> proti <strong>%(opponent)s</strong>."
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "You are debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "Debatujete jako <strong>%(side)s</strong> proti <strong>%(opponent)s</strong>."
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "%(team)s is debating against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "%(team)s debatuje proti <strong>%(opponent)s</strong>."
 
 #: participants/templates/current_round/round_team.html
 #, python-format
 msgid "You are debating against <strong>%(opponent)s</strong>."
-msgstr ""
+msgstr "Debatujete proti <strong>%(opponent)s</strong>."
 
 #: participants/templates/current_round/round_team.html
 #, python-format
