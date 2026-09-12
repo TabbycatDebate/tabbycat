@@ -101,9 +101,13 @@ function initChart (vueContext) {
     .attr('cy', d => yScale(d.y))
     .attr('r', 5) // Size of circle
     .attr('class', d => `hoverable position-display d3-hover-black ${d.position_class}`)
+    // Ring the rounds where a tester sat on their panel
+    .attr('stroke', d => (d.tested ? '#000' : null))
+    .attr('stroke-width', d => (d.tested ? 2 : null))
     .on('mouseover', (event, d) => {
       div.style('opacity', 0.9)
-      div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}</div>`)
+      const tested = d.tested ? ', tested' : ''
+      div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}${tested}</div>`)
         .style('left', `${event.pageX}px`)
         .style('top', `${event.pageY - 28}px`)
     })

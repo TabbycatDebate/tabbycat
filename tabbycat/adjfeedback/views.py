@@ -134,6 +134,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
         table.add_adjudicator_columns(adjudicators, show_institutions=False, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
+        table.add_tester_checkbox(adjudicators)
         table.add_weighted_score_columns(adjudicators, scores)
         table.add_base_score_columns(adjudicators, editable=True)
         table.add_feedback_only_columns(adjudicators)
@@ -683,6 +684,21 @@ class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogA
         adjudicator = Adjudicator.objects.get((Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
         adjudicator.breaking = posted_info['breaking']
         adjudicator.save()
+        return JsonResponse(json.dumps(True), safe=False)
+
+
+class SetAdjudicatorTesterStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
+
+    edit_permission = Permission.EDIT_ADJ_TESTER
+    action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_TESTER_SET
+
+    def post(self, request, *args, **kwargs):
+        posted_info = json.loads(self.request.body.decode('utf-8'))
+        adjudicator = Adjudicator.objects.get(
+            (Q(tournament=self.tournament) | Q(tournament=None)), id=posted_info['id'])
+        adjudicator.is_tester = posted_info['tester']
+        adjudicator.save()
+        self.log_action(content_object=adjudicator)
         return JsonResponse(json.dumps(True), safe=False)
 
 

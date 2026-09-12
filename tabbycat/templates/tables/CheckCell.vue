@@ -11,7 +11,7 @@ const emit = defineEmits(['toggle-checked', 'update-sort'])
 const { ajaxSave } = useAjax()
 
 const checkUpdate = (newChecked) => {
-  if (props.cellData.noSave) {
+  if (props.cellData.noSave || props.cellData.disabled) {
     return
   }
   const cd = props.cellData
@@ -40,6 +40,8 @@ const checkUpdate = (newChecked) => {
     <div class="table-check">
       <input
         :checked="cellData.checked"
+        :disabled="cellData.disabled"
+        :title="cellData.disabled ? cellData.disabledTooltip : null"
         type="checkbox"
         class="form-check-input position-static"
         :name="cellData.name"
