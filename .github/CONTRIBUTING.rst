@@ -35,6 +35,8 @@ Development
 
   - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser and ChromeDriver installed.
 
+- Run ``npm test`` for frontend JavaScript tests (``*.test.js``), without a Django server.
+
 - We use `pre-commit <https://pre-commit.com/>`_ to run code style checks (linters). To have them run as a git hook automatically before every commit::
 
     $ pre-commit install
@@ -77,8 +79,6 @@ For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a 
 For stylesheets, we use `stylelint <https://stylelint.io>`_. The relevant code can be checked by using::
 
     $ pre-commit run stylelint --all-files
-
-Run ``npm test`` for frontend JavaScript tests (``*.test.js``), without a Django server.
 
 For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS <https://standardjs.com>`_ style and the standard recommendation of the vue plugin for eslint. The relevant code can be checked by using::
 

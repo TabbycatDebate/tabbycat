@@ -18,15 +18,34 @@ function table (rows, defaults = {}) {
 const rows = () => ['Alpha', 'Charlie', 'Bravo'].map(name => [{ text: name }, { text: 10 }])
 const names = state => state.dataOrderedByKey.value.map(row => row[0].text)
 
-test('changing columns preserves the previous order within ties', () => {
+test('shift-clicking adds a primary sort and preserves earlier sorts as tie-breakers', () => {
   const state = table(rows())
   state.updateSorting('name')
   assert.deepEqual(names(state), ['Charlie', 'Bravo', 'Alpha'])
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   assert.deepEqual(names(state), ['Charlie', 'Bravo', 'Alpha'])
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   assert.deepEqual(names(state), ['Charlie', 'Bravo', 'Alpha'])
+  state.updateSorting('score', true)
+  assert.deepEqual(state.sortHistory.value, [{ key: 'name', order: 'desc' }])
   assert.deepEqual(state.sortableData.value, rows())
+})
+
+test('normal clicks replace existing sorts and cycle through descending, ascending, and unsorted', () => {
+  const state = table([
+    [{ text: 'Alpha' }, { text: 20 }],
+    [{ text: 'Charlie' }, { text: 10 }],
+    [{ text: 'Bravo' }, { text: 20 }],
+  ])
+  state.updateSorting('name')
+  state.updateSorting('score')
+  assert.deepEqual(names(state), ['Alpha', 'Bravo', 'Charlie'])
+  assert.deepEqual(state.sortHistory.value, [{ key: 'score', order: 'desc' }])
+  state.updateSorting('score')
+  assert.deepEqual(names(state), ['Charlie', 'Alpha', 'Bravo'])
+  state.updateSorting('score')
+  assert.deepEqual(names(state), ['Alpha', 'Charlie', 'Bravo'])
+  assert.deepEqual(state.sortHistory.value, [])
 })
 
 test('descending ties retain their input order without an earlier sort', () => {
@@ -36,14 +55,30 @@ test('descending ties retain their input order without an earlier sort', () => {
 
 test('default sorting participates in subsequent tie breaking', () => {
   const state = table(rows(), { defaultSortKey: 'name', defaultSortOrder: 'asc' })
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   assert.deepEqual(names(state), ['Alpha', 'Bravo', 'Charlie'])
+})
+
+test('multiple default sorts retain their individual directions', () => {
+  const state = table([
+    [{ text: 'Alpha' }, { text: 20 }],
+    [{ text: 'Charlie' }, { text: 10 }],
+    [{ text: 'Bravo' }, { text: 20 }],
+  ], {
+    defaultSortHistory: [
+      { key: 'score', order: 'desc' },
+      { key: 'name', order: 'asc' },
+    ],
+  })
+  assert.deepEqual(names(state), ['Alpha', 'Bravo', 'Charlie'])
+  assert.equal(state.sortKey.value, 'score')
+  assert.equal(state.sortOrder.value, 'desc')
 })
 
 test('new rows use the current sort history', () => {
   const state = table(rows())
   state.updateSorting('name')
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   state.sortableData.value = [...rows(), [{ text: 'Delta' }, { text: 10 }]]
   assert.deepEqual(names(state), ['Delta', 'Charlie', 'Bravo', 'Alpha'])
 })
@@ -55,30 +90,34 @@ test('the latest column and direction outrank earlier sorts', () => {
     [{ text: 'Bravo' }, { text: 20 }],
   ])
   state.updateSorting('name')
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   assert.deepEqual(names(state), ['Bravo', 'Alpha', 'Charlie'])
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   assert.deepEqual(names(state), ['Charlie', 'Bravo', 'Alpha'])
-  state.updateSorting('name')
-  state.updateSorting('name')
+  state.updateSorting('name', true)
   assert.deepEqual(names(state), ['Alpha', 'Bravo', 'Charlie'])
 })
 
 // The same sort history drives tie-breaking and each header's visible priority.
-test('headers display all active priorities and their individual directions', () => {
+test('headers expose priorities, directions, and only the primary ARIA sort', () => {
   const state = table(rows())
-  const header = useSortableHeader({ ...state, emit: () => {} })
+  const emitted = []
+  const header = useSortableHeader({ ...state, emit: (...args) => emitted.push(args) })
   assert.equal(header.sortPosition('name'), 0)
   state.updateSorting('name')
-  state.updateSorting('name')
-  state.updateSorting('score')
+  state.updateSorting('score', true)
   assert.equal(header.sortPosition('SCORE'), 1)
   assert.equal(header.sortPosition('name'), 2)
   assert.match(header.sortClasses('score'), /sort-by-desc/)
-  assert.match(header.sortClasses('name'), /sort-by-asc/)
-  state.updateSorting('name')
+  assert.match(header.sortClasses('name'), /sort-by-desc/)
+  assert.equal(header.ariaSort('score'), 'descending')
+  assert.equal(header.ariaSort('name'), null)
+  state.updateSorting('name', true)
   assert.equal(header.sortPosition('name'), 1)
   assert.equal(header.sortPosition('score'), 2)
-  assert.match(header.sortClasses('name'), /sort-by-desc/)
+  assert.match(header.sortClasses('name'), /sort-by-asc/)
+  assert.equal(header.ariaSort('name'), 'ascending')
   assert.equal(header.sortPosition('unknown'), 0)
+  header.resort('score', { shiftKey: true })
+  assert.deepEqual(emitted, [['resort', 'score', true]])
 })

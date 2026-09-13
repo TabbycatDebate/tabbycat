@@ -1,26 +1,31 @@
 import { computed, ref, watch } from 'vue'
 import _ from 'lodash'
 
-export function useSortableTable ({ headers, sortableData, getSortableProperty, defaultSortKey, defaultSortOrder, externalFilterKey }) {
-  const sortKey = ref(defaultSortKey || '')
-  const sortOrder = ref(defaultSortOrder || '')
+export function useSortableTable ({ headers, sortableData, getSortableProperty, defaultSortKey, defaultSortOrder, defaultSortHistory, externalFilterKey }) {
   const filterKey = ref('')
-
-  // Earlier column sorts remain tie-breakers when the primary column changes.
-  const sortHistory = ref([])
-  watch([sortKey, sortOrder], ([key, order]) => {
-    const normalizedKey = String(key || '').toLowerCase()
-    sortHistory.value = normalizedKey
-      ? [{ key: normalizedKey, order }, ...sortHistory.value.filter(item => item.key !== normalizedKey)]
+  const initialSortHistory = defaultSortHistory?.length
+    ? defaultSortHistory.map(item => ({
+      key: String(item.key).toLowerCase(),
+      order: item.order === 'desc' ? 'desc' : 'asc',
+    }))
+    : defaultSortKey
+      ? [{ key: String(defaultSortKey).toLowerCase(), order: defaultSortOrder === 'desc' ? 'desc' : 'asc' }]
       : []
-  }, { immediate: true, flush: 'sync' })
+  const sortHistory = ref(initialSortHistory.slice())
+  const sortKey = computed(() => sortHistory.value[0]?.key || '')
+  const sortOrder = computed(() => sortHistory.value[0]?.order || '')
 
-  const updateSorting = (newSortKey) => {
-    if (sortKey.value === newSortKey) {
-      sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  const updateSorting = (newSortKey, multiSort = false) => {
+    const key = String(newSortKey).toLowerCase()
+    const current = sortHistory.value.find(item => item.key === key)
+    const remaining = sortHistory.value.filter(item => item.key !== key)
+    const nextOrder = !current ? 'desc' : current.order === 'desc' ? 'asc' : ''
+
+    if (!nextOrder) {
+      sortHistory.value = multiSort ? remaining : []
     } else {
-      sortKey.value = newSortKey
-      sortOrder.value = 'desc'
+      const nextSort = { key, order: nextOrder }
+      sortHistory.value = multiSort ? [nextSort, ...remaining] : [nextSort]
     }
   }
 

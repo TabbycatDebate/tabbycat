@@ -24,6 +24,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  defaultSortHistory: {
+    type: Array,
+    default: () => [],
+  },
   externalFilterKey: String,
 })
 
@@ -71,6 +75,7 @@ const {
   getSortableProperty,
   defaultSortKey: props.defaultSortKey,
   defaultSortOrder: props.defaultSortOrder,
+  defaultSortHistory: props.defaultSortHistory,
   externalFilterKey: toRef(props, 'externalFilterKey'),
 })
 

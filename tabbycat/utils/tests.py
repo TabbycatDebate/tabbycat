@@ -6,7 +6,7 @@ from unittest import expectedFailure
 from django.contrib.auth import get_user, get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.cache import cache
-from django.test import tag, TestCase
+from django.test import SimpleTestCase, tag, TestCase
 from django.urls import reverse
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -15,6 +15,7 @@ from draw.models import DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.models import Tournament
 from utils.misc import add_query_string_parameter, reverse_tournament
+from utils.tables import BaseTableBuilder
 from venues.models import Venue
 
 V1_ROOT_URL = "http://testserver/api/v1"
@@ -227,6 +228,29 @@ class TableViewTestsMixin:
             if not allow_vacuous:
                 self.assertNotEqual(count, 0)  # check the test isn't vacuous
             self.assertEqual(count, len(table['data']))
+
+
+class BaseTableBuilderTests(SimpleTestCase):
+
+    def test_legacy_initial_sort_is_serialized_as_history(self):
+        table = BaseTableBuilder(sort_key='name', sort_order='desc')
+
+        self.assertEqual(table.jsondict()['sort_history'], [{'key': 'name', 'order': 'desc'}])
+
+    def test_multiple_initial_sorts_are_serialized_in_priority_order(self):
+        table = BaseTableBuilder(sort_history=[('score', 'DESC'), {'key': 'name', 'order': 'asc'}])
+
+        data = table.jsondict()
+        self.assertEqual(data['sort_history'], [
+            {'key': 'score', 'order': 'desc'},
+            {'key': 'name', 'order': 'asc'},
+        ])
+        self.assertEqual(data['sort_key'], 'score')
+        self.assertEqual(data['sort_order'], 'desc')
+
+    def test_initial_sort_rejects_invalid_directions(self):
+        with self.assertRaisesMessage(ValueError, "sort_history order must be 'asc' or 'desc'"):
+            BaseTableBuilder(sort_history=[('name', 'sideways')])
 
 
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):

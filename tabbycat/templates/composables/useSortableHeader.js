@@ -1,6 +1,6 @@
 export function useSortableHeader ({ sortKey, sortOrder, sortHistory, emit }) {
-  const resort = (key) => {
-    emit('resort', key)
+  const resort = (key, event = {}) => {
+    emit('resort', key, Boolean(event.shiftKey))
   }
 
   const sortPosition = (key) => {
@@ -20,9 +20,17 @@ export function useSortableHeader ({ sortKey, sortOrder, sortHistory, emit }) {
     return `${baseCSS}text-muted`
   }
 
+  const ariaSort = (key) => {
+    if (sortPosition(key) !== 1) {
+      return null
+    }
+    return sortOrder.value === 'asc' ? 'ascending' : 'descending'
+  }
+
   return {
     resort,
     sortClasses,
     sortPosition,
+    ariaSort,
   }
 }
