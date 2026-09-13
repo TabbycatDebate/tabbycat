@@ -58,6 +58,9 @@ class BaseTableBuilder:
     - A *cell dict* is a dict that contains a value under `"text"` that is a
       string, and may optionally contain entries under `"sort"`, `"icon"`,
       `"emoji"`, `"popover"` and `"link"`.
+    - `sort_history` is an optional list of `(key, order)` pairs, in priority
+      order, where `order` is either `"asc"` or `"desc"`. It takes precedence
+      over the legacy `sort_key` and `sort_order` arguments.
 
     """
 
@@ -69,8 +72,43 @@ class BaseTableBuilder:
         self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
         self.sort_order = kwargs.get('sort_order', 'asc' if self.sort_key else '')
+        if kwargs.get('sort_history') is not None:
+            self.sort_history = self._convert_sort_history(kwargs['sort_history'])
+            self.sort_key = self.sort_history[0]['key'] if self.sort_history else ''
+            self.sort_order = self.sort_history[0]['order'] if self.sort_history else ''
+        else:
+            self.sort_history = ([{'key': force_str(self.sort_key), 'order': self.sort_order}]
+                                 if self.sort_key else [])
         self.empty_title = kwargs.get('empty_title', _("No Data Available"))
         self.highlight_column = None  # Column index to use for row highlighting (None = no highlighting)
+
+    @staticmethod
+    def _convert_sort_history(sort_history):
+        converted = []
+        keys = set()
+        for criterion in sort_history:
+            if isinstance(criterion, dict):
+                try:
+                    key, order = criterion['key'], criterion['order']
+                except KeyError as error:
+                    raise ValueError("sort_history dictionaries require 'key' and 'order'") from error
+            elif isinstance(criterion, (list, tuple)) and len(criterion) == 2:
+                key, order = criterion
+            else:
+                raise ValueError("sort_history entries must be (key, order) pairs or dictionaries")
+
+            key = force_str(key)
+            normalized_key = key.lower()
+            order = force_str(order).lower()
+            if not key:
+                raise ValueError("sort_history keys cannot be empty")
+            if normalized_key in keys:
+                raise ValueError("sort_history keys must be unique")
+            if order not in ('asc', 'desc'):
+                raise ValueError("sort_history order must be 'asc' or 'desc'")
+            converted.append({'key': key, 'order': order})
+            keys.add(normalized_key)
+        return converted
 
     @staticmethod
     def _convert_header(header):
@@ -170,6 +208,7 @@ class BaseTableBuilder:
             'class': self.table_class,
             'sort_key': self.sort_key,
             'sort_order': self.sort_order,
+            'sort_history': self.sort_history,
             'highlight_column': self.highlight_column,
         }
 

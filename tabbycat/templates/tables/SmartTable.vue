@@ -24,6 +24,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  defaultSortHistory: {
+    type: Array,
+    default: () => [],
+  },
   externalFilterKey: String,
 })
 
@@ -62,6 +66,7 @@ const getSortableProperty = (row, orderedHeaderIndex) => {
 const {
   sortKey,
   sortOrder,
+  sortHistory,
   updateSorting,
   dataFilteredByKey,
 } = useSortableTable({
@@ -70,6 +75,7 @@ const {
   getSortableProperty,
   defaultSortKey: props.defaultSortKey,
   defaultSortOrder: props.defaultSortOrder,
+  defaultSortHistory: props.defaultSortHistory,
   externalFilterKey: toRef(props, 'externalFilterKey'),
 })
 
@@ -129,6 +135,7 @@ const resolveCellComponent = (cellData) => {
             :header="header"
             :sort-key="sortKey"
             :sort-order="sortOrder"
+            :sort-history="sortHistory"
             @resort="updateSorting"
           />
         </tr>

@@ -104,6 +104,7 @@ const copyTableTrigger = (i) => {
             :table-class="table.class"
             :default-sort-key="table.sort_key"
             :default-sort-order="table.sort_order"
+            :default-sort-history="table.sort_history"
             :empty-title="table.empty_title"
             :highlight-column="table.highlight_column"
             :external-filter-key="filterKey"
