@@ -7,13 +7,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
 from django.utils import formats, timezone
 from django.utils.encoding import force_str
 from django.utils.html import format_html_join
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView, UpdateView
 from formtools.wizard.views import SessionWizardView
@@ -28,6 +29,7 @@ from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from users.permissions import has_permission, Permission
+from utils.ical import ICalendar
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
                           WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
@@ -602,3 +604,32 @@ class PublicScheduleView(PublicTournamentPageMixin, VueTableTemplateView):
         context = super().get_context_data(**kwargs)
         context['schedule_timezone_label'] = get_current_timezone_name()
         return context
+
+
+class PublicScheduleICalendarView(PublicTournamentPageMixin, View):
+    """Expose the public tournament schedule as an iCalendar feed."""
+
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
+    public_page_preference = 'public_schedule'
+
+    def get(self, request, *args, **kwargs):
+        schedule_url = request.build_absolute_uri(
+            reverse_tournament('tournament-public-schedule', self.tournament),
+        )
+        calendar = ICalendar(
+            name=_("%(tournament)s Schedule") % {'tournament': self.tournament.name},
+            timezone_name=settings.TIME_ZONE,
+            prodid='-//Tabbycat//Tournament Schedule//EN',
+        )
+        for event in self.tournament.scheduleevent_set.select_related('round'):
+            calendar.add_event(
+                uid=f'schedule-event-{event.pk}-{self.tournament.slug}@{request.get_host()}',
+                start=event.start_time,
+                end=event.end_time,
+                summary=event.display_title,
+                url=schedule_url,
+            )
+
+        response = HttpResponse(calendar.to_ical(), content_type='text/calendar; charset=utf-8')
+        response['Content-Disposition'] = f'attachment; filename="{self.tournament.slug}-schedule.ics"'
+        return response

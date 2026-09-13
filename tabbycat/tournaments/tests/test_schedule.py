@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import formats, timezone
@@ -221,3 +223,59 @@ class SetTournamentScheduleViewTest(TestCase):
         self.assertEqual(tables[0]['data'][0][1]['text'], formats.time_format(
             timezone.localtime(first.start_time), format='TIME_FORMAT', use_l10n=True,
         ))
+
+    def test_public_schedule_links_to_icalendar_export(self):
+        self.tournament.preferences['public_features__public_schedule'] = True
+
+        response = self.client.get(reverse_tournament('tournament-public-schedule', self.tournament))
+
+        export_url = reverse_tournament('tournament-public-schedule-ical', self.tournament)
+        self.assertContains(response, export_url)
+        self.assertContains(response, 'Add schedule to calendar')
+
+    def test_public_schedule_icalendar_export(self):
+        event = ScheduleEvent.objects.create(
+            tournament=self.tournament,
+            type=ScheduleEvent.Types.OTHER,
+            title='Lunch, networking; and Q&amp;A\\notes',
+            start_time=timezone.make_aware(datetime(2026, 8, 15, 9)),
+            end_time=timezone.make_aware(datetime(2026, 8, 15, 10, 30)),
+        )
+        self.tournament.preferences['public_features__public_schedule'] = True
+
+        response = self.client.get(reverse_tournament('tournament-public-schedule-ical', self.tournament))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'text/calendar; charset=utf-8')
+        self.assertEqual(
+            response['Content-Disposition'],
+            f'attachment; filename="{self.tournament.slug}-schedule.ics"',
+        )
+        content = response.content.decode('utf-8')
+        self.assertTrue(content.startswith('BEGIN:VCALENDAR\r\nVERSION:2.0\r\n'))
+        self.assertTrue(content.endswith('END:VCALENDAR\r\n'))
+        self.assertIn(f'UID:schedule-event-{event.pk}-{self.tournament.slug}@testserver\r\n', content)
+        self.assertIn(f'DTSTART;TZID={settings.TIME_ZONE}:', content)
+        self.assertIn(f'DTEND;TZID={settings.TIME_ZONE}:', content)
+        site_timezone = ZoneInfo(settings.TIME_ZONE)
+        expected_start = event.start_time.astimezone(site_timezone).strftime('%Y%m%dT%H%M%S')
+        expected_end = event.end_time.astimezone(site_timezone).strftime('%Y%m%dT%H%M%S')
+        self.assertIn(f'DTSTART;TZID={settings.TIME_ZONE}:{expected_start}\r\n', content)
+        self.assertIn(f'DTEND;TZID={settings.TIME_ZONE}:{expected_end}\r\n', content)
+        self.assertIn(f'X-WR-TIMEZONE:{settings.TIME_ZONE}\r\n', content)
+        self.assertIn(r'SUMMARY:Lunch\, networking\; and Q&amp\;A\\notes', content)
+
+    def test_public_schedule_icalendar_export_omits_missing_end_time(self):
+        self.create_event('Registration', 15, 9)
+        self.tournament.preferences['public_features__public_schedule'] = True
+
+        response = self.client.get(reverse_tournament('tournament-public-schedule-ical', self.tournament))
+
+        self.assertNotIn('DTEND:', response.content.decode('utf-8'))
+
+    def test_public_schedule_icalendar_export_obeys_public_preference(self):
+        self.tournament.preferences['public_features__public_schedule'] = False
+
+        response = self.client.get(reverse_tournament('tournament-public-schedule-ical', self.tournament))
+
+        self.assertEqual(response.status_code, 403)
