@@ -280,6 +280,13 @@ class SpeakerScoreByAdj(models.Model):
         verbose_name=_("debate team"))
     score = ScoreField(verbose_name=_("score"))
     position = models.IntegerField(verbose_name=_("position"))
+    speaker_score = models.ForeignObject(
+        'SpeakerScore', models.DO_NOTHING,
+        from_fields=('ballot_submission', 'debate_team', 'position'),
+        to_fields=('ballot_submission', 'debate_team', 'position'),
+        null=True,
+        related_name='+',
+    )
 
     class Meta:
         constraints = [
