@@ -678,6 +678,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, RoundM
 
             if len(errors) == 0:
                 has_errors = False
+                merged_bs.self_split = any(bs.self_split for bs in bses)
                 merged_bs.save()
                 merged_result.save()
 
@@ -974,6 +975,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
             ).annotate(ordering=Window(Rank(), partition_by="participant_submitter", order_by="-version")).filter(ordering=1).select_related('participant_submitter')
             populate_results(bses, self.tournament)
             self.merged_ballots = bses
+            self.ballotsub.self_split = any(bs.self_split for bs in bses)
 
         # Handle result conflicts
         criteria = ScoreCriterion.objects.filter(tournament=self.tournament)
