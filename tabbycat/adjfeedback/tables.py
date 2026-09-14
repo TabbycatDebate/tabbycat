@@ -29,6 +29,26 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         self.add_column(breaking_header, breaking_data)
 
+    def add_tester_checkbox(self, adjudicators):
+        tester_header = {
+            'key': 'tester',
+            'icon': 'check-circle',
+            'tooltip': _("Whether the adj tests other adjs (click to mark). "
+                         "Adjudication core members are always testers"),
+        }
+        tester_data = [{
+            'component': 'check-cell',
+            'checked': adj.adj_core or adj.is_tester,
+            'sort': adj.adj_core or adj.is_tester,
+            'type': 'tester',
+            'saveURL': reverse_tournament('adjfeedback-set-adj-tester-status', self.tournament),
+            'id': adj.pk,
+            'disabled': adj.adj_core,
+            'disabledTooltip': str(_("On the adjudication core, so always a tester")),
+        } for adj in adjudicators]
+
+        self.add_column(tester_header, tester_data)
+
     @staticmethod
     def get_formatted_adj_score(score, strong=False):
         if score is None:

@@ -23,6 +23,7 @@ class ActionLogEntry(models.Model):
 
     class ActionType(models.TextChoices):
         ADJUDICATOR_BREAK_SET             = 'br.aj.set', _("Changed adjudicator breaking status")
+        ADJUDICATOR_TESTER_SET            = 'ts.aj.set', _("Changed adjudicator tester status")
         ADJUDICATOR_CREATE                = 'aj.crea', _("Created adjudicator")
         ADJUDICATOR_EDIT                  = 'aj.edit', _("Edited adjudicator")
         ADJUDICATOR_NOTE_SET              = 'aj.note', _("Set adjudicator note")   # obsolete
