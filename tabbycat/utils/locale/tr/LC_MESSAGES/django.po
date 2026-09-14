@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:51\n"
+"PO-Revision-Date: 2026-07-06 07:34\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -120,7 +120,7 @@ msgstr "%(team)s—sonuç yok"
 #: utils/tables.py
 #, python-format
 msgid "%(team)s placed %(place)s"
-msgstr "%(team)s %(place)s oldu"
+msgstr "%(team)s (place)s oldu"
 
 #: utils/tables.py
 #, python-format

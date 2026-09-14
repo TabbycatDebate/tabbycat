@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"PO-Revision-Date: 2026-02-27 16:10\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Malay\n"
 "Language: ms_MY\n"
@@ -1039,7 +1039,7 @@ msgstr ""
 
 #: results/views.py
 msgid " vs "
-msgstr ""
+msgstr " vs "
 
 #: results/views.py
 #, python-format

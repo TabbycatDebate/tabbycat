@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:46\n"
+"PO-Revision-Date: 2026-09-13 17:13\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -31,7 +31,7 @@ msgstr[1] ""
 
 #: results/admin.py
 msgid "Speaker"
-msgstr ""
+msgstr "Orador"
 
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"

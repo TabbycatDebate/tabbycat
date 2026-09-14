@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-06 09:40+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"PO-Revision-Date: 2025-12-01 16:31\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -200,7 +200,7 @@ msgstr "Rozhodčí"
 
 #: checkins/views.py
 msgid "Rooms"
-msgstr ""
+msgstr "Místnosti"
 
 #: checkins/views.py
 #, python-format
@@ -814,11 +814,11 @@ msgstr ""
 #: templates/base.html
 #, python-format
 msgid "The tab for %(tournament)s runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
-msgstr ""
+msgstr "Tab turnaje %(tournament)s běží na Tabbycatu, tabovacím systému s veřejně dostupným kódem pro řadu debatních formátů"
 
 #: templates/base.html
 msgid "This tab runs on Tabbycat, a source-available tab system for a variety of parliamentary debating formats"
-msgstr ""
+msgstr "Tento tab běží na Tabbycatu, tabovacím systému s veřejně dostupným kódem pro řadu debatních formátů"
 
 #: templates/components/form-errors.html
 msgid "Whoops! There was an error with one or more fields."
@@ -1166,7 +1166,7 @@ msgstr ""
 
 #: templates/nav/public_nav.html
 msgid "Motions Tab"
-msgstr ""
+msgstr "Tab tezí"
 
 #: templates/nav/public_nav.html
 msgid "By round"
@@ -1451,7 +1451,7 @@ msgstr ""
 
 #: users/models.py
 msgid "user"
-msgstr ""
+msgstr "uživatel"
 
 #: users/models.py
 msgid "permission"
