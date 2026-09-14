@@ -502,6 +502,29 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
                     self.assertEqual(score, score_in_db)
                     self.assertEqual(score, result.get_score(adj, side, pos))
 
+    def test_speaker_score_by_adj_speaker_score_relation(self):
+        self.save_complete_result(self.testdata['high'])
+        speaker = self.teams[0].speaker_set.first()
+
+        score = SpeakerScoreByAdj.objects.select_related('speaker_score__speaker').get(
+            ballot_submission__debate=self.debate,
+            ballot_submission__confirmed=True,
+            debate_team__team=self.teams[0],
+            debate_adjudicator__adjudicator=self.adjs[0],
+            position=1,
+        )
+
+        with self.assertNumQueries(0):
+            self.assertEqual(score.speaker_score.speaker, speaker)
+
+        self.assertEqual(
+            SpeakerScoreByAdj.objects.filter(
+                speaker_score__speaker=speaker,
+                position=1,
+            ).count(),
+            len(self.adjs),
+        )
+
     @standard_test
     def test_winner_by_adj(self, result, testdata, scoresheet_type):
         for adj, winner in zip(self.adjs, testdata[scoresheet_type]['winner_by_adj']):
