@@ -106,13 +106,19 @@ const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
 }
 
 const copyTableData = async () => {
+  // Reuse one detached element while decoding the table's cells.
+  const decoder = document.createElement('textarea')
+  const getPlainText = (html) => {
+    decoder.innerHTML = html.replace(/<[^>]*>?/gm, '')
+    return decoder.value
+  }
   const content = props.tableContent.map(row =>
     row.reduce((acc, cell, index) => {
       const value = ['ajax-select-cell', 'check-cell'].includes(cell.component)
         ? getCellValue(cell)
         : cell.text
       acc[props.tableHeaders[index].key] = typeof value === 'string'
-        ? value.replace(/<[^>]*>?/gm, '')
+        ? getPlainText(value)
         : (value ?? '')
       return acc
     }, {}),
