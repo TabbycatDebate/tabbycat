@@ -535,6 +535,35 @@ class FeedbackFromTeams(ChoicePreference):
     default = 'orallist'
 
 
+FEEDBACK_ROUNDS_CHOICES = (
+    ('prelims', _("Preliminary rounds only")),
+    ('all', _("Preliminary and elimination rounds")),
+)
+
+
+@tournament_preferences_registry.register
+class FeedbackPathsRounds(ChoicePreference):
+    verbose_name = _("Expect feedback from adjudicators in")
+    help_text = _("Which rounds adjudicators are asked for feedback in. Feedback given in elimination rounds is "
+                  "recorded and shown, but never counts towards adjudicators' scores.")
+    section = feedback
+    name = 'feedback_paths_rounds'
+    choices = FEEDBACK_ROUNDS_CHOICES
+    default = 'prelims'
+
+
+@tournament_preferences_registry.register
+class FeedbackFromTeamsRounds(ChoicePreference):
+    verbose_name = _("Expect feedback from teams in")
+    help_text = _("Which rounds teams are asked for feedback in. Teams are never asked for feedback in silent "
+                  "rounds. Feedback given in elimination rounds is recorded and shown, but never counts towards "
+                  "adjudicators' scores.")
+    section = feedback
+    name = 'feedback_from_teams_rounds'
+    choices = FEEDBACK_ROUNDS_CHOICES
+    default = 'prelims'
+
+
 @tournament_preferences_registry.register
 class ShowUnexpectedFeedback(BooleanPreference):
     verbose_name = _("Show unexpected feedback submissions in participants pages")
