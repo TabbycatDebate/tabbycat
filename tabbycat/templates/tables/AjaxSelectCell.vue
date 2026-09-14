@@ -13,14 +13,14 @@ const { ajaxSave } = useAjax(time => emit('saved', time))
 const displayValue = computed(() => props.cellData.value ?? '')
 
 const selectUpdate = (newValue) => {
-  if (props.cellData.noSave) {
-    return
-  }
-
   const cd = props.cellData
   const selectedOption = cd.options.find(option => String(option.value) === newValue)
   const selectedValue = newValue === '' ? null : (selectedOption?.value ?? newValue)
   cd.value = selectedValue
+
+  if (props.cellData.noSave) {
+    return
+  }
 
   const payload = { ...cd.payload, [cd.payloadKey]: selectedValue }
   ajaxSave(cd.saveURL, payload, cd.saveMessage, null, null, null)
@@ -32,6 +32,7 @@ const selectUpdate = (newValue) => {
     <select
       :value="displayValue"
       class="form-control"
+      :name="cellData.name"
       @change="selectUpdate($event.target.value)"
     >
       <option
