@@ -1,8 +1,10 @@
 import json
 import logging
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from breakqual.models import BreakingTeam
 from draw.models import Debate
 from results.models import BallotSubmission, TeamScore
 from utils.tests import CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, suppress_logs
@@ -37,6 +39,34 @@ class PublicESLBreakingTeamsViewTest(BreakingTeamsViewTestMixin, TestCase):
 
 class PublicNoviceBreakingTeamsViewTest(BreakingTeamsViewTestMixin, TestCase):
     break_category_slug = 'novice'
+
+
+class AdminBreakingTeamsViewTest(CompletedTournamentTestMixin, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.admin = get_user_model().objects.create(username='break_admin', is_superuser=True)
+        self.client.force_login(self.admin)
+
+    def test_remark_column_uses_form_select_cells(self):
+        category = self.tournament.breakcategory_set.get(slug='open')
+        breaking_team = category.breakingteam_set.first()
+        breaking_team.remark = BreakingTeam.Remark.CAPPED
+        breaking_team.save()
+        response = self.client.get(self.reverse_url('breakqual-teams', category=category.slug))
+        self.assertResponseOK(response)
+
+        table = json.loads(response.context['tables_data'])[0]
+        remark_index = [header['key'] for header in table['head']].index('edit-remark')
+        cells = [row[remark_index] for row in table['data']]
+
+        self.assertTrue(cells)
+        self.assertTrue(all(cell['component'] == 'ajax-select-cell' for cell in cells))
+        self.assertTrue(all(cell['noSave'] for cell in cells))
+        self.assertTrue(all(cell['name'].startswith('remark_') for cell in cells))
+        self.assertTrue(all('text' not in cell for cell in cells))
+        selected_cell = next(cell for cell in cells if cell['name'] == f'remark_{breaking_team.team_id}')
+        self.assertEqual(selected_cell['value'], BreakingTeam.Remark.CAPPED)
 
 
 class PublicBreakingAdjudicatorsViewTest(ConditionalTableViewTestsMixin, TestCase):

@@ -169,7 +169,7 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
         )
         table.add_column(
             {'key': 'edit-remark', 'title': _("Edit Remark")},
-            [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings],
+            [self.form.get_remark_cell(tsi.team) for tsi in self.standings],
         )
         return table
 

@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.encoding import force_str
 
 from utils.forms import OptionalChoiceField
 
@@ -22,8 +23,21 @@ class BreakingTeamsForm(forms.Form):
     def _fieldname_remark(team):  # Team not BreakingTeam
         return 'remark_%(team)d' % {'team': team.id}
 
-    def get_remark_field(self, team):  # Team not BreakingTeam
-        return self[self._fieldname_remark(team)].as_widget(attrs={'class': 'form-control'})
+    def get_remark_cell(self, team):  # Team not BreakingTeam
+        field = self[self._fieldname_remark(team)]
+        choices = list(field.field.choices)
+        blank_label = choices.pop(0)[1]
+        return {
+            'component': 'ajax-select-cell',
+            'value': field.value(),
+            'options': [
+                {'value': value, 'label': force_str(label)}
+                for value, label in choices
+            ],
+            'blankLabel': force_str(blank_label),
+            'name': field.html_name,
+            'noSave': True,
+        }
 
     def _bt(self, team):
         return self._bts_by_team_id[team.id]

@@ -11,12 +11,14 @@ const emit = defineEmits(['toggle-checked', 'update-sort'])
 const { ajaxSave } = useAjax()
 
 const checkUpdate = (newChecked) => {
-  if (props.cellData.noSave) {
-    return
-  }
   const cd = props.cellData
   cd.checked = newChecked
   cd.sort = newChecked
+
+  if (props.cellData.noSave) {
+    return
+  }
+
   if (_.isUndefined(props.cellData.saveURL)) {
     emit('toggle-checked', cd)
   } else {
