@@ -87,6 +87,7 @@ class ActionLogEntry(models.Model):
         ROUND_EDIT                        = 'rd.edit', _("Edited round")
         ROUND_START_TIME_SET              = 'rd.st.set', _("Set start time")
         SIDES_SAVE                        = 'ms.save', _("Saved the sides status of a matchup")
+        SIDE_PREALLOCATIONS_SAVE          = 'sa.save', _("Edited side pre-allocations")
         SIMPLE_IMPORT_ADJUDICATORS        = 'si.adju', _("Imported adjudicators using the simple importer")
         SIMPLE_IMPORT_INSTITUTIONS        = 'si.inst', _("Imported institutions using the simple importer")
         SIMPLE_IMPORT_TEAMS               = 'si.team', _("Imported teams using the simple importer")
