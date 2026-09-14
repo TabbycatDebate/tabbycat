@@ -62,6 +62,9 @@ const getCellValue = (cell) => {
   if (cell.component === 'ajax-select-cell') {
     return cell.value ?? ''
   }
+  if (cell.component === 'check-cell') {
+    return cell.checked ?? false
+  }
   return _.isUndefined(cell.sort) ? cell.text : cell.sort
 }
 
@@ -105,7 +108,9 @@ const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
 const copyTableData = async () => {
   const content = props.tableContent.map(row =>
     row.reduce((acc, cell, index) => {
-      const value = cell.component === 'ajax-select-cell' ? cell.value : cell.text
+      const value = ['ajax-select-cell', 'check-cell'].includes(cell.component)
+        ? getCellValue(cell)
+        : cell.text
       acc[props.tableHeaders[index].key] = typeof value === 'string'
         ? value.replace(/<[^>]*>?/gm, '')
         : (value ?? '')

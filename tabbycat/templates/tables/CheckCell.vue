@@ -17,6 +17,11 @@ const checkUpdate = (newChecked) => {
   const cd = props.cellData
   cd.checked = newChecked
   cd.sort = newChecked
+
+  if (props.cellData.noSave) {
+    return
+  }
+
   if (_.isUndefined(props.cellData.saveURL)) {
     emit('toggle-checked', cd)
   } else {
