@@ -105,6 +105,12 @@ const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
   return cellData
 }
 
+const getPlainText = (html) => {
+  const decoder = document.createElement('textarea')
+  decoder.innerHTML = html.replace(/<[^>]*>?/gm, '')
+  return decoder.value
+}
+
 const copyTableData = async () => {
   const content = props.tableContent.map(row =>
     row.reduce((acc, cell, index) => {
@@ -112,7 +118,7 @@ const copyTableData = async () => {
         ? getCellValue(cell)
         : cell.text
       acc[props.tableHeaders[index].key] = typeof value === 'string'
-        ? value.replace(/<[^>]*>?/gm, '')
+        ? getPlainText(value)
         : (value ?? '')
       return acc
     }, {}),
