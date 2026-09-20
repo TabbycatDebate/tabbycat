@@ -296,7 +296,7 @@ class BallotSerializerTests(APITestCase):
         self.user.delete()
         logging.disable(logging.NOTSET)
 
-    def test_can_create_consensus_ballot_scores(self):
+    def test_can_create_consensus_ballot_scores_with_ghost(self):
         client = APIClient()
         client.force_authenticate(user=self.user)
         response = client.post(reverse_round('api-ballot-list', self.round, kwargs={'debate_pk': self.debate.pk}), {
@@ -308,7 +308,7 @@ class BallotSerializerTests(APITestCase):
                             'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
                             'speeches': [
                                 {
-                                    'ghost': False,
+                                    'ghost': True,
                                     'score': 80,
                                     'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s1.pk}),
                                 },
@@ -340,6 +340,7 @@ class BallotSerializerTests(APITestCase):
             },
         })
         self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.data['result']['sheets'][0]['teams'][0]['speeches'][0]['ghost'])
 
     def test_rejects_reply_criterion_on_substantive_speech(self):
         self.tournament.preferences['debate_rules__reply_scores_enabled'] = True

@@ -1500,7 +1500,7 @@ class BallotSerializer(serializers.ModelSerializer):
 
                         result.set_speaker(*speaker_args, self.validated_data['speaker'])
                         if self.validated_data.get('ghost', False):
-                            result.set_ghost(*speaker_args)
+                            result.set_ghost(*speaker_args, True)
 
                         if kwargs.get('adjudicator') is not None:
                             speaker_args.insert(0, kwargs['adjudicator'])
