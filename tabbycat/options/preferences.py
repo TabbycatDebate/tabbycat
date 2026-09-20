@@ -95,6 +95,20 @@ class MarginIncludesDissent(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ScoreAggregationFunction(ChoicePreference):
+    help_text = _("How is the speaker's score from a debate judged by multiple judges "
+        "calculated: Mean (default), or Median (required by Karl Popper rules).")
+    verbose_name = _("Panel score aggregation function")
+    section = scoring
+    name = 'score_aggregation_function'
+    choices = (
+        ('mean', _("Mean (average)")),
+        ('median', _("Median (in even-numbered panels, decimals rounded up)")),
+    )
+    default = 'mean'
+
+
+@tournament_preferences_registry.register
 class BallotIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the ballot form, e.g. speaker scale")
     verbose_name = _("Ballot introduction/explanation")

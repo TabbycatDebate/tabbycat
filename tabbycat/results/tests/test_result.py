@@ -1,4 +1,5 @@
 import logging
+from statistics import mean
 
 from django.test import TestCase
 
@@ -6,7 +7,7 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
-from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, SpeakerScoreByAdj, TeamScore
 from results.result import ConsensusDebateResultWithScores, DebateResultByAdjudicatorWithScores, ResultError    # absolute import to keep logger's name consistent
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
@@ -735,6 +736,147 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
         self.assertEqual(len(adjs_with_splits), 1)
         adj, adjtype, split = adjs_with_splits[0]
         self.assertFalse(split)
+
+    # ==========================================================================
+    # Median aggregation tests
+    # ==========================================================================
+
+    @with_preference('scoring', 'score_aggregation_function', 'median')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @standard_test
+    def test_median_aggregation_odd_panel(self, result, testdata, scoresheet_type):
+        """Test median aggregation with odd-sized panels (uses true median)."""
+        # With 3 adjudicators and margin_includes_dissenters=True, all are included (odd),
+        # so the aggregator should use the true median
+        if testdata['num_adjs'] != 3:
+            self.skipTest("This test is for 3-adjudicator panels")
+
+        # Only test 'high' testdata for now (has well-known expected values)
+        if testdata != self.testdata.get('high'):
+            self.skipTest("This test is only defined for 'high' testdata")
+
+        # For 'high' testdata with 3 adjs:
+        # AFF pos 1: [75.0, 74.0, 75.0] -> sorted [74, 75, 75] -> median = 75.0
+        # AFF pos 2: [76.0, 75.0, 75.0] -> sorted [75, 75, 76] -> median = 75.0
+        # AFF pos 3: [74.0, 76.0, 75.0] -> sorted [74, 75, 76] -> median = 75.0
+        # AFF pos 4 (reply): [38.0, 37.0, 37.5] -> sorted [37, 37.5, 38] -> median = 37.5
+        expected_aff_scores = [75.0, 75.0, 75.0, 37.5]
+
+        # NEG pos 1: [76.0, 77.0, 76.0] -> sorted [76, 76, 77] -> median = 76.0
+        # NEG pos 2: [73.0, 74.0, 78.0] -> sorted [73, 74, 78] -> median = 74.0
+        # NEG pos 3: [75.0, 74.0, 77.0] -> sorted [74, 75, 77] -> median = 75.0
+        # NEG pos 4 (reply): [37.5, 38.0, 37.0] -> sorted [37, 37.5, 38] -> median = 37.5
+        expected_neg_scores = [76.0, 74.0, 75.0, 37.5]
+
+        for pos, (aff_expected, neg_expected) in enumerate(zip(expected_aff_scores, expected_neg_scores), start=1):
+            with suppress_logs('results.result', logging.WARNING):
+                self.assertAlmostEqual(aff_expected, self._get_speakerscore_in_db(DebateSide.AFF, pos).score,
+                                       msg=f"AFF position {pos} score mismatch")
+                self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
+                                       msg=f"NEG position {pos} score mismatch")
+
+        self.assertAlmostEqual(testdata['common']['everyone_totals'][0],
+                               self._get_teamscore_in_db(DebateSide.AFF).score)
+        self.assertAlmostEqual(testdata['common']['everyone_totals'][1],
+                               self._get_teamscore_in_db(DebateSide.NEG).score)
+
+    @with_preference('scoring', 'score_aggregation_function', 'median')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    def test_median_aggregation_even_panel(self):
+        """Test median aggregation with even-sized panels (uses ceil(mean) fallback).
+
+        margin_includes_dissenters=True is essential here: it makes
+        relevant_adjudicators() return *both* adjudicators (a genuinely
+        even-length input), so this actually exercises the ceil(mean(...))
+        fallback branch of _score_aggregator(). If only the majority
+        adjudicator were included (margin_includes_dissenters=False), the
+        input would collapse to a single (odd) value and this test would not
+        distinguish the fallback from the trivial odd-panel case.
+
+        The 'even' testdata's per-adjudicator scores are:
+          AFF: adj0=[80.0, 74.0, 35.5], adj1=[80.0, 79.0, 37.5]
+          NEG: adj0=[79.0, 76.0, 39.0], adj1=[73.0, 71.0, 39.5]
+        Several of these positions have a non-whole mean (e.g. AFF pos 2:
+        mean(74.0, 79.0) = 76.5), so ceil(mean(...)) is verifiably distinct
+        from what a naive statistics.median (which would average the two
+        middle values, giving 76.5, not 77.0) would produce.
+        """
+        testdata = self.testdata['even']
+        self.save_complete_result(testdata)
+
+        # AFF pos 1: mean(80.0, 80.0) = 80.0 -> ceil = 80.0
+        # AFF pos 2: mean(74.0, 79.0) = 76.5 -> ceil = 77.0
+        # AFF pos 3 (reply): mean(35.5, 37.5) = 36.5 -> ceil = 37.0
+        expected_aff_scores = [80.0, 77.0, 37.0]
+
+        # NEG pos 1: mean(79.0, 73.0) = 76.0 -> ceil = 76.0
+        # NEG pos 2: mean(76.0, 71.0) = 73.5 -> ceil = 74.0
+        # NEG pos 3 (reply): mean(39.0, 39.5) = 39.25 -> ceil = 40.0
+        expected_neg_scores = [76.0, 74.0, 40.0]
+
+        for pos, (aff_expected, neg_expected) in enumerate(zip(expected_aff_scores, expected_neg_scores), start=1):
+            with suppress_logs('results.result', logging.WARNING):
+                self.assertAlmostEqual(aff_expected, self._get_speakerscore_in_db(DebateSide.AFF, pos).score,
+                                       msg=f"AFF position {pos} score mismatch")
+                self.assertAlmostEqual(neg_expected, self._get_speakerscore_in_db(DebateSide.NEG, pos).score,
+                                       msg=f"NEG position {pos} score mismatch")
+
+    @with_preference('scoring', 'score_aggregation_function', 'median')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    def test_median_aggregation_with_criteria(self):
+        """Aggregate criteria for speaker scores, but average team totals."""
+        criteria = [
+            ScoreCriterion.objects.create(
+                tournament=self.tournament, name=name, seq=seq, weight=1,
+                min_score=0, max_score=50, step=1,
+            )
+            for seq, name in enumerate(("Content", "Style"), start=1)
+        ]
+        blank_result = self.save_blank_result(nadjs=3, nspeakers=2)
+        result = self.debate_result_class(blank_result.ballotsub, criteria=criteria)
+
+        for side, team in zip(self.SIDES, self.teams):
+            speakers = team.speaker_set.all()[:2]
+            for pos, speaker in enumerate(speakers, start=1):
+                result.set_speaker(side, pos, speaker)
+            result.set_speaker(side, 3, speakers[0])
+
+        # For AFF, each criterion has a median of 40, while the per-adjudicator
+        # totals are 70, 70, and 80 (median 70). NEG follows the same pattern
+        # one point lower per criterion.
+        for side, offset in ((DebateSide.AFF, 0), (DebateSide.NEG, -1)):
+            criterion_scores = ((30 + offset, 40 + offset),
+                                (40 + offset, 30 + offset),
+                                (40 + offset, 40 + offset))
+            for adj, scores in zip(self.adjs, criterion_scores):
+                for pos in result.positions:
+                    for criterion, score in zip(criteria, scores):
+                        result.set_criterion_score(adj, side, pos, criterion, score)
+
+        self.assertEqual(40, result.speakercriterionscore_field_score(DebateSide.AFF, 1, criteria[0]))
+        self.assertEqual(40, result.speakercriterionscore_field_score(DebateSide.AFF, 1, criteria[1]))
+        self.assertEqual(80, result.speakerscore_field_score(DebateSide.AFF, 1))
+        self.assertEqual(220, result.teamscore_field_score(DebateSide.AFF))
+
+        self.assertEqual(39, result.speakercriterionscore_field_score(DebateSide.NEG, 1, criteria[0]))
+        self.assertEqual(39, result.speakercriterionscore_field_score(DebateSide.NEG, 1, criteria[1]))
+        self.assertEqual(78, result.speakerscore_field_score(DebateSide.NEG, 1))
+        self.assertEqual(214, result.teamscore_field_score(DebateSide.NEG))
+
+    @with_preference('scoring', 'score_aggregation_function', 'mean')
+    @with_preference('scoring', 'margin_includes_dissenters', True)
+    @standard_test
+    def test_mean_aggregation_regression(self, result, testdata, scoresheet_type):
+        """Regression test: ensure mean aggregation (default) still works as before."""
+        for side, totals in zip(self.SIDES, testdata['common']['everyone_scores']):
+            for pos, score in enumerate(totals, start=1):
+                with suppress_logs('results.result', logging.WARNING):
+                    self.assertAlmostEqual(score, self._get_speakerscore_in_db(side, pos).score)
+                    self.assertAlmostEqual(score, result.speakerscore_field_score(side, pos))
+            legacy_team_score = mean(
+                result.scoresheets[adj].get_total(side) for adj in result.relevant_adjudicators()
+            )
+            self.assertAlmostEqual(legacy_team_score, result.teamscore_field_score(side))
 
     # ==========================================================================
     # Irregular operation

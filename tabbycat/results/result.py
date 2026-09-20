@@ -39,9 +39,10 @@ A few notes on error checking:
 """
 
 import logging
+import math
 from functools import wraps
 from itertools import product
-from statistics import mean
+from statistics import mean, median
 from typing import TYPE_CHECKING, Union
 
 from django.utils.translation import gettext_lazy as _
@@ -62,6 +63,19 @@ if TYPE_CHECKING:
     from .models import SpeakerScore, SpeakerScoreByAdj
 
 logger = logging.getLogger(__name__)
+
+
+def median_or_rounded_up_mean(values):
+    values = list(values)
+    if len(values) % 2 == 1:
+        return median(values)
+    return math.ceil(mean(values))
+
+
+SCORE_AGGREGATORS = {
+    'mean': mean,
+    'median': median_or_rounded_up_mean,
+}
 
 
 class ResultError(RuntimeError):
@@ -1176,6 +1190,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     # Model fields
     # --------------------------------------------------------------------------
 
+    def _score_aggregator(self):
+        return SCORE_AGGREGATORS[self.tournament.pref('score_aggregation_function')]
+
     def teamscorebyadj_field_margin(self, adj, side):
         if len(self.sides) > 2:
             return None
@@ -1210,7 +1227,18 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
+        if self.criteria:
+            # Aggregate criteria separately so the saved speaker score remains
+            # the weighted sum of the saved aggregate criterion scores. This is
+            # significant for medians, which are not distributive over sums.
+            score = 0
+            for criterion in self.criteria:
+                if not criterion.applies_to_position(position, self.reply_position):
+                    continue
+                criterion_score = self.speakercriterionscore_field_score(side, position, criterion)
+                score += criterion_score * type(criterion_score)(criterion.weight)
+            return score
+        return self._score_aggregator()(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
 
     def speakercriterionscore_field_score(self, side, pos, criterion):
         # Should be decision-decorated
@@ -1218,7 +1246,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
+        return self._score_aggregator()(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
 
     def speakercriterionscorebyadj_field_score(self, adjudicator, side, pos, criterion):
         return self.scoresheets[adjudicator].get_criterion_score(side, pos, criterion)
