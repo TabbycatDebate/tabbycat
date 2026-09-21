@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:49\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -76,8 +76,8 @@ msgid "The draw cannot be generated until some adjudicators have been marked as 
 msgstr "Сетка не может быть сгенерирована, пока какие-то судьи не отмечены как доступные."
 
 #: availability/templates/availability_index.html
-msgid "The draw cannot be generated until some rooms have been marked as available."
-msgstr "Сетка не может быть сгенерирована, пока какие-то аудитории не отмечены как доступные."
+msgid "No rooms are marked as available. You can still generate the draw and assign rooms later."
+msgstr ""
 
 #: availability/templates/availability_index.html
 msgid "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly."
@@ -135,9 +135,21 @@ msgid "There's only one team breaking in the %(break_category)s Break. You can't
 msgstr "Есть только одна команда, брейкающаяся в %(break_category)s брейке. Вы не можете создать сетку на брейковый раунд только с одной командой - возможно, вы захотите <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> ещё раз посмотреть брейк %(break_category)s</a>."
 
 #: availability/templates/availability_index.html
+msgid "One or more teams have a <strong>seed</strong> assigned, but this round's draw type is not <strong>Seeded</strong>."
+msgstr ""
+
+#: availability/templates/availability_index.html
+msgid "Set draw type to Seeded"
+msgstr ""
+
+#: availability/templates/availability_index.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
 msgstr "Первенство положения команд пустует. Это означает, что команды не ранжированы ни по одной метрике, то есть все команды будут в одной группе. Если это не то, что вы хотели, установите первенство положения команд в <a href=\"%(standings_config_url)s\" class=\"alert-link\"> области Положение настроек турнира </a> до создания сетки. Для большинства турниров первой метрикой будет количество баллов или побед."
+
+#: availability/templates/availability_index.html
+msgid "Request failed"
+msgstr ""
 
 #: availability/templates/base_availability.html
 msgid "Select All"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:46\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -45,6 +45,10 @@ msgstr ""
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr "URL этой страницы персонализирован для вас, %(name)s. <strong> Не делитесь им ни с кем:</strong> любой, кто знает это URL может отправлять за вас результаты дебатов и/или фидбэк. Если вы запомните эту страницу, вы можете возвращаться после каждого раунда для доступных действий."
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
+msgstr ""
 
 #: privateurls/templates/private_url_landing.html
 #, python-format
@@ -155,6 +159,10 @@ msgstr "URL"
 #: privateurls/views.py
 msgid "Speakers"
 msgstr "Спикеры"
+
+#: privateurls/views.py
+msgid "Team"
+msgstr "Команда"
 
 #: privateurls/views.py
 msgid "Adjudicators"
