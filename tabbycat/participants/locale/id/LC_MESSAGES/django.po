@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:52\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -17,6 +17,14 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/participants/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 942\n"
+
+#: participants/admin.py
+msgid "Create institution conflict"
+msgstr ""
+
+#: participants/admin.py
+msgid "Automatically create a conflict between the selected institution and this participant."
+msgstr ""
 
 #: participants/admin.py
 #, python-format
@@ -66,6 +74,23 @@ msgstr[0] "Sebanyak %(count)d juri sudah menghapus kunci URL mereka."
 #: participants/apps.py participants/views.py
 msgid "Participants"
 msgstr "Partisipan"
+
+#: participants/forms.py
+msgid "Speaker's full name"
+msgstr ""
+
+#: participants/forms.py
+#, python-format
+msgid "You must type '%(name)s' exactly to confirm deletion."
+msgstr ""
+
+#: participants/models.py
+msgid "Unconfirmed"
+msgstr "Tidak Dikonfirmasi"
+
+#: participants/models.py
+msgid "Confirmed"
+msgstr "Terkonfirmasi"
 
 #: participants/models.py
 msgid "name"
@@ -312,7 +337,7 @@ msgid "seed"
 msgstr ""
 
 #: participants/models.py
-msgid "Used as initial ranking to power-pair the first round"
+msgid "Used as initial ranking to power-pair the first round, and to order teams for round-robin draws (including BP preset schedules, which require unique seeds 1 through n)."
 msgstr ""
 
 #: participants/models.py
@@ -342,6 +367,14 @@ msgstr "tipe"
 #: participants/models.py
 msgid "emoji"
 msgstr "emoji"
+
+#: participants/models.py
+msgid "registration status"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether the team's registration has been confirmed by tournament staff"
+msgstr ""
 
 #: participants/models.py
 msgid "team"
@@ -404,6 +437,18 @@ msgid "adjudication core"
 msgstr "juri inti"
 
 #: participants/models.py
+msgid "tester"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether this adjudicator tests other adjudicators. Members of the adjudication core count as testers whether or not this is checked"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether the adjudicator's registration has been confirmed by tournament staff"
+msgstr ""
+
+#: participants/models.py
 msgid "adjudicator"
 msgstr "juri debat"
 
@@ -437,6 +482,16 @@ msgstr "Catatan Rekor untuk %(name)s"
 #, python-format
 msgid "About %(name)s"
 msgstr "Tentang %(name)s"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Edit Database"
+msgstr "Sunting Basisdata"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed."
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Independent adjudicator"
@@ -504,10 +559,6 @@ msgstr "Konflik Juri:"
 msgid "Room Constraints:"
 msgstr "Batasan-batasan Ruangan:"
 
-#: participants/templates/admin/participants/adjudicator/change_form.html
-msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "<strong>Jangan lupa:</strong> Jika juri ini memiliki konflik dengan institusinya, anda sebaiknya menambahkan konflik ini <strong>sekarang</strong> di bagian tab <strong>Konflik Juri dengan institusi</strong>, karena konflik ini <strong>tidak</strong> dibuat secara otomatis ketika menggunakan formulir ini."
-
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
@@ -537,10 +588,6 @@ msgstr "Jika anda merasa yakin untuk menghapus objek %(object_name)s, harap hapu
 msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
 msgstr "Jika anda merasa yakin untuk menghapus objek %(objects_name)s ini, harap hapus objek yang berada di atasnya terlebih dahulu, dan pastikan untuk memperhatikan peringatan yang akan anda lihat pada halaman objek \"tim debat\" sebelum melanjutkan."
 
-#: participants/templates/admin/participants/team/change_form.html
-msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "<strong>Jangan lupa:</strong> Jika timini memiliki konflik dengan institusinya, anda sebaiknya menambahkan konflik ini <strong>sekarang</strong> di bagian tab <strong>Konflik Tim dengan institusi</strong>, karena konflik ini <strong>tidak</strong> dibuat secara otomatis ketika menggunakan formulir ini."
-
 #: participants/templates/current_round/common.html
 #, python-format
 msgid "The round begins at %(start_time)s"
@@ -549,6 +596,10 @@ msgstr "Ronde akan dimulai pada %(start_time)s"
 #: participants/templates/current_round/common.html
 msgid "Teams:"
 msgstr "Tim:"
+
+#: participants/templates/current_round/common.html
+msgid "The adjudicators for this debate have not yet been released."
+msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "Adjudicator:"
@@ -578,8 +629,8 @@ msgid "Motion:"
 msgstr "Mosi:"
 
 #: participants/templates/current_round/common.html
-msgid "View Info Slide"
-msgstr "Buka Slide Info"
+msgid "View Info-slide"
+msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -827,6 +878,12 @@ msgid_plural "It looks like %(team)s is competing in %(ndebates)s debates this r
 msgstr[0] "Sepertinya tim %(team)s sedang bertanding di debat %(ndebates)s pada ronde ini."
 
 #: participants/templates/in_this_round.html
+#, python-format
+msgid "It looks like you are competing in %(ndebates)s debate this round."
+msgid_plural "It looks like you are competing in %(ndebates)s debates this round."
+msgstr[0] ""
+
+#: participants/templates/in_this_round.html
 msgid "If this is an error, please contact a tab director immediately."
 msgstr "Jika terdapat kesalahan, mohon hubungi pimpinan debat secepatnya."
 
@@ -850,6 +907,14 @@ msgstr "Daftar Partisipan"
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
 msgstr "Daftar Institusi"
+
+#: participants/templates/participants_subnav.html
+msgid "Gender Diversity"
+msgstr ""
+
+#: participants/templates/participants_subnav.html
+msgid "Adjudicator Rule"
+msgstr ""
 
 #: participants/templates/participants_subnav.html
 msgid "Emails have already been sent."
@@ -884,6 +949,35 @@ msgstr "Jika Anda ingin menghapus kategori pembicara, gunakan area <a href=\"%(e
 #: participants/templates/speaker_categories_edit.html
 msgid "Save Speaker Categories"
 msgstr "Menyimpan Kategori Pembicara"
+
+#: participants/templates/speaker_confirm_delete.html
+msgid "Confirm Speaker Deletion"
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#: participants/templates/speaker_create.html
+msgid "Back to Team Record"
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Do you really want to delete <strong>%(name)s</strong> from %(team)s? This will permanently remove the speaker and <strong>cannot be undone</strong>. Any ballot scores attributed to this speaker will also be deleted."
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Yes, delete %(name)s"
+msgstr ""
+
+#: participants/templates/speaker_create.html
+#: participants/templates/team_registration_card.html
+msgid "Add Speaker"
+msgstr ""
+
+#: participants/templates/speaker_create.html
+#, python-format
+msgid "for %(name)s"
+msgstr "untuk %(name)s"
 
 #: participants/templates/team_registration_card.html
 msgid "Team name:"
@@ -924,6 +1018,10 @@ msgstr "Memenuhi syarat untuk kategori break:"
 #: participants/templates/team_registration_card.html
 msgid "Speaker categories:"
 msgstr "Kategori pembicara:"
+
+#: participants/templates/team_registration_card.html
+msgid "Delete"
+msgstr ""
 
 #: participants/templatetags/team_name_for_data_entry.py
 #, python-format
@@ -979,6 +1077,28 @@ msgid "Number of independent adjudicators"
 msgstr "Banyak juri independen"
 
 #: participants/views.py
+msgid "Institution Gender Diversity"
+msgstr ""
+
+#: participants/views.py
+msgid "N/A"
+msgstr "N/A"
+
+#: participants/views.py
+msgid "Institution"
+msgstr "Institusi"
+
+#: participants/views.py
+#, python-format
+msgid "Speakers (%(gender)s)"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "Adjudicators (%(gender)s)"
+msgstr ""
+
+#: participants/views.py
 msgid "Code name"
 msgstr "Kode nama"
 
@@ -996,6 +1116,30 @@ msgstr "Ronde sebelumnya"
 
 #: participants/views.py
 #, python-format
+msgid "Add Speaker to %(team)s"
+msgstr ""
+
+#: participants/views.py
+msgid "Cancel and return to team record"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was added as a speaker."
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "Delete %(name)s"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was deleted."
+msgstr ""
+
+#: participants/views.py
+#, python-format
 msgid "Saved category: %(list)s"
 msgid_plural "Saved categories: %(list)s"
 msgstr[0] "Kategori yang tersimpan: %(list)s"
@@ -1007,4 +1151,12 @@ msgstr "Tidak ada perubahan yang dilakukan pada kategori."
 #: participants/views.py
 msgid "Speaker Category Eligibility"
 msgstr "Eligibilitas Kategori Pembicara"
+
+#: participants/views.py
+msgid "Adjudicator Requirement"
+msgstr ""
+
+#: participants/views.py
+msgid "Registered"
+msgstr ""
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:59\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -141,7 +141,7 @@ msgstr "crwdns31016:0%(level)scrwdne31016:0"
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
-msgstr "crwdns31018:0%(chisq).3fcrwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
+msgstr "crwdns31018:0%(chisq)crwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
 
 #: motions/statistics.py
 msgid "probably balanced"
@@ -150,7 +150,7 @@ msgstr "crwdns31020:0crwdne31020:0"
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
-msgstr "crwdns31022:0%(chisq).3fcrwdne31022:0"
+msgstr "crwdns31022:0%(chisq)crwdne31022:0"
 
 #: motions/templates/motion_global_statistics.html
 #: motions/templates/motion_round_statistics.html
@@ -347,6 +347,34 @@ msgstr[1] "crwdns51302:5%(round)scrwdne51302:5"
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "crwdns31116:0crwdne31116:0"
 
+#: motions/templates/show.html
+msgid "Release Motion"
+msgstr "crwdns54021:0crwdne54021:0"
+
+#: motions/templates/show.html
+msgid "Release Info Slide"
+msgstr "crwdns54023:0crwdne54023:0"
+
+#: motions/templates/show.html
+msgid "Releasing..."
+msgstr "crwdns54025:0crwdne54025:0"
+
+#: motions/templates/show.html
+msgid "Motions are Released"
+msgstr "crwdns54027:0crwdne54027:0"
+
+#: motions/templates/show.html
+msgid "Failed to release motions"
+msgstr "crwdns54029:0crwdne54029:0"
+
+#: motions/templates/show.html
+msgid "Info-slides are released"
+msgstr "crwdns54031:0crwdne54031:0"
+
+#: motions/templates/show.html
+msgid "Failed to release info-slides"
+msgstr "crwdns54033:0crwdne54033:0"
+
 #: motions/utils.py
 msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr "crwdns52768:0crwdne52768:0"
@@ -385,6 +413,17 @@ msgstr[0] "crwdns51856:1crwdne51856:1"
 msgstr[1] "crwdns51856:5%(count)dcrwdne51856:5"
 
 #: motions/views.py
+#, python-format
+msgid "%(tournament)s - %(round)s"
+msgstr "crwdns54035:0%(tournament)scrwdnd54035:0%(round)scrwdne54035:0"
+
+#: motions/views.py
+msgid "The motion has been released."
+msgid_plural "The motions have been released."
+msgstr[0] "crwdns54037:1crwdne54037:1"
+msgstr[1] "crwdns54037:5crwdne54037:5"
+
+#: motions/views.py
 msgid "Released the motion."
 msgid_plural "Released the motions."
 msgstr[0] "crwdns52199:1crwdne52199:1"
@@ -395,6 +434,12 @@ msgid "Unreleased the motion."
 msgid_plural "Unreleased the motions."
 msgstr[0] "crwdns52201:1crwdne52201:1"
 msgstr[1] "crwdns52201:5crwdne52201:5"
+
+#: motions/views.py
+msgid "Released the info-slide."
+msgid_plural "Released the info-slides."
+msgstr[0] "crwdns54039:1crwdne54039:1"
+msgstr[1] "crwdns54039:5crwdne54039:5"
 
 #: motions/views.py
 msgid "Round Motions"

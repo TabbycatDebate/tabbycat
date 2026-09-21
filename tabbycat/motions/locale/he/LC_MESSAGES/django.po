@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: he\n"
@@ -165,7 +165,6 @@ msgid_plural "results from %(ndebates)s debates"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
@@ -174,7 +173,6 @@ msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%)
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
@@ -183,7 +181,6 @@ msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
@@ -244,7 +241,6 @@ msgid_plural "average points per position (%(ndebates)s debates)"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
@@ -253,7 +249,6 @@ msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(point
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
@@ -267,7 +262,6 @@ msgid_plural "%(count)s %(side)s wins"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
@@ -280,7 +274,6 @@ msgid_plural "%(count)s %(side)s vetoes"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams vetoed this motion"
@@ -292,7 +285,6 @@ msgid_plural "Edit Motions"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motions_edit.html
 msgid "Display Draw"
@@ -316,7 +308,6 @@ msgid_plural "The motions for this round are currently publicly displayed becaus
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motions_edit.html
 msgid "Save Motion"
@@ -324,7 +315,6 @@ msgid_plural "Save Motions"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/motions_info.html
 msgid "Info Slide"
@@ -349,7 +339,6 @@ msgid_plural "Motions for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/show.html
 #, python-format
@@ -358,7 +347,6 @@ msgid_plural "Reveal Info Slides for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/show.html
 #, python-format
@@ -367,10 +355,37 @@ msgid_plural "Reveal Motions for %(round)s"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/templates/show.html
 msgid "There are no motions for this round entered into Tabbycat."
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Release Motion"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Release Info Slide"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Releasing..."
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Motions are Released"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Failed to release motions"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Info-slides are released"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Failed to release info-slides"
 msgstr ""
 
 #: motions/utils.py
@@ -392,7 +407,6 @@ msgid_plural "%(count)d motions have been saved."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/views.py
 #, python-format
@@ -401,7 +415,6 @@ msgid_plural "%(count)d motions have been deleted."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/views.py
 msgid "Motions cannot be copied to the first round."
@@ -414,7 +427,18 @@ msgid_plural "Reused the %(count)d motions from the previous round."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
+
+#: motions/views.py
+#, python-format
+msgid "%(tournament)s - %(round)s"
+msgstr ""
+
+#: motions/views.py
+msgid "The motion has been released."
+msgid_plural "The motions have been released."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: motions/views.py
 msgid "Released the motion."
@@ -422,7 +446,6 @@ msgid_plural "Released the motions."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: motions/views.py
 msgid "Unreleased the motion."
@@ -430,7 +453,13 @@ msgid_plural "Unreleased the motions."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
+
+#: motions/views.py
+msgid "Released the info-slide."
+msgid_plural "Released the info-slides."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: motions/views.py
 msgid "Round Motions"

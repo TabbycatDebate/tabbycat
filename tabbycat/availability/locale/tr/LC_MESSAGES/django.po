@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -76,8 +76,8 @@ msgid "The draw cannot be generated until some adjudicators have been marked as 
 msgstr "Bazı jüriler müsait olarak işaretlenene kadar kura oluşturulamaz."
 
 #: availability/templates/availability_index.html
-msgid "The draw cannot be generated until some rooms have been marked as available."
-msgstr "Bazı odalar müsait olarak işaretlenene kadar kura oluşturulamaz."
+msgid "No rooms are marked as available. You can still generate the draw and assign rooms later."
+msgstr ""
 
 #: availability/templates/availability_index.html
 msgid "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly."
@@ -133,9 +133,21 @@ msgid "There's only one team breaking in the %(break_category)s Break. You can't
 msgstr "%(break_category)s Break'inde sadece bir takım break oluyor. Sadece bir takımla eleme turu kurası oluşturamazsınız — <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> %(break_category)s Breakinin break kurallarını incelemek isteyebilirsiniz.</a>."
 
 #: availability/templates/availability_index.html
+msgid "One or more teams have a <strong>seed</strong> assigned, but this round's draw type is not <strong>Seeded</strong>."
+msgstr ""
+
+#: availability/templates/availability_index.html
+msgid "Set draw type to Seeded"
+msgstr ""
+
+#: availability/templates/availability_index.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
 msgstr "Takım sıralama önceliği boş. Bu, takımların herhangi bir metriğe göre sıralanmadığı anlamına gelir, bu nedenle tüm takımlar herkesi içeren tek bir aşamada olacaktır. İsteğiniz bu değilse, kurayı oluşturmadan önce <a href=\"%(standings_config_url)s\" class=\"alert-link\">Bu maçın ayarlarında sıralama önceliğininden</a> takım sıralama önceliğini ayarlayın. Çoğu turnuvada, ilk metrik puan veya galibiyetdir."
+
+#: availability/templates/availability_index.html
+msgid "Request failed"
+msgstr ""
 
 #: availability/templates/base_availability.html
 msgid "Select All"

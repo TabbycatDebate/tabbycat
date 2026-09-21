@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:52\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:42\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -224,6 +224,10 @@ msgid "Always Trainee"
 msgstr "Selalu Trainee"
 
 #: utils/tables.py
+msgid "self-declared split"
+msgstr ""
+
+#: utils/tables.py
 msgid "in minority"
 msgstr "sebagai minoritas"
 
@@ -252,6 +256,15 @@ msgstr "Ruangan ini %(predicates)s, dan %(last_predicate)s."
 #: utils/tables.py
 msgid "Room"
 msgstr "Ruangan"
+
+#: utils/tables.py
+msgid "Scheduled time"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Pull-up team (%(ordinal)s pull-up)"
+msgstr ""
 
 #: utils/tables.py
 #, python-format
@@ -328,6 +341,10 @@ msgstr ""
 #, python-format
 msgid "Team %(num)d"
 msgstr "Tim %(num)d"
+
+#: utils/tables.py
+msgid "Postponed"
+msgstr ""
 
 #: utils/tables.py
 msgid "Postpone"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:40+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -231,6 +231,14 @@ msgstr "crwdns30660:0crwdne30660:0"
 msgid "You are now checked in."
 msgstr "crwdns30662:0crwdne30662:0"
 
+#: registration/admin.py
+msgid "Source"
+msgstr "crwdns53813:0crwdne53813:0"
+
+#: registration/admin.py
+msgid "Receiving"
+msgstr "crwdns53815:0crwdne53815:0"
+
 #. Translators: Please leave this blank, it should be left for the base Django translations.
 #: registration/form_utils.py
 msgid "Yes"
@@ -246,9 +254,29 @@ msgstr "crwdns53170:0crwdne53170:0"
 msgid "This field is required."
 msgstr "crwdns53172:0crwdne53172:0"
 
+#: registration/forms.py registration/views.py
+msgid "Institution name"
+msgstr "crwdns53817:0crwdne53817:0"
+
 #: registration/forms.py
-msgid "Coach name"
-msgstr "crwdns53174:0crwdne53174:0"
+msgid "Institution abbreviation"
+msgstr "crwdns53819:0crwdne53819:0"
+
+#: registration/forms.py
+msgid "Institution region"
+msgstr "crwdns53821:0crwdne53821:0"
+
+#: registration/forms.py
+msgid "An institution with this name is already registered for this tournament."
+msgstr "crwdns53823:0crwdne53823:0"
+
+#: registration/forms.py
+msgid "An institution with this abbreviation is already registered for this tournament."
+msgstr "crwdns53825:0crwdne53825:0"
+
+#: registration/forms.py
+msgid "Name of primary contact"
+msgstr "crwdns53827:0crwdne53827:0"
 
 #: registration/forms.py
 msgid "Unseeded"
@@ -267,8 +295,67 @@ msgid "Full seed"
 msgstr "crwdns53182:0crwdne53182:0"
 
 #: registration/forms.py
+msgid "A team with this name is already registered for this tournament."
+msgstr "crwdns53829:0crwdne53829:0"
+
+#: registration/forms.py
+msgid "Team name (excluding institution)"
+msgstr "crwdns53831:0crwdne53831:0"
+
+#: registration/forms.py
 msgid "Full name for tab"
 msgstr "crwdns53184:0crwdne53184:0"
+
+#: registration/forms.py
+#: registration/templates/registration/institution_edit.html
+#: registration/templates/registration/institution_view_response.html
+#: registration/views.py
+msgid "Institution"
+msgstr "crwdns53833:0crwdne53833:0"
+
+#: registration/forms.py
+msgid "Institution not listed"
+msgstr "crwdns53835:0crwdne53835:0"
+
+#: registration/forms.py
+msgid "If the institution is not listed above, enter the name of the receiving institution here."
+msgstr "crwdns53837:0crwdne53837:0"
+
+#: registration/forms.py
+msgid "Contact email"
+msgstr "crwdns53839:0crwdne53839:0"
+
+#: registration/forms.py
+msgid "If the institution is not listed above, enter the contact email for the receiving institution here."
+msgstr "crwdns53841:0crwdne53841:0"
+
+#: registration/forms.py
+msgid "Team slots to transfer"
+msgstr "crwdns53843:0crwdne53843:0"
+
+#: registration/forms.py
+msgid "Adjudicator slots to transfer"
+msgstr "crwdns53845:0crwdne53845:0"
+
+#: registration/forms.py
+msgid "Please enter the name of the receiving institution."
+msgstr "crwdns53847:0crwdne53847:0"
+
+#: registration/forms.py
+msgid "Please enter the contact email for the receiving institution."
+msgstr "crwdns53849:0crwdne53849:0"
+
+#: registration/forms.py
+msgid "Transfer at least one team or adjudicator slot."
+msgstr "crwdns53851:0crwdne53851:0"
+
+#: registration/forms.py
+msgid "You cannot transfer more team slots than you have."
+msgstr "crwdns53853:0crwdne53853:0"
+
+#: registration/forms.py
+msgid "You cannot transfer more adjudicator slots than you have."
+msgstr "crwdns53855:0crwdne53855:0"
 
 #: registration/models.py
 msgid "content type"
@@ -415,6 +502,10 @@ msgid "created on"
 msgstr "crwdns53254:0crwdne53254:0"
 
 #: registration/models.py
+msgid "slot transfer request"
+msgstr "crwdns53857:0crwdne53857:0"
+
+#: registration/models.py
 msgid "invitation"
 msgstr "crwdns53256:0crwdne53256:0"
 
@@ -422,12 +513,66 @@ msgstr "crwdns53256:0crwdne53256:0"
 msgid "invitations"
 msgstr "crwdns53258:0crwdne53258:0"
 
+#: registration/models.py
+msgid "Pending"
+msgstr "crwdns53859:0crwdne53859:0"
+
+#: registration/models.py
+msgid "Approved"
+msgstr "crwdns53861:0crwdne53861:0"
+
+#: registration/models.py
+msgid "Rejected"
+msgstr "crwdns53863:0crwdne53863:0"
+
+#: registration/models.py
+msgid "source institution"
+msgstr "crwdns53865:0crwdne53865:0"
+
+#: registration/models.py
+msgid "team slots transferred"
+msgstr "crwdns53867:0crwdne53867:0"
+
+#: registration/models.py
+msgid "adjudicator slots transferred"
+msgstr "crwdns53869:0crwdne53869:0"
+
+#: registration/models.py
+msgid "receiving institution"
+msgstr "crwdns53871:0crwdne53871:0"
+
+#: registration/models.py
+msgid "receiving institution name"
+msgstr "crwdns53873:0crwdne53873:0"
+
+#: registration/models.py
+msgid "receiving institution contact email"
+msgstr "crwdns53875:0crwdne53875:0"
+
+#: registration/models.py
+msgid "created at"
+msgstr "crwdns53877:0crwdne53877:0"
+
+#: registration/models.py
+msgid "updated at"
+msgstr "crwdns53879:0crwdne53879:0"
+
+#: registration/models.py
+msgid "slot transfer requests"
+msgstr "crwdns53881:0crwdne53881:0"
+
+#: registration/models.py
+#, python-format
+msgid "%(source)s → %(recipient)s (%(status)s)"
+msgstr "crwdns53883:0%(source)scrwdnd53883:0%(recipient)scrwdnd53883:0%(status)scrwdne53883:0"
+
 #: registration/templates/adjudicator_registration_form.html
 msgctxt "button"
 msgid "Register as Adjudicator"
 msgstr "crwdns53260:0crwdne53260:0"
 
 #: registration/templates/adjudicator_registration_form.html
+#: registration/templates/speaker_registration_form.html
 #: registration/templates/wizard_registration_form.html
 #: templates/registration/password_change_form.html
 #: templates/registration/password_reset_confirm.html
@@ -437,6 +582,18 @@ msgstr "crwdns30908:0crwdne30908:0"
 #: registration/templates/answer_tables/adjudicators.html
 msgid "Questions"
 msgstr "crwdns53262:0crwdne53262:0"
+
+#: registration/templates/answer_tables/institutions.html
+msgid "Email Coaches"
+msgstr "crwdns53885:0crwdne53885:0"
+
+#: registration/templates/answer_tables/institutions.html
+msgid "Slot transfers"
+msgstr "crwdns53887:0crwdne53887:0"
+
+#: registration/templates/answer_tables/institutions.html
+msgid "Transfer summary"
+msgstr "crwdns53889:0crwdne53889:0"
 
 #: registration/templates/answer_tables/institutions.html
 #: registration/templates/answer_tables/teams.html
@@ -454,31 +611,37 @@ msgid "Coaches"
 msgstr "crwdns53266:0crwdne53266:0"
 
 #: registration/templates/answer_tables/institutions.html
+#: registration/templates/coach_private_url.html
 #, python-format
 msgid "Teams Requested: <strong>%(num)s</strong>"
 msgstr "crwdns53268:0%(num)scrwdne53268:0"
 
 #: registration/templates/answer_tables/institutions.html
+#: registration/templates/coach_private_url.html
 #, python-format
 msgid "Teams Allocated: <strong>%(num)s</strong>"
 msgstr "crwdns53270:0%(num)scrwdne53270:0"
 
 #: registration/templates/answer_tables/institutions.html
+#: registration/templates/coach_private_url.html
 #, python-format
 msgid "Teams Registered: <strong>%(num)s</strong>"
 msgstr "crwdns53272:0%(num)scrwdne53272:0"
 
 #: registration/templates/answer_tables/institutions.html
+#: registration/templates/coach_private_url.html
 #, python-format
 msgid "Adjudicators Requested: <strong>%(num)s</strong>"
 msgstr "crwdns53274:0%(num)scrwdne53274:0"
 
 #: registration/templates/answer_tables/institutions.html
+#: registration/templates/coach_private_url.html
 #, python-format
 msgid "Adjudicators Allocated: <strong>%(num)s</strong>"
 msgstr "crwdns53276:0%(num)scrwdne53276:0"
 
 #: registration/templates/answer_tables/institutions.html
+#: registration/templates/coach_private_url.html
 #, python-format
 msgid "Adjudicators Registered: <strong>%(num)s</strong>"
 msgstr "crwdns53278:0%(num)scrwdne53278:0"
@@ -503,20 +666,24 @@ msgstr "crwdns53284:0%(name)scrwdnd53284:0%(institution)scrwdne53284:0"
 
 #: registration/templates/coach_private_url.html
 #, python-format
-msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can manage participants for %(institution)s. You may bookmark this page and return here after each debate for the available actions."
-msgstr "crwdns53286:0%(name)scrwdnd53286:0%(institution)scrwdne53286:0"
+msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can manage participants for %(institution)s. Bookmark this page as you may need it for a next phase of registration."
+msgstr "crwdns53891:0%(name)scrwdnd53891:0%(institution)scrwdne53891:0"
+
+#: registration/templates/coach_private_url.html
+msgid "View your registration form response"
+msgstr "crwdns53893:0crwdne53893:0"
 
 #: registration/templates/coach_private_url.html registration/views.py
 msgid "Register Adjudicator"
 msgstr "crwdns53288:0crwdne53288:0"
 
 #: registration/templates/coach_private_url.html
-msgid "Participant registration is not yet open"
-msgstr "crwdns53290:0crwdne53290:0"
-
-#: registration/templates/coach_private_url.html
 msgid "or distribute this link to allow members to register themselves as adjudicators:"
 msgstr "crwdns53292:0crwdne53292:0"
+
+#: registration/templates/coach_private_url.html
+msgid "Adjudicator registration is not yet open"
+msgstr "crwdns53895:0crwdne53895:0"
 
 #: registration/templates/coach_private_url.html registration/views.py
 msgid "Register Team"
@@ -527,8 +694,48 @@ msgid "or distribute this link to allow members to register their teams:"
 msgstr "crwdns53296:0crwdne53296:0"
 
 #: registration/templates/coach_private_url.html
+msgid "Team registration is not yet open"
+msgstr "crwdns53897:0crwdne53897:0"
+
+#: registration/templates/coach_private_url.html
+msgid "Transfer slots to another institution"
+msgstr "crwdns53899:0crwdne53899:0"
+
+#: registration/templates/coach_private_url.html
 msgid "View invoice"
 msgstr "crwdns53298:0crwdne53298:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "Available variables"
+msgstr "crwdns53901:0crwdne53901:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "You can personalise the subject and message using the variables below. They are replaced per recipient when the email is sent."
+msgstr "crwdns53903:0crwdne53903:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "name of the institution's contact"
+msgstr "crwdns53905:0crwdne53905:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "institution name"
+msgstr "crwdns53907:0crwdne53907:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "tournament name"
+msgstr "crwdns53909:0crwdne53909:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "Arithmetic (for pricing, etc.)"
+msgstr "crwdns53911:0crwdne53911:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "Use the <code>calc</code> tag for calculations with <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>:"
+msgstr "crwdns53913:0crwdne53913:0"
+
+#: registration/templates/email_institution_coaches.html
+msgid "alternative syntax"
+msgstr "crwdns53915:0crwdne53915:0"
 
 #: registration/templates/questions_edit.html
 msgid "These questions appear as extra fields for participants to answer, in feedback or registration forms."
@@ -543,9 +750,49 @@ msgstr "crwdns53302:0%(edit_db_url)scrwdne53302:0"
 msgid "Save Questions"
 msgstr "crwdns53304:0crwdne53304:0"
 
+#: registration/templates/registration/institution_edit.html
+#: registration/templates/registration/institution_view_response.html
+msgid "Primary contact"
+msgstr "crwdns53917:0crwdne53917:0"
+
+#: registration/templates/registration/institution_edit.html
+msgctxt "button"
+msgid "Save changes"
+msgstr "crwdns53919:0crwdne53919:0"
+
+#: registration/templates/registration/institution_edit.html
+msgid "Back to institution list"
+msgstr "crwdns53921:0crwdne53921:0"
+
+#: registration/templates/registration/institution_view_response.html
+msgid "This form is read-only. You can view your institution's registration response below but cannot edit it here."
+msgstr "crwdns53923:0crwdne53923:0"
+
+#: registration/templates/registration/institution_view_response.html
+msgid "Back to your private URL"
+msgstr "crwdns53925:0crwdne53925:0"
+
+#: registration/templates/slot_transfer_request_form.html
+msgid "Submit request"
+msgstr "crwdns53927:0crwdne53927:0"
+
+#: registration/templates/slot_transfer_request_form.html
+msgid "Cancel and return to private URL"
+msgstr "crwdns53929:0crwdne53929:0"
+
+#: registration/templates/speaker_registration_form.html
+msgctxt "button"
+msgid "Register as Speaker"
+msgstr "crwdns53931:0crwdne53931:0"
+
 #: registration/templates/team_wizard_speakers.html
 msgid "You may register speakers for the team, but if not all speakers are included, a link will be generated to let speakers register themselves to the team after submission which you can then distribute."
 msgstr "crwdns53306:0crwdne53306:0"
+
+#: registration/templates/team_wizard_speakers.html
+#, python-format
+msgid "Speaker #%(number)s"
+msgstr "crwdns53933:0%(number)scrwdne53933:0"
 
 #: registration/templates/wizard_registration_form.html
 msgctxt "button"
@@ -556,6 +803,18 @@ msgstr "crwdns53308:0crwdne53308:0"
 msgctxt "button"
 msgid "Register"
 msgstr "crwdns53310:0crwdne53310:0"
+
+#: registration/utils.py
+msgid "Confirm"
+msgstr "crwdns53935:0crwdne53935:0"
+
+#: registration/utils.py
+msgid "Approve"
+msgstr "crwdns53937:0crwdne53937:0"
+
+#: registration/utils.py
+msgid "Status"
+msgstr "crwdns53939:0crwdne53939:0"
 
 #: registration/views.py
 msgid "Register Institution"
@@ -603,6 +862,27 @@ msgid "You have been registered as a speaker!"
 msgstr "crwdns53328:0crwdne53328:0"
 
 #: registration/views.py
+msgid "Edit institution registration"
+msgstr "crwdns53941:0crwdne53941:0"
+
+#: registration/views.py
+#, python-format
+msgid "Institution %s updated."
+msgstr "crwdns53943:0%scrwdne53943:0"
+
+#: registration/views.py
+msgid "Registration form response"
+msgstr "crwdns53945:0crwdne53945:0"
+
+#: registration/views.py
+msgid "Transfer slots"
+msgstr "crwdns53947:0crwdne53947:0"
+
+#: registration/views.py
+msgid "Your slot transfer request has been submitted and is pending approval."
+msgstr "crwdns53949:0crwdne53949:0"
+
+#: registration/views.py
 msgid "Institutional Registration"
 msgstr "crwdns53330:0crwdne53330:0"
 
@@ -615,8 +895,16 @@ msgid "Name"
 msgstr "crwdns53334:0crwdne53334:0"
 
 #: registration/views.py
+msgid "Code"
+msgstr "crwdns53951:0crwdne53951:0"
+
+#: registration/views.py
 msgid "Coach"
 msgstr "crwdns53336:0crwdne53336:0"
+
+#: registration/views.py
+msgid "Email"
+msgstr "crwdns53356:0crwdne53356:0"
 
 #: registration/views.py
 msgid "Teams Requested"
@@ -643,8 +931,24 @@ msgid "Adjudicators Registered"
 msgstr "crwdns53348:0crwdne53348:0"
 
 #: registration/views.py
+msgid "Region"
+msgstr "crwdns53953:0crwdne53953:0"
+
+#: registration/views.py
 msgid "Successfully modified institution allocations"
 msgstr "crwdns53350:0crwdne53350:0"
+
+#: registration/views.py
+msgid "Email Institution Coaches"
+msgstr "crwdns53955:0crwdne53955:0"
+
+#: registration/views.py
+msgid "Teams (req. / alloc.)"
+msgstr "crwdns53957:0crwdne53957:0"
+
+#: registration/views.py
+msgid "Adjudicators (req. / alloc.)"
+msgstr "crwdns53959:0crwdne53959:0"
 
 #: registration/views.py
 msgid "Team Registration"
@@ -654,10 +958,6 @@ msgstr "crwdns53352:0crwdne53352:0"
 #, python-format
 msgid "Speaker %d"
 msgstr "crwdns53354:0%dcrwdne53354:0"
-
-#: registration/views.py
-msgid "Email"
-msgstr "crwdns53356:0crwdne53356:0"
 
 #: registration/views.py
 msgid "Adjudicator Registration"
@@ -675,6 +975,64 @@ msgstr "crwdns53362:0%(model)scrwdne53362:0"
 #: registration/views.py
 msgid "No changes were made to the questions."
 msgstr "crwdns53364:0crwdne53364:0"
+
+#: registration/views.py
+#, python-format
+msgid "%s has been confirmed."
+msgstr "crwdns53961:0%scrwdne53961:0"
+
+#: registration/views.py
+msgid "Slot transfer requests"
+msgstr "crwdns53963:0crwdne53963:0"
+
+#: registration/views.py
+msgid "From"
+msgstr "crwdns53965:0crwdne53965:0"
+
+#: registration/views.py
+msgid "To"
+msgstr "crwdns53967:0crwdne53967:0"
+
+#: registration/views.py
+msgid "Transfer request rejected."
+msgstr "crwdns53969:0crwdne53969:0"
+
+#: registration/views.py
+msgid "Invalid request or transfer is no longer pending."
+msgstr "crwdns53971:0crwdne53971:0"
+
+#: registration/views.py
+msgid "Transfer approved. An invitation email has been sent to the provided address. "
+msgstr "crwdns53973:0crwdne53973:0"
+
+#: registration/views.py
+#, python-format
+msgid "You can also share this link: <a href=\"%(url)s\" class=\"alert-link\">%(url)s</a>"
+msgstr "crwdns53975:0%(url)scrwdnd53975:0%(url)scrwdne53975:0"
+
+#: registration/views.py
+msgid "Transfer approved."
+msgstr "crwdns53977:0crwdne53977:0"
+
+#: registration/views.py
+msgid "Slot transfer summary"
+msgstr "crwdns53979:0crwdne53979:0"
+
+#: registration/views.py
+msgid "Teams allocated"
+msgstr "crwdns53981:0crwdne53981:0"
+
+#: registration/views.py
+msgid "Adjudicators allocated"
+msgstr "crwdns53983:0crwdne53983:0"
+
+#: registration/views.py
+msgid "Net new teams"
+msgstr "crwdns53985:0crwdne53985:0"
+
+#: registration/views.py
+msgid "Net new adjudicators"
+msgstr "crwdns53987:0crwdne53987:0"
 
 #: settings/core.py
 msgid "Arabic"
@@ -1424,6 +1782,28 @@ msgid "Email address"
 msgstr "crwdns51594:0crwdne51594:0"
 
 #: users/forms.py
+msgid "Email addresses"
+msgstr "crwdns53989:0crwdne53989:0"
+
+#: users/forms.py
+msgid "Separate multiple addresses with commas or new lines."
+msgstr "crwdns53991:0crwdne53991:0"
+
+#: users/forms.py
+msgid "Enter at least one email address."
+msgstr "crwdns53993:0crwdne53993:0"
+
+#: users/forms.py
+#, python-format
+msgid "%(email)s is not a valid email address."
+msgstr "crwdns53995:0%(email)scrwdne53995:0"
+
+#: users/forms.py
+#, python-format
+msgid "Duplicate email address: %(email)s"
+msgstr "crwdns53997:0%(email)scrwdne53997:0"
+
+#: users/forms.py
 msgid "Username"
 msgstr "crwdns52496:0crwdne52496:0"
 
@@ -1442,6 +1822,10 @@ msgstr "crwdns52502:0crwdne52502:0"
 #: users/groups.py
 msgid "Tabulation Assistant"
 msgstr "crwdns52504:0crwdne52504:0"
+
+#: users/groups.py
+msgid "Access"
+msgstr "crwdns53999:0crwdne53999:0"
 
 #: users/models.py
 msgid "user"
@@ -1522,6 +1906,10 @@ msgstr "crwdns52544:0crwdne52544:0"
 #: users/permissions.py
 msgid "add teams"
 msgstr "crwdns52546:0crwdne52546:0"
+
+#: users/permissions.py
+msgid "delete speakers"
+msgstr "crwdns54001:0crwdne54001:0"
 
 #: users/permissions.py
 msgid "view decoded team names"
@@ -1796,6 +2184,10 @@ msgid "add feedback"
 msgstr "crwdns52688:0crwdne52688:0"
 
 #: users/permissions.py
+msgid "edit adjudicator tester status"
+msgstr "crwdns54003:0crwdne54003:0"
+
+#: users/permissions.py
 msgid "view adjudicator break"
 msgstr "crwdns52690:0crwdne52690:0"
 
@@ -1872,6 +2264,10 @@ msgid "edit room check-in"
 msgstr "crwdns52730:0crwdne52730:0"
 
 #: users/permissions.py
+msgid "edit debate check-in"
+msgstr "crwdns54005:0crwdne54005:0"
+
+#: users/permissions.py
 msgid "edit round attributes"
 msgstr "crwdns52732:0crwdne52732:0"
 
@@ -1935,6 +2331,18 @@ msgstr "crwdns53390:0crwdne53390:0"
 msgid "view registration responses"
 msgstr "crwdns53392:0crwdne53392:0"
 
+#: users/permissions.py
+msgid "edit registration responses"
+msgstr "crwdns54007:0crwdne54007:0"
+
+#: users/permissions.py
+msgid "confirm registration responses"
+msgstr "crwdns54009:0crwdne54009:0"
+
+#: users/permissions.py
+msgid "edit institution slot allocations"
+msgstr "crwdns54011:0crwdne54011:0"
+
 #: users/templates/account_invitation_email.html
 msgid "Hello!"
 msgstr "crwdns52748:0crwdne52748:0"
@@ -1967,12 +2375,12 @@ msgstr "crwdns52758:0crwdne52758:0"
 
 #: users/templates/invite_user.html
 msgctxt "button"
-msgid "Invite User"
-msgstr "crwdns52760:0crwdne52760:0"
+msgid "Invite Users"
+msgstr "crwdns54013:0crwdne54013:0"
 
 #: users/templates/invite_user.html
-msgid "Note: if you submit this multiple times, multiple invite emails will be sent."
-msgstr "crwdns53394:0crwdne53394:0"
+msgid "Resubmitting will send duplicate invitation emails."
+msgstr "crwdns54015:0crwdne54015:0"
 
 #: users/templates/signup.html
 msgctxt "page title"
@@ -1993,12 +2401,15 @@ msgid "Welcome! You've created an account for %s."
 msgstr "crwdns52073:0%scrwdne52073:0"
 
 #: users/views.py
-msgid "Invite User"
-msgstr "crwdns52764:0crwdne52764:0"
+msgid "Invite Users"
+msgstr "crwdns54017:0crwdne54017:0"
 
 #: users/views.py
-msgid "Successfully invited user to create an account for the tournament."
-msgstr "crwdns53396:0crwdne53396:0"
+#, python-format
+msgid "Successfully invited %(count)s user to create an account for the tournament."
+msgid_plural "Successfully invited %(count)s users to create an account for the tournament."
+msgstr[0] "crwdns54019:1%(count)scrwdne54019:1"
+msgstr[1] "crwdns54019:5%(count)scrwdne54019:5"
 
 #: users/views.py
 msgid "Accept Invitation"

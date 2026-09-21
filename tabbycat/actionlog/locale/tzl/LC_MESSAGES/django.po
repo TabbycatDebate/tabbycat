@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:33\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -24,6 +24,10 @@ msgstr "crwdns29056:0crwdne29056:0"
 #: actionlog/models.py
 msgid "Changed adjudicator breaking status"
 msgstr "crwdns29114:0crwdne29114:0"
+
+#: actionlog/models.py
+msgid "Changed adjudicator tester status"
+msgstr "crwdns53655:0crwdne53655:0"
 
 #: actionlog/models.py
 msgid "Created adjudicator"
@@ -282,6 +286,10 @@ msgid "Saved the sides status of a matchup"
 msgstr "crwdns29102:0crwdne29102:0"
 
 #: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr "crwdns53657:0crwdne53657:0"
+
+#: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
 msgstr "crwdns29150:0crwdne29150:0"
 
@@ -304,6 +312,10 @@ msgstr "crwdns29142:0crwdne29142:0"
 #: actionlog/models.py
 msgid "Created speaker"
 msgstr "crwdns52452:0crwdne52452:0"
+
+#: actionlog/models.py
+msgid "Deleted speaker"
+msgstr "crwdns53659:0crwdne53659:0"
 
 #: actionlog/models.py
 msgid "Edited speaker"
@@ -392,6 +404,18 @@ msgstr "crwdns53138:0crwdne53138:0"
 #: actionlog/models.py
 msgid "Registered speaker"
 msgstr "crwdns53140:0crwdne53140:0"
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr "crwdns53661:0crwdne53661:0"
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr "crwdns53663:0crwdne53663:0"
+
+#: actionlog/models.py
+msgid "Edited schedule event"
+msgstr "crwdns53665:0crwdne53665:0"
 
 #: actionlog/models.py
 msgid "API"

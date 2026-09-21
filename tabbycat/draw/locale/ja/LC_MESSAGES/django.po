@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:35\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -39,6 +39,10 @@ msgstr "対戦表"
 
 #: draw/forms.py
 msgid "Full round name"
+msgstr ""
+
+#: draw/forms.py
+msgid "Overwrite preformed panels with current panels"
 msgstr ""
 
 #: draw/forms.py
@@ -148,6 +152,14 @@ msgstr "このラウンドのチーム数（%d）が2のべき乗ではありま
 msgid "%(noninteger)d out of %(total)d teams have a noninteger first metric in the team standings. Intermediate brackets require the first team standings metric to be an integer (typically points or wins)."
 msgstr "チーム順位を計算するための第一指標が%(total)dチーム中%(noninteger)dチームで整数ではありません。中間ブラケットを生成するには、最初の順位指標が整数（通常勝ち数または点数）である必要があります。"
 
+#: draw/generator/powerpair.py
+msgid "Draw strength pullups require 'Minimum cost matching (including pullups)' as the conflict avoidance method"
+msgstr ""
+
+#: draw/generator/powerpair.py
+msgid "Intermediate-type pullups require 'One-up-one-down' as the conflict avoidance method"
+msgstr ""
+
 #: draw/generator/random.py
 #, python-format
 msgid "There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
@@ -156,6 +168,30 @@ msgstr "肯定が%(aff_count)dチーム、否定が%(neg_count)dチームいま�
 #: draw/generator/random.py
 msgid "One or more teams had an allocated side that wasn't affirmative or negative."
 msgstr "肯定でも否定でもないサイドに配置されたチームがあります。"
+
+#: draw/generator/roundrobin.py
+msgid "Berger round-robin requires an even number of teams with no byes in the draw."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "This round's position in the round-robin schedule (%(rr)d) is not valid for %(n)d teams (expected between 1 and %(max)d)."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "British Parliamentary round-robin draws are only implemented for %(supported)s teams at the moment (this tournament has %(n)d)."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "This round's position in the round-robin schedule (%(rr)d) is not valid — expected between 1 and %(max)d for %(n)d teams."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "Team seeds must be the integers 1 through %(n)d for BP round-robin."
+msgstr ""
 
 #: draw/manager.py
 #, python-format
@@ -171,6 +207,10 @@ msgstr "%(type)sの対戦表方式はBritish Parliamentary形式に対応して�
 #, python-format
 msgid "Unrecognised \"teams in debate\" option: %(option)s"
 msgstr "無効な試合当たりのチーム数設定：%(option)s"
+
+#: draw/manager.py
+msgid "Every team must have a seed set for round-robin draws. Assign seeds before generating the draw."
+msgstr ""
 
 #: draw/manager.py
 #, python-format
@@ -200,6 +240,14 @@ msgstr "ラウンド"
 #: draw/models.py
 msgid "room"
 msgstr "部屋"
+
+#: draw/models.py
+msgid "scheduled time"
+msgstr ""
+
+#: draw/models.py
+msgid "Optional start time for this debate, if it differs from the round schedule."
+msgstr ""
 
 #: draw/models.py
 msgid "bracket"
@@ -327,6 +375,14 @@ msgid "SH"
 msgstr "サイド経験"
 
 #: draw/tables.py
+msgid "PU"
+msgstr "PU"
+
+#: draw/tables.py
+msgid "Number of pullups before this round"
+msgstr ""
+
+#: draw/tables.py
 msgid "Went from balanced to imbalanced"
 msgstr "サイドバランスの偏り発生"
 
@@ -371,12 +427,16 @@ msgid "Side history after this round"
 msgstr "これ以降のサイド経験"
 
 #: draw/tables.py
-msgid "Cost"
-msgstr "コスト"
+msgid "Position cost + pullup penalty"
+msgstr ""
 
 #: draw/tables.py
 msgid "Position cost"
 msgstr "サイドコスト"
+
+#: draw/tables.py
+msgid "Cost"
+msgstr "コスト"
 
 #: draw/tables.py
 msgid "Status"
@@ -399,6 +459,10 @@ msgstr "これまでのサイド経験"
 #: draw/tables.py
 msgid "Sides"
 msgstr "サイド"
+
+#: draw/tables.py
+msgid "position cost + pullup penalty"
+msgstr ""
 
 #: draw/tables.py
 msgid "position cost"
@@ -592,16 +656,33 @@ msgid "The draw for this round is still in a draft state. Confirm the draw befor
 msgstr "このラウンドの対戦表はまだ下書き状態です。公開する前に承認してください。"
 
 #: draw/templates/draw_display_admin.html
+msgid "Unrelease draw (teams only)"
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
+msgid "Release draw with adjudicators"
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
+msgid "The draw has been released publicly (teams only, without adjudicators)."
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
+msgid "View public draw page"
+msgstr "参加者向けの対戦表ページを表示"
+
+#: draw/templates/draw_display_admin.html
+#, python-format
+msgid "You have released the draw (teams only), but it will not show to the public unless the \"public view of draw\" setting is enabled in <a class=\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
 msgid "Unrelease draw to public"
 msgstr "対戦表を非公開"
 
 #: draw/templates/draw_display_admin.html
 msgid "The draw has been released publicly."
 msgstr "対戦表を公開しました。"
-
-#: draw/templates/draw_display_admin.html
-msgid "View public draw page"
-msgstr "参加者向けの対戦表ページを表示"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -616,6 +697,10 @@ msgstr "対戦表をリリースしましたが、<a class=\"alert-link\" href=\
 #: draw/templates/draw_display_admin.html
 msgid "Release draw to public"
 msgstr "対戦表を公開"
+
+#: draw/templates/draw_display_admin.html
+msgid "Release draw (teams only)"
+msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so."
@@ -643,9 +728,19 @@ msgid_plural "Release motions to public"
 msgstr[0] "論題を公開"
 
 #: draw/templates/draw_display_admin.html
+msgid "Release info-slide to public"
+msgid_plural "Release info-slides to public"
+msgstr[0] ""
+
+#: draw/templates/draw_display_admin.html
 msgid "Unrelease motion to public"
 msgid_plural "Unrelease motions to public"
 msgstr[0] "論題を非公開"
+
+#: draw/templates/draw_display_admin.html
+msgid "Unrelease info-slide from public"
+msgid_plural "Unrelease info-slides from public"
+msgstr[0] ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Release Motion"
@@ -674,6 +769,11 @@ msgstr[0] "各ラウンドの論題を公開する設定になっています。
 msgid "Your tournament is not configured to show the motion for each round on the public site. There's no need to release the motion."
 msgid_plural "Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions."
 msgstr[0] "各ラウンドの論題を公開しない設定になっています。論題をリリースする必要がありません。"
+
+#: draw/templates/draw_display_admin.html
+msgid "Info-slides have been released. You can now release the full motions."
+msgid_plural "Info-slides have been released. You can now release the full motions."
+msgstr[0] ""
 
 #: draw/templates/draw_display_admin.html
 msgid "The motion has been released publicly."
@@ -825,6 +925,14 @@ msgid "There are currently fewer adjudicators checked in than there are rooms."
 msgstr "現在、部屋の数よりチェックイン済みのジャッジの数の方が少ないです。"
 
 #: draw/templates/draw_status_confirmed.html
+msgid "Edit adjudicator allocations for all current rounds"
+msgstr ""
+
+#: draw/templates/draw_status_confirmed.html
+msgid "Edit adjudicator allocations for all panels in this schedule slot"
+msgstr ""
+
+#: draw/templates/draw_status_confirmed.html
 msgid "Allocate adjudicators"
 msgstr "ジャッジを配置"
 
@@ -835,6 +943,10 @@ msgstr "ジャッジ配置を編集"
 #: draw/templates/draw_status_confirmed.html
 msgid "Room Allocations"
 msgstr "部屋の配置"
+
+#: draw/templates/draw_status_confirmed.html
+msgid "Edit room allocation for all current rounds"
+msgstr ""
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Allocate rooms"
@@ -935,6 +1047,46 @@ msgstr "サイドバランス報告はBritish Parliamentary形式の大会での
 msgid "Position balance reports aren't computed for the first round of a tournament."
 msgstr "サイドバランス報告は2試合目以降閲覧できます。"
 
+#: draw/templates/side_allocations.html
+msgid "Rounds that are finished, or already have a draw, show each team's actual side for that round. Rounds that don't have a draw yet show the current side pre-allocation, which can be edited directly in the table below for the next round to be drawn."
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "This will overwrite the current side pre-allocations for every team in the selected round. Continue?"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Bulk-apply from a previous round"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Sets every team's side pre-allocation for the chosen round from their actual side in an earlier finished round, either the same side or the opposite. Teams with no result in that round (e.g. a bye) are left untouched."
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Set pre-allocations for:"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Copy from:"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Same side"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Opposite side"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Apply to all teams"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "No finished rounds yet to copy from."
+msgstr ""
+
 #: draw/views.py
 msgid "No debates in this round"
 msgstr "試合がありません"
@@ -967,11 +1119,6 @@ msgstr[0] "%(time)sに試合開始"
 #: draw/views.py
 msgid "The draw for this round hasn't been released."
 msgstr "このラウンドの対戦表は公開されていません。"
-
-#: draw/views.py
-#, python-format
-msgid "All Debates for All Rounds of %(tournament)s"
-msgstr "%(tournament)sの全ラウンドの全試合"
 
 #: draw/views.py
 msgid "Adjudicator Assignments"
@@ -1036,8 +1183,8 @@ msgstr "情報付き対戦表"
 
 #: draw/views.py
 #, python-format
-msgid "Could not create draw for %(round)s, there was already a draw!"
-msgstr "%(round)sの対戦表は既に存在したので新たに生成できませんでした。"
+msgid "Could not create draw for %(round)s, there is already a draw!"
+msgstr ""
 
 #: draw/views.py
 #, python-format
@@ -1058,6 +1205,10 @@ msgid "<p>The team standings could not be generated, because the following error
 msgstr "<p>以下のエラーのためチームの順位を計算できませんでした：<em>%(message)s</em></p><p>対戦表はチームの順位をもとに計算するため、対戦表も生成できません。</p>"
 
 #: draw/views.py
+msgid "The draw could not be created, because another user was also creating a draw."
+msgstr ""
+
+#: draw/views.py
 msgid "Rooms were not auto-allocated because there are one or more adjudicator room constraints. You should run room allocations after allocating adjudicators."
 msgstr "部屋の制約条件があるジャッジがいたため、自動で部屋を割りふれれませんでした。ジャッジを配置した後に部屋を配置してください。"
 
@@ -1068,6 +1219,10 @@ msgstr "対戦表がありません。"
 #: draw/views.py
 msgid "The draw had already been confirmed."
 msgstr "対戦表は既に承認済みです。"
+
+#: draw/views.py
+msgid "Overwrote preformed panels with current panels."
+msgstr ""
 
 #: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
@@ -1086,6 +1241,30 @@ msgid "Released the draw."
 msgstr "対戦表を公開しました。"
 
 #: draw/views.py
+#, python-format
+msgid "%(tournament)s - %(round)s"
+msgstr ""
+
+#: draw/views.py
+#, python-format
+msgid "You are the %(type)s in %(venue)s, adjudicating %(matchup)s"
+msgid_plural "You are a %(type)s in %(venue)s, adjudicating %(matchup)s"
+msgstr[0] ""
+
+#: draw/views.py
+msgid "Room TBA"
+msgstr "部屋未決定"
+
+#: draw/views.py
+#, python-format
+msgid "You are the %(type)s in %(venue)s, with %(matchup)s"
+msgstr ""
+
+#: draw/views.py
+msgid "Released the draw (teams only)."
+msgstr ""
+
+#: draw/views.py
 msgid "The draw had been unreleased."
 msgstr "対戦表を非公開にしました。"
 
@@ -1101,6 +1280,44 @@ msgstr "「%(input)s」は有効な時間設定ではありません。「13:57�
 #: draw/views.py
 msgid "Side Pre-Allocations"
 msgstr "サイドの事前配置"
+
+#: draw/views.py
+msgid "Unallocated"
+msgstr ""
+
+#: draw/views.py
+msgid "Set side pre-allocation"
+msgstr ""
+
+#: draw/views.py
+msgid "Invalid team or round."
+msgstr ""
+
+#: draw/views.py
+msgid "Can't change a side pre-allocation once the draw for that round has been generated."
+msgstr ""
+
+#: draw/views.py
+msgid "Invalid side."
+msgstr ""
+
+#: draw/views.py
+msgid "Invalid round."
+msgstr ""
+
+#: draw/views.py
+msgid "Can't set side pre-allocations for a round whose draw has already been generated."
+msgstr ""
+
+#: draw/views.py
+msgid "The source round must be a finished round with a confirmed draw."
+msgstr ""
+
+#: draw/views.py
+#, python-format
+msgid "Set the side pre-allocation for %(applied)d team (skipped %(skipped)d with no result in %(round)s)."
+msgid_plural "Set the side pre-allocation for %(applied)d teams (skipped %(skipped)d with no result in %(round)s)."
+msgstr[0] ""
 
 #: draw/views.py
 msgid "Edit Matchups"
