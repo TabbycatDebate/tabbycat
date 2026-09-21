@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -43,6 +43,10 @@ msgstr "Konu"
 #: notifications/forms.py
 msgid "Message"
 msgstr "Mesaj"
+
+#: notifications/forms.py
+msgid "The {{ URL }} variable must be unlinked for it to work"
+msgstr ""
 
 #: notifications/models.py
 msgid "email"
@@ -119,6 +123,22 @@ msgstr "yayınlanan jüri(ler)"
 #: notifications/models.py
 msgid "team draw released"
 msgstr "takım kurası yayınlandı"
+
+#: notifications/models.py
+msgid "institution registration"
+msgstr ""
+
+#: notifications/models.py
+msgid "participant slots allocated"
+msgstr ""
+
+#: notifications/models.py
+msgid "user invitation"
+msgstr ""
+
+#: notifications/models.py
+msgid "custom institution message"
+msgstr ""
 
 #: notifications/models.py
 msgid "custom message"
@@ -212,6 +232,30 @@ msgstr "e-posta durumu"
 msgid "email statuses"
 msgstr "e-posta durumları"
 
+#: notifications/models.py
+msgid "participant"
+msgstr ""
+
+#: notifications/models.py
+msgid "The participant (adjudicator or speaker) who owns this device"
+msgstr ""
+
+#: notifications/models.py
+msgid "language"
+msgstr ""
+
+#: notifications/models.py
+msgid "The language preference of the participant at subscription time"
+msgstr ""
+
+#: notifications/models.py
+msgid "WebPush device"
+msgstr ""
+
+#: notifications/models.py
+msgid "WebPush devices"
+msgstr ""
+
 #: notifications/templates/email_participants.html
 #, python-format
 msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
@@ -294,7 +338,7 @@ msgstr "<li>%(side)s: %(team)s (%(points)d puanlı %(speaks)s toplam konuşmacı
 #: notifications/utils.py
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
-msgstr "<li>%(side)s: %(team)s (%(points)s - %(speaks)s toplam konuşmacı)"
+msgstr "<li>%(side)s: %(team)s (%(points)d - %(speaks)s toplam konuşmacı)"
 
 #: notifications/utils.py
 msgid "Win"
@@ -387,8 +431,8 @@ msgstr[0] "%(email_count)s e-posta gönderilmek üzere sıraya alındı."
 msgstr[1] "%(email_count)s e-posta gönderilmek üzere sıraya alındı."
 
 #: notifications/views.py
-msgid "No emails were sent — likely because no recipients were selected."
-msgstr "Hiçbir e-posta gönderilmedi — büyük olasılıkla hiçbir alıcı seçilmediği için."
+msgid "No emails were queued — likely because no valid recipients were selected."
+msgstr ""
 
 #: notifications/views.py
 msgid "Send Email"
@@ -417,4 +461,11 @@ msgstr "Konuşmacılar"
 #: notifications/views.py
 msgid "Adjudicators"
 msgstr "Jüriler"
+
+#: notifications/views.py
+#, python-format
+msgid "The email to %(recipients)s was not queued because the email address is invalid."
+msgid_plural "Emails to %(recipients)s were not queued because their email addresses are invalid."
+msgstr[0] ""
+msgstr[1] ""
 

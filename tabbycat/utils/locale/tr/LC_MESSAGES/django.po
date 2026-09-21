@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:51\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:41\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -120,7 +120,7 @@ msgstr "%(team)s—sonuç yok"
 #: utils/tables.py
 #, python-format
 msgid "%(team)s placed %(place)s"
-msgstr "%(team)s %(place)s oldu"
+msgstr "%(team)s (place)s oldu"
 
 #: utils/tables.py
 #, python-format
@@ -224,6 +224,10 @@ msgid "Always Trainee"
 msgstr "her zaman acemi"
 
 #: utils/tables.py
+msgid "self-declared split"
+msgstr ""
+
+#: utils/tables.py
 msgid "in minority"
 msgstr "azınlıkta"
 
@@ -252,6 +256,15 @@ msgstr "Bu oda %(predicates)s, ve %(last_predicate)s."
 #: utils/tables.py
 msgid "Room"
 msgstr "Oda"
+
+#: utils/tables.py
+msgid "Scheduled time"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Pull-up team (%(ordinal)s pull-up)"
+msgstr ""
 
 #: utils/tables.py
 #, python-format
@@ -329,6 +342,10 @@ msgstr "Takım son tur demir kişi konuşması yaptı."
 #, python-format
 msgid "Team %(num)d"
 msgstr "Takım %(num)d"
+
+#: utils/tables.py
+msgid "Postponed"
+msgstr ""
 
 #: utils/tables.py
 msgid "Postpone"
