@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-11-27 13:39\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -76,7 +76,7 @@ msgid "The draw cannot be generated until some adjudicators have been marked as 
 msgstr ""
 
 #: availability/templates/availability_index.html
-msgid "The draw cannot be generated until some rooms have been marked as available."
+msgid "No rooms are marked as available. You can still generate the draw and assign rooms later."
 msgstr ""
 
 #: availability/templates/availability_index.html
@@ -133,8 +133,20 @@ msgid "There's only one team breaking in the %(break_category)s Break. You can't
 msgstr ""
 
 #: availability/templates/availability_index.html
+msgid "One or more teams have a <strong>seed</strong> assigned, but this round's draw type is not <strong>Seeded</strong>."
+msgstr ""
+
+#: availability/templates/availability_index.html
+msgid "Set draw type to Seeded"
+msgstr ""
+
+#: availability/templates/availability_index.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
+msgstr ""
+
+#: availability/templates/availability_index.html
+msgid "Request failed"
 msgstr ""
 
 #: availability/templates/base_availability.html
