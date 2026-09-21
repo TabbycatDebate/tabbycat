@@ -141,7 +141,7 @@ msgstr "crwdns31016:0%(level)scrwdne31016:0"
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
-msgstr "crwdns31018:0%(chisq)crwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
+msgstr "crwdns31018:0%(chisq).3fcrwdnd31018:0%(evidence)scrwdnd31018:0%(level)scrwdne31018:0"
 
 #: motions/statistics.py
 msgid "probably balanced"
@@ -150,7 +150,7 @@ msgstr "crwdns31020:0crwdne31020:0"
 #: motions/statistics.py
 #, python-format
 msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
-msgstr "crwdns31022:0%(chisq)crwdne31022:0"
+msgstr "crwdns31022:0%(chisq).3fcrwdne31022:0"
 
 #: motions/templates/motion_global_statistics.html
 #: motions/templates/motion_round_statistics.html

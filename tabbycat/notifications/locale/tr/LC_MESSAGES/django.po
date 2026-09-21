@@ -338,7 +338,7 @@ msgstr "<li>%(side)s: %(team)s (%(points)d puanlı %(speaks)s toplam konuşmacı
 #: notifications/utils.py
 #, python-format
 msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
-msgstr "<li>%(side)s: %(team)s (%(points)d - %(speaks)s toplam konuşmacı)"
+msgstr "<li>%(side)s: %(team)s (%(points)s - %(speaks)s toplam konuşmacı)"
 
 #: notifications/utils.py
 msgid "Win"

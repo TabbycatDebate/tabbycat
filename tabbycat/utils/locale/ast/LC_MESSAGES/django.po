@@ -85,7 +85,7 @@ msgstr ""
 #: utils/tables.py
 #, python-format
 msgid "View %(a)s's %(d)s Record"
-msgstr "Ver la corrida de %(a)s"
+msgstr "Ver la corrida de %(a)s de %(d)s"
 
 #: utils/tables.py
 #, python-format

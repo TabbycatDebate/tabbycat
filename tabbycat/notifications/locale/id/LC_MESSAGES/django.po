@@ -365,7 +365,7 @@ msgstr ", "
 #: notifications/views.py
 #, python-format
 msgid "The email (SMTP) server returned an error sending the test email: [SMTP code %(code)d] %(error)s"
-msgstr "Server surel (SMTP) mengalami sebuah kesalahan dalam mengirimkan surel ujicoba: [SMTP code %(code)d%] %(error)s"
+msgstr "Server surel (SMTP) mengalami sebuah kesalahan dalam mengirimkan surel ujicoba: [SMTP code %(code)d] %(error)s"
 
 #: notifications/views.py
 msgid "Hint: If the error is about sender identity verification in SendGrid, and you've already completed the steps in SendGrid, it may be that you need to update the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."

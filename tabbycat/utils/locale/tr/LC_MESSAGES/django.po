@@ -120,7 +120,7 @@ msgstr "%(team)s—sonuç yok"
 #: utils/tables.py
 #, python-format
 msgid "%(team)s placed %(place)s"
-msgstr "%(team)s (place)s oldu"
+msgstr "%(team)s %(place)s oldu"
 
 #: utils/tables.py
 #, python-format

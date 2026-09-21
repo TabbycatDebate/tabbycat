@@ -176,8 +176,8 @@ msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s ilerledi. (%(percent
 #, python-format
 msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
 msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
-msgstr[0] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
-msgstr[1] "%(side)sdan %(ndebates)s takımdan %(advancing)s elendi. (%(percentage)s%%)"
+msgstr[0] "%(side)sdan %(ndebates)s takımdan %(eliminated)s elendi. (%(percentage)s%%)"
+msgstr[1] "%(side)sdan %(ndebates)s takımdan %(eliminated)s elendi. (%(percentage)s%%)"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
