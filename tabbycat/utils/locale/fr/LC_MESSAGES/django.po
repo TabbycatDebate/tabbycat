@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-06 01:33\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:41\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -224,6 +224,10 @@ msgid "Always Trainee"
 msgstr "Toujours Stagiaire"
 
 #: utils/tables.py
+msgid "self-declared split"
+msgstr ""
+
+#: utils/tables.py
 msgid "in minority"
 msgstr "en minorité"
 
@@ -252,6 +256,15 @@ msgstr "Cette salle %(predicates)s, et %(last_predicate)s."
 #: utils/tables.py
 msgid "Room"
 msgstr "Salle"
+
+#: utils/tables.py
+msgid "Scheduled time"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Pull-up team (%(ordinal)s pull-up)"
+msgstr ""
 
 #: utils/tables.py
 #, python-format
@@ -329,6 +342,10 @@ msgstr "Équipe avait un orateur-seul pendant la joute précédente."
 #, python-format
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
+
+#: utils/tables.py
+msgid "Postponed"
+msgstr ""
 
 #: utils/tables.py
 msgid "Postpone"
