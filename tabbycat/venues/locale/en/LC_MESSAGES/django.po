@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
 "PO-Revision-Date: 2019-07-11 23:50\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -183,6 +183,10 @@ msgstr ""
 
 #: venues/views.py
 msgid "Edit Rooms"
+msgstr ""
+
+#: venues/views.py
+msgid "Edit Rooms (Concurrent Rounds)"
 msgstr ""
 
 #: venues/views.py
