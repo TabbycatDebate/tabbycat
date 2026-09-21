@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:38\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -43,6 +43,10 @@ msgstr "Subjek"
 #: notifications/forms.py
 msgid "Message"
 msgstr "Pesan"
+
+#: notifications/forms.py
+msgid "The {{ URL }} variable must be unlinked for it to work"
+msgstr ""
 
 #: notifications/models.py
 msgid "email"
@@ -119,6 +123,22 @@ msgstr "mosi dirilis"
 #: notifications/models.py
 msgid "team draw released"
 msgstr "draw tim dirilis"
+
+#: notifications/models.py
+msgid "institution registration"
+msgstr ""
+
+#: notifications/models.py
+msgid "participant slots allocated"
+msgstr ""
+
+#: notifications/models.py
+msgid "user invitation"
+msgstr ""
+
+#: notifications/models.py
+msgid "custom institution message"
+msgstr ""
 
 #: notifications/models.py
 msgid "custom message"
@@ -211,6 +231,30 @@ msgstr "status email"
 #: notifications/models.py
 msgid "email statuses"
 msgstr "status email"
+
+#: notifications/models.py
+msgid "participant"
+msgstr ""
+
+#: notifications/models.py
+msgid "The participant (adjudicator or speaker) who owns this device"
+msgstr ""
+
+#: notifications/models.py
+msgid "language"
+msgstr ""
+
+#: notifications/models.py
+msgid "The language preference of the participant at subscription time"
+msgstr ""
+
+#: notifications/models.py
+msgid "WebPush device"
+msgstr ""
+
+#: notifications/models.py
+msgid "WebPush devices"
+msgstr ""
 
 #: notifications/templates/email_participants.html
 #, python-format
@@ -321,7 +365,7 @@ msgstr ", "
 #: notifications/views.py
 #, python-format
 msgid "The email (SMTP) server returned an error sending the test email: [SMTP code %(code)d] %(error)s"
-msgstr "Server surel (SMTP) mengalami sebuah kesalahan dalam mengirimkan surel ujicoba: [SMTP code %(code)d] %(error)s"
+msgstr "Server surel (SMTP) mengalami sebuah kesalahan dalam mengirimkan surel ujicoba: [SMTP code %(code)d%] %(error)s"
 
 #: notifications/views.py
 msgid "Hint: If the error is about sender identity verification in SendGrid, and you've already completed the steps in SendGrid, it may be that you need to update the DEFAULT_FROM_EMAIL config var in Heroku to match your verified sender identity."
@@ -386,8 +430,8 @@ msgid_plural "%(email_count)s emails have been queued for sending."
 msgstr[0] "%(email_count)s email telah disiapkan untuk dikirim."
 
 #: notifications/views.py
-msgid "No emails were sent — likely because no recipients were selected."
-msgstr "Tidak ada email yang dikirim -- mungkin karena tidak ada penerima yang dipilih."
+msgid "No emails were queued — likely because no valid recipients were selected."
+msgstr ""
 
 #: notifications/views.py
 msgid "Send Email"
@@ -416,4 +460,10 @@ msgstr "Pembicara"
 #: notifications/views.py
 msgid "Adjudicators"
 msgstr "Juri"
+
+#: notifications/views.py
+#, python-format
+msgid "The email to %(recipients)s was not queued because the email address is invalid."
+msgid_plural "Emails to %(recipients)s were not queued because their email addresses are invalid."
+msgstr[0] ""
 
