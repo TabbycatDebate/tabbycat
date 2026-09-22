@@ -67,7 +67,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         overall_data = [{
             'sort': scores[adj],
             'text': self.get_formatted_adj_score(scores[adj], True),
-            'tooltip': _("This adjudicator's current rating."),
+            'tooltip': _("This adjudicator's current rating (%(score).3f)") % {'score': scores[adj]},
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
 
