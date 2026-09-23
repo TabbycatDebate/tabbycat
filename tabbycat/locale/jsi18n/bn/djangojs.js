@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n != 1);
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "6 a.m.": "\u09ec \u09aa\u09c2\u09b0\u09cd\u09ac\u09be\u09b9\u09cd\u09a8",
     "Available %s": "%s \u09ac\u09bf\u09a6\u09cd\u09af\u09ae\u09be\u09a8",
@@ -57,7 +56,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

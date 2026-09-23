@@ -45,3 +45,36 @@ class TestDefineRooms(unittest.TestCase):
 
     def test_pullup_one_room(self):
         self._test_define_rooms("one_room", self.one_room)
+
+
+class TestPullupPenalty(unittest.TestCase):
+    """Tests pull-up penalty in the BP Hungarian cost matrix."""
+
+    def test_pullup_penalty_in_cost_matrix(self):
+        teams = [
+            TestTeam(1, 'A', points=3, npullups=0, side_history=[0, 0, 0, 0]),
+            TestTeam(2, 'B', points=2, npullups=0, side_history=[0, 0, 0, 0]),
+            TestTeam(3, 'C', points=2, npullups=1, side_history=[0, 0, 0, 0]),
+            TestTeam(4, 'D', points=2, npullups=1, side_history=[0, 0, 0, 0]),
+        ]
+        generator = BPHungarianDrawGenerator(teams, pullup_penalty=100, position_cost='simple', exponent=1)
+        rooms = [(3, {3, 2})]
+        costs = generator.generate_cost_matrix(rooms)
+        # Team already in the bracket incurs no pull-up penalty
+        for col in range(4):
+            self.assertEqual(costs[0][col], 0)
+        # Among pull-up candidates, cost scales with npullups
+        self.assertEqual(costs[1][0] + 100, costs[2][0])
+        self.assertEqual(costs[2][0], costs[3][0])
+
+    def test_no_pullup_penalty_when_disabled(self):
+        teams = [
+            TestTeam(1, 'A', points=2, npullups=0, side_history=[0, 0, 0, 0]),
+            TestTeam(2, 'B', points=2, npullups=1, side_history=[0, 0, 0, 0]),
+            TestTeam(3, 'C', points=2, npullups=0, side_history=[0, 0, 0, 0]),
+            TestTeam(4, 'D', points=2, npullups=0, side_history=[0, 0, 0, 0]),
+        ]
+        generator = BPHungarianDrawGenerator(teams, pullup_penalty=0, position_cost='simple', exponent=1)
+        rooms = [(3, {3, 2})]
+        costs = generator.generate_cost_matrix(rooms)
+        self.assertEqual(costs[0], costs[1])

@@ -52,7 +52,7 @@
         {% elif motions|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            {{ motions.0.motion.text }}
+            {{ motions.0.motion.text|linebreaksbr }}
           </div>
 
         {% else %}
@@ -64,7 +64,7 @@
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ m.seq }}.</span>
                   {% endif %}
-                  {{ m.motion.text }}
+                  {{ m.motion.text|linebreaksbr }}
                 </div>
               </div>
             {% endfor %}

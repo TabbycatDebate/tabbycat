@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:35\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -20,6 +20,10 @@ msgstr ""
 #: breakqual/apps.py
 msgid "Break Qualification"
 msgstr "crwdns29778:0crwdne29778:0"
+
+#: breakqual/base.py
+msgid "There are too few teams eligible for this break category."
+msgstr "crwdns53701:0crwdne53701:0"
 
 #: breakqual/base.py
 #, python-format
@@ -191,6 +195,10 @@ msgstr "crwdns29854:0crwdne29854:0"
 #: breakqual/models.py
 msgid "breaking team"
 msgstr "crwdns29856:0crwdne29856:0"
+
+#: breakqual/templates/bracket.html
+msgid "Bracket"
+msgstr "crwdns53703:0crwdne53703:0"
 
 #: breakqual/templates/break_categories_edit.html
 #: breakqual/templates/breaking_index.html
@@ -542,4 +550,9 @@ msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category ass
 msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"
 msgstr[0] "crwdns34038:1%(nspeakers)scrwdnd34038:1%(category)scrwdne34038:1"
 msgstr[1] "crwdns34038:5%(nspeakers)scrwdnd34038:5%(category)scrwdne34038:5"
+
+#: breakqual/views.py
+#, python-format
+msgid "%(category)s Bracket"
+msgstr "crwdns53705:0%(category)scrwdne53705:0"
 

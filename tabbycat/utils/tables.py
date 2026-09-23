@@ -4,11 +4,13 @@ import warnings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.db.models import Exists, OuterRef, Prefetch
-from django.template.loader import render_to_string
+from django.middleware.csrf import get_token
 from django.utils import timezone
 from django.utils.encoding import force_str
-from django.utils.html import escape
+from django.utils.formats import date_format, time_format
+from django.utils.html import escape, format_html
 from django.utils.safestring import SafeString
+from django.utils.timezone import localtime
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -30,6 +32,16 @@ from .mixins import AdministratorMixin
 logger = logging.getLogger(__name__)
 _draw_flags_dict = dict(DRAW_FLAG_DESCRIPTIONS)
 
+_postpone_button_html = """
+<form method="POST" action="{}" style="display: inline;">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{}"/>
+    <button type="submit" class="btn btn-sm btn-success">
+        <div class="d-flex justify-content-center align-items-center">
+            <i data-feather="clock" style="height: 16px;width: 16px;margin-bottom: -2.5px;"></i>
+        </div>
+    </button>
+</form>"""
+
 
 def escape_if_unsafe(s):
     return s if type(s) is SafeString else escape(s)
@@ -46,6 +58,9 @@ class BaseTableBuilder:
     - A *cell dict* is a dict that contains a value under `"text"` that is a
       string, and may optionally contain entries under `"sort"`, `"icon"`,
       `"emoji"`, `"popover"` and `"link"`.
+    - `sort_history` is an optional list of `(key, order)` pairs, in priority
+      order, where `order` is either `"asc"` or `"desc"`. It takes precedence
+      over the legacy `sort_key` and `sort_order` arguments.
 
     """
 
@@ -56,9 +71,44 @@ class BaseTableBuilder:
         self.subtitle = kwargs.get('subtitle', "")
         self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
-        self.sort_order = kwargs.get('sort_order', '')
+        self.sort_order = kwargs.get('sort_order', 'asc' if self.sort_key else '')
+        if kwargs.get('sort_history') is not None:
+            self.sort_history = self._convert_sort_history(kwargs['sort_history'])
+            self.sort_key = self.sort_history[0]['key'] if self.sort_history else ''
+            self.sort_order = self.sort_history[0]['order'] if self.sort_history else ''
+        else:
+            self.sort_history = ([{'key': force_str(self.sort_key), 'order': self.sort_order}]
+                                 if self.sort_key else [])
         self.empty_title = kwargs.get('empty_title', _("No Data Available"))
         self.highlight_column = None  # Column index to use for row highlighting (None = no highlighting)
+
+    @staticmethod
+    def _convert_sort_history(sort_history):
+        converted = []
+        keys = set()
+        for criterion in sort_history:
+            if isinstance(criterion, dict):
+                try:
+                    key, order = criterion['key'], criterion['order']
+                except KeyError as error:
+                    raise ValueError("sort_history dictionaries require 'key' and 'order'") from error
+            elif isinstance(criterion, (list, tuple)) and len(criterion) == 2:
+                key, order = criterion
+            else:
+                raise ValueError("sort_history entries must be (key, order) pairs or dictionaries")
+
+            key = force_str(key)
+            normalized_key = key.lower()
+            order = force_str(order).lower()
+            if not key:
+                raise ValueError("sort_history keys cannot be empty")
+            if normalized_key in keys:
+                raise ValueError("sort_history keys must be unique")
+            if order not in ('asc', 'desc'):
+                raise ValueError("sort_history order must be 'asc' or 'desc'")
+            converted.append({'key': key, 'order': order})
+            keys.add(normalized_key)
+        return converted
 
     @staticmethod
     def _convert_header(header):
@@ -158,6 +208,7 @@ class BaseTableBuilder:
             'class': self.table_class,
             'sort_key': self.sort_key,
             'sort_order': self.sort_order,
+            'sort_history': self.sort_history,
             'highlight_column': self.highlight_column,
         }
 
@@ -579,7 +630,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                         a['adj'].institution is not None:
                     descriptors.append(escape(a['adj'].institution.code))
                 if a.get('split', False):
-                    descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
+                    if getattr(debate.confirmed_ballot, 'self_split', False):
+                        descriptors.append("<span class='text-danger'>" + _("self-declared split") + "</span>")
+                    else:
+                        descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
                 text = escape_if_unsafe(a['adj'].get_public_name(self.tournament))
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
@@ -758,17 +812,43 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
         self.add_column(venue_header, venue_data)
 
-    def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts):
+    def add_debate_scheduled_at_column_if_needed(self, debates):
+        """After venue: show per-debate scheduled times in the site timezone when any debate has one."""
+        if not any(d.scheduled_at for d in debates):
+            return
+
+        def fmt(dt):
+            return date_format(localtime(dt), format='SHORT_DATETIME_FORMAT')
+
+        cells = [
+            {'text': fmt(d.scheduled_at), 'class': 'no-wrap'} if d.scheduled_at else {'text': self.BLANK_TEXT}
+            for d in debates
+        ]
+        header = {
+            'key': 'scheduled_at',
+            'icon': 'clock',
+            'tooltip': _("Scheduled time"),
+        }
+        self.add_column(header, cells)
+
+    def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts, standings=None):
 
         conflicts_by_debate = []
         for debate in debates:
             # conflicts is a list of (level, message) tuples
             conflicts = [("secondary", _draw_flags_dict.get(flag, flag)) for flag in debate.flags]
             if not debate.is_bye:
-                conflicts += [("secondary", "%(team)s: %(flag)s" % {
+                for dt in debate.debateteams:
+                    for flag in dt.flags:
+                        if flag == 'pullup' and standings is not None:
+                            prev_pullups = standings.get_standing(dt.team).metrics['npullups']
+                            flag_text = _("Pull-up team (%(ordinal)s pull-up)") % {'ordinal': ordinal(prev_pullups + 1)}
+                        else:
+                            flag_text = _draw_flags_dict.get(flag, flag)
+                        conflicts.append(("secondary", "%(team)s: %(flag)s" % {
                             'team': self._team_short_name(dt.team),
-                            'flag': _draw_flags_dict.get(flag, flag),
-                        }) for dt in debate.debateteams for flag in dt.flags]
+                            'flag': flag_text,
+                        }))
 
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
@@ -1007,8 +1087,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_columns(results_header, results_data)
 
-    def add_debate_postponement_column(self, debates):
-        col_data = [render_to_string('debate_postponement_form.html', {'debate': d}) for d in debates]
+    def add_debate_postponement_column(self, debates, request):
+        csrf_token = get_token(request)
+        col_data = []
+        for debate in debates:
+            if debate.result_status == Debate.STATUS_POSTPONED:
+                col_data.append(format_html('<small>{}</small>', _("Postponed")))
+            else:
+                url = reverse_round('results-postpone-debate', debate.round, kwargs={'debate_id': debate.id})
+                col_data.append(format_html(_postpone_button_html, url, csrf_token))
         header = {'key': 'postpone', 'title': _("Postpone")}
         self.add_column(header, col_data)
 
@@ -1024,22 +1111,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
             ) for s in standings]
             self.add_column(header, results)
 
-    def add_schedule_event_columns(self, schedule_events):
-        self.add_column({'title': _("Event"), 'key': _("Event")}, [ev.title for ev in schedule_events])
+    def add_schedule_event_columns(self, schedule_events, include_date=True):
+        self.add_column(
+            {'title': _("Event"), 'key': 'event'},
+            [escape(ev.display_title) for ev in schedule_events],
+        )
+
+        def format_event_time(value):
+            value = timezone.localtime(value)
+            if include_date:
+                return date_format(value, format='DATETIME_FORMAT', use_l10n=True)
+            return time_format(value, format='TIME_FORMAT', use_l10n=True)
 
         starts = [
-            timezone.localtime(ev.start_time)
-                    .strftime("%A, %b %d,  %H:%M")
+            {'text': format_event_time(ev.start_time), 'sort': ev.start_time.timestamp()}
             for ev in schedule_events
         ]
-        self.add_column({'title': _("Start Time"), 'key': _("Start Time")}, starts)
+        self.add_column({'title': _("Start Time"), 'key': 'start_time'}, starts)
 
         ends = [
-            (
-                timezone.localtime(ev.end_time)
-                        .strftime("%A, %b %d, %H:%M")
-                if ev.end_time else ""
-            )
+            {'text': format_event_time(ev.end_time), 'sort': ev.end_time.timestamp()}
+            if ev.end_time else {'text': '', 'sort': ''}
             for ev in schedule_events
         ]
-        self.add_column({'title': _("End Time"), 'key': _("End Time")}, ends)
+        self.add_column({'title': _("End Time"), 'key': 'end_time'}, ends)

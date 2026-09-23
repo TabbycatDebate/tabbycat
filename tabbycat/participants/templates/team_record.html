@@ -3,10 +3,9 @@
 
 {% block page-subnav-sections %}{% endblock %}<!-- No need for searching -->
 
-{# Note "team_short_name" is set by the View to be the team's code name if code
-names are relevant, or to the team's real name if it is not. #}
-
 {% block content %}
+
+  {% team_name_for_display object as team_short_name %}
 
   <div class="card-deck">
 

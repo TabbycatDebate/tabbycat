@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2024-06-30 18:16\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:42\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -185,6 +185,10 @@ msgstr "La sala no cumple con ninguna de las limitaciones de la institución %(i
 
 #: venues/views.py
 msgid "Edit Rooms"
+msgstr ""
+
+#: venues/views.py
+msgid "Edit Rooms (Concurrent Rounds)"
 msgstr ""
 
 #: venues/views.py

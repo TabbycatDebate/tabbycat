@@ -50,7 +50,7 @@ class TournamentPreferenceFormViewTests(TestCase):
 
     def test_section_does_not_exist(self):
         tournament = Tournament.objects.create(slug="optionform", name="Option Form Testing")
-        tournament.round_set.create(seq=1, name='1', abbreviation='1', draw_type='M')
+        tournament.round_set.create(seq=1, schedule_group=1, name='1', abbreviation='1', draw_type='M')
         request = RequestFactory().get(reverse_tournament('options-tournament-section', tournament, kwargs={'section': 'invalidsection'}))
         request.user = get_user_model()(is_superuser=True)
 

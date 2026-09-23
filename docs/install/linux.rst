@@ -28,7 +28,7 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make
+  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make redis-server
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
@@ -111,6 +111,25 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 Some of the Python packages require GCC, G++ and Make in order to install::
 
     $ sudo apt install gcc g++ make
+
+1(e). Redis
+-----------
+  *Redis is an in-memory data structure store, used as a message broker and cache.*
+
+Tabbycat requires Redis for two critical functions:
+
+  1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
+
+  2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
+
+Install and start Redis using::
+
+    $ sudo apt install redis-server
+    $ sudo systemctl enable --now redis-server
+
+After installation, Redis will automatically start and be configured to launch on system boot. You can verify it's running with::
+
+    $ sudo systemctl status redis-server
 
 .. _install-linux-source-code:
 

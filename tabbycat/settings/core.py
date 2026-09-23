@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.11.1'
-TABBYCAT_CODENAME = 'Tonkinese'
-READTHEDOCS_VERSION = 'v2.11.1'
+TABBYCAT_VERSION = '2.12.0'
+TABBYCAT_CODENAME = 'Ukrainian Levkoy'
+READTHEDOCS_VERSION = 'v2.12.0'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -64,6 +64,7 @@ LANGUAGES = [
     ('ca', _('Catalan')),
     ('cs', _('Czech')),
     ('de', _('German')),
+    ('el', _('Greek')),
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
@@ -77,7 +78,9 @@ LANGUAGES = [
     ('pt', _('Portuguese')),
     ('ro', _('Romanian')),
     ('ru', _('Russian')),
+    ('sk', _('Slovak')),
     ('tr', _('Turkish')),
+    ('uk', _('Ukrainian')),
     ('vi', _('Vietnamese')),
     ('zh-hans', _('Simplified Chinese')),
     ('tzl', _('Translation')),
@@ -198,6 +201,9 @@ TEMPLATES = [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
                 ]),
+            ],
+            'builtins': [
+                'notifications.templatetags.email_math',  # arithmetic helpers for email templates
             ],
         }
     },
@@ -366,6 +372,7 @@ DYNAMIC_PREFERENCES = {
 # ==============================================================================
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exceptions.api_exception_handler',
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
@@ -387,7 +394,7 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Tabbycat API',
     'DESCRIPTION': 'Parliamentary debate tabulation software',
-    'VERSION': '1.3.0',
+    'VERSION': '1.4.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SCHEMA_PATH_PREFIX': r'api/v\d+',
     'CONTACT': {'name': 'Étienne Beaulé', 'email': 'ebeaule@tabbycat-debate.org'},

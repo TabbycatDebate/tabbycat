@@ -73,39 +73,46 @@
   {{ block.super }}
   <script>
     // Actions for the table elements
-    $(document).ready(function(){
-      $(".edit-base-score a").each( function() {
-        $(this).click( function() {
-          var adj_id = parseInt($(this).attr("data-target"));
-          var adj_score = $(this, "span").text();
-          $("#id_adj_id").val(adj_id); // Updating form ID reference
-          $("#id_base_score").prop('placeholder', adj_score); // updating the form's table
-          $('#edit-base-score').modal();
-        });
-      });
-      $(".edit-note a").each( function() {
-        $(this).click( function() {
-          var adj_id = parseInt($(this).attr("data-target").split("===")[0]);
-          var adj_note = $(this).attr("data-target").split("===")[1];
-          $("#id_note").val(adj_note);
-          $("#id_adj_id_note").val(adj_id);
-          $('#edit-note').modal();
-        });
-      });
-      $(".edit-feedback-weight").click( function(e) {
-        e.preventDefault();
-        var current_weight = parseFloat($(this).attr("data-weight"));
-        var current_weight_percent = Math.round(current_weight * 100);
-        $("#id_feedback_weight_percent").val(current_weight_percent);
-        $('#edit-feedback-weight').modal();
-      });
+    document.addEventListener('DOMContentLoaded', function(){
+      // Wait for Vue app to load and jQuery to be available
+      setTimeout(function() {
+        if (typeof $ !== 'undefined') {
+          $(".edit-base-score a").each( function() {
+            $(this).click( function() {
+              var adj_id = parseInt($(this).attr("data-target"));
+              var adj_score = $(this, "span").text();
+              $("#id_adj_id").val(adj_id); // Updating form ID reference
+              $("#id_base_score").prop('placeholder', adj_score); // updating the form's table
+              $('#edit-base-score').modal();
+            });
+          });
+          $(".edit-note a").each( function() {
+            $(this).click( function() {
+              var adj_id = parseInt($(this).attr("data-target").split("===")[0]);
+              var adj_note = $(this).attr("data-target").split("===")[1];
+              $("#id_note").val(adj_note);
+              $("#id_adj_id_note").val(adj_id);
+              $('#edit-note').modal();
+            });
+          });
+          $(".edit-feedback-weight").click( function(e) {
+            e.preventDefault();
+            var current_weight = parseFloat($(this).attr("data-weight"));
+            var current_weight_percent = Math.round(current_weight * 100);
+            $("#id_feedback_weight_percent").val(current_weight_percent);
+            $('#edit-feedback-weight').modal();
+          });
 
-      // Convert percentage to decimal before form submission
-      $("#feedbackWeightForm").submit(function(e) {
-        var percent = parseFloat($("#id_feedback_weight_percent").val());
-        var decimal = percent / 100;
-        $("#id_feedback_weight").val(decimal);
-      });
+          // Convert percentage to decimal before form submission
+          $("#feedbackWeightForm").submit(function(e) {
+            var percent = parseFloat($("#id_feedback_weight_percent").val());
+            var decimal = percent / 100;
+            $("#id_feedback_weight").val(decimal);
+          });
+        } else {
+          console.error('jQuery not available - Vue app may not be loaded yet');
+        }
+      }, 100);
     });
   </script>
 

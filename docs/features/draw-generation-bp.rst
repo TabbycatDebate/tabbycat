@@ -38,6 +38,9 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - Algorithm used to assign positions
     - - *Hungarian*\*
       - **Hungarian with preshuffling**
+  * - :ref:`Pullup penalty <draw-bp-pullup-penalty>`
+    - Prefer teams with fewer prior pull-ups when filling pull-up slots
+    - Any non-negative integer (default: **0**; **100000** in the WUDC preset)
 
 .. _draw-bp-big-picture:
 
@@ -123,7 +126,22 @@ The available options are as follows:
 
 .. note:: While it can be argued that the `All in the same room` setting is fairer, it is prohibited by the WUDC constitution. If your tournament follows WUDC rules, you cannot use this setting.
 
-  The teams that get pulled up aren't specifically chosen---they're just assigned as part of the algorithm described :ref:`above <draw-bp-big-picture>`, which optimises for position balance. Tabbycat doesn't support taking anything else into account when choosing pullup teams. (WUDC rules wouldn't allow it, either.)
+.. _draw-bp-pullup-penalty:
+
+Pullup penalty
+--------------
+
+In addition to the pullup distribution, we can prefer teams who have been pulled up fewer times. If the :ref:`pullup penalty <draw-bp-pullup-penalty>` is non-zero, Tabbycat uses the **number of pullups** metric (``npullups``): the number of times each team has previously been pulled up. The penalty added is ``npullups × pullup_penalty``, so teams with more prior pull-ups incur a higher cost when assigned to a debate above their points bracket.
+
+The pull-up penalty is added to the position cost for every assignment where the team would be placed in a debate above its points bracket (that is, where the team's points are below the room's bracket level). The Hungarian algorithm then minimises the sum of position costs and pullup penalties together.
+
+.. rst-class:: spaced-list
+
+- Set the penalty to **0** to disable this behaviour, or set the penalty high enough (the British Parliamentary preset uses **100000**) so that a difference in prior pull-ups takes precedence over side balance, as required by WUDC constitution s36.2.8.1. The default position cost exponent (4) means position costs for a single assignment are typically well below this value.
+
+- **Tuning:** A single integer is usually sufficient. Larger values make prior pull-up counts dominate more strongly over position balance when both pull-up candidates are otherwise similar. Smaller non-zero values blend the two concerns.
+
+The Position Balance Report shows prior pull-up counts and includes pull-up penalties in each team's cost when this option is enabled.
 
 .. _draw-bp-position-cost-section:
 

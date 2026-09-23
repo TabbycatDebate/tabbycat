@@ -117,6 +117,9 @@ urlpatterns = [
                                         views.BallotViewSet.as_view(detail_methods),
                                         name='api-ballot-detail'),
                                 ])),
+                                path('/checkin',
+                                    views.DebateCheckinsView.as_view(),
+                                    name='api-debate-checkin'),
                             ])),
                         ])),
 
@@ -185,12 +188,18 @@ urlpatterns = [
                         path('/rounds',
                             views.TeamRoundStandingsRoundsView.as_view({'get': 'list'}),
                             name='api-team-round-standings'),
+                        path('/current-rounds',
+                            views.TeamCurrentStandingsView.as_view({'get': 'list'}),
+                            name='api-team-current-standings'),
                     ])),
                 ])),
                 path('/adjudicators', include([
                     path('',
                         views.AdjudicatorViewSet.as_view(list_methods),
                         name='api-adjudicator-list'),
+                    path('/standings',
+                        views.AdjudicatorStandingsView.as_view(),
+                        name='api-adjudicator-standings'),
                     path('/<int:pk>', include([
                         path('',
                             views.AdjudicatorViewSet.as_view(detail_methods),
@@ -244,6 +253,15 @@ urlpatterns = [
                     path('/<int:pk>',
                         views.VenueCategoryViewSet.as_view(detail_methods),
                         name='api-venuecategory-detail'),
+                ])),
+
+                path('/schedule-events', include([
+                    path('',
+                        views.ScheduleEventViewSet.as_view(list_methods),
+                        name='api-scheduleevent-list'),
+                    path('/<int:pk>',
+                        views.ScheduleEventViewSet.as_view(detail_methods),
+                        name='api-scheduleevent-detail'),
                 ])),
 
                 path('/user-groups', include([

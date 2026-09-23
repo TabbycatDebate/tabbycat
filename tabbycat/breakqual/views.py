@@ -13,9 +13,13 @@ from django.views.generic import FormView, TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.generator.utils import ispow2
+from draw.models import Debate
 from participants.models import Team
 from participants.views import EditSpeakerCategoriesView, UpdateEligibilityEditView as BaseUpdateEligibilityEditView
+from results.models import TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
+from tournaments.models import Round
+from tournaments.utils import get_side_name
 from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -85,6 +89,23 @@ class PublicBreakingTeamsView(PublicTournamentPageMixin, BaseBreakingTeamsView):
     public_page_preference = 'public_breaking_teams'
     cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
+    def get_table(self):
+        metrics_to_show = self.tournament.pref('public_break_metrics_to_show')
+        self.standings = self.get_standings()
+
+        if metrics_to_show != -1:
+            n = max(0, metrics_to_show)
+            self.standings.metric_keys = self.standings.metric_keys[:n]
+            self.standings._metric_specs = self.standings._metric_specs[:n]
+
+        table = TabbycatTableBuilder(view=self, title=escape(self.object.name), sort_key='Rk')
+        table.add_ranking_columns(self.standings)
+        table.add_column({'title': _("Break"), 'key': 'break'},
+                         [tsi.break_rank for tsi in self.standings])
+        table.add_team_columns([tsi.team for tsi in self.standings])
+        table.add_metric_columns(self.standings)
+        return table
+
 
 class GenerateBreakMixin:
 
@@ -148,7 +169,7 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
         )
         table.add_column(
             {'key': 'edit-remark', 'title': _("Edit Remark")},
-            [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings],
+            [self.form.get_remark_cell(tsi.team) for tsi in self.standings],
         )
         return table
 
@@ -345,3 +366,118 @@ class UpdateEligibilityEditView(BaseUpdateEligibilityEditView):
     participant_model = Team
     many_to_many_field = 'break_categories'
     edit_permission = Permission.EDIT_BREAK_ELIGIBILITY
+
+
+# ==============================================================================
+# Elimination Bracket
+# ==============================================================================
+
+class PublicEliminationBracketView(PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
+    template_name = 'bracket.html'
+    model = BreakCategory
+    slug_url_kwarg = 'category'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('public_results') and tournament.pref('public_breaking_teams')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def get_page_title(self):
+        return _("%(category)s Bracket") % {'category': self.object.name}
+
+    def _get_advancing_flags(self, debate, round_obj):
+        """Returns a dict of {team_id: bool} for each team in the debate,
+        indicating whether they advanced, or None if results aren't available."""
+        results_released = self.tournament.pref('all_results_released') or (
+            round_obj.completed and not round_obj.silent
+        )
+        if not (results_released and debate.result_status == Debate.STATUS_CONFIRMED):
+            return {}
+        scores = TeamScore.objects.filter(
+            ballot_submission__confirmed=True,
+            debate_team__debate=debate,
+        ).select_related('debate_team')
+        return {ts.debate_team.team_id: ts.win for ts in scores}
+
+    def get_context_data(self, **kwargs):
+        category = self.object
+        tournament = self.tournament
+        teams_in_debate = tournament.pref('teams_in_debate')
+
+        breaking_teams = category.breakingteam_set.filter(
+            break_rank__isnull=False,
+        ).order_by('break_rank').select_related('team')
+
+        # Only link through to record pages if the tournament publishes them.
+        link_records = tournament.pref('public_record')
+
+        breaking_teams_data = [
+            {
+                'break_rank': bt.break_rank,
+                'team': {
+                    'id': bt.team_id,
+                    'short_name': bt.team.short_name,
+                    'url': reverse_tournament('participants-public-team-record', tournament,
+                        kwargs={'pk': bt.team_id}) if link_records else None,
+                },
+            }
+            for bt in breaking_teams
+        ]
+
+        rounds_qs = tournament.round_set.filter(
+            break_category=category,
+            stage=Round.Stage.ELIMINATION,
+        ).order_by('seq').prefetch_related(
+            'debate_set__debateteam_set__team',
+        )
+
+        rounds_data = []
+        all_results_released = tournament.pref('all_results_released')
+        for round_obj in rounds_qs:
+            round_info = {
+                'seq': round_obj.seq,
+                'name': round_obj.name,
+                'drawStatus': round_obj.draw_status,
+            }
+
+            if all_results_released or round_obj.draw_status in (Round.Status.RELEASED, Round.Status.TEAMS_RELEASED):
+                pairings = []
+                for debate in round_obj.debate_set.all():
+                    advancing_flags = self._get_advancing_flags(debate, round_obj)
+                    teams = []
+                    for dt in debate.debateteam_set.all():
+                        teams.append({
+                            'team_id': dt.team_id,
+                            'side': dt.side,
+                            'advancing': advancing_flags.get(dt.team_id),
+                        })
+                    pairings.append({
+                        'room_rank': debate.room_rank,
+                        'result_status': debate.result_status,
+                        'sides_confirmed': debate.sides_confirmed,
+                        'teams': sorted(teams, key=lambda t: t['side']),
+                    })
+                pairings.sort(key=lambda p: p['room_rank'])
+                round_info['pairings'] = pairings
+            else:
+                round_info['pairings'] = None
+
+            rounds_data.append(round_info)
+
+        kwargs['bracket_data'] = json.dumps({
+            'breakCategory': {
+                'name': category.name,
+                'slug': category.slug,
+                'breakSize': category.break_size,
+            },
+            'teamsInDebate': teams_in_debate,
+            'breakingTeams': breaking_teams_data,
+            'rounds': rounds_data,
+            'sideNames': {side: get_side_name(tournament, side, 'abbr') for side in tournament.sides},
+        })
+        kwargs['category'] = category
+
+        return super().get_context_data(**kwargs)

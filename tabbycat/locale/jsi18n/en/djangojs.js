@@ -1,18 +1,17 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

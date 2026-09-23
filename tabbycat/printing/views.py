@@ -8,10 +8,11 @@ from django.views.generic.base import TemplateView
 from qrcode.image import svg
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
-from adjfeedback.utils import expected_feedback_targets
+from adjfeedback.utils import expected_feedback_targets, team_feedback_allowed_targets
 from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
 from draw.models import DebateTeam
+from draw.types import DebateSide
 from options.utils import use_team_code_names
 from participants.models import Adjudicator, Speaker
 from results.utils import side_and_position_names
@@ -75,7 +76,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         if len(debate.adjudicators) == 0:
             return []
 
-        team_paths = self.tournament.pref('feedback_from_teams')
+        team_paths = team_feedback_allowed_targets(self.tournament.pref('feedback_from_teams'))
         ballots = []
 
         if team_paths == 'orallist' and debate.adjudicators.chair:
@@ -83,6 +84,9 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
                                                debate.adjudicators.chair, ""))
         elif team_paths == 'all-adjs':
             for target in debate.adjudicators.all():
+                ballots.append(self.construct_info(debate.venue, team, _("Team"), target, ""))
+        elif team_paths == 'all-voting-adjs':
+            for target in debate.adjudicators.voting():
                 ballots.append(self.construct_info(debate.venue, team, _("Team"), target, ""))
 
         return ballots
@@ -133,7 +137,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_ballots_dicts(self):
-        draw = self.round.debate_set_with_prefetches(iron=True)
+        draw = self.round.debate_set_with_prefetches(iron=True).exclude(debateteam__side=DebateSide.BYE)
 
         # Create the DebateIdentifiers for the ballots if needed
         create_identifiers(DebateIdentifier, draw)

@@ -15,8 +15,8 @@
             <div class="list-group-item text-info py-3">
               {% tournamenturl 'options-tournament-section' section='feedback' as feedback_options %}
               {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
-                The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
-                <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
+                The score range for adjudicators is between <strong>{{ min_score }}</strong> and
+                <strong>{{ max_score }}</strong>. Decimals are permitted. This can be configured in
                 <a href="{{ feedback_options }}">Feedback settings</a>.
               {% endblocktrans %}
             </div>

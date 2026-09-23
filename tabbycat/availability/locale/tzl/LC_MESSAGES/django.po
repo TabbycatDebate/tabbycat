@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:55\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -76,8 +76,8 @@ msgid "The draw cannot be generated until some adjudicators have been marked as 
 msgstr "crwdns29672:0crwdne29672:0"
 
 #: availability/templates/availability_index.html
-msgid "The draw cannot be generated until some rooms have been marked as available."
-msgstr "crwdns51090:0crwdne51090:0"
+msgid "No rooms are marked as available. You can still generate the draw and assign rooms later."
+msgstr "crwdns53693:0crwdne53693:0"
 
 #: availability/templates/availability_index.html
 msgid "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly."
@@ -133,9 +133,21 @@ msgid "There's only one team breaking in the %(break_category)s Break. You can't
 msgstr "crwdns29696:0%(break_category)scrwdnd29696:0%(breakqual_teams_url)scrwdnd29696:0%(break_category)scrwdne29696:0"
 
 #: availability/templates/availability_index.html
+msgid "One or more teams have a <strong>seed</strong> assigned, but this round's draw type is not <strong>Seeded</strong>."
+msgstr "crwdns53695:0crwdne53695:0"
+
+#: availability/templates/availability_index.html
+msgid "Set draw type to Seeded"
+msgstr "crwdns53697:0crwdne53697:0"
+
+#: availability/templates/availability_index.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
 msgstr "crwdns35164:0%(standings_config_url)scrwdne35164:0"
+
+#: availability/templates/availability_index.html
+msgid "Request failed"
+msgstr "crwdns53699:0crwdne53699:0"
 
 #: availability/templates/base_availability.html
 msgid "Select All"

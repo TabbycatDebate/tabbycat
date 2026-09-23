@@ -1,111 +1,37 @@
 //------------------------------------------------------------------------------
 // Highlights for Allocation Pages
 //------------------------------------------------------------------------------
+@use "sass:math";
+$break-cat-cycle: $break-cat-1, $break-cat-2, $break-cat-3, $break-cat-4, $break-cat-5, $break-cat-6, $break-cat-0;
 
 .conflicts-toolbar:hover {
   color: #fff; // Needed to keep consistent with other bars
 }
+@mixin break-category-rules($prefix) {
+  // Each pass of 7 cycles through the same colors, lightened by 10% per pass
+  @for $i from 0 through 27 {
+    $color: lighten(nth($break-cat-cycle, $i % 7 + 1), floor(math.div($i, 7)) * 10%);
 
-.break-display {
+    &.#{$prefix}-#{$i} {
+      @include hover-highlights($color);
 
-  &.break-0 {
-    @include hover-highlights($break-cat-1);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+      .vue-draggable-muted {
+        color: rgba(255, 255, 255, 0.75);
+      }
     }
-  }
 
-  &.break-0-disabled {
-    @include outline-highlights($break-cat-1);
-  }
-
-  &.break-1 {
-    @include hover-highlights($break-cat-2);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    &.#{$prefix}-#{$i}-disabled {
+      @include outline-highlights($color);
     }
-  }
-
-  &.break-1-disabled {
-    @include outline-highlights($break-cat-2);
-  }
-
-  &.break-2 {
-    @include hover-highlights($break-cat-3);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.break-2-disabled {
-    @include outline-highlights($break-cat-3);
-  }
-
-  &.break-3 {
-    @include hover-highlights($break-cat-4);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.break-4-disabled {
-    @include outline-highlights($break-cat-4);
   }
 }
 
+.break-display {
+  @include break-category-rules('break');
+}
+
 .category-display {
-
-  &.category-0 {
-    @include hover-highlights($break-cat-1);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-0-disabled {
-    @include outline-highlights($break-cat-1);
-  }
-
-  &.category-1 {
-    @include hover-highlights($break-cat-2);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-1-disabled {
-    @include outline-highlights($break-cat-2);
-  }
-
-  &.category-2 {
-    @include hover-highlights($break-cat-3);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-2-disabled {
-    @include outline-highlights($break-cat-3);
-  }
-
-  &.category-3 {
-    @include hover-highlights($break-cat-4);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-4-disabled {
-    @include outline-highlights($break-cat-4);
-  }
+  @include break-category-rules('category');
 }
 
 .gender-display {

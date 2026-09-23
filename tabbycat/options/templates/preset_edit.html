@@ -17,7 +17,7 @@
 <form id="applyPresetsForm" method="POST">
   {% csrf_token %}
 
-  {% regroup form.visible_fields|dictsort:"changed" by changed as preferences_grouped %}
+  {% regroup form.iter_preference_fields|dictsort:"changed" by changed as preferences_grouped %}
   {% for changed, preferences in preferences_grouped reversed %}
     {% if preferences|length > 0 %}
       {% if changed %}
@@ -36,6 +36,55 @@
       {% include "preferences_state.html" %}
     {% endif %}
   {% endfor %}
+
+  {% if form.preset_action_rows_already %}
+  <div class="card mt-3">
+    <div class="card-body text-secondary border-secondary">
+      <h4 class="card-title mb-0">
+        <i data-feather="check-circle"></i> {% trans "Preset actions already in effect" %}
+      </h4>
+      <p class="form-text text-muted small mb-0">
+        {% trans "The tournament already matches these parts of the preset. They will not run again when you save." %}
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for action, field in form.preset_action_rows_already %}
+      <li class="list-group-item text-muted">
+        <span class="d-flex align-items-start">
+          <i data-feather="check" class="text-success mr-2 mt-1 flex-shrink-0" style="width:1.1rem;height:1.1rem;"></i>
+          <span>{{ field.label }}</span>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if form.preset_action_rows_pending %}
+  <div class="card mt-3">
+    <div class="card-body text-info border-info">
+      <h4 class="card-title mb-0">
+        <i data-feather="settings"></i> {% trans "Preset actions to apply when you save" %}
+      </h4>
+      <p class="form-text text-muted small mb-0">
+        {% trans "These options are not tournament preferences; they adjust other data (for example rounds). Uncheck any you do not want applied." %}
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for action, field in form.preset_action_rows_pending %}
+      <li class="list-group-item">
+        <div class="form-check">
+          {{ field }}
+          <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% if field.errors %}
+            {{ field.errors }}
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
   <div hidden>
     {% for field in form.hidden_fields %}

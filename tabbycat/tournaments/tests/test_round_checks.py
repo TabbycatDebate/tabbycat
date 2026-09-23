@@ -14,7 +14,7 @@ class TestRoundChecks(TestCase):
 
     def setUp(self):
         self.tournament = Tournament.objects.create(slug="roundcheckstest", name="Round checks test")
-        self.round = Round.objects.create(tournament=self.tournament, seq=1)
+        self.round = Round.objects.create(tournament=self.tournament, seq=1, schedule_group=1)
         self.debates = []
         self.venues = []
         self.teams = []

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-06 01:33\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:35\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -42,6 +42,10 @@ msgstr "Tirage"
 #: draw/forms.py
 msgid "Full round name"
 msgstr "Nom complet de la joute"
+
+#: draw/forms.py
+msgid "Overwrite preformed panels with current panels"
+msgstr ""
 
 #: draw/forms.py
 #, python-format
@@ -150,6 +154,14 @@ msgstr "Le nombre d’équipes (%d) dans cette joute n’est pas une puissance d
 msgid "%(noninteger)d out of %(total)d teams have a noninteger first metric in the team standings. Intermediate brackets require the first team standings metric to be an integer (typically points or wins)."
 msgstr "%(noninteger)d sur %(total)d équipes ont une première métrique de classement non-entier. Les tranches intermédiaires obligent celui ci d'être entier (typiquement le pointage ou nombre de victoires)."
 
+#: draw/generator/powerpair.py
+msgid "Draw strength pullups require 'Minimum cost matching (including pullups)' as the conflict avoidance method"
+msgstr ""
+
+#: draw/generator/powerpair.py
+msgid "Intermediate-type pullups require 'One-up-one-down' as the conflict avoidance method"
+msgstr ""
+
 #: draw/generator/random.py
 #, python-format
 msgid "There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
@@ -158,6 +170,30 @@ msgstr "Il y avait %(aff_count)d équipes affirmatives mais %(neg_count)d équip
 #: draw/generator/random.py
 msgid "One or more teams had an allocated side that wasn't affirmative or negative."
 msgstr "Un équipe ou plus avait des côtés alloués qui n'étaient pas affirmatif ni négatif."
+
+#: draw/generator/roundrobin.py
+msgid "Berger round-robin requires an even number of teams with no byes in the draw."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "This round's position in the round-robin schedule (%(rr)d) is not valid for %(n)d teams (expected between 1 and %(max)d)."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "British Parliamentary round-robin draws are only implemented for %(supported)s teams at the moment (this tournament has %(n)d)."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "This round's position in the round-robin schedule (%(rr)d) is not valid — expected between 1 and %(max)d for %(n)d teams."
+msgstr ""
+
+#: draw/generator/roundrobin.py
+#, python-format
+msgid "Team seeds must be the integers 1 through %(n)d for BP round-robin."
+msgstr ""
 
 #: draw/manager.py
 #, python-format
@@ -173,6 +209,10 @@ msgstr "Le type de tirage %(type)s ne peut pas être utilisé avec le format de 
 #, python-format
 msgid "Unrecognised \"teams in debate\" option: %(option)s"
 msgstr "Réglage d'« équipes au débat » inconnu : %(option)s"
+
+#: draw/manager.py
+msgid "Every team must have a seed set for round-robin draws. Assign seeds before generating the draw."
+msgstr ""
 
 #: draw/manager.py
 #, python-format
@@ -202,6 +242,14 @@ msgstr "tour"
 #: draw/models.py
 msgid "room"
 msgstr "salle"
+
+#: draw/models.py
+msgid "scheduled time"
+msgstr ""
+
+#: draw/models.py
+msgid "Optional start time for this debate, if it differs from the round schedule."
+msgstr ""
 
 #: draw/models.py
 msgid "bracket"
@@ -330,6 +378,14 @@ msgid "SH"
 msgstr "HC"
 
 #: draw/tables.py
+msgid "PU"
+msgstr "PROM"
+
+#: draw/tables.py
+msgid "Number of pullups before this round"
+msgstr "Nombre de promotions avant cette joute"
+
+#: draw/tables.py
 msgid "Went from balanced to imbalanced"
 msgstr "D'équilibré à déséquilibré"
 
@@ -374,12 +430,16 @@ msgid "Side history after this round"
 msgstr "Historique de côté après ce tour"
 
 #: draw/tables.py
-msgid "Cost"
-msgstr "Coût"
+msgid "Position cost + pullup penalty"
+msgstr ""
 
 #: draw/tables.py
 msgid "Position cost"
 msgstr "Coût de position"
+
+#: draw/tables.py
+msgid "Cost"
+msgstr "Coût"
 
 #: draw/tables.py
 msgid "Status"
@@ -403,6 +463,10 @@ msgstr "historique de côté avant ce tour"
 #: draw/tables.py
 msgid "Sides"
 msgstr "Côtés"
+
+#: draw/tables.py
+msgid "position cost + pullup penalty"
+msgstr ""
 
 #: draw/tables.py
 msgid "position cost"
@@ -609,16 +673,33 @@ msgid "The draw for this round is still in a draft state. Confirm the draw befor
 msgstr "Le tirage de cette joute est encore un brouillon. Confirmez-le avant de le publier."
 
 #: draw/templates/draw_display_admin.html
+msgid "Unrelease draw (teams only)"
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
+msgid "Release draw with adjudicators"
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
+msgid "The draw has been released publicly (teams only, without adjudicators)."
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
+msgid "View public draw page"
+msgstr "Voir page de tirage publique"
+
+#: draw/templates/draw_display_admin.html
+#, python-format
+msgid "You have released the draw (teams only), but it will not show to the public unless the \"public view of draw\" setting is enabled in <a class=\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
+msgstr ""
+
+#: draw/templates/draw_display_admin.html
 msgid "Unrelease draw to public"
 msgstr "Retirer le tirage du public"
 
 #: draw/templates/draw_display_admin.html
 msgid "The draw has been released publicly."
 msgstr "Le tirage a été publié."
-
-#: draw/templates/draw_display_admin.html
-msgid "View public draw page"
-msgstr "Voir page de tirage publique"
 
 #: draw/templates/draw_display_admin.html
 #, python-format
@@ -633,6 +714,10 @@ msgstr "Vous avez publié le tirage, mais il ne s'affichera pas à moins que la 
 #: draw/templates/draw_display_admin.html
 msgid "Release draw to public"
 msgstr "Publier le tirage"
+
+#: draw/templates/draw_display_admin.html
+msgid "Release draw (teams only)"
+msgstr ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so."
@@ -661,10 +746,22 @@ msgstr[0] "Publier la motion au public"
 msgstr[1] "Publier les motions"
 
 #: draw/templates/draw_display_admin.html
+msgid "Release info-slide to public"
+msgid_plural "Release info-slides to public"
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/templates/draw_display_admin.html
 msgid "Unrelease motion to public"
 msgid_plural "Unrelease motions to public"
 msgstr[0] "Retirer la motion du public"
 msgstr[1] "Retirer les motions"
+
+#: draw/templates/draw_display_admin.html
+msgid "Unrelease info-slide from public"
+msgid_plural "Unrelease info-slides from public"
+msgstr[0] ""
+msgstr[1] ""
 
 #: draw/templates/draw_display_admin.html
 msgid "Release Motion"
@@ -697,6 +794,12 @@ msgid "Your tournament is not configured to show the motion for each round on th
 msgid_plural "Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions."
 msgstr[0] "Votre tournoi n'est pas configuré pour afficher la motion de chaque joute sur la page publique. Vous n'avez pas besoin de les publier."
 msgstr[1] "Votre tournoi n'est pas configuré pour afficher les motions de chaque joute sur la page publique. Vous n'avez pas besoin de les publier."
+
+#: draw/templates/draw_display_admin.html
+msgid "Info-slides have been released. You can now release the full motions."
+msgid_plural "Info-slides have been released. You can now release the full motions."
+msgstr[0] ""
+msgstr[1] ""
 
 #: draw/templates/draw_display_admin.html
 msgid "The motion has been released publicly."
@@ -849,6 +952,14 @@ msgid "There are currently fewer adjudicators checked in than there are rooms."
 msgstr "Il y a actuellement moins de juges enregistrés que de salles."
 
 #: draw/templates/draw_status_confirmed.html
+msgid "Edit adjudicator allocations for all current rounds"
+msgstr ""
+
+#: draw/templates/draw_status_confirmed.html
+msgid "Edit adjudicator allocations for all panels in this schedule slot"
+msgstr ""
+
+#: draw/templates/draw_status_confirmed.html
 msgid "Allocate adjudicators"
 msgstr "Attribuer les juges"
 
@@ -859,6 +970,10 @@ msgstr "Modifier les attributions de juges"
 #: draw/templates/draw_status_confirmed.html
 msgid "Room Allocations"
 msgstr "Attribution de salles"
+
+#: draw/templates/draw_status_confirmed.html
+msgid "Edit room allocation for all current rounds"
+msgstr ""
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Allocate rooms"
@@ -961,6 +1076,46 @@ msgstr "Les rapports sur l'équilibre des positions ne sont disponible que pour 
 msgid "Position balance reports aren't computed for the first round of a tournament."
 msgstr "Un rapport sur l'équilibre des positions ne se produit pas pour le premier tour d'un tournoi."
 
+#: draw/templates/side_allocations.html
+msgid "Rounds that are finished, or already have a draw, show each team's actual side for that round. Rounds that don't have a draw yet show the current side pre-allocation, which can be edited directly in the table below for the next round to be drawn."
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "This will overwrite the current side pre-allocations for every team in the selected round. Continue?"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Bulk-apply from a previous round"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Sets every team's side pre-allocation for the chosen round from their actual side in an earlier finished round, either the same side or the opposite. Teams with no result in that round (e.g. a bye) are left untouched."
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Set pre-allocations for:"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Copy from:"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Same side"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Opposite side"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "Apply to all teams"
+msgstr ""
+
+#: draw/templates/side_allocations.html
+msgid "No finished rounds yet to copy from."
+msgstr ""
+
 #: draw/views.py
 msgid "No debates in this round"
 msgstr "Aucun débat dans cette joute"
@@ -994,11 +1149,6 @@ msgstr[1] "débats commencent à %(time)s"
 #: draw/views.py
 msgid "The draw for this round hasn't been released."
 msgstr "Le tirage pour cette joute n'a pas été publié."
-
-#: draw/views.py
-#, python-format
-msgid "All Debates for All Rounds of %(tournament)s"
-msgstr "Tous les débats pour toutes les joutes de %(tournament)s"
 
 #: draw/views.py
 msgid "Adjudicator Assignments"
@@ -1063,8 +1213,8 @@ msgstr "Tirage Annoté"
 
 #: draw/views.py
 #, python-format
-msgid "Could not create draw for %(round)s, there was already a draw!"
-msgstr "Ne pouvait pas créer un tirage pour %(round)s, il y avait déjà un tirage !"
+msgid "Could not create draw for %(round)s, there is already a draw!"
+msgstr ""
 
 #: draw/views.py
 #, python-format
@@ -1088,6 +1238,10 @@ msgstr "<p>Le classement d'équipe ne pouvait pas être généré parce que l'er
 "<p>Parce que la génération de tirage utilise le classement d'équipe actuel, ceci empêche le tirage d'être généré.</p>"
 
 #: draw/views.py
+msgid "The draw could not be created, because another user was also creating a draw."
+msgstr ""
+
+#: draw/views.py
 msgid "Rooms were not auto-allocated because there are one or more adjudicator room constraints. You should run room allocations after allocating adjudicators."
 msgstr "Les salles n'ont pas été automatiquement attribués car il y a des juges avec des contraintes de salle. Vous devriez allouer les salles après d'avoir assigné les juges."
 
@@ -1098,6 +1252,10 @@ msgstr "Il n'y a pas de tirage."
 #: draw/views.py
 msgid "The draw had already been confirmed."
 msgstr "Le tirage a déjà été confirmé."
+
+#: draw/views.py
+msgid "Overwrote preformed panels with current panels."
+msgstr ""
 
 #: draw/views.py
 msgid "Deleted the draw. You can now recreate it as normal."
@@ -1116,6 +1274,31 @@ msgid "Released the draw."
 msgstr "Publié le tirage."
 
 #: draw/views.py
+#, python-format
+msgid "%(tournament)s - %(round)s"
+msgstr ""
+
+#: draw/views.py
+#, python-format
+msgid "You are the %(type)s in %(venue)s, adjudicating %(matchup)s"
+msgid_plural "You are a %(type)s in %(venue)s, adjudicating %(matchup)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: draw/views.py
+msgid "Room TBA"
+msgstr "Salle ÀD"
+
+#: draw/views.py
+#, python-format
+msgid "You are the %(type)s in %(venue)s, with %(matchup)s"
+msgstr ""
+
+#: draw/views.py
+msgid "Released the draw (teams only)."
+msgstr ""
+
+#: draw/views.py
 msgid "The draw had been unreleased."
 msgstr "Le tirage a été retiré."
 
@@ -1131,6 +1314,45 @@ msgstr "Désolé, « %(input)s » n'est pas un temps valide. Il doit être en fo
 #: draw/views.py
 msgid "Side Pre-Allocations"
 msgstr "Pré-Répartition des côtés aux équipes"
+
+#: draw/views.py
+msgid "Unallocated"
+msgstr ""
+
+#: draw/views.py
+msgid "Set side pre-allocation"
+msgstr ""
+
+#: draw/views.py
+msgid "Invalid team or round."
+msgstr ""
+
+#: draw/views.py
+msgid "Can't change a side pre-allocation once the draw for that round has been generated."
+msgstr ""
+
+#: draw/views.py
+msgid "Invalid side."
+msgstr ""
+
+#: draw/views.py
+msgid "Invalid round."
+msgstr ""
+
+#: draw/views.py
+msgid "Can't set side pre-allocations for a round whose draw has already been generated."
+msgstr ""
+
+#: draw/views.py
+msgid "The source round must be a finished round with a confirmed draw."
+msgstr ""
+
+#: draw/views.py
+#, python-format
+msgid "Set the side pre-allocation for %(applied)d team (skipped %(skipped)d with no result in %(round)s)."
+msgid_plural "Set the side pre-allocation for %(applied)d teams (skipped %(skipped)d with no result in %(round)s)."
+msgstr[0] ""
+msgstr[1] ""
 
 #: draw/views.py
 msgid "Edit Matchups"

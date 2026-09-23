@@ -11,11 +11,12 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from breakqual.models import BreakingTeam
 from options.utils import use_team_code_names
 from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from users.permissions import Permission
+from users.permissions import has_permission, Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
@@ -57,6 +58,7 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
             kwargs["scan_url"] = self.tournament.slug + '/checkins/'
         kwargs["for_admin"] = self.for_admin
         kwargs["team_size"] = self.tournament.pref('substantive_speakers')
+        kwargs.setdefault("prelims_completed", False)
         return super().get_context_data(**kwargs)
 
 
@@ -69,8 +71,25 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
     def get_context_data(self, **kwargs):
 
+        code_names_pref = self.tournament.pref('team_code_names')
         team_codes = use_team_code_names(self.tournament, admin=self.for_admin, user=self.request.user)
         kwargs["team_codes"] = json.dumps(team_codes)
+
+        prelims_completed = not self.tournament.prelim_rounds().filter(completed=False).exists()
+        kwargs["prelims_completed"] = prelims_completed
+
+        breaking_team_ids = set(
+            BreakingTeam.objects.filter(
+                break_category__tournament=self.tournament,
+                remark__isnull=True,
+            ).values_list('team_id', flat=True),
+        )
+
+        # Include the extra fields for the admin name-display toggle only when appropriate.
+        include_real_name_field = self.for_admin and (
+            code_names_pref in ['off', 'all-tooltips'] or
+            has_permission(self.request.user, Permission.VIEW_DECODED_TEAMS, self.tournament)
+        )
 
         adjudicators = []
         for adj in self.tournament.relevant_adjudicators.all().select_related('institution', 'checkin_identifier'):
@@ -84,6 +103,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'id': adj.id, 'name': adj.get_public_name(self.tournament), 'type': 'Adjudicator',
                 'identifier': [code], 'locked': False, 'independent': adj.independent,
                 'institution': institution,
+                'breaking': adj.breaking,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
@@ -95,12 +115,17 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 code = None
 
             institution = InstitutionSerializer(speaker.team.institution).data if speaker.team.institution else None
-            speakers.append({
+            speaker_data = {
                 'id': speaker.id, 'name': speaker.get_public_name(self.tournament), 'type': 'Speaker',
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
+                'team_code_name': speaker.team.code_name,
                 'institution': institution,
-            })
+                'breaking': speaker.team_id in breaking_team_ids,
+            }
+            if include_real_name_field:
+                speaker_data['team_real_name'] = speaker.team.short_name
+            speakers.append(speaker_data)
         kwargs["speakers"] = json.dumps(speakers)
 
         return super().get_context_data(**kwargs)

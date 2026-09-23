@@ -20,7 +20,11 @@
 {% endif %} {# pref.teams_in_debate == 4 #}
 
 {# Adjudicators #}
-{% if not pref.no_panellist_position or not pref.no_trainee_position %}
+{% if debate.round.draw_status != debate.round.Status.RELEASED and not admin_page %}
+  <div class="list-group-item">
+    <em>{% trans "The adjudicators for this debate have not yet been released." %}</em>
+  </div>
+{% elif not pref.no_panellist_position or not pref.no_trainee_position %}
   <div class="list-group-item">
     {% if debate.adjudicators|length > 0 %}
       {% with adjudicators=debate.adjudicators %}
@@ -44,10 +48,11 @@
       <em>{% trans "There are no panellists or trainees assigned to this debate." %}</em>
     {% endif %} {# debate.adjudicators|length > 0 #}
   </div>
-{% endif %} {# not pref.no_panellist_position or not pref.no_trainee_position #}
+{% endif %} {# (debate.round.draw_status != 'R' and not admin_page) and (not pref.no_panellist_position or not pref.no_trainee_position) #}
 
 {# Motions #}
-{% if pref.public_motions or admin_page %}
+{% haspermission "view.roundmotion" as motions_perm %}
+{% if admin_page and motions_perm or pref.public_motions %}
   <div class="list-group-item {% if not pref.public_motions or not current_round.motions_released %}list-group-item-dark{% endif %}">
     {% if debate.round.motions_released or admin_page %}
       {% if not debate.round.motions_released %}

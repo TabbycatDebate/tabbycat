@@ -95,6 +95,20 @@ class MarginIncludesDissent(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ScoreAggregationFunction(ChoicePreference):
+    help_text = _("How is the speaker's score from a debate judged by multiple judges "
+        "calculated: Mean (default), or Median (required by Karl Popper rules).")
+    verbose_name = _("Panel score aggregation function")
+    section = scoring
+    name = 'score_aggregation_function'
+    choices = (
+        ('mean', _("Mean (average)")),
+        ('median', _("Median (in even-numbered panels, decimals rounded up)")),
+    )
+    default = 'mean'
+
+
+@tournament_preferences_registry.register
 class BallotIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the ballot form, e.g. speaker scale")
     verbose_name = _("Ballot introduction/explanation")
@@ -230,6 +244,18 @@ class MaxTimesPerSide(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class PrelimPanels(IntegerPreference):
+    help_text = _("When greater than 1, consecutive preliminary rounds are treated as parallel panels in the same "
+        "schedule slot (e.g. A and B). Current-round navigation and feedback eligibility use the shared slot. "
+        "Round creation assigns schedule groups from this value.")
+    verbose_name = _("Preliminary panels per schedule slot")
+    section = draw_rules
+    name = 'prelim_panels'
+    default = 1
+    field_kwargs = {'validators': [MinValueValidator(1)]}
+
+
+@tournament_preferences_registry.register
 class DrawOddBracket(ChoicePreference):
     help_text = _("How odd brackets are resolved (see documentation for further details)")
     verbose_name = _("Odd bracket resolution method")
@@ -315,7 +341,10 @@ class DrawPullupRestriction(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawPullupPenalty(IntegerPreference):
-    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching)")
+    help_text = _("Penalty applied when determining which teams to pull up (for minimum cost matching). "
+        "In BP, added to position costs when a team is placed above its points bracket; teams with "
+        "fewer prior pull-ups are preferred. Set high enough to take precedence over side balance "
+        "(e.g. 100000 with the default position cost exponent). Leave 0 for no preference.")
     verbose_name = _("Pullup penalty")
     section = draw_rules
     name = 'draw_pullup_penalty'
@@ -478,6 +507,15 @@ class MaximumAdjScore(FloatPreference):
 
 
 @tournament_preferences_registry.register
+class AdjScoreStep(FloatPreference):
+    help_text = _("Score step allowed when entering adjudicator feedback scores, e.g. full points (1) or half points (0.5)")
+    verbose_name = _("Adjudicator score step")
+    section = feedback
+    name = 'adj_score_step'
+    default = 1.0
+
+
+@tournament_preferences_registry.register
 class FeedbackPaths(ChoicePreference):
     help_text = _("Used to inform available choices in the feedback forms for adjudicators (both online and printed) and feedback progress")
     verbose_name = _("Allow and expect feedback to be submitted by")
@@ -496,13 +534,16 @@ class FeedbackPaths(ChoicePreference):
 
 @tournament_preferences_registry.register
 class FeedbackFromTeams(ChoicePreference):
-    verbose_name = _("Expect feedback to be submitted by teams on")
+    verbose_name = _("Allow and expect feedback to be submitted by teams on")
     help_text = _("Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC")
     section = feedback
     name = 'feedback_from_teams'
     choices = (
         ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
-        ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+        ('all-voting-adjs-allowed', _("Allow all voting adjudicators, but only expect the orallist")),
+        ('all-adjs-allowed', _("Allow all adjudicators (including trainees), but only expect the orallist")),
+        ('all-voting-adjs', _("All voting adjudicators (excluding trainees)")),
+        ('all-adjs', _("All adjudicators (including trainees)")),
         ('no-one', _("No one")),
     )
     default = 'orallist'
@@ -1054,6 +1095,16 @@ class SplitVotingBallots(BooleanPreference):
     default = False
 
 
+@tournament_preferences_registry.register
+class AllowSelfSplitBallots(BooleanPreference):
+    help_text = _("Allow a solo adjudicator (no panel) to declare their own decision as a "
+        "2:1 split rather than unanimous, per Karl Popper rules.")
+    verbose_name = _("Allow self-split ballots for solo adjudicators")
+    section = data_entry
+    name = 'allow_self_split_ballots'
+    default = False
+
+
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================
@@ -1187,6 +1238,17 @@ class PublicBreakingTeams(BooleanPreference):
     section = public_features
     name = 'public_breaking_teams'
     default = False
+
+
+@tournament_preferences_registry.register
+class PublicBreakMetricsToShow(IntegerPreference):
+    help_text = _("How many metrics from the team standings precedence to show on the public break page. "
+                  "For example, 2 shows only the first two metrics set in Standings. "
+                  "Use 0 to hide all metrics, or -1 to show all of them.")
+    verbose_name = _("Number of metrics to show on public break page")
+    section = public_features
+    name = 'public_break_metrics_to_show'
+    default = -1
 
 
 @tournament_preferences_registry.register
@@ -1630,6 +1692,19 @@ class TeamRegistrationFields(MultipleChoicePreference):
 
 
 @tournament_preferences_registry.register
+class InstitutionRegistrationFields(MultipleChoicePreference):
+    help_text = _("Which fields should institutions be allowed to submit")
+    verbose_name = _("Customizable institution fields")
+    section = registration
+    name = 'reg_institution_fields'
+    default = ()
+    choices = (
+        ('region', _("Region")),
+    )
+    widget = SelectMultiple(attrs={'size': 5})
+
+
+@tournament_preferences_registry.register
 class SpeakerRegistrationFields(MultipleChoicePreference):
     help_text = _("Which fields should speakers submit, in addition to fields with handling through other settings.")
     verbose_name = _("Customizable speaker fields")
@@ -1688,6 +1763,24 @@ class ParticipantSlots(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class BlockRegistrationOverAllocated(BooleanPreference):
+    help_text = _("When participant slots are in use, block team and adjudicator registration once an institution's allocated slots are full.")
+    verbose_name = _("Block registration when over allocated slots")
+    section = registration
+    name = 'reg_block_over_allocated'
+    default = True
+
+
+@tournament_preferences_registry.register
+class InstitutionSlotTransfers(BooleanPreference):
+    help_text = _("Allow institutions to request transferring team or adjudicator slots to another institution (when participant slots are in use).")
+    verbose_name = _("Enable institution slot transfers")
+    section = registration
+    name = 'reg_institution_slot_transfers'
+    default = False
+
+
+@tournament_preferences_registry.register
 class EnableOpenTeamRegistration(BooleanPreference):
     help_text = _("Allow teams to register independently to an institution")
     verbose_name = _("Enable open team registration")
@@ -1720,6 +1813,20 @@ class CodeNameGenerator(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class RegistrationConfirmation(ChoicePreference):
+    help_text = _("Should registration be confirmed by tournament staff")
+    verbose_name = _("Registration confirmation")
+    section = registration
+    name = 'registration_confirmation'
+    choices = (
+        ('always', _("Always")),
+        ('open', _("Only for open (non-institutional) registration")),
+        ('never', _("Never")),
+    )
+    default = 'never'
+
+
+@tournament_preferences_registry.register
 class InstitutionRegisterMessage(LongStringPreference):
     help_text = _("Message to be displayed on the institution registration form")
     verbose_name = _("Institution register message")
@@ -1748,5 +1855,45 @@ class TeamRegisterMessage(LongStringPreference):
     section = registration
     name = 'team_register_message'
     default = ""
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class InstitutionRegistrationEmailSubject(StringPreference):
+    help_text = _("Subject line for the email sent when an institution registers. Body can use {{ USER }} and {{ URL }} (coach's landing page).")
+    verbose_name = _("Institution registration email subject")
+    section = registration
+    name = 'institution_registration_email_subject'
+    default = "Institution registered for {{ TOURN }}"
+
+
+@tournament_preferences_registry.register
+class InstitutionRegistrationEmailBody(LongStringPreference):
+    help_text = _("Body of the email sent when an institution registers. Available: {{ USER }}, {{ URL }}.")
+    verbose_name = _("Institution registration email body")
+    section = registration
+    name = 'institution_registration_email_body'
+    default = "<p>Hi {{ USER }},</p><p>Your institution has been registered. You can manage your registration here: {{ URL }}</p>"
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class SlotsAllocatedEmailSubject(StringPreference):
+    help_text = _("Subject line when participant slots are allocated. Body can use {{ USER }}, {{ TEAMS_ALLOCATED }}, {{ ADJUDICATORS_ALLOCATED }}, {{ INSTITUTION }}.")
+    verbose_name = _("Slots allocated email subject")
+    section = registration
+    name = 'slots_allocated_email_subject'
+    default = "Participant slots allocated for {{ INSTITUTION }}"
+
+
+@tournament_preferences_registry.register
+class SlotsAllocatedEmailBody(LongStringPreference):
+    help_text = _("Body of the email when participant slots are allocated. Available: {{ USER }}, {{ TEAMS_ALLOCATED }}, {{ ADJUDICATORS_ALLOCATED }}, {{ INSTITUTION }}.")
+    verbose_name = _("Slots allocated email body")
+    section = registration
+    name = 'slots_allocated_email_body'
+    default = "<p>Hi {{ USER }},</p><p>Your institution {{ INSTITUTION }} has been allocated {{ TEAMS_ALLOCATED }} team slot(s) and {{ ADJUDICATORS_ALLOCATED }} adjudicator slot(s).</p>"
     widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}

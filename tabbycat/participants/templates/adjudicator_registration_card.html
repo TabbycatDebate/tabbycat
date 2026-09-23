@@ -2,11 +2,22 @@
 
 <div class="card mt-md-3">
   <div class="list-group list-group-flush">
-    <div class="list-group-item">
+    <div class="list-group-item d-flex justify-content-between align-items-center">
       <h4 class="card-title mb-0">
         {{ card_title|safe }}
       </h4>
+      {% if admin_page and user.is_staff %}
+        <a href="{% url 'admin:participants_adjudicator_change' adjudicator.pk %}" class="btn btn-sm btn-outline-secondary">
+          {% trans "Edit Database" %}
+        </a>
+      {% endif %}
     </div>
+
+    {% if adjudicator.registration_status == 'U' %}
+      <div class="list-group-item">
+        <em class="text-danger">{% trans "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed." %}</em>
+      </div>
+    {% endif %}
 
     {% if adjudicator.independent or adjudicator.adj_core %}
       <div class="list-group-item">

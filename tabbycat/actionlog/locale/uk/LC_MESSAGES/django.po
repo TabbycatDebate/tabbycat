@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:48\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Language: uk_UA\n"
@@ -24,6 +24,10 @@ msgstr "Журнал дій"
 #: actionlog/models.py
 msgid "Changed adjudicator breaking status"
 msgstr "Змінено статус судді для брейку"
+
+#: actionlog/models.py
+msgid "Changed adjudicator tester status"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Created adjudicator"
@@ -59,7 +63,7 @@ msgstr "Наявність команд змінено"
 
 #: actionlog/models.py
 msgid "Edited room availability"
-msgstr "Редагувати наявність кімнат"
+msgstr "Наявність місця змінено"
 
 #: actionlog/models.py
 msgid "Checked in ballot set"
@@ -147,7 +151,7 @@ msgstr "Конфлікти команда-інституція змінено"
 
 #: actionlog/models.py
 msgid "Created debate"
-msgstr "Створити дебати"
+msgstr "Дебати створено"
 
 #: actionlog/models.py
 msgid "Edited debate"
@@ -282,6 +286,10 @@ msgid "Saved the sides status of a matchup"
 msgstr ""
 
 #: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr ""
+
+#: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
 msgstr ""
 
@@ -304,6 +312,10 @@ msgstr "Категорії спікерів змінено"
 #: actionlog/models.py
 msgid "Created speaker"
 msgstr "Спікера створено"
+
+#: actionlog/models.py
+msgid "Deleted speaker"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Edited speaker"
@@ -394,6 +406,18 @@ msgid "Registered speaker"
 msgstr ""
 
 #: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
+msgstr ""
+
+#: actionlog/models.py
 msgid "API"
 msgstr "API"
 
@@ -435,11 +459,11 @@ msgstr "ID обʼєкту"
 
 #: actionlog/models.py
 msgid "agent"
-msgstr ""
+msgstr "агент"
 
 #: actionlog/models.py
 msgid "action log"
-msgstr ""
+msgstr "журнал дій"
 
 #: actionlog/models.py
 msgid "action log entries"
@@ -451,5 +475,5 @@ msgstr "Всі записи журналу потребують як мінім�
 
 #: actionlog/models.py
 msgid "anonymous"
-msgstr ""
+msgstr "анонімно"
 

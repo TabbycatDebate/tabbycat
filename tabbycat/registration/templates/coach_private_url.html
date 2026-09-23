@@ -14,7 +14,7 @@
   {% blocktrans trimmed with name=coach.name institution=institution.name asvar p1 %}
     The URL of this page is personalised to you, {{ name }}. <strong>Do not
     share it with anyone;</strong> anyone who knows this URL can manage participants for {{ institution }}.
-    You may bookmark this page and return here after each debate for the available actions.
+    Bookmark this page as you may need it for a next phase of registration.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="warning" %}
 
@@ -22,45 +22,142 @@
 
 {% block content %}
 
+<div class="row mb-4">
+  <div class="col-md">
+    <div class="list-group mt-2">
+        {% trans "View your registration form response" as text %}
+        {% tournamenturl 'reg-inst-view-response' url_key as url %}
+        {% include "components/item-action.html" with icon="eye" %}
+      </div>
+    </div>
+  </div>
+
+  {% if pref.reg_institution_slots or pref.institution_participant_registration %}
+  <div class="row mb-4">
+    {% if pref.reg_institution_slots %}
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title mb-0">{% blocktranslate with num=adjudicators_requested %}Adjudicators Requested: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title mb-0">{% blocktranslate with num=adjudicators_allocated %}Adjudicators Allocated: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+            </div>
+          </div>
+        </div>
+        {% if pref.institution_participant_registration %}
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title mb-0">{% blocktranslate with num=adjudicators_registered %}Adjudicators Registered: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title mb-0">{% blocktranslate with num=teams_requested %}Teams Requested: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title mb-0">{% blocktranslate with num=teams_allocated %}Teams Allocated: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+            </div>
+          </div>
+        </div>
+        {% if pref.institution_participant_registration %}
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title mb-0">{% blocktranslate with num=teams_registered %}Teams Registered: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% elif pref.institution_participant_registration %}
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title mb-0">{% blocktranslate with num=teams_registered %}Teams Registered: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title mb-0">{% blocktranslate with num=adjudicators_registered %}Adjudicators Registered: <strong>{{ num }}</strong>{% endblocktranslate %}</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
   <div class="card-deck">
-    <div class="card mb-3 panel-default">
-      {% if pref.institution_participant_registration %}
+    {% if pref.institution_participant_registration %}
+      <div class="card mb-3 panel-default">
         {% tournamenturl 'reg-inst-create-adj' url_key as url %}
         {% blocktrans trimmed asvar text %}Register Adjudicator{% endblocktrans %}
         {% include "components/item-action.html" with icon="user-plus" %}
-      {% else %}
+
+        {% if adjudicator_invitation_link %}
+          <div class="list-group-item small">
+            <em>{% trans "or distribute this link to allow members to register themselves as adjudicators:" %}</em><br />
+            <a href="{{ adjudicator_invitation_link }}" class="mixed-text">{{ adjudicator_invitation_link }}</a>
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="card mb-3">
         <div class="alert alert-warning">
-          {% trans "Participant registration is not yet open" %}
+          {% trans "Adjudicator registration is not yet open" %}
         </div>
-      {% endif %}
+      </div>
+    {% endif %}
 
-      {% if adjudicator_invitation_link %}
-        <div class="list-group-item small">
-          <em>{% trans "or distribute this link to allow members to register themselves as adjudicators:" %}</em><br />
-          <a href="{{ adjudicator_invitation_link }}" class="mixed-text">{{ adjudicator_invitation_link }}</a>
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="card mb-3 panel-default">
-      {% if pref.institution_participant_registration %}
+    {% if pref.institution_participant_registration %}
+      <div class="card mb-3 panel-default">
         {% tournamenturl 'reg-inst-create-team' url_key as url %}
         {% blocktrans trimmed asvar text %}Register Team{% endblocktrans %}
-        {% include "components/item-action.html" with icon="user-plus" %}
-      {% else %}
-        <div class="alert alert-warning">
-          {% trans "Participant registration is not yet open" %}
-        </div>
-      {% endif %}
-
+        {% include "components/item-action.html" with icon="users" %}
       {% if team_invitation_link %}
         <div class="list-group-item small">
           <em>{% trans "or distribute this link to allow members to register their teams:" %}</em><br />
           <a href="{{ team_invitation_link }}" class="mixed-text">{{ team_invitation_link }}</a>
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="card mb-3">
+        <div class="alert alert-warning">
+          {% trans "Team registration is not yet open" %}
         </div>
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div>
+
+  {% if pref.reg_institution_slots and pref.reg_institution_slot_transfers %}
+    <div class="card mb-3 panel-default">
+      {% tournamenturl 'reg-inst-transfer-slots' url_key as url %}
+      {% blocktrans trimmed asvar text %}Transfer slots to another institution{% endblocktrans %}
+      {% include "components/item-action.html" with icon="arrow-right-left" %}
+    </div>
+  {% endif %}
 
   {% if False %}
     <div class="list-group">

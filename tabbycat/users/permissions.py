@@ -28,6 +28,7 @@ class Permission(TextChoices):
 
     VIEW_TEAMS = 'view.team', _("view teams")
     ADD_TEAMS = 'add.team', _("add teams")
+    DELETE_SPEAKER = 'delete.speaker', _("delete speakers")
     VIEW_DECODED_TEAMS = 'view.teamname', _("view decoded team names")
     VIEW_ANONYMOUS = 'view.anonymous', _("View names of anonymized participants")
     VIEW_ADJUDICATORS = 'view.adj', _("view adjudicators")
@@ -110,6 +111,7 @@ class Permission(TextChoices):
     EDIT_FEEDBACK_CONFIRM = 'edit.feedbackconfirm', _("toggle confirm feedback")
     VIEW_FEEDBACK_UNSUBMITTED = 'view.feedbackunsubmitted', _("view feedback unsubmitted tab")
     ADD_FEEDBACK = 'add.feedback', _("add feedback")
+    EDIT_ADJ_TESTER = 'edit.adj.tester', _("edit adjudicator tester status")
     VIEW_ADJ_BREAK = 'view.adj.break', _("view adjudicator break")
     EDIT_ADJ_BREAK = 'edit.adj.break', _("edit adjudicator break")
     EDIT_FEEDBACKQUESTION = 'edit.feedbackquestion', _("edit feedback questions")
@@ -133,6 +135,7 @@ class Permission(TextChoices):
     VIEW_CHECKIN = 'view.checkin', _("view checkins")
     EDIT_PARTICIPANT_CHECKIN = 'edit.participantcheckin', _("edit participant check-in")
     EDIT_ROOM_CHECKIN = 'edit.roomcheckin', _("edit room check-in")
+    EDIT_DEBATE_CHECKIN = 'edit.debatecheckin', _("edit debate check-in")
 
     EDIT_ROUND = 'edit.round', _("edit round attributes")
     DELETE_ROUND = 'delete.round', _("delete rounds")
@@ -157,6 +160,9 @@ class Permission(TextChoices):
     VIEW_EVENTS = 'view.events', _("view events")
 
     VIEW_REGISTRATION = 'view.registration', _("view registration responses")
+    EDIT_REGISTRATION = 'edit.registration', _("edit registration responses")
+    CONFIRM_REGISTRATION = 'confirm.registration', _("confirm registration responses")
+    EDIT_REGISTRATION_SLOTS = 'edit.registration.slots', _("edit institution slot allocations")
 
 
 permission_type = Union[Permission, bool]

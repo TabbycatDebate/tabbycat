@@ -63,6 +63,15 @@ input[type="range"] {
   padding-top: 10px;
 }
 
+// Choice widget labels (radios/checkboxes) don't need the extra padding
+.list-group-item {
+
+  .form-check label,
+  label.form-check-label {
+    padding-top: 0;
+  }
+}
+
 // Don't pad form panels as the elements already have padding
 .card-body.form-panel {
   padding-bottom: 0;

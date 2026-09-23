@@ -1,13 +1,30 @@
 import logging
 from copy import copy
 from decimal import Decimal
+from typing import Any, Callable, NamedTuple
 
+from django import forms
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from .forms import tournament_preference_form_builder
+from .forms import tournament_preference_form_builder, TournamentPreferenceForm
 
 logger = logging.getLogger(__name__)
+
+
+class PresetApplyAction(NamedTuple):
+    """Labelled side effect run when a preset is applied (not stored as a preference)."""
+
+    id: str
+    label: Any
+    apply: Callable[[Any], None]
+    default_enabled: bool = True
+    would_change: Callable[[Any], bool] | None = None
+
+    def is_changed_for_tournament(self, tournament: Any) -> bool:
+        if self.would_change is not None:
+            return self.would_change(tournament)
+        return True
 
 
 def _all_subclasses(cls):
@@ -55,6 +72,7 @@ def get_preset_from_slug(slug):
 
 class PreferencesPreset:
     show_in_list                               = False
+    apply_actions                              = ()
 
     @classmethod
     def get_preferences(cls):
@@ -63,12 +81,78 @@ class PreferencesPreset:
                 yield key
 
     @classmethod
+    def get_apply_actions(cls):
+        return cls.apply_actions
+
+    @classmethod
+    def _run_apply_actions(cls, tournament, selected_action_ids):
+        """selected_action_ids None: run each action where default_enabled (CLI / configure).
+        Otherwise run only ids present in the set (preset form checkboxes)."""
+        for action in cls.get_apply_actions():
+            if selected_action_ids is None:
+                if not action.default_enabled:
+                    continue
+            elif action.id not in selected_action_ids:
+                continue
+            logger.info("Applying preset action %s for tournament %s", action.id, tournament.slug)
+            action.apply(tournament)
+
+    @classmethod
     def get_form(cls, tournament, **kwargs):
-        form = tournament_preference_form_builder(tournament, [tuple(key.split('__', 1)[::-1]) for key in cls.get_preferences()])(**kwargs)
+        pref_tuples = [tuple(key.split('__', 1)[::-1]) for key in cls.get_preferences()]
+        BaseForm = tournament_preference_form_builder(tournament, pref_tuples)  # noqa: N806
+        action_specs = list(cls.get_apply_actions())
+        if action_specs:
+
+            def update_preferences(self, **kwargs):
+                # Not a normal class-body method: zero-arg super() is invalid here.
+                TournamentPreferenceForm.update_preferences(self, **kwargs)
+                inst = self.manager.instance
+                selected = {a.id for a in action_specs if self.cleaned_data.get(f'preset_action__{a.id}')}
+                cls._run_apply_actions(inst, selected)
+
+            attrs = {
+                'update_preferences': update_preferences,
+            }
+            for a in action_specs:
+                attrs[f'preset_action__{a.id}'] = forms.BooleanField(
+                    label=a.label,
+                    required=False,
+                    initial=a.default_enabled,
+                    widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                )
+            FormClass = type('PresetFormWithApplyActions', (BaseForm,), attrs)  # noqa: N806
+            form = FormClass(**kwargs)
+            form.preset_action_rows = tuple((a, form[f'preset_action__{a.id}']) for a in action_specs)
+        else:
+            form = BaseForm(**kwargs)
+            form.preset_action_rows = ()
+
+        actions_by_id = {a.id: a for a in action_specs}
         for field in form:
+            if field.name.startswith('preset_action__'):
+                aid = field.name[len('preset_action__'):]
+                spec = actions_by_id.get(aid)
+                field.changed = spec.is_changed_for_tournament(tournament) if spec else True
+                continue
             # Copying required to avoid blanks added to list fields
             field.initial = copy(getattr(cls, field.name))
             field.changed = tournament.preferences[field.name] != getattr(cls, field.name)
+
+        if action_specs:
+            pending_rows, already_rows = [], []
+            for a in action_specs:
+                bf = form[f'preset_action__{a.id}']
+                if bf.changed:
+                    pending_rows.append((a, bf))
+                else:
+                    already_rows.append((a, bf))
+            form.preset_action_rows_pending = tuple(pending_rows)
+            form.preset_action_rows_already = tuple(already_rows)
+        else:
+            form.preset_action_rows_pending = ()
+            form.preset_action_rows_already = ()
+
         return form
 
     @classmethod
@@ -76,6 +160,7 @@ class PreferencesPreset:
         for pref in cls.get_preferences():
             logger.info(f"Setting {pref} to {getattr(cls, pref)}")
             tournament.preferences[pref] = getattr(cls, pref)
+        cls._run_apply_actions(tournament, None)
 
 
 class AustralsPreferences(PreferencesPreset):
@@ -123,11 +208,12 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     description  = _("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
     show_in_list = True
 
+    # WUDC Constitution: https://docs.google.com/document/d/19Hk8imODwOIr6zLCUUwqpAhSamoSqmL0ZdoeemY_XD0/edit?tab=t.0
     scoring__score_min                         = Decimal('50')
-    scoring__score_max                         = Decimal('99')
+    scoring__score_max                         = Decimal('100') # WUDC Schedule 1: 5.3
     scoring__score_step                        = Decimal('1')
     scoring__maximum_margin                    = 0.0
-    scoring__teamscore_includes_ghosts         = True  # WUDC 34.9.3.2
+    scoring__teamscore_includes_ghosts         = True  # WUDC 35.9.3.2
     # Debate Rules
     debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 4
@@ -147,6 +233,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     draw_rules__bp_renyi_order                 = 1.0
     draw_rules__bp_position_cost_exponent      = 4.0
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
+    draw_rules__draw_pullup_penalty            = 100000
     # Standings Rules
     standings__standings_missed_debates        = -1 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds', 'draw_strength']
@@ -271,21 +358,21 @@ class UADCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, and all adjudicators "
         "can receive feedback from teams.")
 
-    # Rules source = https://docs.google.com/document/d/10AVKBhev_OFRtorWsu2VB9B5V1a2f20425HYkC5ztMM/edit
+    # Rules source = https://docs.google.com/document/d/1yoRcSR3mufyzOTxbOTxnGvdfxS-ODscVPN3CzzoD3mQ/edit?tab=t.0#heading=h.scv1sbq5r6yj
+    # Handbook source = https://docs.google.com/document/d/1JoJa0oqDfW06vAQb3eBcAX37oG9p2g0hRO44vvCHv_Q/edit?tab=t.0
     # Scoring
-    scoring__score_min                         = Decimal('69')  # From Rules Book
-    scoring__score_max                         = Decimal('81')  # From Rules Book
+    scoring__score_min                         = Decimal('67')  # From Handbook 2.8.2
+    scoring__score_max                         = Decimal('83')  # From Handbook 2.8.2
     scoring__score_step                        = Decimal('1')
-    scoring__reply_score_min                   = Decimal('34.5')  # Not specified; assuming half of substantive
-    scoring__reply_score_max                   = Decimal('42.0')  # Not specified; assuming half of substantive
+    scoring__reply_score_min                   = Decimal('33.5')  # From Handbook 2.8.2
+    scoring__reply_score_max                   = Decimal('41.5')  # From Handbook 2.8.2
     scoring__reply_score_step                  = Decimal('0.5')
     scoring__maximum_margin                    = 0.0   # TODO= check this
     scoring__margin_includes_dissenters        = False  # From Rules 20.3.2
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True
-    draw_rules__draw_odd_bracket               = 'pullup_top'  # From Rules 20.10
-    draw_rules__draw_pullup_restriction        = 'least_to_date'  # From Rules 20.11
+    draw_rules__draw_odd_bracket               = 'intermediate_bubble_up_down'  # From Rules 20.6
     draw_rules__draw_side_allocations          = 'balance'
     draw_rules__draw_pairing_method            = 'slide'  # From rules 20.9
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'  # From rules 10.6.4
@@ -310,7 +397,69 @@ class WSDCPreferences(AustralsPreferences):
     description  = _("3 vs 3 with replies, chosen motions, prop/opp side labels, "
         "and all adjudicators can receive feedback from teams.")
 
-    # Rules source = https://www.wsdcdebating.org/_files/ugd/669183_399cb065fe31455b9371bd8dfdf7e0d1.pdf
+    score_criteria = (
+        ('Style', 'S', Decimal('24'), Decimal('32'), True),
+        ('Content', 'S', Decimal('24'), Decimal('32'), True),
+        ('Strategy', 'S', Decimal('12'), Decimal('16'), True),
+        ('POIs', 'S', Decimal('-2'), Decimal('2'), False),
+        ('Style', 'R', Decimal('12'), Decimal('16'), True),
+        ('Content', 'R', Decimal('12'), Decimal('16'), True),
+        ('Strategy', 'R', Decimal('6'), Decimal('8'), True),
+    )
+
+    @staticmethod
+    def _wsdc_score_criteria_match(tournament):
+        actual = list(tournament.scorecriterion_set.order_by('seq').values_list(
+            'seq', 'name', 'speech_type', 'weight', 'min_score', 'max_score', 'step', 'required',
+        ))
+        expected = [
+            (seq, name, speech_type, 1.0, min_score, max_score, 0.5, required)
+            for seq, (name, speech_type, min_score, max_score, required)
+            in enumerate(WSDCPreferences.score_criteria, start=1)
+        ]
+        return actual == expected
+
+    @staticmethod
+    def _apply_wsdc_score_criteria(tournament):
+        if WSDCPreferences._wsdc_score_criteria_match(tournament):
+            return
+
+        from django.db import transaction
+        from results.models import ScoreCriterion
+
+        with transaction.atomic():
+            tournament.scorecriterion_set.all().delete()
+            ScoreCriterion.objects.bulk_create([
+                ScoreCriterion(
+                    tournament=tournament,
+                    name=name,
+                    seq=seq,
+                    speech_type=speech_type,
+                    weight=1,
+                    min_score=min_score,
+                    max_score=max_score,
+                    step=0.5,
+                    required=required,
+                )
+                for seq, (name, speech_type, min_score, max_score, required)
+                in enumerate(WSDCPreferences.score_criteria, start=1)
+            ])
+
+    @staticmethod
+    def _wsdc_score_criteria_would_change(tournament):
+        return not WSDCPreferences._wsdc_score_criteria_match(tournament)
+
+    apply_actions = (
+        PresetApplyAction(
+            id='wsdc_score_criteria',
+            label=_('Replace score criteria with the WSDC criteria'),
+            apply=_apply_wsdc_score_criteria,
+            default_enabled=True,
+            would_change=_wsdc_score_criteria_would_change,
+        ),
+    )
+
+    # Rules source: https://www.wsdcdebating.org/_files/ugd/669183_713c6d981c374df989d1d1d7854d2cd3.pdf
     # Score (strictly specified in the rules)
     scoring__score_min                         = Decimal('60')
     scoring__score_max                         = Decimal('80')
@@ -324,17 +473,17 @@ class WSDCPreferences(AustralsPreferences):
     motions__enable_motions                    = False
     debate_rules__side_names                   = 'prop-opp'
     # Draws (exact mechanism is up to the host)
-    # Draw source = https://www.wsdcdebating.org/_files/ugd/669183_acd9f3bd3ab3482ebead22ae0da74fa7.pdf
+    # Draw source: https://www.wsdcdebating.org/_files/ugd/669183_31ca1b6263694aa7b36a7008d0e54b95.pdf
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = True # Rule 3.9
-    draw_rules__draw_pairing_method            = 'fold' # Rule 3.8
+    draw_rules__draw_pairing_method            = 'random' # Rule 3.8
     draw_rules__draw_odd_bracket               = 'pullup_top' # Rule 3.7
     draw_rules__max_times_per_side             = 5
     # Tabbycat currently does not support WSDC-style pull up and so not fully support WSDC-style draw creation.
     # Hence, this below setting is the closest that we can manage to achive.
     # TODO: Update when Tabbycat can support WSDC pull-up.
     draw_rules__draw_side_allocations          = 'balance'
-    draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
+    draw_rules__draw_avoid_conflicts           = 'graph_one'
     draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'
     # Standings
     standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg'] # Rule 3.2 (2023 version)
@@ -348,6 +497,31 @@ class APDAPreferences(PreferencesPreset):
     name = _("APDA Rules")
     show_in_list = True
     description = _("2 vs 2 with speech rankings and byes")
+
+    @staticmethod
+    def _apda_apply_seed_first_prelim_draw(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        first = tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).order_by('seq').first()
+        if first is None:
+            return
+        first.draw_type = Round.DrawType.SEEDED
+        first.save(update_fields=['draw_type'])
+
+    @staticmethod
+    def _apda_seed_first_prelim_would_change(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        first = tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).order_by('seq').first()
+        return first is not None and first.draw_type != Round.DrawType.SEEDED
+
+    apply_actions = (
+        PresetApplyAction(
+            id='seed_first_prelim_draw',
+            label=_('Set round 1 preliminary draw type to Seeded'),
+            apply=_apda_apply_seed_first_prelim_draw,
+            default_enabled=True,
+            would_change=_apda_seed_first_prelim_would_change,
+        ),
+    )
 
     scoring__score_min                         = Decimal('15')
     scoring__score_max                         = Decimal('40')
@@ -373,12 +547,57 @@ class APDAPreferences(PreferencesPreset):
     debate_rules__reply_scores_enabled         = False
     debate_rules__speaker_ranks                = 'any'
     standings__speaker_standings_precedence    = ['average', 'srank', 'trimmed_mean']
+    ui_options__show_seed_in_importer          = 'title'
+
+
+class RoundRobinTwoTeam(PreferencesPreset):
+    name = _("Round-robin (two-team)")
+    show_in_list = False
+    description = _("Two teams per room, preliminary rounds use round-robin (no random first round). "
+        "Conflict-avoidance options are less relevant because pairings are fixed by schedule.")
+
+    debate_rules__teams_in_debate = 2
+    draw_rules__avoid_team_history = False
+    draw_rules__avoid_same_institution = False
+    ui_options__show_seed_in_importer = 'numeric'
+
+
+class RoundRobinBP(PreferencesPreset):
+    name = _("Round-robin (British Parliamentary)")
+    show_in_list = False
+    description = _("BP with preset balanced round-robin tables for 16 or 28 teams. "
+        "Assign every team a unique seed from 1 to n before drawing.")
+
+    debate_rules__teams_in_debate = 4
+    draw_rules__avoid_team_history = False
+    draw_rules__avoid_same_institution = False
+    ui_options__show_seed_in_importer = 'numeric'
 
 
 class PublicSpeaking(PreferencesPreset):
     name = _("Public Speaking")
     show_in_list = True
     description = _("Arbitrary number of teams per room, one speech each, no team points")
+
+    @staticmethod
+    def apply_all_draws_random(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        return tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).update(draw_type=Round.DrawType.RANDOM)
+
+    @staticmethod
+    def are_some_draws_not_random(tournament):
+        Round = tournament.round_set.model  # noqa: N806
+        return tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).exclude(draw_type=Round.DrawType.RANDOM).exists()
+
+    apply_actions = (
+        PresetApplyAction(
+            id='all_draws_random',
+            label=_('Set all preliminary draws to random (no power-pairing)'),
+            apply=apply_all_draws_random,
+            default_enabled=True,
+            would_change=are_some_draws_not_random,
+        ),
+    )
 
     scoring__score_min                         = Decimal('50')
     scoring__score_max                         = Decimal('99')
@@ -400,6 +619,76 @@ class PublicSpeaking(PreferencesPreset):
     draw_rules__avoid_team_history             = False
     # Standings
     standings__team_standings_precedence       = ['speaks_avg']
+
+
+class KarlPopperPreferences(PreferencesPreset):
+    name         = _("Karl Popper (Czechia)")
+    show_in_list = True
+    description  = _("3 vs 3 with no reply speeches, median scoring, self-split "
+        "ballots, and a penalty-weighted draw.")
+
+    # Scoring
+    scoring__score_min                         = Decimal('50')
+    scoring__score_max                         = Decimal('100')
+    scoring__margin_includes_dissenters        = True
+    scoring__score_aggregation_function        = 'median'
+    # Debate Rules
+    debate_rules__teams_in_debate              = 2
+    debate_rules__substantive_speakers         = 3
+    debate_rules__side_names                   = 'aff-neg'
+    debate_rules__ballots_per_debate_prelim    = 'per-adj'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
+    debate_rules__reply_scores_enabled         = False
+    debate_rules__require_substantive_for_reply = False
+    debate_rules__winners_in_ballots           = 'high-points'
+    debate_rules__preparation_time             = 60
+    debate_rules__enable_forfeits              = True
+    motions__enable_motions                    = False
+    motions__motion_vetoes_enabled             = False
+    motions__enable_motion_reuse               = True
+    # Draw Rules (penalty-weighted, as with APDA)
+    draw_rules__draw_odd_bracket               = 'pullup_top'
+    draw_rules__draw_pairing_method            = 'adjacent'
+    draw_rules__draw_avoid_conflicts           = 'graph'
+    draw_rules__draw_pullup_restriction        = 'lowest_ds_wins'
+    draw_rules__draw_pullup_penalty            = 100
+    draw_rules__bye_team_results               = 'points'
+    draw_rules__bye_team_selection             = 'lowest'
+    draw_rules__adj_min_voting_score           = 1.0
+    draw_rules__adj_conflict_penalty           = 10000
+    draw_rules__adj_history_penalty            = 1
+    draw_rules__preformed_panel_mismatch_penalty = 10
+    draw_rules__team_institution_penalty       = 100
+    draw_rules__team_history_penalty           = 10000
+    draw_rules__pullup_debates_penalty         = 100
+    draw_rules__side_penalty                   = 10000
+    # Standings Rules
+    standings__standings_missed_debates        = 2
+    standings__team_standings_precedence       = ['wins', 'num_adjs', 'wbw', 'speaks_sum', 'draw_strength']
+    standings__team_standings_extra_metrics    = ['speaks_ind_avg']
+    # Feedback Rules
+    feedback__adj_max_score                    = 6.0
+    feedback__feedback_paths                   = 'no-adjs'
+    feedback__feedback_from_teams              = 'all-adjs'
+    feedback__show_unaccredited                = True
+    # Participant Data Entry -- leave the "Participant Data Entry" dropdown set
+    # to "Disabled" when using this preset, since it sets ballots and feedback
+    # to different methods and either dropdown option would overwrite that.
+    data_entry__participant_ballots            = 'private-urls'
+    data_entry__participant_feedback           = 'public'
+    data_entry__public_checkins_submit         = True
+    data_entry__individual_ballots             = True
+    data_entry__allow_self_split_ballots       = True
+    # Public Features -- leave the "Public Configuration" dropdown set to
+    # "Disable Public Information" when using this preset, for the same reason.
+    public_features__public_participants       = True
+    public_features__public_institutions_list  = True
+    public_features__public_draw               = 'current'
+    public_features__public_motions            = True
+    public_features__public_record             = False
+    # UI Options
+    ui_options__show_team_institutions         = False
+    ui_options__show_adjudicator_institutions  = True
 
 
 class PublicInformation(PreferencesPreset):

@@ -1,41 +1,55 @@
 import json
 import logging
 from collections import OrderedDict
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url
+from django.utils import formats, timezone
+from django.utils.encoding import force_str
 from django.utils.html import format_html_join
 from django.utils.timezone import get_current_timezone_name
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import View
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, FormView, UpdateView
+from django.views.generic.edit import FormView, UpdateView
+from formtools.wizard.views import SessionWizardView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from breakqual.models import BreakCategory
+from breakqual.utils import auto_make_break_rounds
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from users.permissions import has_permission, Permission
+from utils.ical import ICalendar
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin,
                           WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin)
 from utils.tables import TabbycatTableBuilder
 from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
 
-from .forms import (RoundWeightForm, ScheduleEventForm, SetCurrentRoundMultipleBreakCategoriesForm,
-                    SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
-                    TournamentStartForm)
+from .forms import (clear_all_round_caches, RoundRobinPrelimSetupForm, RoundWeightForm, ScheduleEventForm,
+                    SetCurrentRoundMultipleBreakCategoriesForm, SetCurrentRoundSingleBreakCategoryForm,
+                    TournamentConfigureForm, TournamentStartForm)
 from .mixins import PublicTournamentPageMixin, RoundMixin, TournamentMixin
 from .models import ScheduleEvent, Tournament
-from .utils import get_side_name
+from .utils import auto_make_rounds_rr, DRAW_FORMAT_ROUND_ROBIN, get_side_name
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
+
+
+def _create_tournament_wizard_show_rr_setup(wizard):
+    cfg = wizard.get_cleaned_data_for_step('configure')
+    return bool(cfg and cfg.get('draw_format') == DRAW_FORMAT_ROUND_ROBIN)
 
 
 class PublicSiteIndexView(WarnAboutDatabaseUseMixin, WarnAboutLegacySendgridConfigVarsMixin, TemplateView):
@@ -222,28 +236,63 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
             return redirect_round('availability-index', self.round.next)
 
 
-class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):
-    """This view allows a logged-in superuser to create a new tournament."""
+class CreateTournamentWizardView(AdministratorMixin, WarnAboutDatabaseUseMixin, SessionWizardView):
+    """Create a tournament and apply initial configuration in one wizard (session-backed)."""
 
-    model = Tournament
-    form_class = TournamentStartForm
+    form_list = [
+        ('basics', TournamentStartForm),
+        ('configure', TournamentConfigureForm),
+        ('rr_setup', RoundRobinPrelimSetupForm),
+    ]
+    condition_dict = {
+        'rr_setup': _create_tournament_wizard_show_rr_setup,
+    }
     template_name = "create_tournament.html"
     db_warning_severity = messages.ERROR
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, form, **kwargs):
+        context = super().get_context_data(form=form, **kwargs)
         demo_datasets = [
             ('minimal8team', _("8-team generic dataset")),
             ('australs24team', _("24-team Australs dataset")),
             ('bp88team', _("88-team BP dataset")),
         ]
-        kwargs['demo_datasets'] = demo_datasets
+        context['demo_datasets'] = demo_datasets
         demo_slugs = [slug for slug, _ in demo_datasets]
-        kwargs['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
-        return super().get_context_data(**kwargs)
+        context['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
+        return context
 
-    def get_success_url(self):
-        t = Tournament.objects.order_by('id').last()
-        return reverse_tournament('tournament-configure', tournament=t)
+    def get_form_kwargs(self, step=None, **kwargs):
+        kwargs = super().get_form_kwargs(step=step, **kwargs)
+        if step == 'configure':
+            kwargs.setdefault('instance', Tournament())
+        return kwargs
+
+    def done(self, form_list, form_dict, **kwargs):
+        configure = form_dict['configure']
+        draw_rr = configure.cleaned_data.get('draw_format') == DRAW_FORMAT_ROUND_ROBIN
+        rr_form = form_dict.get('rr_setup') if draw_rr else None
+        panels = max(1, int(rr_form.cleaned_data['prelim_panels'])) if rr_form else 1
+        skip_rounds = draw_rr and panels > 1
+
+        t = form_dict['basics'].save(skip_rounds=skip_rounds)
+        configure.instance = t
+        configure.save(skip_rounds=skip_rounds)
+
+        if draw_rr and rr_form:
+            num_rr = form_dict['basics'].cleaned_data['num_prelim_rounds']
+            t.preferences['draw_rules__prelim_panels'] = panels
+            if skip_rounds:
+                auto_make_rounds_rr(t, num_rr, panels=panels)
+                open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
+                if open_break:
+                    auto_make_break_rounds(open_break, t, False)
+            else:
+                t.round_set.filter(stage=Round.Stage.PRELIMINARY).update(draw_type=Round.DrawType.ROUNDROBIN)
+            clear_all_round_caches(t)
+
+        messages.success(self.request, _("Tournament %(name)s is ready.") % {'name': t.short_name or t.name})
+        return HttpResponseRedirect(reverse_tournament('tournament-admin-home', tournament=t))
 
 
 class ConfigureTournamentView(AdministratorMixin, TournamentMixin, UpdateView):
@@ -381,14 +430,12 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
     edit_permission = Permission.EDIT_EVENTS
     view_permission = Permission.VIEW_EVENTS
 
-    same_view = 'tournament-set-schedule'
-
     def get_formset_factory_kwargs(self):
         can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
         kwargs = super().get_formset_factory_kwargs()
         kwargs.update({
             'form': self.form_class,
-            'extra': 3 * int(can_edit),
+            'extra': 0,
             'can_delete': can_edit,
         })
         return kwargs
@@ -409,7 +456,95 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
         return formset
 
     def get_formset_queryset(self):
-        return self.tournament.scheduleevent_set.all()
+        return self.tournament.scheduleevent_set.select_related('round')
+
+    @staticmethod
+    def _serialize_datetime(value):
+        if not value:
+            return {'date': '', 'time': '', 'raw': None}
+
+        if isinstance(value, datetime):
+            if timezone.is_aware(value):
+                value = timezone.localtime(value)
+            return {
+                'date': value.date().isoformat(),
+                'time': value.strftime('%H:%M'),
+                'raw': None,
+            }
+        if isinstance(value, str):
+            try:
+                parsed = datetime.fromisoformat(value)
+            except ValueError:
+                return {'date': '', 'time': '', 'raw': value}
+            if timezone.is_aware(parsed):
+                parsed = timezone.localtime(parsed)
+            return {
+                'date': parsed.date().isoformat(),
+                'time': parsed.strftime('%H:%M'),
+                'raw': None,
+            }
+        return {'date': '', 'time': '', 'raw': force_str(value)}
+
+    def _serialize_schedule_form(self, form, index):
+        start = self._serialize_datetime(form['start_time'].value())
+        end = self._serialize_datetime(form['end_time'].value())
+        errors = {
+            field: [force_str(error) for error in field_errors]
+            for field, field_errors in form.errors.items()
+            if field != '__all__'
+        }
+        can_delete = 'DELETE' in form.fields
+
+        return {
+            'formIndex': index,
+            'id': force_str(form['id'].value() or ''),
+            'type': force_str(form['type'].value() or ScheduleEvent.Types.OTHER),
+            'title': force_str(form['title'].value() or ''),
+            'startDate': start['date'],
+            'startTime': start['time'],
+            'startRaw': start['raw'],
+            'endDate': end['date'],
+            'endTime': end['time'],
+            'endRaw': end['raw'],
+            'round': force_str(form['round'].value() or ''),
+            'deleted': bool(form['DELETE'].value()) if can_delete else False,
+            'errors': errors,
+            'nonFieldErrors': [force_str(error) for error in form.non_field_errors()],
+        }
+
+    def _serialize_schedule_editor(self, formset, can_edit):
+        empty_form = formset.empty_form
+        return {
+            'events': [
+                self._serialize_schedule_form(form, index)
+                for index, form in enumerate(formset.forms)
+            ],
+            'management': {
+                'prefix': formset.prefix,
+                'totalForms': formset.total_form_count(),
+                'initialForms': formset.initial_form_count(),
+                'minNumForms': force_str(formset.management_form['MIN_NUM_FORMS'].value() or 0),
+                'maxNumForms': force_str(formset.management_form['MAX_NUM_FORMS'].value() or 1000),
+            },
+            'typeChoices': [
+                [force_str(value), force_str(label)]
+                for value, label in empty_form.fields['type'].choices
+            ],
+            'roundChoices': [
+                [force_str(value), force_str(label)]
+                for value, label in empty_form.fields['round'].choices
+            ],
+            'defaultEventType': ScheduleEvent.Types.OTHER,
+            'canEdit': can_edit,
+            'timezoneLabel': get_current_timezone_name(),
+            'nonFormErrors': [force_str(error) for error in formset.non_form_errors()],
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        can_edit = has_permission(self.request.user, self.get_edit_permission(), self.tournament)
+        context['schedule_editor_data'] = self._serialize_schedule_editor(context['formset'], can_edit)
+        return context
 
     def formset_valid(self, formset):
         instances = formset.save(commit=False)
@@ -428,9 +563,6 @@ class SetTournamentScheduleView(AdministratorMixin, TournamentMixin, ModelFormSe
             f"Saved {nsaved} event(s), deleted {ndeleted}.",
         )
 
-        if "add_more" in self.request.POST:
-            return redirect_tournament(self.same_view, self.tournament)
-
         return super().formset_valid(formset)
 
     def get_success_url(self):
@@ -443,15 +575,61 @@ class PublicScheduleView(PublicTournamentPageMixin, VueTableTemplateView):
     public_page_preference = 'public_schedule'
     page_title = _("Tournament Schedule")
     page_emoji = '⏳'
-    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
+    tables_orientation = 'rows'
 
-    def get_table(self):
-        events = self.tournament.scheduleevent_set.all()
-        table = TabbycatTableBuilder(view=self, sort_key='start_time')
-        table.add_schedule_event_columns(events)
-        return table
+    def get_tables(self):
+        events = self.tournament.scheduleevent_set.select_related('round')
+        events_by_day = OrderedDict()
+        for event in events:
+            day = timezone.localtime(event.start_time).date()
+            events_by_day.setdefault(day, []).append(event)
+
+        if not events_by_day:
+            table = TabbycatTableBuilder(view=self, sort_key='start_time')
+            table.add_schedule_event_columns([], include_date=False)
+            return [table]
+
+        tables = []
+        for day, day_events in events_by_day.items():
+            table = TabbycatTableBuilder(
+                view=self,
+                title=formats.date_format(day, format='DATE_FORMAT', use_l10n=True),
+                sort_key='start_time',
+            )
+            table.add_schedule_event_columns(day_events, include_date=False)
+            tables.append(table)
+        return tables
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['schedule_timezone_label'] = get_current_timezone_name()
         return context
+
+
+class PublicScheduleICalendarView(PublicTournamentPageMixin, View):
+    """Expose the public tournament schedule as an iCalendar feed."""
+
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
+    public_page_preference = 'public_schedule'
+
+    def get(self, request, *args, **kwargs):
+        schedule_url = request.build_absolute_uri(
+            reverse_tournament('tournament-public-schedule', self.tournament),
+        )
+        calendar = ICalendar(
+            name=_("%(tournament)s Schedule") % {'tournament': self.tournament.name},
+            timezone_name=settings.TIME_ZONE,
+            prodid='-//Tabbycat//Tournament Schedule//EN',
+        )
+        for event in self.tournament.scheduleevent_set.select_related('round'):
+            calendar.add_event(
+                uid=f'schedule-event-{event.pk}-{self.tournament.slug}@{request.get_host()}',
+                start=event.start_time,
+                end=event.end_time,
+                summary=event.display_title,
+                url=schedule_url,
+            )
+
+        response = HttpResponse(calendar.to_ical(), content_type='text/calendar; charset=utf-8')
+        response['Content-Disposition'] = f'attachment; filename="{self.tournament.slug}-schedule.ics"'
+        return response

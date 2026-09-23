@@ -10,6 +10,7 @@ from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from standings.templatetags.standingsformat import metricformat
 from tournaments.models import Round
+from users.permissions import has_permission, Permission
 from utils.tables import TabbycatTableBuilder
 
 
@@ -121,7 +122,9 @@ class TeamDebateTable:
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
-        if table.admin or tournament.pref('all_results_released') and tournament.pref('speaker_tab_released') and tournament.pref('speaker_tab_limit') == 0:
+        speaks_access = table.admin and has_permission(view.request.user, Permission.VIEW_SPEAKERSSTANDINGS, tournament)
+        speaks_public = tournament.pref('all_results_released') and tournament.pref('speaker_tab_released') and tournament.pref('speaker_tab_limit') == 0
+        if speaks_access or speaks_public:
             table.add_speaker_scores_column(teamscores)
         table.add_debate_side_by_team_column(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)

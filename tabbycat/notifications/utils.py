@@ -302,6 +302,93 @@ class TeamSpeakerEmailGenerator(NotificationContextGenerator):
         return emails
 
 
+class InstitutionRegistrationEmailGenerator(NotificationContextGenerator):
+
+    @dataclass
+    class InstitutionRegistrationContext(EmailContextData):
+        URL: str
+        TOURN: str
+        INSTITUTION: str
+
+    context_class = InstitutionRegistrationContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        return [(cls.context_class(URL=_create_url(url), TOURN=tourn_str, INSTITUTION=person.coach.tournament_institution.institution.name), person) for person in to]
+
+
+class SlotsAllocatedEmailGenerator(NotificationContextGenerator):
+
+    @dataclass
+    class SlotsAllocatedContext(EmailContextData):
+        TEAMS_ALLOCATED: int
+        ADJUDICATORS_ALLOCATED: int
+        INSTITUTION: str
+        URL: str
+        TOURN: str
+
+    context_class = SlotsAllocatedContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        return [
+            (
+                cls.context_class(
+                    URL=_create_url(url),
+                    TOURN=tourn_str,
+                    INSTITUTION=person.coach.tournament_institution.institution.name,
+                    TEAMS_ALLOCATED=person.coach.tournament_institution.teams_allocated,
+                    ADJUDICATORS_ALLOCATED=person.coach.tournament_institution.adjudicators_allocated,
+                ),
+                person,
+            )
+            for person in to
+        ]
+
+
+class InstitutionCustomEmailGenerator(NotificationContextGenerator):
+    """Variables for ad-hoc emails to an institution's contact (coach).
+
+    Exposes the institution name, contact name and the requested/allocated
+    slot counts so organisers can write custom messages (e.g. invoices using
+    arithmetic such as ``{% calc "TEAMS_ALLOCATED * 80" %}``).
+    """
+
+    @dataclass
+    class InstitutionCustomContext(EmailContextData):
+        INSTITUTION: str
+        CONTACT: str
+        TOURN: str
+        TEAMS_REQUESTED: int
+        TEAMS_ALLOCATED: int
+        ADJUDICATORS_REQUESTED: int
+        ADJUDICATORS_ALLOCATED: int
+
+    context_class = InstitutionCustomContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        emails = []
+        for person in to:
+            t_inst = person.coach.tournament_institution
+            emails.append((
+                cls.context_class(
+                    INSTITUTION=t_inst.institution.name,
+                    CONTACT=person.name,
+                    TOURN=tourn_str,
+                    TEAMS_REQUESTED=t_inst.teams_requested,
+                    TEAMS_ALLOCATED=t_inst.teams_allocated,
+                    ADJUDICATORS_REQUESTED=t_inst.adjudicators_requested,
+                    ADJUDICATORS_ALLOCATED=t_inst.adjudicators_allocated,
+                ),
+                person,
+            ))
+        return emails
+
+
 class TeamDrawEmailGenerator(NotificationContextGenerator):
 
     @dataclass

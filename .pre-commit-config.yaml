@@ -33,18 +33,12 @@ repos:
     - stylelint-config-standard@20.0.0
     - stylelint-scss@3.18.0
 - repo: https://github.com/pre-commit/mirrors-eslint
-  rev: 'v7.3.1'  # Use the sha / tag you want to point at
+  rev: 'v9.39.1'  # Use the sha / tag you want to point at
   hooks:
   - id: eslint
-    files: '\.vue'
+    files: '\.(vue|js)'
     types: [file]
     additional_dependencies:
-    - '@vue/eslint-config-standard@5.1.2'
-    - '@vue/cli-plugin-eslint@4.4.5'
-    - eslint@6.8.0
-    - eslint-plugin-import@2.20.2
-    - eslint-plugin-node@11.1.0
-    - eslint-plugin-promise@4.2.1
-    - eslint-plugin-standard@4.0.0
-    - eslint-plugin-vue@6.2.2
-    - babel-eslint@10.1.0
+    - eslint@9.39.2
+    - eslint-plugin-vue@10.6.2
+    - '@vue/eslint-config-standard@8.0.1'

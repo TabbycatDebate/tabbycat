@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:41\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -51,6 +51,26 @@ msgstr "crwdns33098:0crwdne33098:0"
 msgid "Open"
 msgstr "crwdns33100:0crwdne33100:0"
 
+#: tournaments/forms.py tournaments/models.py
+msgid "Power-paired"
+msgstr "crwdns33154:0crwdne33154:0"
+
+#: tournaments/forms.py tournaments/models.py
+msgid "Random"
+msgstr "crwdns33148:0crwdne33148:0"
+
+#: tournaments/forms.py
+msgid "Round robin"
+msgstr "crwdns54275:0crwdne54275:0"
+
+#: tournaments/forms.py
+msgid "Draw format"
+msgstr "crwdns54277:0crwdne54277:0"
+
+#: tournaments/forms.py
+msgid "How preliminary rounds are drawn. The first option matches Tabbycat’s usual default (random draw in round 1, then power-pairing). Round robin opens an extra step to set parallel panels and how many preliminary rounds to create."
+msgstr "crwdns54279:0crwdne54279:0"
+
 #: tournaments/forms.py
 msgid "Format Configuration"
 msgstr "crwdns33102:0crwdne33102:0"
@@ -78,6 +98,14 @@ msgstr "crwdns52393:0crwdne52393:0"
 #: tournaments/forms.py
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Equity:</strong> [list equity members here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
 msgstr "crwdns52235:0crwdne52235:0"
+
+#: tournaments/forms.py
+msgid "Parallel preliminary panels per schedule slot"
+msgstr "crwdns54281:0crwdne54281:0"
+
+#: tournaments/forms.py
+msgid "With 1, each schedule slot has one database round. With 2, Tabbycat creates two rounds per slot (e.g. A and B) that share the same “current round” slot for navigation and feedback."
+msgstr "crwdns54283:0crwdne54283:0"
 
 #: tournaments/forms.py
 msgid "Current preliminary round"
@@ -109,6 +137,14 @@ msgstr "crwdns34556:0crwdne34556:0"
 #, python-format
 msgid "%(name)s (%(abbreviation)s)"
 msgstr "crwdns52141:0%(name)scrwdnd52141:0%(abbreviation)scrwdne52141:0"
+
+#: tournaments/forms.py
+msgid "Round"
+msgstr "crwdns54285:0crwdne54285:0"
+
+#: tournaments/forms.py tournaments/models.py
+msgid "If the event belongs to a specific round, which round"
+msgstr "crwdns53626:0crwdne53626:0"
 
 #: tournaments/mixins.py
 #, python-format
@@ -186,20 +222,12 @@ msgid "tournaments"
 msgstr "crwdns33146:0crwdne33146:0"
 
 #: tournaments/models.py
-msgid "Random"
-msgstr "crwdns33148:0crwdne33148:0"
-
-#: tournaments/models.py
 msgid "Manual"
 msgstr "crwdns33150:0crwdne33150:0"
 
 #: tournaments/models.py
 msgid "Round-robin"
 msgstr "crwdns33152:0crwdne33152:0"
-
-#: tournaments/models.py
-msgid "Power-paired"
-msgstr "crwdns33154:0crwdne33154:0"
 
 #: tournaments/models.py
 msgid "Elimination"
@@ -226,12 +254,36 @@ msgid "Confirmed"
 msgstr "crwdns33164:0crwdne33164:0"
 
 #: tournaments/models.py
+msgid "Teams released"
+msgstr "crwdns54287:0crwdne54287:0"
+
+#: tournaments/models.py
 msgid "Released"
 msgstr "crwdns33166:0crwdne33166:0"
 
 #: tournaments/models.py
+msgid "Not released"
+msgstr "crwdns54289:0crwdne54289:0"
+
+#: tournaments/models.py
+msgid "Info-slides released"
+msgstr "crwdns54291:0crwdne54291:0"
+
+#: tournaments/models.py
+msgid "Motions released"
+msgstr "crwdns54293:0crwdne54293:0"
+
+#: tournaments/models.py
 msgid "A number that determines the order of the round, should count consecutively from 1 for the first round"
 msgstr "crwdns33168:0crwdne33168:0"
+
+#: tournaments/models.py
+msgid "schedule group"
+msgstr "crwdns54295:0crwdne54295:0"
+
+#: tournaments/models.py
+msgid "Rounds in the same schedule slot (e.g. parallel panels A/B) share this value. Defaults to the sequence number when each slot has only one round."
+msgstr "crwdns54297:0crwdne54297:0"
 
 #: tournaments/models.py
 msgid "completed"
@@ -304,12 +356,12 @@ msgid "If marked silent, information about this round (such as its results) will
 msgstr "crwdns33198:0crwdne33198:0"
 
 #: tournaments/models.py
-msgid "motions released"
-msgstr "crwdns33200:0crwdne33200:0"
+msgid "motions status"
+msgstr "crwdns54299:0crwdne54299:0"
 
 #: tournaments/models.py
-msgid "Whether motions will appear on the public website, assuming that feature is turned on"
-msgstr "crwdns33202:0crwdne33202:0"
+msgid "The release status of motions for this round"
+msgstr "crwdns54301:0crwdne54301:0"
 
 #: tournaments/models.py
 msgid "starts at"
@@ -392,8 +444,8 @@ msgid "title"
 msgstr "crwdns53610:0crwdne53610:0"
 
 #: tournaments/models.py
-msgid "e.g. \"Lunch\""
-msgstr "crwdns53612:0crwdne53612:0"
+msgid "Optional custom title; leave blank to use the event type and round"
+msgstr "crwdns54303:0crwdne54303:0"
 
 #: tournaments/models.py
 msgid "event type"
@@ -418,10 +470,6 @@ msgstr "crwdns53622:0crwdne53622:0"
 #: tournaments/models.py
 msgid "The time at which the event ends, may be empty"
 msgstr "crwdns53624:0crwdne53624:0"
-
-#: tournaments/models.py
-msgid "If the event belongs to a specific round, which round"
-msgstr "crwdns53626:0crwdne53626:0"
 
 #: tournaments/models.py
 msgid "schedule event"
@@ -475,10 +523,6 @@ msgid "Tabbycat"
 msgstr "crwdns33240:0crwdne33240:0"
 
 #: tournaments/templates/configure_tournament.html
-msgid "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed."
-msgstr "crwdns33242:0crwdne33242:0"
-
-#: tournaments/templates/configure_tournament.html
 msgid "Configure Tournament"
 msgstr "crwdns33244:0crwdne33244:0"
 
@@ -508,8 +552,28 @@ msgid "You already have a tournament set up using this data set. Reloading the d
 msgstr "crwdns35532:0crwdne35532:0"
 
 #: tournaments/templates/create_tournament.html
-msgid "Create Tournament"
-msgstr "crwdns33258:0crwdne33258:0"
+#, python-format
+msgid "Step %(step)s of %(total)s: tournament details"
+msgstr "crwdns54305:0%(step)scrwdnd54305:0%(total)scrwdne54305:0"
+
+#: tournaments/templates/create_tournament.html
+#, python-format
+msgid "Step %(step)s of %(total)s: format and draw options"
+msgstr "crwdns54307:0%(step)scrwdnd54307:0%(total)scrwdne54307:0"
+
+#: tournaments/templates/create_tournament.html
+#, python-format
+msgid "Step %(step)s of %(total)s: round robin preliminary setup"
+msgstr "crwdns54309:0%(step)scrwdnd54309:0%(total)scrwdne54309:0"
+
+#: tournaments/templates/create_tournament.html
+msgctxt "button"
+msgid "Continue"
+msgstr "crwdns54311:0crwdne54311:0"
+
+#: tournaments/templates/create_tournament.html
+msgid "Create tournament"
+msgstr "crwdns54313:0crwdne54313:0"
 
 #: tournaments/templates/create_tournament.html
 msgid "Cancel and go back to the site home page"
@@ -678,6 +742,11 @@ msgid "%(category)s Break"
 msgstr "crwdns51462:0%(category)scrwdne51462:0"
 
 #: tournaments/templates/public_tournament_index.html
+#, python-format
+msgid "%(category)s Bracket"
+msgstr "crwdns54315:0%(category)scrwdne54315:0"
+
+#: tournaments/templates/public_tournament_index.html
 msgid "Breaking Adjudicators"
 msgstr "crwdns33344:0crwdne33344:0"
 
@@ -726,6 +795,14 @@ msgstr "crwdns33360:0crwdne33360:0"
 #, python-format
 msgid "Schedule is in time zone: %(schedule_timezone_label)s"
 msgstr "crwdns53640:0%(schedule_timezone_label)scrwdne53640:0"
+
+#: tournaments/templates/public_tournament_schedule.html
+msgid "Download the iCalendar file to add these events to your calendar app."
+msgstr "crwdns54317:0crwdne54317:0"
+
+#: tournaments/templates/public_tournament_schedule.html
+msgid "Add schedule to calendar"
+msgstr "crwdns54319:0crwdne54319:0"
 
 #: tournaments/templates/round_complete_check.html
 msgid "Confirm Round Completion"
@@ -945,8 +1022,12 @@ msgid "Public area for <strong>%(tn)s</strong>"
 msgstr "crwdns33402:0%(tn)scrwdne33402:0"
 
 #: tournaments/templates/tournament_schedule_edit.html
-msgid "This page allows you to set the public schedule for the tournament."
-msgstr "crwdns53642:0crwdne53642:0"
+msgid "View Public Schedule"
+msgstr "crwdns54321:0crwdne54321:0"
+
+#: tournaments/templates/tournament_schedule_edit.html
+msgid "Events are grouped by day and ordered by start time. Drag an event into another row's time slot to reorder it."
+msgstr "crwdns54323:0crwdne54323:0"
 
 #: tournaments/templates/tournament_schedule_edit.html
 msgid "Save Schedule"
@@ -1069,6 +1150,30 @@ msgid "2nd team"
 msgstr "crwdns52864:0crwdne52864:0"
 
 #: tournaments/utils.py
+msgid "plaintiff/prosecution"
+msgstr "crwdns54325:0crwdne54325:0"
+
+#: tournaments/utils.py
+msgid "defense"
+msgstr "crwdns54327:0crwdne54327:0"
+
+#: tournaments/utils.py
+msgid "plaintiff/prosecution team"
+msgstr "crwdns54329:0crwdne54329:0"
+
+#: tournaments/utils.py
+msgid "defense team"
+msgstr "crwdns54331:0crwdne54331:0"
+
+#: tournaments/utils.py
+msgid "Pl"
+msgstr "crwdns54333:0crwdne54333:0"
+
+#: tournaments/utils.py
+msgid "Def"
+msgstr "crwdns54335:0crwdne54335:0"
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr "crwdns33518:0crwdne33518:0"
 
@@ -1122,14 +1227,28 @@ msgstr "crwdns33540:0crwdne33540:0"
 
 #: tournaments/utils.py
 #, python-format
+msgid "Round %(slot)d (%(panel)s)"
+msgstr "crwdns54337:0%(slot)dcrwdnd54337:0%(panel)scrwdne54337:0"
+
+#: tournaments/utils.py
+#, python-format
+msgid "R%(slot)d%(panel)s"
+msgstr "crwdns54339:0%(slot)dcrwdnd54339:0%(panel)scrwdne54339:0"
+
+#: tournaments/utils.py
+#, python-format
 msgid "Round %(number)d"
 msgstr "crwdns33542:0%(number)dcrwdne33542:0"
 
-#. Translators: This stands for "Round %(number)d".
 #: tournaments/utils.py
 #, python-format
 msgid "R%(number)d"
 msgstr "crwdns33544:0%(number)dcrwdne33544:0"
+
+#: tournaments/utils.py
+#, python-format
+msgid "R%(slot)-d%(panel)s"
+msgstr "crwdns54341:0%(slot)crwdnd54341:0%(panel)scrwdne54341:0"
 
 #: tournaments/utils.py
 msgid "bye"
@@ -1188,6 +1307,11 @@ msgid "88-team BP dataset"
 msgstr "crwdns33564:0crwdne33564:0"
 
 #: tournaments/views.py
+#, python-format
+msgid "Tournament %(name)s is ready."
+msgstr "crwdns54343:0%(name)scrwdne54343:0"
+
+#: tournaments/views.py
 msgid "Set Current Round"
 msgstr "crwdns33386:0crwdne33386:0"
 
@@ -1198,4 +1322,9 @@ msgstr "crwdns52247:0crwdne52247:0"
 #: tournaments/views.py
 msgid "Tournament Schedule"
 msgstr "crwdns53646:0crwdne53646:0"
+
+#: tournaments/views.py
+#, python-format
+msgid "%(tournament)s Schedule"
+msgstr "crwdns54345:0%(tournament)scrwdne54345:0"
 

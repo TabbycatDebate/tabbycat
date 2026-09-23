@@ -6,7 +6,7 @@ from itertools import groupby
 
 from django.db.models import Q
 from django.utils.encoding import force_str
-from django.utils.translation import ngettext
+from django.utils.translation import gettext as _, ngettext
 
 from breakqual.models import BreakingTeam
 from standings.teams import TeamStandingsGenerator
@@ -70,6 +70,8 @@ class BaseBreakGenerator:
         self.set_team_queryset()
         self.retrieve_standings()
         self.filter_eligible_teams()
+        if len(self.eligible_teams) < self.break_size:
+            raise BreakGeneratorError(_("There are too few teams eligible for this break category."))
         self.compute_break()
         self.add_reserve_teams()
         self.populate_database()

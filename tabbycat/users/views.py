@@ -3,11 +3,11 @@ from threading import Lock
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
-from django.http.response import Http404
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.http.response import Http404, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView
 
 from actionlog.mixins import LogActionMixin
@@ -57,19 +57,19 @@ class BlankSiteStartView(FormView):
         return super().form_valid(form)
 
 
-class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, PasswordResetView):
-    """This view is used by an administrator to invite an email address to
-    either create an account or to give them access to a particular tournament,
-    for when permissions will be created."""
+class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, FormView):
+    """Invite one or more email addresses to create an account and join a tournament role."""
 
     form_class = InviteUserForm
     template_name = "invite_user.html"
     action_log_type = ActionLogEntry.ActionType.USER_INVITE
-    page_title = _("Invite User")
+    page_title = _("Invite Users")
     page_emoji = '👤'
 
     subject_template_name = 'account_invitation_subject.txt'
     email_template_name = 'account_invitation_email.html'
+    html_email_template_name = None
+    extra_email_context = None
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -80,8 +80,20 @@ class InviteUserView(LogActionMixin, AdministratorMixin, TournamentMixin, Passwo
         return reverse_tournament('options-tournament-index', self.tournament)
 
     def form_valid(self, form):
-        messages.success(self.request, _("Successfully invited user to create an account for the tournament."))
-        return super().form_valid(form)
+        count = form.save(
+            request=self.request,
+            subject_template_name=self.subject_template_name,
+            email_template_name=self.email_template_name,
+            html_email_template_name=self.html_email_template_name,
+            extra_email_context=self.extra_email_context,
+        )
+        self.log_action()
+        messages.success(self.request, ngettext(
+            "Successfully invited %(count)s user to create an account for the tournament.",
+            "Successfully invited %(count)s users to create an account for the tournament.",
+            count,
+        ) % {'count': count})
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class AcceptInvitationView(TournamentMixin, PasswordResetConfirmView):

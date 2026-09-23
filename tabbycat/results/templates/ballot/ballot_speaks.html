@@ -1,12 +1,12 @@
 {% load add_field_css debate_tags i18n %}
 
 <div class="list-group-item js-team-speakers side-{{ team.side_code }} s{{ position.pos }}">
-  <div class="row flex-column flex-md-row">
-    <div class="col-4 col-md-2 pt-2 p-lg-2 pr-0 p-md-1 speaker-position-label">
+  <div class="row flex-column flex-md-row align-items-center">
+    <div class="col-4 col-md-2 pr-0 speaker-position-label">
       {{ position.name }}
     </div>
 
-    <div class="col mb-0 mb-3 pr-md-2 pr-1 form-group {{ position.speaker.errors|yesno:'error,' }}">
+    <div class="col mb-0 pr-md-2 pr-1 form-group {{ position.speaker.errors|yesno:'error,' }}">
 
       {% if forloop.parentloop.parentloop.first %}
 

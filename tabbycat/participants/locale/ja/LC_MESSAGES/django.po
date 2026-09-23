@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -17,6 +17,14 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/participants/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 942\n"
+
+#: participants/admin.py
+msgid "Create institution conflict"
+msgstr ""
+
+#: participants/admin.py
+msgid "Automatically create a conflict between the selected institution and this participant."
+msgstr ""
 
 #: participants/admin.py
 #, python-format
@@ -66,6 +74,23 @@ msgstr[0] "%(count)d人のジャッジのURLキーを削除しました。"
 #: participants/apps.py participants/views.py
 msgid "Participants"
 msgstr "参加者"
+
+#: participants/forms.py
+msgid "Speaker's full name"
+msgstr ""
+
+#: participants/forms.py
+#, python-format
+msgid "You must type '%(name)s' exactly to confirm deletion."
+msgstr ""
+
+#: participants/models.py
+msgid "Unconfirmed"
+msgstr "未承認"
+
+#: participants/models.py
+msgid "Confirmed"
+msgstr "承認済み"
 
 #: participants/models.py
 msgid "name"
@@ -312,8 +337,8 @@ msgid "seed"
 msgstr "シード値"
 
 #: participants/models.py
-msgid "Used as initial ranking to power-pair the first round"
-msgstr "最初のラウンドでパワーペアリングを行う際の最初の順位として使用されます。"
+msgid "Used as initial ranking to power-pair the first round, and to order teams for round-robin draws (including BP preset schedules, which require unique seeds 1 through n)."
+msgstr ""
 
 #: participants/models.py
 msgid "institution conflicts"
@@ -342,6 +367,14 @@ msgstr "種類"
 #: participants/models.py
 msgid "emoji"
 msgstr "絵文字"
+
+#: participants/models.py
+msgid "registration status"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether the team's registration has been confirmed by tournament staff"
+msgstr ""
 
 #: participants/models.py
 msgid "team"
@@ -404,6 +437,18 @@ msgid "adjudication core"
 msgstr "審査委員（Adjudication Core/AC）"
 
 #: participants/models.py
+msgid "tester"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether this adjudicator tests other adjudicators. Members of the adjudication core count as testers whether or not this is checked"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether the adjudicator's registration has been confirmed by tournament staff"
+msgstr ""
+
+#: participants/models.py
 msgid "adjudicator"
 msgstr "ジャッジ"
 
@@ -437,6 +482,16 @@ msgstr "%(name)sの記録"
 #, python-format
 msgid "About %(name)s"
 msgstr "%(name)sについて"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Edit Database"
+msgstr "データベースを編集"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed."
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Independent adjudicator"
@@ -504,10 +559,6 @@ msgstr "ジャッジコンフリクト："
 msgid "Room Constraints:"
 msgstr "部屋の制約条件："
 
-#: participants/templates/admin/participants/adjudicator/change_form.html
-msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "<strong>忘れないで：</strong>自身の所属するインステに対してコンフリクトがあるべきな場合、<strong>この場で</strong>上のジャッジ・インステ間コンフリクトのタブから追加してください。このフォームからではインステコンフリクトは<strong>自動的に登録されません</strong>。"
-
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
@@ -537,10 +588,6 @@ msgstr "%(object_name)sを削除しても大丈夫な自信がある場合、ま
 msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
 msgstr "%(objects_name)sを削除しても大丈夫な自信がある場合、まず上記のオブジェクトを削除し、「ディベートチーム」オブジェクトページで表示される警告についても確認してください。"
 
-#: participants/templates/admin/participants/team/change_form.html
-msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "<strong>忘れないで：</strong>自身の所属するインステに対してコンフリクトがあるべきな場合、<strong>この場で</strong>上のチーム・インステ間コンフリクトのタブから追加してください。このフォームからではインステコンフリクトは<strong>自動的に登録されません</strong>。"
-
 #: participants/templates/current_round/common.html
 #, python-format
 msgid "The round begins at %(start_time)s"
@@ -549,6 +596,10 @@ msgstr "%(start_time)sに試合開始"
 #: participants/templates/current_round/common.html
 msgid "Teams:"
 msgstr "チーム："
+
+#: participants/templates/current_round/common.html
+msgid "The adjudicators for this debate have not yet been released."
+msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "Adjudicator:"
@@ -578,8 +629,8 @@ msgid "Motion:"
 msgstr "論題："
 
 #: participants/templates/current_round/common.html
-msgid "View Info Slide"
-msgstr "インフォスライドを表示"
+msgid "View Info-slide"
+msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -826,6 +877,12 @@ msgid_plural "It looks like %(team)s is competing in %(ndebates)s debates this r
 msgstr[0] "%(team)sはこのラウンドの%(ndebates)s試合に出場することになっているようです。"
 
 #: participants/templates/in_this_round.html
+#, python-format
+msgid "It looks like you are competing in %(ndebates)s debate this round."
+msgid_plural "It looks like you are competing in %(ndebates)s debates this round."
+msgstr[0] ""
+
+#: participants/templates/in_this_round.html
 msgid "If this is an error, please contact a tab director immediately."
 msgstr "間違いだと思う場合、今すぐにタブディレクターに連絡してください。"
 
@@ -849,6 +906,14 @@ msgstr "参加者リスト"
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
 msgstr "インステリスト"
+
+#: participants/templates/participants_subnav.html
+msgid "Gender Diversity"
+msgstr ""
+
+#: participants/templates/participants_subnav.html
+msgid "Adjudicator Rule"
+msgstr ""
 
 #: participants/templates/participants_subnav.html
 msgid "Emails have already been sent."
@@ -883,6 +948,35 @@ msgstr "スピーカーカテゴリーを削除したい場合、<a href=\"%(edi
 #: participants/templates/speaker_categories_edit.html
 msgid "Save Speaker Categories"
 msgstr "スピーカーカテゴリーを保存"
+
+#: participants/templates/speaker_confirm_delete.html
+msgid "Confirm Speaker Deletion"
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#: participants/templates/speaker_create.html
+msgid "Back to Team Record"
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Do you really want to delete <strong>%(name)s</strong> from %(team)s? This will permanently remove the speaker and <strong>cannot be undone</strong>. Any ballot scores attributed to this speaker will also be deleted."
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Yes, delete %(name)s"
+msgstr ""
+
+#: participants/templates/speaker_create.html
+#: participants/templates/team_registration_card.html
+msgid "Add Speaker"
+msgstr ""
+
+#: participants/templates/speaker_create.html
+#, python-format
+msgid "for %(name)s"
+msgstr "%(name)s用"
 
 #: participants/templates/team_registration_card.html
 msgid "Team name:"
@@ -923,6 +1017,10 @@ msgstr "ブレイク資格："
 #: participants/templates/team_registration_card.html
 msgid "Speaker categories:"
 msgstr "スピーカーカテゴリー"
+
+#: participants/templates/team_registration_card.html
+msgid "Delete"
+msgstr ""
 
 #: participants/templatetags/team_name_for_data_entry.py
 #, python-format
@@ -978,6 +1076,28 @@ msgid "Number of independent adjudicators"
 msgstr "インディベンデントジャッジの数"
 
 #: participants/views.py
+msgid "Institution Gender Diversity"
+msgstr ""
+
+#: participants/views.py
+msgid "N/A"
+msgstr "該当なし"
+
+#: participants/views.py
+msgid "Institution"
+msgstr "インステ"
+
+#: participants/views.py
+#, python-format
+msgid "Speakers (%(gender)s)"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "Adjudicators (%(gender)s)"
+msgstr ""
+
+#: participants/views.py
 msgid "Code name"
 msgstr "コード名"
 
@@ -995,6 +1115,30 @@ msgstr "過去のラウンド"
 
 #: participants/views.py
 #, python-format
+msgid "Add Speaker to %(team)s"
+msgstr ""
+
+#: participants/views.py
+msgid "Cancel and return to team record"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was added as a speaker."
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "Delete %(name)s"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was deleted."
+msgstr ""
+
+#: participants/views.py
+#, python-format
 msgid "Saved category: %(list)s"
 msgid_plural "Saved categories: %(list)s"
 msgstr[0] "カテゴリーを保存しました：%(list)s"
@@ -1006,4 +1150,12 @@ msgstr "カテゴリーに変更はありませんでした"
 #: participants/views.py
 msgid "Speaker Category Eligibility"
 msgstr "スピーカーカテゴリー資格"
+
+#: participants/views.py
+msgid "Adjudicator Requirement"
+msgstr ""
+
+#: participants/views.py
+msgid "Registered"
+msgstr ""
 

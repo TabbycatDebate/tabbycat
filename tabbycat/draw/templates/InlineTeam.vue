@@ -1,149 +1,194 @@
+<script setup>
+import { computed } from 'vue'
+import { useDragAndDropStore } from '../../templates/allocations/DragAndDropStore.js'
+import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
+import { useHighlightable } from '../../templates/composables/useHighlightable.js'
+import { useHoverPanel } from '../../templates/composables/useHoverPanel.js'
+import { useHoverConflicts } from '../../templates/composables/useHoverConflicts.js'
+import { useHoverConflictReceiver } from '../../templates/composables/useHoverConflictReceiver.js'
+import { useConflictableTeam, useConflictsCSS } from '../../templates/composables/useConflictable.js'
+
+const props = defineProps({ team: Object, debateId: Number, isElimination: Boolean })
+
+const store = useDragAndDropStore()
+const { gettext } = useDjangoI18n()
+const { showHoverPanel, hideHoverPanel } = useHoverPanel()
+const { showHoverConflicts, hideHoverConflicts } = useHoverConflicts()
+
+const team = computed(() => props.team)
+const debateId = computed(() => props.debateId)
+
+const extra = computed(() => store.extra)
+
+const teamName = computed(() => {
+  let name = team.value.short_name
+  if (extra.value.codeNames === 'everywhere' || extra.value.codeNames === 'admin-tooltips-real') {
+    name = team.value.code_name
+    if (name === '') {
+      name = gettext('No code name set')
+    }
+  }
+  return name
+})
+
+const highlightData = computed(() => team.value)
+const { highlightsCSS } = useHighlightable({ highlightData })
+
+const clashableType = computed(() => 'team')
+const clashableID = computed(() => team.value.id)
+
+const hoverReceiver = useHoverConflictReceiver({ clashableType, clashableID })
+const hoverConflictsCSS = hoverReceiver.hoverConflictsCSS
+
+const teamConflicts = useConflictableTeam({
+  debateId,
+  team,
+  clashableType,
+  clashableID,
+})
+
+const { conflictsCSS } = useConflictsCSS({
+  hasClashConflict: teamConflicts.hasClashConflict,
+  hasInstitutionalConflict: teamConflicts.hasInstitutionalConflict,
+  hasHistoryConflict: teamConflicts.hasHistoryConflict,
+})
+
+const hasHistory = computed(() => {
+  if (hoverReceiver.hasHoverHistoryConflict.value) {
+    return hoverReceiver.hasHoverHistoryConflict.value
+  }
+  if (teamConflicts.hasHistoryConflict.value) {
+    return teamConflicts.hasHistoryConflict.value
+  }
+  return false
+})
+
+const maxOccurrences = teamConflicts.maxOccurrences
+
+const isLive = computed(() => {
+  if (props.isElimination || team.value.break_categories.length === 0) {
+    return true
+  }
+  const breakCategoriesCount = team.value.break_categories.length
+  let letDeadCategoriesCount = 0
+  for (const bc of team.value.break_categories) {
+    const category = store.highlights.break.options[bc]
+    if (category) {
+      if (team.value.points >= category.fields.safe) {
+        letDeadCategoriesCount += 1
+      }
+      if (team.value.points <= category.fields.dead) {
+        letDeadCategoriesCount += 1
+      }
+    }
+  }
+  return (breakCategoriesCount - letDeadCategoriesCount) > 0
+})
+
+const assignedVenueCategoryIds = computed(() => {
+  try {
+    const debate = store.debatesOrPanels?.[debateId.value]
+    if (!debate || !debate.venue) { return null }
+    let venueObj = debate.venue
+    if (typeof venueObj === 'number') {
+      venueObj = store.allocatableItems?.[venueObj]
+    }
+    const cats = venueObj?.categories ?? null
+    if (!cats) { return null }
+    return new Set(cats.map(c => (typeof c === 'object' ? c.id : c)))
+  } catch (e) {
+    return null
+  }
+})
+
+const teamAllowedSets = computed(() => {
+  try {
+    const constraints = extra.value?.constraints
+    if (!constraints) { return [] }
+    const sets = []
+    const teamCats = constraints.teams?.[team.value.id]
+    if (teamCats && teamCats.length > 0) { sets.push(teamCats) }
+    const instId = team.value.institution
+    const instCats = instId ? constraints.institutions?.[instId] : null
+    if (instCats && instCats.length > 0) { sets.push(instCats) }
+    return sets
+  } catch (e) {
+    return []
+  }
+})
+
+const hoveredVenueCategories = computed(() => {
+  const cats = store.currentHoverVenueCategories
+  if (!cats) { return null }
+  return new Set(cats)
+})
+
+const venueConstraintOutlineCSS = computed(() => {
+  const sets = teamAllowedSets.value
+  if (!sets || sets.length === 0) { return '' }
+
+  const isMismatchForCats = (catSet) => {
+    if (!catSet) { return false }
+    for (const allowed of sets) {
+      let intersects = false
+      for (const cid of allowed) { if (catSet.has(cid)) { intersects = true; break } }
+      if (!intersects) { return true }
+    }
+    return false
+  }
+
+  if (isMismatchForCats(assignedVenueCategoryIds.value)) {
+    return 'conflictable panel-adjudicator'
+  }
+  if (isMismatchForCats(hoveredVenueCategories.value)) {
+    return 'conflictable panel-adjudicator'
+  }
+  return ''
+})
+
+const showHovers = () => {
+  showHoverPanel(team.value, 'team')
+  showHoverConflicts(team.value.id, 'team')
+  try {
+    const constraints = extra.value?.constraints
+    const sets = []
+    const teamCats = constraints?.teams?.[team.value.id]
+    if (teamCats && teamCats.length > 0) { sets.push(teamCats) }
+    const instId = team.value.institution
+    const instCats = instId ? constraints?.institutions?.[instId] : null
+    if (instCats && instCats.length > 0) { sets.push(instCats) }
+    store.setHoverVenueConstraints({ allowedSets: sets, debateId: debateId.value })
+  } catch (e) {
+    // noop
+  }
+}
+
+const hideHovers = () => {
+  hideHoverPanel()
+  hideHoverConflicts()
+  store.unsetHoverVenueConstraints()
+}
+</script>
+
 <template>
-  <div class="text-truncate small px-1 inline-team flex-fill d-flex align-items-center hover-target"
-       :class="[highlightsCSS, conflictsCSS, hoverConflictsCSS, venueConstraintOutlineCSS]"
-       @mouseenter="showHovers" @mouseleave="hideHovers">
-    <div :class="[this.isLive ? '' : 'not-live']" v-text="teamName"></div>
-    <div class="history-tooltip tooltip" v-if="hasHistory">
+  <div
+    class="text-truncate small px-1 inline-team flex-fill d-flex align-items-center hover-target"
+    :class="[highlightsCSS, conflictsCSS, hoverConflictsCSS, venueConstraintOutlineCSS]"
+    @mouseenter="showHovers"
+    @mouseleave="hideHovers"
+  >
+    <div :class="[isLive ? '' : 'not-live']">
+      {{ teamName }}
+    </div>
+    <div
+      v-if="hasHistory"
+      class="history-tooltip tooltip"
+    >
       <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistory + '-ago']">
-        {{ hasHistory }} ago <template v-if="maxOccurrences > 1">× {{ maxOccurrences }}</template>
+        {{ hasHistory }} ago <template v-if="maxOccurrences > 1">
+          × {{ maxOccurrences }}
+        </template>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex'
-import HighlightableMixin from '../../templates/allocations/HighlightableMixin.vue'
-import HoverablePanelMixin from '../../templates/allocations/HoverablePanelMixin.vue'
-import HoverableConflictMixin from '../../templates/allocations/HoverableConflictMixin.vue'
-import HoverableConflictReceiverMixin from '../../templates/allocations/HoverableConflictReceiverMixin.vue'
-import ConflictableTeamMixin from '../../templates/allocations/ConflictableTeamMixin.vue'
-
-export default {
-  mixins: [HighlightableMixin, HoverablePanelMixin, HoverableConflictMixin, HoverableConflictReceiverMixin, ConflictableTeamMixin],
-  props: { team: Object, debateId: Number, isElimination: Boolean },
-  methods: {
-    showHovers: function () {
-      this.showHoverPanel(this.team, 'team')
-      this.showHoverConflicts(this.team.id, 'team')
-      try {
-        const constraints = this.$store.state.extra?.constraints
-        const sets = []
-        const teamCats = constraints?.teams?.[this.team.id]
-        if (teamCats && teamCats.length > 0) { sets.push(teamCats) }
-        const instId = this.team.institution
-        const instCats = instId ? constraints?.institutions?.[instId] : null
-        if (instCats && instCats.length > 0) { sets.push(instCats) }
-        this.$store.commit('setHoverVenueConstraints', { allowedSets: sets, debateId: this.debateId })
-      } catch (e) { /* noop */ }
-    },
-    hideHovers: function () {
-      this.hideHoverPanel()
-      this.hideHoverConflicts()
-      this.$store.commit('unsetHoverVenueConstraints')
-    },
-  },
-  computed: {
-    teamName: function () {
-      let name = this.team.short_name // Default
-      if (this.extra.codeNames === 'everywhere' || this.extra.codeNames === 'admin-tooltips-real') {
-        name = this.team.code_name
-        if (name === '') {
-          name = this.gettext('No code name set')
-        }
-      }
-      return name
-    },
-    clashableType: function () {
-      return 'team'
-    },
-    clashableID: function () {
-      return this.team.id
-    },
-    highlightData: function () {
-      return this.team
-    },
-    hasHistory: function () {
-      if (this.hasHoverHistoryConflict) {
-        return this.hasHoverHistoryConflict
-      } else if (this.hasHistoryConflict) {
-        return this.hasHistoryConflict
-      }
-      return false
-    },
-    isLive: function () {
-      if (this.isElimination || this.team.break_categories.length === 0) {
-        return true // Never show strikeouts in out rounds; don't show if no categories are set
-      }
-      const breakCategoriesCount = this.team.break_categories.length
-      let letDeadCategoriesCount = 0
-      for (const bc of this.team.break_categories) {
-        const category = this.highlights.break.options[bc]
-        if (category) {
-          if (this.team.points >= category.fields.safe) {
-            letDeadCategoriesCount += 1
-          }
-          if (this.team.points <= category.fields.dead) {
-            letDeadCategoriesCount += 1
-          }
-        }
-      }
-      return (breakCategoriesCount - letDeadCategoriesCount) > 0
-    },
-    ...mapState(['extra']),
-    assignedVenueCategoryIds: function () {
-      try {
-        const debate = this.$store.state.debatesOrPanels?.[this.debateId]
-        if (!debate || !debate.venue) { return null }
-        let venueObj = debate.venue
-        if (typeof venueObj === 'number') {
-          venueObj = this.$store.state.allocatableItems?.[venueObj]
-        }
-        const cats = venueObj?.categories ?? null
-        if (!cats) { return null }
-        return new Set(cats.map(c => (typeof c === 'object' ? c.id : c)))
-      } catch (e) { return null }
-    },
-    teamAllowedSets: function () {
-      try {
-        const constraints = this.extra?.constraints
-        if (!constraints) { return [] }
-        const sets = []
-        const teamCats = constraints.teams?.[this.team.id]
-        if (teamCats && teamCats.length > 0) { sets.push(teamCats) }
-        const instId = this.team.institution
-        const instCats = instId ? constraints.institutions?.[instId] : null
-        if (instCats && instCats.length > 0) { sets.push(instCats) }
-        return sets
-      } catch (e) { return [] }
-    },
-    hoveredVenueCategories: function () {
-      const cats = this.$store.getters.currentHoverVenueCategories
-      if (!cats) { return null }
-      return new Set(cats)
-    },
-    venueConstraintOutlineCSS: function () {
-      const sets = this.teamAllowedSets
-      if (!sets || sets.length === 0) { return '' }
-
-      const isMismatchForCats = (catSet) => {
-        if (!catSet) { return false }
-        for (const allowed of sets) {
-          let intersects = false
-          for (const cid of allowed) { if (catSet.has(cid)) { intersects = true; break } }
-          if (!intersects) { return true }
-        }
-        return false
-      }
-
-      if (isMismatchForCats(this.assignedVenueCategoryIds)) {
-        return 'conflictable panel-adjudicator'
-      }
-      if (isMismatchForCats(this.hoveredVenueCategories)) {
-        return 'conflictable panel-adjudicator'
-      }
-      return ''
-    },
-  },
-}
-</script>

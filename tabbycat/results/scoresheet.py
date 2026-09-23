@@ -59,9 +59,19 @@ class ScoresMixin:
         super().__init__(*args, **kwargs)
         self.positions = positions
         self.criteria = kwargs.get('criteria', [])
+        self.reply_position = kwargs.get('reply_position')
         self.scores = {side: dict.fromkeys(self.positions, None) for side in self.sides}
         self.speaker_ranks = {side: dict.fromkeys(self.positions, None) for side in self.sides}
-        self.criteria_scores = {side: {pos: dict.fromkeys(self.criteria, 0) for pos in self.positions} for side in self.sides}
+        self.criteria_scores = {
+            side: {pos: dict.fromkeys(self.criteria_for_position(pos), 0) for pos in self.positions}
+            for side in self.sides
+        }
+
+    def criteria_for_position(self, position):
+        return [
+            criterion for criterion in self.criteria
+            if criterion.applies_to_position(position, self.reply_position)
+        ]
 
     def is_complete(self):
         if len(self.criteria) == 0:
@@ -87,10 +97,11 @@ class ScoresMixin:
         return self.speaker_ranks[side][position]
 
     def set_criterion_score(self, side: str, position: int, criterion, score):
-        self.criteria_scores[side][position][criterion] = score
+        if criterion in self.criteria_scores[side][position]:
+            self.criteria_scores[side][position][criterion] = score
 
     def get_criterion_score(self, side: str, position: int, criterion):
-        return self.criteria_scores[side][position][criterion]
+        return self.criteria_scores[side][position].get(criterion)
 
     def get_total(self, side):
         scores = [self.get_score(side, p) for p in self.positions]

@@ -28,7 +28,7 @@ urlpatterns = [
         BlankSiteStartView.as_view(),
         name='blank-site-start'),
     path('create/',
-        tournaments.views.CreateTournamentView.as_view(),
+        tournaments.views.CreateTournamentWizardView.as_view(),
         name='tournament-create'),
     path('load-demo/',
         LoadDemoView.as_view(),

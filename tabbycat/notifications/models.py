@@ -55,6 +55,10 @@ class BulkNotification(models.Model):
         ADJ_REG = 'a', _("adjudicator registration")
         MOTIONS = 'm', _("motion(s) released")
         TEAM_DRAW = 'r', _("team draw released")
+        INSTITUTION_REG = 'i', _("institution registration")
+        SLOTS_ALLOCATED = 's', _("participant slots allocated")
+        USER_INVITE = 'v', _("user invitation")
+        INSTITUTION_CUSTOM = 'ic', _("custom institution message")
         CUSTOM = '', _("custom message")
 
     event = models.CharField(max_length=20, choices=EventType.choices,
@@ -153,8 +157,10 @@ class ParticipantWebPushDevice(WebPushDevice):
         return super().__str__()
 
     def send_message(self, message):
+        if not self.active:
+            return
         try:
-            super().send_message(message)
+            super().send_message(message, ttl=200)
         except WebPushError:
             self.active = False
             self.save(update_fields=['active'])

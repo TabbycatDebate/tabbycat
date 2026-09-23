@@ -134,6 +134,14 @@
   .list-group-item:first-child {
     border-top: 0;
   }
+
+  // Text truncation for hover panel buttons to prevent wrapping
+  .btn-group .btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
 }
 
 //------------------------------------------------------------------------------

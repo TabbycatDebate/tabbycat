@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n != 1);
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s / %(cnt)s se\u00e7ildi",
@@ -50,6 +49,7 @@
       "%s se\u00e7ilen se\u00e7enek g\u00f6r\u00fcn\u00fcr de\u011fil",
       "%s se\u00e7ilen se\u00e7enek g\u00f6r\u00fcn\u00fcr de\u011fil"
     ],
+    "(click to clear)": "(temizlemek i\u00e7in t\u0131klay\u0131n)",
     "6 a.m.": "Sabah 6",
     "6 p.m.": "6 \u00f6.s.",
     "; ": "; ",
@@ -79,19 +79,18 @@
     "Category": "Kategori",
     "Chair for Panel of %1": "%1 Paneli Ba\u015fkan\u0131",
     "Checked-In": "Giri\u015fli",
-    "Choose": "Se\u00e7in",
+    "Choose %s by selecting them and then select the \"Choose\" arrow button.": "Bunlar\u0131 se\u00e7erek %s se\u00e7in ve ard\u0131ndan \"Se\u00e7\" ok d\u00fc\u011fmesine t\u0131klay\u0131n.",
     "Choose a Date": "Bir Tarih Se\u00e7in",
     "Choose a Time": "Bir Saat Se\u00e7in",
     "Choose a time": "Bir saat se\u00e7in",
-    "Choose all": "T\u00fcm\u00fcn\u00fc se\u00e7in",
+    "Choose all %s": "T\u00fcm %s se\u00e7",
+    "Choose selected %s": "Se\u00e7ilen %s se\u00e7",
     "Chosen %s": "Se\u00e7ilen %s",
     "Circle %1": "%1 yuvarlak i\u00e7ine al",
     "Circle Rank:": "Daire S\u0131ralamas\u0131:",
     "Circle the last digit of the %1's score:": "%1'in puan\u0131n\u0131n son basama\u011f\u0131n\u0131 daire i\u00e7ine al\u0131n:",
     "Circle the last digit of the team's total:": "Tak\u0131m\u0131n toplam\u0131n\u0131n son basama\u011f\u0131n\u0131 daire i\u00e7ine al\u0131n:",
     "Click to check-in manually": "Elle giri\u015f yapmak i\u00e7in t\u0131klay\u0131n",
-    "Click to choose all %s at once.": "Bir kerede t\u00fcm %s se\u00e7ilmesi i\u00e7in t\u0131klay\u0131n.",
-    "Click to remove all chosen %s at once.": "Bir kerede t\u00fcm se\u00e7ilen %s kald\u0131r\u0131lmas\u0131 i\u00e7in t\u0131klay\u0131n.",
     "Click to undo a check-in": "Giri\u015fi geri almak i\u00e7in t\u0131klay\u0131n",
     "Confirmed": "Onaylanm\u0131\u015f",
     "Copy From Check-Ins": "Giri\u015flerdem Kopyala",
@@ -101,8 +100,8 @@
     "February": "\u015eubat",
     "Filter": "S\u00fczge\u00e7",
     "Find in Table": "Tabloda Bul",
+    "Friday": "Cuma",
     "Gender": "Cinsiyet",
-    "Hide": "Gizle",
     "ID %1,": "Kimlik %1,",
     "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches": "\u00d6NEML\u0130: Bir konu\u015fmac\u0131n\u0131n birden fazla konu\u015fma yap\u0131p yapmad\u0131\u011f\u0131n\u0131 kontrol edin ve a\u00e7\u0131k\u00e7a not edin",
     "If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.": "Bu sayfay\u0131 kenar \u00e7ubu\u011fu olmadan g\u00f6r\u00fcnt\u00fclemek istiyorsan\u0131z (yani bir oditoryumda g\u00f6r\u00fcnt\u00fclemek i\u00e7in) yard\u0131mc\u0131 s\u00fcr\u00fcm\u00fc kullanabilirsiniz.",
@@ -119,6 +118,7 @@
     "Match Check-Ins": "Giri\u015flerle E\u015fle\u015ftir",
     "May": "May\u0131s",
     "Midnight": "Geceyar\u0131s\u0131",
+    "Monday": "Pazartesi",
     "Neg Veto": "Muhalefet Veto",
     "No": "Hay\u0131r",
     "No Actions Yet": "Hen\u00fcz \u0130\u015flem Yok",
@@ -154,12 +154,14 @@
     "Rank": "S\u0131ralama",
     "Re-Edit": "Yeniden D\u00fczenle",
     "Region": "B\u00f6lge",
-    "Remove": "Kald\u0131r",
-    "Remove all": "T\u00fcm\u00fcn\u00fc kald\u0131r",
+    "Remove %s by selecting them and then select the \"Remove\" arrow button.": "Bunlar\u0131 se\u00e7erek %s kald\u0131r\u0131n ve ard\u0131ndan \"Kald\u0131r\" ok d\u00fc\u011fmesine t\u0131klay\u0131n.",
+    "Remove all %s": "T\u00fcm %s kald\u0131r",
+    "Remove selected %s": "Se\u00e7ilen %s kald\u0131r",
     "Return ballots to %1.": "Ballotlar\u0131 %1'e d\u00f6nd\u00fcr\u00fcn.",
     "Return to Draw": "Kuraya D\u00f6n",
     "Review": "\u0130ncele",
     "Room:": "Oda:",
+    "Saturday": "Cumartesi",
     "Scan Using Camera": "Kamera Kullanarak Tara",
     "Score:": "Puan:",
     "September": "Eyl\u00fcl",
@@ -167,11 +169,11 @@
     "Set all availabilities to exactly match check-ins.": "T\u00fcm kullan\u0131labilirlikleri giri\u015flerle tam olarak e\u015fle\u015fecek \u015fekilde ayarlay\u0131n.",
     "Set all the availabilities to exactly match what they were in the previous round.": "T\u00fcm kullan\u0131labilirlikleri bir \u00f6nceki turdakiyle tam olarak e\u015fle\u015fecek \u015fekilde ayarla.",
     "Set people as available only if they have a check-in and are currently unavailable \u2014 i.e. it will not overwrite any existing availabilities.": "Ki\u015fileri yaln\u0131zca bir giri\u015f i\u015flemi varsa ve \u015fu anda kullan\u0131lam\u0131yorsa kullan\u0131labilir olarak ayarlay\u0131n - yani mevcut kullan\u0131labilirlikleri silmez.",
-    "Show": "G\u00f6ster",
     "Solo Chair": "Tek Ba\u015fkan",
     "Speaker Demographics": "Konu\u015fmac\u0131 Demografisi",
     "Speaker Results": "Konu\u015fmac\u0131 Sonu\u00e7lar\u0131",
     "Stop Camera Scan": "Kamera Taramas\u0131n\u0131 Durdur",
+    "Sunday": "Pazar",
     "Team": "Tak\u0131m",
     "The bracket range of the hypothetical debate": "Varsay\u0131msal ma\u00e7\u0131n a\u015fama aral\u0131\u011f\u0131",
     "The debate's bracket": "Bu ma\u00e7\u0131n a\u015famas\u0131",
@@ -179,14 +181,14 @@
     "The motion is <em>%1</em>": "\u00d6nerge <em>%1</em'dir>",
     "The total number of live break categories across all teams": "T\u00fcm tak\u0131mlardaki m\u00fcmk\u00fcn break kategorilerinin toplam say\u0131s\u0131",
     "This debate's priority": "Bu ma\u00e7\u0131n \u00f6nceli\u011fi",
-    "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Bu mevcut %s listesidir. A\u015fa\u011f\u0131daki kutudan baz\u0131lar\u0131n\u0131 i\u015faretleyerek ve ondan sonra iki kutu aras\u0131ndaki \"Se\u00e7in\" okuna t\u0131klayarak se\u00e7ebilirsiniz.",
-    "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Bu se\u00e7ilen %s listesidir. A\u015fa\u011f\u0131daki kutudan baz\u0131lar\u0131n\u0131 i\u015faretleyerek ve ondan sonra iki kutu aras\u0131ndaki \"Kald\u0131r\" okuna t\u0131klayarak kald\u0131rabilirsiniz.",
     "This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.": "Bu sayfa, ilk liste en fazla bir dakika gecikmeli olsa da, ger\u00e7ekle\u015ftikleri anda yeni giri\u015flerle canl\u0131 olarak g\u00fcncellenecektir.",
     "This person does not have a check-in identifier so they can't be checked in": "Bu ki\u015finin bir giri\u015f tan\u0131mlay\u0131c\u0131s\u0131 yok, bu nedenle giri\u015f yapam\u0131yor",
+    "Thursday": "Per\u015fembe",
     "Today": "Bug\u00fcn",
     "Tomorrow": "Yar\u0131n",
     "Total:": "Toplam:",
     "Trainee": "Acemi",
+    "Tuesday": "Sal\u0131",
     "Turn On Sounds": "Sesleri A\u00e7",
     "Type into this box to filter down the list of available %s.": "Mevcut %s listesini s\u00fczmek i\u00e7in bu kutu i\u00e7ine yaz\u0131n.",
     "Type into this box to filter down the list of selected %s.": "Se\u00e7ilen %s listesini s\u00fczmek i\u00e7in bu kutu i\u00e7ine yaz\u0131n.",
@@ -195,6 +197,7 @@
     "Unconfirmed": "Onaylanmam\u0131\u015f",
     "Unknown": "Bilinmeyen",
     "Unsure": "Emin de\u011filim",
+    "Wednesday": "\u00c7ar\u015famba",
     "Which team won the debate:": "Tart\u0131\u015fmay\u0131 hangi tak\u0131m\u0131n kazand\u0131\u011f\u0131:",
     "Yes": "Evet",
     "Yesterday": "D\u00fcn",
@@ -202,6 +205,13 @@
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Bir eylem se\u00e7tiniz, ancak tek tek alanlarda herhangi bir de\u011fi\u015fiklik yapmad\u0131n\u0131z. Muhtemelen Kaydet d\u00fc\u011fmesi yerine Git d\u00fc\u011fmesini ar\u0131yorsunuz.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Bir eylem se\u00e7tiniz, ancak de\u011fi\u015fikliklerinizi tek tek alanlara kaydetmediniz. Kaydetmek i\u00e7in l\u00fctfen TAMAM d\u00fc\u011fmesine t\u0131klay\u0131n. Eylemi yeniden \u00e7al\u0131\u015ft\u0131rman\u0131z gerekecek.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Bireysel d\u00fczenlenebilir alanlarda kaydedilmemi\u015f de\u011fi\u015fiklikleriniz var. E\u011fer bir eylem \u00e7al\u0131\u015ft\u0131r\u0131rsan\u0131z, kaydedilmemi\u015f de\u011fi\u015fiklikleriniz kaybolacakt\u0131r.",
+    "abbrev. day Friday\u0004Fri": "Cum",
+    "abbrev. day Monday\u0004Mon": "Pzt",
+    "abbrev. day Saturday\u0004Sat": "Cmt",
+    "abbrev. day Sunday\u0004Sun": "Paz",
+    "abbrev. day Thursday\u0004Thur": "Per",
+    "abbrev. day Tuesday\u0004Tue": "Sal",
+    "abbrev. day Wednesday\u0004Wed": "\u00c7r\u015f",
     "abbrev. month April\u0004Apr": "Nis",
     "abbrev. month August\u0004Aug": "A\u011fu",
     "abbrev. month December\u0004Dec": "Ara",
@@ -235,7 +245,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

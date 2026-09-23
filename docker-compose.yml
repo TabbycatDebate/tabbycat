@@ -3,12 +3,10 @@
 # Reference: https://docs.docker.com/compose/compose-file/
 
 # Initial setup with
-# $ docker-compose -f docker-compose.yml up
+# $ docker compose -f docker-compose.yml up
 
 # Can run management commands with
-# $ docker-compose run web /code/manage.py whatever
-
-version: '3'
+# $ docker compose run web /code/manage.py whatever
 
 services:
   db:
@@ -18,17 +16,24 @@ services:
       - POSTGRES_USER=tabbycat
       - POSTGRES_DB=tabbycat
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
 
   redis:
     image: redis:6
     volumes:
-     - redis_data:/data
+      - redis_data:/data
 
   web:
     build: .
     # Hack to wait until Postgres is up before running things
-    command: ["./bin/docker-wait.sh", "--timeout=0", "db:5432", "--", "./bin/docker-run-honcho.sh"]
+    command:
+      [
+        "./bin/docker-wait.sh",
+        "--timeout=0",
+        "db:5432",
+        "--",
+        "./bin/docker-run-honcho.sh",
+      ]
     depends_on:
       - db
       - redis
@@ -47,7 +52,14 @@ services:
   worker:
     build: .
     # Hack to wait until migration is done before running things
-    command: ["./bin/docker-wait.sh", "--timeout=0", "web:8000", "--", "./bin/docker-run-worker.sh"]
+    command:
+      [
+        "./bin/docker-wait.sh",
+        "--timeout=0",
+        "web:8000",
+        "--",
+        "./bin/docker-run-worker.sh",
+      ]
     depends_on:
       - db
       - redis

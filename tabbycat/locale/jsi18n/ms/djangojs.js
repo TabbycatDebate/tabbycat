@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = 0;
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s daripada %(cnt)s dipilih"
@@ -95,7 +94,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

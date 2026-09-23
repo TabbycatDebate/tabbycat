@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:46\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -45,6 +45,10 @@ msgstr ""
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr "La URL d'aquesta pàgina està personalitzada per a tu, %(name)s. <strong>No la comparteixis amb ningú;</strong> qualsevol persona que tingui accés a aquest URL pot enviar resultats i/o retroalimentació per als teus debats. Podeu afegir a favorits aquesta pàgina i tornar aquí després de cada debat per realitzar les accions oportunes."
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
+msgstr ""
 
 #: privateurls/templates/private_url_landing.html
 #, python-format
@@ -155,6 +159,10 @@ msgstr "URL"
 #: privateurls/views.py
 msgid "Speakers"
 msgstr "Oradors"
+
+#: privateurls/views.py
+msgid "Team"
+msgstr "Equip"
 
 #: privateurls/views.py
 msgid "Adjudicators"

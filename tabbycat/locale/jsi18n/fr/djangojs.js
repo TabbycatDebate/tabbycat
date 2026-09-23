@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n > 1);
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s sur %(cnt)s s\u00e9lectionn\u00e9",
@@ -50,12 +49,14 @@
       "%s option s\u00e9lectionn\u00e9e invisible",
       "%s options s\u00e9lectionn\u00e9es invisibles"
     ],
+    "(click to clear)": "(cliquer pour effacer)",
     "6 a.m.": "6:00",
     "6 p.m.": "18:00",
     "; ": " ; ",
     "<strong>%1</strong>: %2": "<strong>%1</strong>\u00a0: %2",
     "<strong>\u2613</strong> All": "<strong>\u2613</strong> Tous",
     "<strong>\u2713</strong> All": "<strong>\u2713</strong> Tous",
+    "Add": "Ajouter",
     "Add Ballot": "Ajouter feuille",
     "Adjudicating with %1.": "Jugeant avec %1.",
     "Adjudicator Demographics": "D\u00e9mographiques des juges",
@@ -79,30 +80,31 @@
     "Category": "Cat\u00e9gorie",
     "Chair for Panel of %1": "Pr\u00e9sident pour le jury de %1",
     "Checked-In": "Enregistr\u00e9",
-    "Choose": "Choisir",
+    "Choose %s by selecting them and then select the \"Choose\" arrow button.": "Choisissez %s en les s\u00e9lectionnant puis cliquez sur le bouton fl\u00e8che \u00ab\u00a0Choisir\u00a0\u00bb.",
     "Choose a Date": "Choisir une date",
     "Choose a Time": "Choisir une heure",
     "Choose a time": "Choisir une heure",
-    "Choose all": "Tout choisir",
-    "Chosen %s": "Choix des \u00ab\u00a0%s \u00bb",
+    "Choose all %s": "Choisir toutes les valeurs \u00ab\u00a0%s\u00a0\u00bb",
+    "Choose selected %s": "Choisir les valeurs \u00ab\u00a0%s\u00a0\u00bb s\u00e9lectionn\u00e9es",
+    "Chosen %s": "Choix des \u00ab\u00a0%s\u00a0\u00bb",
     "Circle %1": "Encercler %1",
     "Circle Rank:": "Encerclez le rang\u00a0:",
     "Circle the last digit of the %1's score:": "Encerclez le dernier chiffre du score de %1\u00a0:",
     "Circle the last digit of the team's total:": "Encerclez le dernier chiffre du total de l'\u00e9quipe\u00a0:",
     "Click to check-in manually": "Cliquer pour enregistrer manuellement",
-    "Click to choose all %s at once.": "Cliquez pour choisir tous les \u00ab\u00a0%s\u00a0\u00bb en une seule op\u00e9ration.",
-    "Click to remove all chosen %s at once.": "Cliquez pour enlever tous les \u00ab\u00a0%s\u00a0\u00bb en une seule op\u00e9ration.",
     "Click to undo a check-in": "Cliquez pour annuler un enregistrement",
     "Confirmed": "Confirm\u00e9",
     "Copy From Check-Ins": "Copier \u00e0 partir des enregistrements",
     "Debated": "D\u00e9battu",
     "December": "D\u00e9cembre",
+    "Delete": "\u00c9ffacer",
     "Did %1 deliver the adjudication?": "%1 a-t-il livr\u00e9 le jugement\u00a0?",
     "February": "F\u00e9vrier",
     "Filter": "Filtrer",
     "Find in Table": "Trouver dans la table",
+    "Friday": "vendredi",
     "Gender": "Genre",
-    "Hide": "Masquer",
+    "General": "G\u00e9n\u00e9ral",
     "ID %1,": "ID %1,",
     "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches": "IMPORTANT\u00a0: Cochez et notez explicitement si un orateur a donn\u00e9 plusieurs discours",
     "If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.": "Si vous voulez afficher cette page sans la barre lat\u00e9rale (comme pour l'affichage dans un auditorium), vous pouvez utiliser la version d'assistant.",
@@ -119,6 +121,7 @@
     "Match Check-Ins": "Refl\u00e9ter les enregistrements",
     "May": "Mai",
     "Midnight": "Minuit",
+    "Monday": "lundi",
     "Neg Veto": "V\u00e9to N\u00e9g",
     "No": "Non",
     "No Actions Yet": "Aucune Action",
@@ -154,12 +157,14 @@
     "Rank": "Classement",
     "Re-Edit": "Re-modifier",
     "Region": "R\u00e9gion",
-    "Remove": "Enlever",
-    "Remove all": "Tout enlever",
+    "Remove %s by selecting them and then select the \"Remove\" arrow button.": "Enlevez les valeurs \u00ab\u00a0%s\u00a0\u00bb en les s\u00e9lectionnant puis en cliquant sur le bouton fl\u00e8che \u00ab\u00a0Enlever\u00a0\u00bb.",
+    "Remove all %s": "Enlever toutes les valeurs \u00ab\u00a0%s\u00a0\u00bb",
+    "Remove selected %s": "Enlever les valeurs \u00ab\u00a0%s\u00a0\u00bb s\u00e9lectionn\u00e9es",
     "Return ballots to %1.": "Soumettre feuilles de jugement \u00e0 %1.",
     "Return to Draw": "Retour au tirage",
     "Review": "R\u00e9viser",
     "Room:": "Salle\u00a0:",
+    "Saturday": "samedi",
     "Scan Using Camera": "Num\u00e9riser avec l'appareil photo",
     "Score:": "Score\u00a0:",
     "September": "Septembre",
@@ -167,11 +172,11 @@
     "Set all availabilities to exactly match check-ins.": "Fixer tous les disponibilit\u00e9s pour refl\u00e9ter les enregistrements.",
     "Set all the availabilities to exactly match what they were in the previous round.": "Fixer tous les disponibilit\u00e9s pour refl\u00e9ter leurs statuts dans la joute pr\u00e9c\u00e9dente.",
     "Set people as available only if they have a check-in and are currently unavailable \u2014 i.e. it will not overwrite any existing availabilities.": "Fixer participants comme disponible seulement s\u2019ils peuvent s\u2019enregistrer et qui sont pr\u00e9sentement indisponible \u2014 i.e. ne va pas \u00e9craser les disponibilit\u00e9s qui existent.",
-    "Show": "Afficher",
     "Solo Chair": "Pr\u00e9sident Seul",
     "Speaker Demographics": "D\u00e9mographiques des Orateurs",
     "Speaker Results": "R\u00e9sultats d\u2019orateur",
     "Stop Camera Scan": "Arr\u00eater Num\u00e9risation",
+    "Sunday": "dimanche",
     "Team": "\u00c9quipe",
     "The bracket range of the hypothetical debate": "La gamme des tranches du d\u00e9bat hypoth\u00e9tique",
     "The debate's bracket": "La tranche du d\u00e9bat",
@@ -179,14 +184,14 @@
     "The motion is <em>%1</em>": "La motion est <em>%1</em>",
     "The total number of live break categories across all teams": "Le nombre total de cat\u00e9gories de qualification vives sur toutes les \u00e9quipes",
     "This debate's priority": "La priorit\u00e9 de ce d\u00e9bat",
-    "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Ceci est une liste des \u00ab\u00a0%s\u00a0\u00bb disponibles. Vous pouvez en choisir en les s\u00e9lectionnant dans la zone ci-dessous, puis en cliquant sur la fl\u00e8che \u00ab\u00a0Choisir\u00a0\u00bb entre les deux zones.",
-    "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Ceci est la liste des \u00ab\u00a0%s\u00a0\u00bb choisi(e)s. Vous pouvez en enlever en les s\u00e9lectionnant dans la zone ci-dessous, puis en cliquant sur la fl\u00e8che \u00ab Enlever \u00bb entre les deux zones.",
     "This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.": "Cette page se met \u00e0 jour automatiquement avec chaque enregistrement, m\u00eame si la liste initiale peut \u00eatre jusqu'\u00e0 une minute hors-jour.",
     "This person does not have a check-in identifier so they can't be checked in": "Cette personne n'a pas d'identifiant donc elle ne peut pas \u00eatre enregistr\u00e9e",
+    "Thursday": "jeudi",
     "Today": "Aujourd'hui",
     "Tomorrow": "Demain",
     "Total:": "Total\u00a0:",
     "Trainee": "Stagiaire",
+    "Tuesday": "mardi",
     "Turn On Sounds": "Activer les sons",
     "Type into this box to filter down the list of available %s.": "\u00c9crivez dans cette zone pour filtrer la liste des \u00ab\u00a0%s\u00a0\u00bb disponibles.",
     "Type into this box to filter down the list of selected %s.": "\u00c9crivez dans cette zone pour filtrer la liste des \u00ab\u00a0%s\u00a0\u00bb s\u00e9lectionn\u00e9\u00b7e\u00b7s.",
@@ -195,6 +200,8 @@
     "Unconfirmed": "Non-confirm\u00e9",
     "Unknown": "Inconnu",
     "Unsure": "Incertain",
+    "Warning: you have unsaved changes": "Attention: vous avez des modifications non sauvegard\u00e9es",
+    "Wednesday": "mercredi",
     "Which team won the debate:": "Quelle \u00e9quipe \u00e0 gagn\u00e9 le d\u00e9bat\u00a0:",
     "Yes": "Oui",
     "Yesterday": "Hier",
@@ -202,6 +209,13 @@
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Vous avez s\u00e9lectionn\u00e9 une action, et vous n'avez fait aucune modification sur des champs. Vous cherchez probablement le bouton Envoyer et non le bouton Enregistrer.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Vous avez s\u00e9lectionn\u00e9 une action, mais vous n'avez pas encore enregistr\u00e9 certains champs modifi\u00e9s. Cliquez sur OK pour enregistrer. Vous devrez r\u00e9appliquer l'action.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Vous avez des modifications non sauvegard\u00e9es sur certains champs \u00e9ditables. Si vous lancez une action, ces modifications vont \u00eatre perdues.",
+    "abbrev. day Friday\u0004Fri": "ven",
+    "abbrev. day Monday\u0004Mon": "lun",
+    "abbrev. day Saturday\u0004Sat": "sam",
+    "abbrev. day Sunday\u0004Sun": "dim",
+    "abbrev. day Thursday\u0004Thur": "jeu",
+    "abbrev. day Tuesday\u0004Tue": "mar",
+    "abbrev. day Wednesday\u0004Wed": "mer",
     "abbrev. month April\u0004Apr": "avr",
     "abbrev. month August\u0004Aug": "ao\u00fb",
     "abbrev. month December\u0004Dec": "d\u00e9c",
@@ -216,6 +230,7 @@
     "abbrev. month September\u0004Sep": "sep",
     "adjudicators with gender data": "juges avec donn\u00e9es de genre",
     "decimal marks are allowed": "demi-scores sont permises",
+    "deselect all": "d\u00e9s\u00e9lectionner tout",
     "feedback scores total": "totale des scores d\u2019\u00e9valuation",
     "no \u00bd marks": "pas de demi-points",
     "one letter Friday\u0004F": "V",
@@ -226,6 +241,7 @@
     "one letter Tuesday\u0004T": "M",
     "one letter Wednesday\u0004W": "M",
     "saving...": "enregistrement en cours...",
+    "select all": "s\u00e9lectionner tout",
     "speaker scores total": "total des scores d\u2019orateur",
     "speakers with gender data": "orateurs avec donn\u00e9es de genre",
     "tab check": "v\u00e9rification tab",
@@ -235,7 +251,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
@@ -291,9 +307,6 @@
       "%d/%m/%Y %H:%M:%S",
       "%d/%m/%Y %H:%M:%S.%f",
       "%d/%m/%Y %H:%M",
-      "%d.%m.%Y %H:%M:%S",
-      "%d.%m.%Y %H:%M:%S.%f",
-      "%d.%m.%Y %H:%M",
       "%Y-%m-%d %H:%M:%S",
       "%Y-%m-%d %H:%M:%S.%f",
       "%Y-%m-%d %H:%M",
@@ -303,16 +316,14 @@
     "DATE_INPUT_FORMATS": [
       "%d/%m/%Y",
       "%d/%m/%y",
-      "%d.%m.%Y",
-      "%d.%m.%y",
       "%Y-%m-%d"
     ],
     "DECIMAL_SEPARATOR": ",",
     "FIRST_DAY_OF_WEEK": 1,
     "MONTH_DAY_FORMAT": "j F",
     "NUMBER_GROUPING": 3,
-    "SHORT_DATETIME_FORMAT": "j N Y H:i",
-    "SHORT_DATE_FORMAT": "j N Y",
+    "SHORT_DATETIME_FORMAT": "d/m/Y H:i",
+    "SHORT_DATE_FORMAT": "d/m/Y",
     "THOUSAND_SEPARATOR": "\u00a0",
     "TIME_FORMAT": "H:i",
     "TIME_INPUT_FORMATS": [

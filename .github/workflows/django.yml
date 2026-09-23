@@ -64,6 +64,8 @@ jobs:
         python -m pip install pipenv
         pipenv install --system --dev --deploy
         npm ci
+    - name: Run frontend unit tests
+      run: npm test
     - name: Run linting
       run: npm run lint
     - name: Run build and collect

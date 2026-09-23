@@ -43,7 +43,7 @@
     {% endif %}
 
     {% if pref.public_checkins_submit %}
-      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm">
+      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" class="checkInForm">
         {% csrf_token %}
         {% if event %}
           <input type="hidden" name="action" value="revoke" />

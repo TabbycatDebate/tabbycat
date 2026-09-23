@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n != 1);
     if (typeof v === 'boolean') {
@@ -14,16 +13,20 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s de %(cnt)s seleccionat",
       "%(sel)s of %(cnt)s seleccionats"
+    ],
+    "%s selected option not visible": [
+      "%s opcion seleccionada no visible",
+      "%s opcions seleccionades no visibles"
     ],
     "6 a.m.": "6 a.m.",
     "6 p.m.": "6 p.m.",
@@ -47,6 +50,7 @@
     "February": "Febrer",
     "Filter": "Filtre",
     "Find in Table": "Troba a la taula",
+    "Friday": "Divendres",
     "Hide": "Ocultar",
     "January": "Gener",
     "July": "Juliol",
@@ -55,6 +59,7 @@
     "March": "Mar\u00e7",
     "May": "Maig",
     "Midnight": "Mitjanit",
+    "Monday": "Dilluns",
     "Noon": "Migdia",
     "Note: You are %s hour ahead of server time.": [
       "Nota: Aneu %s hora avan\u00e7ats respecte la hora del servidor.",
@@ -69,20 +74,32 @@
     "October": "Octubre",
     "Remove": "Eliminar",
     "Remove all": "Esborrar-los tots",
+    "Saturday": "Dissabte",
     "September": "Setembre",
     "Show": "Mostrar",
+    "Sunday": "Diumenge",
     "Team": "Equip",
     "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Aquesta \u00e9s la llista de %s disponibles. En podeu escollir alguns seleccionant-los a la caixa de sota i fent clic a la fletxa \"Escollir\" entre les dues caixes.",
     "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Aquesta \u00e9s la llista de %s escollits. En podeu eliminar alguns seleccionant-los a la caixa de sota i fent clic a la fletxa \"Eliminar\" entre les dues caixes.",
+    "Thursday": "Dijous",
     "Today": "Avui",
     "Tomorrow": "Dem\u00e0",
+    "Tuesday": "Dimarts",
     "Type into this box to filter down the list of available %s.": "Escriviu en aquesta caixa per a filtrar la llista de %s disponibles.",
+    "Type into this box to filter down the list of selected %s.": "Escriviu en aquesta caixa per a filtrar la llista de %s seleccionats.",
     "Unknown": "Desconegut",
+    "Wednesday": "Dimecres",
     "Yesterday": "Ahir",
-    "You have already submitted this form. Are you sure you want to submit it again?": "Ja ha enviat aquest formulari. Est\u00e0s segur que vols enviar-ho de nou?",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Has seleccionat una acci\u00f3 i no has fet cap canvi als camps individuals. Probablement est\u00e0s cercant el bot\u00f3 Anar enlloc del bot\u00f3 de Desar.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Has seleccionat una acci\u00f3, per\u00f2 encara no l'has desat els canvis dels camps individuals. Si us plau clica OK per desar. Necessitar\u00e0s tornar a executar l'acci\u00f3.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Teniu canvis sense desar a camps editables individuals. Si executeu una acci\u00f3, es perdran aquests canvis no desats.",
+    "abbrev. day Friday\u0004Fri": "dv.",
+    "abbrev. day Monday\u0004Mon": "dl.",
+    "abbrev. day Saturday\u0004Sat": "ds.",
+    "abbrev. day Sunday\u0004Sun": "dg.",
+    "abbrev. day Thursday\u0004Thur": "dj.",
+    "abbrev. day Tuesday\u0004Tue": "dt.",
+    "abbrev. day Wednesday\u0004Wed": "dc.",
     "abbrev. month April\u0004Apr": "Abr",
     "abbrev. month August\u0004Aug": "Ago",
     "abbrev. month December\u0004Dec": "Des",
@@ -106,7 +123,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

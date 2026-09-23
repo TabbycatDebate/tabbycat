@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:35\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-Language: he\n"
@@ -22,13 +22,16 @@ msgid "Break Qualification"
 msgstr ""
 
 #: breakqual/base.py
+msgid "There are too few teams eligible for this break category."
+msgstr ""
+
+#: breakqual/base.py
 #, python-format
 msgid "The %(rule)s break qualification rule is missing the following required metric in the team standings precedence: %(missing)s"
 msgid_plural "The %(rule)s break qualification rule is missing the following required metrics in the team standings precedence: %(missing)s"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: breakqual/models.py
 msgid "tournament"
@@ -192,6 +195,10 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "breaking team"
+msgstr ""
+
+#: breakqual/templates/bracket.html
+msgid "Bracket"
 msgstr ""
 
 #: breakqual/templates/break_categories_edit.html
@@ -545,5 +552,9 @@ msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker cate
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
+
+#: breakqual/views.py
+#, python-format
+msgid "%(category)s Bracket"
+msgstr ""
 

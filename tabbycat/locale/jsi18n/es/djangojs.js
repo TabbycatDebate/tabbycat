@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n != 1);
     if (typeof v === 'boolean') {
@@ -14,17 +13,22 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s de %(cnt)s seleccionado",
       "%(sel)s de  %(cnt)s seleccionados"
     ],
+    "%s selected option not visible": [
+      "%s opci\u00f3n seleccionada no visible",
+      "%s opciones seleccionadas no visibles"
+    ],
+    "(click to clear)": "(click para limpiar)",
     "6 a.m.": "6 a.m.",
     "6 p.m.": "6 p.m.",
     "; ": "; ",
@@ -38,22 +42,21 @@
     "Cancel": "Cancelar",
     "Category": "Categor\u00eda",
     "Checked-In": "Disponible",
-    "Choose": "Elegir",
+    "Choose %s by selecting them and then select the \"Choose\" arrow button.": "Elija %s seleccion\u00e1ndolos y luego use el bot\u00f3n \"Elegir\".",
     "Choose a Date": "Elija una Fecha",
     "Choose a Time": "Elija una Hora",
     "Choose a time": "Elija una hora",
-    "Choose all": "Selecciona todos",
+    "Choose all %s": "Seleccionar todos %s",
+    "Choose selected %s": "Elegir %s seleccionados",
     "Chosen %s": "%s elegidos",
-    "Click to choose all %s at once.": "Haga clic para seleccionar todos los %s de una vez",
-    "Click to remove all chosen %s at once.": "Haz clic para eliminar todos los %s elegidos",
     "Click to undo a check-in": "Haz clic para deshacer un check-in",
     "Confirmed": "Confirmado",
     "December": "Diciembre",
     "Delete": "Eliminar",
     "February": "Febrero",
     "Filter": "Filtro",
+    "Friday": "Viernes",
     "General": "General",
-    "Hide": "Ocultar",
     "Independent": "Independiente",
     "January": "Enero",
     "July": "Julio",
@@ -63,6 +66,7 @@
     "Match": "Igual que",
     "May": "Mayo",
     "Midnight": "Medianoche",
+    "Monday": "Lunes",
     "No": "No",
     "No Confirmed Results Yet": "A\u00fan no hay resultados confirmados",
     "Noon": "Mediod\u00eda",
@@ -79,36 +83,46 @@
     "October": "Octubre",
     "Panellist": "Panelista",
     "Re-Edit": "Volver a editar",
-    "Remove": "Eliminar",
-    "Remove all": "Eliminar todos",
+    "Remove %s by selecting them and then select the \"Remove\" arrow button.": "Eliminar %s seleccion\u00e1ndolos y luego use el bot\u00f3n \"Eliminar\".",
+    "Remove all %s": "Eliminar todos %s",
+    "Remove selected %s": "Eliminar %s seleccionados",
     "Room:": "Sala:",
+    "Saturday": "S\u00e1bado",
     "Scan Using Camera": "Escanear con c\u00e1mara",
     "Score:": "Puntos:",
     "September": "Septiembre",
-    "Show": "Mostrar",
     "Solo Chair": "\u00danicamente principal",
     "Speaker Results": "Resultados de los oradores",
     "Stop Camera Scan": "Detener el escaneo con c\u00e1mara",
+    "Sunday": "Domingo",
     "Team": "Equipo",
     "The motion is <em>%1</em>": "La moci\u00f3n es <em>%1</em>",
-    "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Esta es la lista de %s disponibles. Puede elegir algunos seleccion\u00e1ndolos en la caja inferior y luego haciendo clic en la flecha \"Elegir\" que hay entre las dos cajas.",
-    "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Esta es la lista de los %s elegidos. Puede elmininar algunos seleccion\u00e1ndolos en la caja inferior y luego haciendo click en la flecha \"Eliminar\" que hay entre las dos cajas.",
+    "Thursday": "Jueves",
     "Today": "Hoy",
     "Tomorrow": "Ma\u00f1ana",
     "Total:": "Total:",
     "Trainee": "Trainee",
+    "Tuesday": "Martes",
     "Turn On Sounds": "Encender el sonido",
     "Type into this box to filter down the list of available %s.": "Escriba en este cuadro para filtrar la lista de %s disponibles",
     "Type into this box to filter down the list of selected %s.": "Escriba en este cuadro para filtrar la lista de %s seleccionados.",
     "Unknown": "Desconocido",
     "Unsure": "No estoy seguro",
     "Warning: you have unsaved changes": "Advertencia: Tiene cambios que no ha guardado",
+    "Wednesday": "Mi\u00e9rcoles",
     "Which team won the debate:": "Qu\u00e9 equipo gan\u00f3 el debate:",
     "Yes": "S\u00ed",
     "Yesterday": "Ayer",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Ha seleccionado una acci\u00f3n y no ha realizado ning\u00fan cambio en campos individuales. Probablemente est\u00e9 buscando el bot\u00f3n 'Ir' en lugar del bot\u00f3n 'Guardar'.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Ha seleccionado una acci\u00f3n, pero a\u00fan no ha guardado los cambios en los campos individuales. Haga clic en Aceptar para guardar. Deber\u00e1 volver a ejecutar la acci\u00f3n.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Tiene cambios sin guardar en campos editables individuales. Si ejecuta una acci\u00f3n, los cambios no guardados se perder\u00e1n.",
+    "abbrev. day Friday\u0004Fri": "Vie",
+    "abbrev. day Monday\u0004Mon": "Lun",
+    "abbrev. day Saturday\u0004Sat": "S\u00e1b",
+    "abbrev. day Sunday\u0004Sun": "Dom",
+    "abbrev. day Thursday\u0004Thur": "Jue",
+    "abbrev. day Tuesday\u0004Tue": "Mar",
+    "abbrev. day Wednesday\u0004Wed": "Mie",
     "abbrev. month April\u0004Apr": "Abr",
     "abbrev. month August\u0004Aug": "Ago",
     "abbrev. month December\u0004Dec": "Dic",
@@ -135,7 +149,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

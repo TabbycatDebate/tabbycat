@@ -37,7 +37,7 @@
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
-      <span class="text-{% if feedback.source_team and pref.feedback_from_teams == 'orallist' and feedback.debate_adjudicator.type != 'C' %}danger{% else %}secondary{% endif %} small">
+      <span class="text-{% if feedback.source_team and pref.feedback_from_teams == 'orallist' and feedback.debate_adjudicator.type != 'C' or feedback.source_team and pref.feedback_from_teams == 'all-voting-adjs-allowed' and feedback.debate_adjudicator.type != 'C' or feedback.source_team and pref.feedback_from_teams == 'all-adjs-allowed' and feedback.debate_adjudicator.type != 'C' or feedback.source_team and pref.feedback_from_teams == 'all-voting-adjs' and feedback.debate_adjudicator.type == 'T' %}danger{% else %}secondary{% endif %} small">
         {% blocktranslate trimmed with as_type=feedback.debate_adjudicator.get_type_display %}
           Received as {{ as_type }}
         {% endblocktranslate %}

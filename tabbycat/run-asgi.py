@@ -54,11 +54,12 @@ if 'USING_NGINX' in os.environ and bool(int(os.environ['USING_NGINX'])):
     ).run()
 else:
     root.info('TC_DEPLOY: Initialising Daphne with Host/Port')
+    port = os.environ.get('PORT', '8000')
     Server(
         application=asgi.application,
         endpoints=build_endpoint_description_strings(
             host="0.0.0.0",
-            port="8000",
+            port=port,
         ),
         ping_interval=15,
         ping_timeout=30,

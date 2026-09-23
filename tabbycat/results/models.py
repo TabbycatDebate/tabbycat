@@ -120,6 +120,10 @@ class BallotSubmission(Submission):
     forfeit = models.BooleanField(default=False,
         verbose_name=_("forfeit"),
         help_text=_("Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."))
+    self_split = models.BooleanField(default=False,
+        verbose_name=_("self-declared split"),
+        help_text=_("For solo-adjudicated debates: whether the adjudicator has declared their decision "
+                    "as a 2:1 split (rather than unanimous), per Karl Popper rules."))
 
     class Meta:
         constraints = [UniqueConstraint(fields=['debate', 'version'])]
@@ -280,6 +284,13 @@ class SpeakerScoreByAdj(models.Model):
         verbose_name=_("debate team"))
     score = ScoreField(verbose_name=_("score"))
     position = models.IntegerField(verbose_name=_("position"))
+    speaker_score = models.ForeignObject(
+        'SpeakerScore', models.DO_NOTHING,
+        from_fields=('ballot_submission', 'debate_team', 'position'),
+        to_fields=('ballot_submission', 'debate_team', 'position'),
+        null=True,
+        related_name='+',
+    )
 
     class Meta:
         constraints = [
@@ -400,11 +411,18 @@ class SpeakerScore(models.Model):
 
 class ScoreCriterion(models.Model):
     """Score criterion for speaker score"""
+    class SpeechType(models.TextChoices):
+        ALL = 'A', _("All speeches")
+        SUBSTANTIVE = 'S', _("Substantive speeches")
+        REPLY = 'R', _("Reply speeches")
+
     tournament = models.ForeignKey(Tournament, models.CASCADE,
         verbose_name=_("tournament"))
     name = models.CharField(max_length=20,
         verbose_name=("name"))
     seq = models.IntegerField(verbose_name=_("sequence"))
+    speech_type = models.CharField(max_length=1, choices=SpeechType.choices, default=SpeechType.ALL,
+        verbose_name=_("speech type"))
     weight = models.FloatField(verbose_name=_("weight"))
     min_score = ScoreField(verbose_name=_("minimum score"))
     max_score = ScoreField(verbose_name=_("maximum score"))
@@ -414,11 +432,23 @@ class ScoreCriterion(models.Model):
 
     class Meta:
         constraints = [UniqueConstraint(fields=['tournament', 'seq'])]
+        ordering = ['seq']
         verbose_name = _("score criterion")
         verbose_name_plural = _("score criteria")
 
     def __str__(self):
         return ("{0.name} at {0.tournament}").format(self)
+
+    def applies_to_position(self, position, reply_position=None):
+        if self.speech_type == self.SpeechType.ALL:
+            return True
+        if reply_position is None:
+            return self.speech_type == self.SpeechType.SUBSTANTIVE
+        is_reply = position == reply_position
+        return (
+            (self.speech_type == self.SpeechType.REPLY and is_reply) or
+            (self.speech_type == self.SpeechType.SUBSTANTIVE and not is_reply)
+        )
 
 
 class SpeakerCriterionScore(models.Model):

@@ -18,7 +18,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
-from .utils import expected_feedback_targets
+from .utils import expected_feedback_targets, team_feedback_allowed_targets
 
 logger = logging.getLogger(__name__)
 
@@ -79,9 +79,11 @@ class BaseFeedbackForm(CustomQuestionsFormMixin, forms.Form):
         # Feedback questions defined for the tournament
         adj_min_score = self._tournament.pref('adj_min_score')
         adj_max_score = self._tournament.pref('adj_max_score')
+        adj_score_step = self._tournament.pref('adj_score_step')
         score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)*") % {
                 'min': int(adj_min_score), 'max': int(adj_max_score)})
-        self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
+        self.fields['score'] = forms.FloatField(
+            min_value=adj_min_score, max_value=adj_max_score, step_size=adj_score_step, label=score_label)
 
         self.add_question_fields()
 
@@ -148,7 +150,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     )
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
-        debate__round__seq__lte=tournament.current_round.seq,
+        debate__round__seq__lte=tournament.current_round_seq_limit,
         debate__round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
@@ -197,6 +199,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
                                       use_tournament_password=False, ignored_option=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
+    allowed_targets = team_feedback_allowed_targets(tournament.pref('feedback_from_teams'))
 
     def adj_choice(adj, debate, pos):
         value = '%d-%d' % (debate.id, adj.id)
@@ -204,7 +207,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         display = _("Submitted - ") if adj.submitted else ""
         if pos == AdjudicatorAllocation.POSITION_ONLY:
             display += _("%(name)s")
-        elif tournament.pref('feedback_from_teams') == 'all-adjs':
+        elif allowed_targets in ['all-voting-adjs', 'all-adjs']:
             # Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
             display += _("%(name)s (%(adjpos)s)")
         elif pos == AdjudicatorAllocation.POSITION_CHAIR:
@@ -219,7 +222,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     # Only include non-silent rounds for teams.
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
-        round__seq__lte=tournament.current_round.seq,
+        round__seq__lte=tournament.current_round_seq_limit,
         round__stage=Round.Stage.PRELIMINARY,
     ).order_by('-round__seq').prefetch_related(Prefetch(
         'debateadjudicator_set',
@@ -242,9 +245,9 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         # so that they pass to the AdjudicatorAllocation
         for da in debate.debateadjudicator_set.all():
             da.adjudicator.submitted = da.submitted
-        if tournament.pref('feedback_from_teams') == 'all-adjs':
+        if allowed_targets == 'all-adjs':
             das = debate.adjudicators.with_positions()
-        elif tournament.pref('feedback_from_teams') == 'orallist':
+        elif allowed_targets in ['orallist', 'all-voting-adjs']:
             das = debate.adjudicators.voting_with_positions()
         else:
             das = []

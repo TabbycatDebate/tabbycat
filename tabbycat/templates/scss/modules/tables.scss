@@ -54,10 +54,28 @@ thead,
 
 .vue-sortable {
 
+  .vue-sort-button {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    background: transparent;
+  }
+
   .vue-sort-key {
-    width: 16px;
+    min-width: 16px;
     height: 18px;
-    display: inline-block;
+    display: inline-flex;
+    gap: 1px;
+    align-items: center;
+  }
+
+  .vue-sort-position {
+    align-self: flex-start;
+    font-size: 0.625em;
+    line-height: 1;
   }
 
   // By default don't show if not hovering or active

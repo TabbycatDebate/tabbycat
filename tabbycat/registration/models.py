@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -45,6 +46,13 @@ class Answer(models.Model):
         constraints = [
             UniqueConstraint(fields=['question', 'content_type', 'object_id']),
         ]
+
+    def deserialize_answer(self):
+        if self.question.answer_type == self.question.AnswerType.MULTIPLE_SELECT:
+            return json.loads(self.answer)
+        if self.question.answer_type == self.question.AnswerType.DATETIME:
+            return datetime.fromisoformat(self.answer)
+        return self.question.ANSWER_TYPE_TYPES[self.question.answer_type](self.answer)
 
 
 class Question(models.Model):
@@ -147,6 +155,8 @@ class Invitation(models.Model):
     url_key = models.CharField(max_length=50, verbose_name=_("URL key"))
     created_on = models.DateTimeField(auto_now=True, verbose_name=_("created on"))
 
+    slot_transfer_request = models.ForeignKey('SlotTransferRequest', models.SET_NULL, null=True, blank=True, verbose_name=_("slot transfer request"))
+
     class Meta:
         verbose_name = _("invitation")
         verbose_name_plural = _("invitations")
@@ -154,3 +164,40 @@ class Invitation(models.Model):
 
     def __str__(self):
         return '%s: %s invitation (%s)' % (self.tournament.name, self.for_content_type, self.team or self.institution)
+
+
+class SlotTransferRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'P', _("Pending")
+        APPROVED = 'A', _("Approved")
+        REJECTED = 'R', _("Rejected")
+
+    tournament = models.ForeignKey(
+        'tournaments.Tournament', models.CASCADE, verbose_name=_("tournament"),
+    )
+    source_tournament_institution = models.ForeignKey(
+        'participants.TournamentInstitution', models.CASCADE, verbose_name=_("source institution"), related_name="slot_transfer_source_set",
+    )
+    teams_transferred = models.PositiveIntegerField(default=0, verbose_name=_("team slots transferred"))
+    adjudicators_transferred = models.PositiveIntegerField(default=0, verbose_name=_("adjudicator slots transferred"))
+    receiving_institution = models.ForeignKey(
+        'participants.TournamentInstitution', models.CASCADE, null=True, blank=True, verbose_name=_("receiving institution"), related_name="slot_transfer_target_set",
+    )
+    receiving_institution_name = models.CharField(max_length=100, blank=True, verbose_name=_("receiving institution name"))
+    receiving_institution_email = models.EmailField(blank=True, verbose_name=_("receiving institution contact email"))
+    status = models.CharField(max_length=1, choices=Status.choices, default=Status.PENDING, db_index=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
+
+    class Meta:
+        verbose_name = _("slot transfer request")
+        verbose_name_plural = _("slot transfer requests")
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return _("%(source)s → %(recipient)s (%(status)s)") % {
+            'source': self.source_tournament_institution.institution.name,
+            'recipient': self.receiving_institution.name if self.receiving_institution else self.receiving_institution_name or '—',
+            'status': self.get_status_display(),
+        }

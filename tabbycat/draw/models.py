@@ -49,6 +49,11 @@ class Debate(models.Model):
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
         verbose_name=_("room"))
+    scheduled_at = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name=_("scheduled time"),
+        help_text=_("Optional start time for this debate, if it differs from the round schedule."),
+    )
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
