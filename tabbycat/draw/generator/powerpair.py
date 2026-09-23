@@ -42,6 +42,10 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
             "none"             - No restriction.
             "least_to_date"    - Choose from teams who have been pulled up the
                                  least number of times in previous rounds.
+            "subset_pct"       - Choose from teams who have been pulled up the
+                                 least number of times in previous rounds from
+                                 a subset pool calculated as a % of the bracket
+                                 below it, rounded down, or the top 2 teams.
             "lowest_ds_wins"   - Choose from teams who have the lowest draw strength by
                                  wins (indicative of having been against easier teams)
             "lowest_ds_speaks" - Choose from teams who have the lowest draw strength by
@@ -76,6 +80,7 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         "pairing_method"        : "slide",
         "avoid_conflicts"       : "one_up_one_down",
         "pullup_restriction"    : "none",
+        "pullup_subset_pct"     : 25, # only used when pullup_restriction == "subset_pct"
         "pullup_debates_penalty": 0,
         "pullup_penalty"        : 0,
     }
@@ -138,6 +143,7 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
     # Pullup restrictions
     PULLUP_RESTRICTION_METRICS = {
         "least_to_date": "npullups",
+        "subset_pct": "npullups",
         "lowest_ds_wins": "draw_strength",
         "lowest_ds_speaks": "draw_strength_speaks",
         "none": None,
@@ -152,11 +158,24 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         except KeyError:
             raise ValueError("Invalid option for pullup_restriction: {0}".format(option))
 
+        if option == "subset_pct":
+            return self._subset_pct_pool(teams)
+
         if metric is None:
             return teams
         else:
             least = min(getattr(team, metric) for team in teams)
             return [team for team in teams if getattr(team, metric) == least]
+
+    def _subset_pct_pool(self, teams):
+        """Returns the subset pullup pool as max(2, floor(pct * n)) teams,
+        ranked with the best pullup candidate first: fewest pullups to date.
+        'pct' is the 'pullup_subset_pct' option."""
+        pct = self.options["pullup_subset_pct"]
+        n = len(teams)
+        subset_count = min(n, max((pct * n) // 100, 2))
+        subset = teams[:subset_count]
+        return sorted(subset, key=lambda t: t.npullups)
 
     # Odd bracket resolutions
     ODD_BRACKET_FUNCTIONS = {
@@ -211,14 +230,24 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         if pullup_needed_for:
             raise DrawFatalError("Last bracket is still odd!\n" + repr(pullup_needed_for))
 
-    @classmethod
-    def _intermediate_brackets(cls, brackets):
+    def _intermediate_brackets(self, brackets):
         """Operates in-place."""
         new = OrderedDict()
+        self._pullup_pools = {}
         odd_team = None
         for points, teams in brackets.items():
             if odd_team:
-                new[points+0.5] = [odd_team, teams.pop(0)]
+                subset = self._pullup_filter(teams)
+                pullup_team = subset[0]
+                teams.remove(pullup_team)
+                new[points+0.5] = [odd_team, pullup_team]
+                self.add_team_flag(pullup_team, "pullup")
+
+                if self.options["pullup_restriction"] == "subset_pct":
+                    min_pu = subset[0].npullups
+                    self._pullup_pools[points+0.5] = [t for t in subset if t.npullups == min_pu and t != pullup_team]
+                else:
+                    self._pullup_pools[points+0.5] = subset[1:]
                 odd_team = None
             if len(teams) % 2 != 0:
                 odd_team = teams.pop()
@@ -272,11 +301,26 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
 
             # bubble down, if bubble up didn't work
             if points-0.5 in brackets:
-                swap_team = brackets[points-0.5][0]  # Bottom team
-                if not _check_conflict(swap_team, teams[0]):
-                    self.add_team_flag(teams[1], (conflict == 1) and "bub_dn_inst" or "bub_dn_hist")
-                    self.add_team_flag(swap_team, "bub_dn_accom")
-                    teams[1], brackets[points-0.5][0] = swap_team, teams[1]
+                lower_bracket = brackets[points-0.5]
+                if self.options["pullup_restriction"] == "none":
+                    candidates = [lower_bracket[0]] if lower_bracket else []
+                else:
+                    pool = self._pullup_pools.get(points, None)
+                    candidates = lower_bracket if pool is None else [t for t in lower_bracket if t in pool]
+
+                swapped = False
+                for swap_team in candidates:
+                    if not _check_conflict(swap_team, teams[0]):
+                        self.add_team_flag(teams[1], (conflict == 1) and "bub_dn_inst" or "bub_dn_hist")
+                        self.add_team_flag(swap_team, "bub_dn_accom")
+                        self.remove_team_flag(teams[1], "pullup")
+                        self.add_team_flag(swap_team, "pullup")
+                        idx = lower_bracket.index(swap_team)
+                        teams[1], lower_bracket[idx] = swap_team, teams[1]
+                        swapped = True
+                        break
+
+                if swapped:
                     continue
 
             # if nothing worked, add a "didn't work" flag
