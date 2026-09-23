@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+2.13.0 (TBD)
+------------
+
+*Release date: TBD*
+
+
 2.12.0 (Ukrainian Levkoy)
 -------------------------
 
