@@ -77,7 +77,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_pairings_random_deviation_zero(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
         # Always 0
-        self.assertEqual(GraphCostMixin._pairings_random([teams[0].subrank, teams[1].subrank], 8), 0)
+        self.assertAlmostEqual(GraphCostMixin._pairings_random([teams[0].subrank, teams[1].subrank], 8), 0, delta=1e-6)
 
     def test_pairings_adjacent_deviation_top(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -122,9 +122,9 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_add_pullup_penalty(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), points=i, subrank=i+1, pullup_debates=i+1) for i in range(2)]
         gcm = GraphPowerPairedDrawGenerator(teams)
-        gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'random', 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False}
+        gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'random', 'pairing_penalty': 1, 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False}
         gcm.team_flags = {teams[0]: ['pullup']}
-        self.assertEqual(gcm.assignment_cost(*teams, 2), 2)
+        self.assertAlmostEqual(gcm.assignment_cost(*teams, 2), 2, delta=1e-6)
 
     def test_add_subrank_pullup(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=(None if i else 1)) for i in range(2)]

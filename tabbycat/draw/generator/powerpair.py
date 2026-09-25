@@ -303,8 +303,7 @@ class GraphCostMixin:
             penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
 
         # Add penalty for deviations in the pairing method
-        if self.options["pairing_method"] != "random":
-            penalty += self.calculate_pairing_penalty(t1, t2, size, bracket)
+        penalty += self.calculate_pairing_penalty(t1, t2, size, bracket)
         return penalty
 
     def calculate_pairing_penalty(self, t1, t2, size, bracket=None) -> int:
@@ -329,7 +328,10 @@ class GraphCostMixin:
 
     @staticmethod
     def _pairings_random(teams, size: int, bracket: Optional[int] = None) -> int:
-        return 0
+        # A tiny random value here is safe at pairing_penalty=1:
+        # ~1,000,000x below the smallest real penalty
+        # unit (side_penalty=1), so it can only ever break exact ties.
+        return random.uniform(0, 1e-6)
 
     @staticmethod
     def _pairings_adjacent(teams, size: int, bracket: Optional[int] = None) -> int:
