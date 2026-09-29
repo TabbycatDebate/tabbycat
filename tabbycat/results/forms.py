@@ -170,6 +170,13 @@ class BaseResultForm(forms.Form):
         if self.has_tournament_password:
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
 
+        if not tabroom:
+            self.fields['flagged'] = forms.BooleanField(
+                required=False,
+                label=_("Flag error"),
+                help_text=_("Signals to the tab room that there is a potential problem with this ballot"),
+            )
+
     def _side_name(self, side):
         return get_side_name(self.tournament, side, 'full')
 
@@ -211,6 +218,8 @@ class BaseResultForm(forms.Form):
         # 4. Save ballot and result status
         self.ballotsub.discarded = self.cleaned_data['discarded']
         self.ballotsub.confirmed = self.cleaned_data['confirmed']
+        if 'flagged' in self.cleaned_data:
+            self.ballotsub.flagged = self.cleaned_data['flagged']
         self.ballotsub.save()
 
         new_status = self.cleaned_data['debate_result_status']
