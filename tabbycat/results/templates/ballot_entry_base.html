@@ -46,6 +46,13 @@
     {% endfor %}
   {% endif %}
 
+  {% if ballotsub.flagged %}
+    {% blocktrans trimmed asvar message %}
+      The has submitter flagged that there is a potential problem with this ballot.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="danger" icon="alert-circle" %}
+  {% endif %}
+
   {% include "ballot/other_ballots_list.html" %}
 
 {% endblock %}
