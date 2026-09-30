@@ -1,7 +1,6 @@
 import logging
 from decimal import Decimal
 from itertools import product
-from typing import TYPE_CHECKING
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -19,12 +18,10 @@ from participants.templatetags.team_name_for_data_entry import team_name_for_dat
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
+from .models import BallotSubmission
 from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
                      DebateResultByAdjudicator, DebateResultByAdjudicatorWithScores)
 from .utils import get_status_meta, side_and_position_names
-
-if TYPE_CHECKING:
-    from .models import BallotSubmission
 
 logger = logging.getLogger(__name__)
 
@@ -133,6 +130,16 @@ def broadcast_results(ballotsub: 'BallotSubmission', debate: Debate):
 # ==============================================================================
 # Result/ballot forms
 # ==============================================================================
+
+class BallotFlagForm(forms.ModelForm):
+    """Lets an adjudicator flag or unflag a ballot after it was submitted."""
+
+    class Meta:
+        model = BallotSubmission
+        fields = ['flagged']
+        labels = {'flagged': _("Flag error")}
+        help_texts = {'flagged': _("Signals to the tab room that there is a potential problem with this ballot")}
+
 
 class BaseResultForm(forms.Form):
     """Base class for forms that report results. Contains fields and methods
