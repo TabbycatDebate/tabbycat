@@ -209,6 +209,17 @@ class TestCriterionStandings(TestCase):
         self.assertNotIn(reply, self.tournament.substantive_score_criteria)
         self.assertIn(self.style, self.tournament.substantive_score_criteria)
 
+    def test_reply_only_criterion_has_no_metrics(self):
+        reply = ScoreCriterion.objects.create(tournament=self.tournament,
+            name="Rebuttal", seq=3, weight=1, min_score=0, max_score=20, step=1,
+            speech_type=ScoreCriterion.SpeechType.REPLY)
+
+        choices = dict(SpeakerStandingsGenerator.get_metric_choices(
+            ranked_only=False, for_extra=True, tournament=self.tournament))
+        for base in (AverageCriterionScoreMetricAnnotator, TotalCriterionScoreMetricAnnotator):
+            self.assertNotIn(base.build_key(reply.seq), choices)
+            self.assertIn(base.build_key(self.style.seq), choices)
+
     def test_public_tab_respects_release_preference(self):
         url = reverse_tournament('standings-public-tab-criterion', self.tournament,
             kwargs={'criterion': self.style.seq})

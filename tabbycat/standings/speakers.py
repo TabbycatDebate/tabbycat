@@ -340,14 +340,15 @@ def is_criterion_metric_key(key):
 
 
 def criterion_metric_annotator_classes(tournament, standalone_criterion=None):
-    """Returns the metric annotator classes for every score criterion in the
-    tournament, keyed by metric key. Each binds its criterion, so that they can
+    """Returns the metric annotator classes for the tournament's score criteria,
+    keyed by metric key. Criteria scored only on replies are left out, since
+    these metrics are over substantive speeches. Each binds its criterion, so that they can
     be used like the classes in SpeakerStandingsGenerator's static dict.
 
     `standalone_criterion`, if given, is the criterion whose page this is, and
     so whose metrics should be labelled without repeating its name."""
     classes = {}
-    for criterion in tournament.scorecriterion_set.all():
+    for criterion in tournament.substantive_score_criteria:
         for base in (AverageCriterionScoreMetricAnnotator, TotalCriterionScoreMetricAnnotator):
             key = base.build_key(criterion.seq)
             classes[key] = type(base.__name__, (base,), {
