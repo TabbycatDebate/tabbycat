@@ -3,10 +3,15 @@
 <div class="card mt-md-3">
   <div class="list-group list-group-flush">
 
-    <div class="list-group-item">
+    <div class="list-group-item d-flex justify-content-between align-items-center">
       <h4 class="card-title mb-0">
         {{ card_title|safe }}
       </h4>
+      {% if admin_page and user.is_staff %}
+        <a href="{% url 'admin:participants_team_change' team.pk %}" class="btn btn-sm btn-outline-secondary">
+          {% trans "Edit Database" %}
+        </a>
+      {% endif %}
     </div>
 
       {% if team.registration_status == 'U' %}
@@ -109,6 +114,8 @@
     {% endif %}
 
     {% haspermission "view.answers" as answers_perm %}
+    {% haspermission "add.team" as add_team_perm %}
+    {% haspermission "delete.speaker" as delete_speaker_perm %}
     {% if admin_page and answers_perm %}
       <div class="list-group-item list-group-item-secondary">
         <div>
@@ -126,7 +133,6 @@
           {% for speaker in team.speakers %}
             <details>
               <summary>{{ speaker.name }}</summary>
-
               <ul>
                 {% for answer in speaker.answers.all %}
                   <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
@@ -136,6 +142,33 @@
           {% endfor %}
         </div>
       </div>
+    {% endif %}
+
+    {% if admin_page and add_team_perm %}
+      <div class="list-group-item list-group-item-secondary">
+        <div>
+          <strong>{% trans "Speakers:" %}</strong>
+        </div>
+        {% for speaker in team.speakers %}
+          <div class="d-flex align-items-center mb-1">
+            <span class="flex-grow-1">{{ speaker.name }}</span>
+            {% if delete_speaker_perm %}
+              <a href="{% tournamenturl 'participants-team-speaker-delete' pk=team.pk speaker_pk=speaker.pk %}"
+                  class="btn btn-sm btn-outline-danger ml-2 flex-shrink-0">
+                {% trans "Delete" %}
+              </a>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="mt-2">
+          <a href="{% tournamenturl 'participants-team-speaker-add' pk=team.pk %}" class="btn btn-sm btn-success">
+            {% trans "Add Speaker" %}
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if admin_page and answers_perm %}
 
       <div class="list-group-item list-group-item-secondary">
 

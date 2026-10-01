@@ -19,6 +19,7 @@ from participants.models import Adjudicator, Team
 from registration.models import Answer
 
 from . import models as fm
+from .utils import team_feedback_allowed_targets
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -102,9 +103,12 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     if debate.adjudicators.chair is None:
         raise ValueError("This debate ({}) doesn't have a chair.".format(debate.matchup))
 
-    if debate.round.tournament.pref('feedback_from_teams') == 'all-adjs':
+    allowed_targets = team_feedback_allowed_targets(debate.round.tournament.pref('feedback_from_teams'))
+    if allowed_targets == 'all-adjs':
         sources_and_subjects = [(team, adj) for team in debate.teams for adj in debate.adjudicators.all()]
-    elif debate.round.tournament.pref('feedback_from_teams') == 'orallist':
+    elif allowed_targets == 'all-voting-adjs':
+        sources_and_subjects = [(team, adj) for team in debate.teams for adj in debate.adjudicators.voting()]
+    elif allowed_targets == 'orallist':
         sources_and_subjects = [(team, debate.adjudicators.chair) for team in debate.teams]
     else:
         sources_and_subjects = []

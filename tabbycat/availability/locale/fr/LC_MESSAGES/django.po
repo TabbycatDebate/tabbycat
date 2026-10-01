@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-08-05 12:04\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -76,8 +76,8 @@ msgid "The draw cannot be generated until some adjudicators have been marked as 
 msgstr "La génération du tirage n'est pas possible avant que des juges aient été marqués comme disponibles."
 
 #: availability/templates/availability_index.html
-msgid "The draw cannot be generated until some rooms have been marked as available."
-msgstr "La génération du tirage n'est pas possible avant que des salles aient été marquées comme disponibles."
+msgid "No rooms are marked as available. You can still generate the draw and assign rooms later."
+msgstr ""
 
 #: availability/templates/availability_index.html
 msgid "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly."
@@ -133,9 +133,21 @@ msgid "There's only one team breaking in the %(break_category)s Break. You can't
 msgstr "Il n'y a qu'une équipe qualifiante dans la catégorie %(break_category)s. Vous ne pouvez pas générer le tirage pour une joute éliminatoire avec seulement une équipe. Vous voudriez peut-être <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification pour la catégorie %(break_category)s</a>."
 
 #: availability/templates/availability_index.html
+msgid "One or more teams have a <strong>seed</strong> assigned, but this round's draw type is not <strong>Seeded</strong>."
+msgstr ""
+
+#: availability/templates/availability_index.html
+msgid "Set draw type to Seeded"
+msgstr ""
+
+#: availability/templates/availability_index.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so all teams will be in a single bracket containing everyone. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a> before creating the draw. In most tournaments, the first metric should be points or wins."
 msgstr "La préséance de classement d'équipes est vide. Cela signifie que les équipes ne sont pas classés par aucun métrique, donc tous les équipes seront dans une seule tranche avec tout le monde. Si vous n'attendiez pas à ça, créez une préséance de classement d'équipes dans <a href=\"%(standings_config_url)s\" class=\"alert-link\">la section de classement des options du tournoi</a> avant de créer le tirage. Dans la plupart des tournois, la première métrique devrait être le pointage ou victoires."
+
+#: availability/templates/availability_index.html
+msgid "Request failed"
+msgstr ""
 
 #: availability/templates/base_availability.html
 msgid "Select All"

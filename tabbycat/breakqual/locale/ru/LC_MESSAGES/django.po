@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:51\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:35\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -20,6 +20,10 @@ msgstr ""
 #: breakqual/apps.py
 msgid "Break Qualification"
 msgstr "Квалификация в брейк"
+
+#: breakqual/base.py
+msgid "There are too few teams eligible for this break category."
+msgstr ""
 
 #: breakqual/base.py
 #, python-format
@@ -193,6 +197,10 @@ msgstr "Используется для объяснения того, поче�
 #: breakqual/models.py
 msgid "breaking team"
 msgstr "брейкающаяся команда"
+
+#: breakqual/templates/bracket.html
+msgid "Bracket"
+msgstr ""
 
 #: breakqual/templates/break_categories_edit.html
 #: breakqual/templates/breaking_index.html
@@ -546,4 +554,9 @@ msgstr[0] "В команде %(nspeakers)s спикер, которому пре
 msgstr[1] "В команде %(nspeakers)s спикеров, которым предоставлена %(category)s категория"
 msgstr[2] "В команде %(nspeakers)s спикеров, которым предоставлена %(category)s категория"
 msgstr[3] "В команде %(nspeakers)s спикеров, которым предоставлена %(category)s категория"
+
+#: breakqual/views.py
+#, python-format
+msgid "%(category)s Bracket"
+msgstr ""
 

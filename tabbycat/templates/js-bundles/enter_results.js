@@ -219,9 +219,9 @@ $('.score input').change(function() {
 function checkForfeit() {
   const anyChecked = document.querySelectorAll('input.forfeit-check:checked').length;
   if (anyChecked) {
-    [...document.querySelectorAll('.js-speaker,.total')].forEach(el => { el.disabled = true; });
+    [...document.querySelectorAll('.js-speaker,.criterion input,.total')].forEach(el => { el.disabled = true; });
   } else {
-    [...document.querySelectorAll('.js-speaker,.total')].forEach(el => { el.disabled = false; });
+    [...document.querySelectorAll('.js-speaker,.criterion input,.total')].forEach(el => { el.disabled = false; });
   }
 }
 

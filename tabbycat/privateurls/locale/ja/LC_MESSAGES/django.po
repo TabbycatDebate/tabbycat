@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -45,6 +45,10 @@ msgstr ""
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr "これはあなた（%(name)s）個人用にカスタマイズされたURLです。<strong>他人に共有しないでください</strong>ーこのURLを持っている人なら誰でもあなたの試合の結果・フィードバックを送信できてしまいます。ブックマークをして試合終了後に戻って来れます。"
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
+msgstr ""
 
 #: privateurls/templates/private_url_landing.html
 #, python-format
@@ -155,6 +159,10 @@ msgstr "URL"
 #: privateurls/views.py
 msgid "Speakers"
 msgstr "スピーカー"
+
+#: privateurls/views.py
+msgid "Team"
+msgstr "チーム"
 
 #: privateurls/views.py
 msgid "Adjudicators"

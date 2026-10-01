@@ -1,4 +1,5 @@
 import logging
+import unicodedata
 from warnings import warn
 
 from django.contrib.contenttypes.fields import GenericRelation
@@ -184,6 +185,10 @@ class Person(models.Model):
         if tournament.pref('participant_code_names') == 'off':
             return self.name
         return self.code_name
+
+    @property
+    def normalized_name(self):
+        return unicodedata.normalize('NFKD', self.name)
 
 
 class Coach(Person):
@@ -489,6 +494,10 @@ class Adjudicator(Person):
         verbose_name=_("independent"))
     adj_core = models.BooleanField(default=False, blank=True,
         verbose_name=_("adjudication core"))
+    is_tester = models.BooleanField(default=False, blank=True,
+        verbose_name=_("tester"),
+        help_text=_("Whether this adjudicator tests other adjudicators. Members of "
+            "the adjudication core count as testers whether or not this is checked"))
 
     registration_status = models.CharField(
         max_length=1,

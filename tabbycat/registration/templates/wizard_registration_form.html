@@ -17,6 +17,7 @@
         {{ wizard.form.management_form }}
         {% for form in wizard.form.forms %}
           <div class="card">
+            {% block formset_form_header %}{% endblock %}
             {% include "components/form-main.html" %}
           </div>
         {% endfor %}

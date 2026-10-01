@@ -10,11 +10,13 @@ const $ = window.jQuery
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
+import EliminationBracketContainer from '../../breakqual/templates/EliminationBracketContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
 import BallotEntryContainer from '../../results/templates/BallotEntryContainer.vue'
 import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
+import ScheduleEditorContainer from '../../tournaments/templates/ScheduleEditorContainer.vue'
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
 // Allocations
 import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditDebateAdjudicatorsContainer.vue'
@@ -178,8 +180,11 @@ vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
 vueComponents.ResultsTablesContainer = ResultsTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
+// Break Bracket
+vueComponents.EliminationBracketContainer = EliminationBracketContainer
 // Divisions Containers
 vueComponents.DiversityContainer = DiversityContainer
+vueComponents.ScheduleEditorContainer = ScheduleEditorContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 // Printables
 vueComponents.PrintableBallot = PrintableBallot

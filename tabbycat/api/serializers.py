@@ -2,6 +2,7 @@ from collections import OrderedDict
 from collections.abc import Mapping
 from datetime import date, datetime, time
 from functools import partial, partialmethod
+from typing import Optional
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -1070,6 +1071,7 @@ class VenueCategorySerializer(serializers.ModelSerializer):
 
 class ScheduleEventSerializer(serializers.ModelSerializer):
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-scheduleevent-detail')
+    display_title = serializers.CharField(read_only=True)
     round = fields.TournamentHyperlinkedRelatedField(
         view_name='api-round-detail',
         lookup_field='seq',
@@ -1102,11 +1104,11 @@ class BaseStandingsSerializer(serializers.Serializer):
     tied = serializers.SerializerMethodField()
     metrics = serializers.SerializerMethodField()
 
-    def get_rank(self, obj) -> int:
-        return obj.rankings['rank'][0]
+    def get_rank(self, obj) -> Optional[int]:
+        return obj.rankings['rank'][0] if 'rank' in obj.rankings else None
 
-    def get_tied(self, obj) -> bool:
-        return obj.rankings['rank'][1]
+    def get_tied(self, obj) -> Optional[bool]:
+        return obj.rankings['rank'][1] if 'rank' in obj.rankings else None
 
     def get_metrics(self, obj) -> list:
         return [{'metric': s, 'value': v} for s, v in obj.metrics.items()]
@@ -1498,7 +1500,7 @@ class BallotSerializer(serializers.ModelSerializer):
 
                         result.set_speaker(*speaker_args, self.validated_data['speaker'])
                         if self.validated_data.get('ghost', False):
-                            result.set_ghost(*speaker_args)
+                            result.set_ghost(*speaker_args, True)
 
                         if kwargs.get('adjudicator') is not None:
                             speaker_args.insert(0, kwargs['adjudicator'])

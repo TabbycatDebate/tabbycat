@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-28 12:44-0400\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -335,6 +335,10 @@ msgstr ""
 
 #: adjallocation/views.py
 msgid "Edit Allocation"
+msgstr ""
+
+#: adjallocation/views.py
+msgid "Edit Allocation (Concurrent Rounds)"
 msgstr ""
 
 #: adjallocation/views.py

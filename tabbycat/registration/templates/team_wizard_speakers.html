@@ -9,3 +9,11 @@
   {% include "components/explainer-card.html" with type="info" %}
 </div>
 {% endblock page-alerts %}
+
+{% block formset_form_header %}
+  <div class="card-header">
+    <h4 class="card-title mb-0">
+      {% blocktranslate trimmed with number=forloop.counter %}Speaker #{{ number }}{% endblocktranslate %}
+    </h4>
+  </div>
+{% endblock formset_form_header %}

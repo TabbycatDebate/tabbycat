@@ -167,6 +167,13 @@
             {% endblocktrans %}
             {% tournamenturl 'breakqual-public-teams' category.slug as url %}
             {% include "components/item-action.html" with icon="pie-chart" %}
+            {% if pref.public_results %}
+              {% blocktrans trimmed asvar text with category=category.name %}
+                {{ category }} Bracket
+              {% endblocktrans %}
+              {% tournamenturl 'breakqual-public-bracket' category.slug as url %}
+              {% include "components/item-action.html" with icon="git-branch" %}
+            {% endif %}
           {% endfor %}
         {% endif %}
 

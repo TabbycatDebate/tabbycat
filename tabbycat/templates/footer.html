@@ -102,6 +102,8 @@
 
   </div>
 </div>
+{# The language form contains a request-specific CSRF token and must not be cached. #}
+{% endcache %}
 
 <div class="modal fade" id="setLanguageModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -130,4 +132,3 @@
     </div>
   </div>
 </div>
-{% endcache %}

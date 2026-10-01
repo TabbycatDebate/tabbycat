@@ -17,6 +17,7 @@ from formtools.wizard.views import SessionWizardView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from notifications.models import BulkNotification
+from notifications.views import TournamentTemplateEmailCreateView
 from participants.emoji import EMOJI_NAMES
 from participants.models import (
     Adjudicator,
@@ -386,7 +387,7 @@ class PublicCreateTeamFormView(BaseCreateTeamFormView):
         ).first()
         if not invitation or not tournament.pref('institution_participant_registration'):
             return False
-        if invitation.institution_id is not None and tournament.pref('reg_institution_slots'):
+        if invitation.institution_id is not None and tournament.pref('reg_institution_slots') and tournament.pref('reg_block_over_allocated'):
             t_inst = TournamentInstitution.objects.filter(
                 tournament=tournament, institution=invitation.institution,
             ).first()
@@ -467,7 +468,7 @@ class PublicCreateAdjudicatorFormView(BaseCreateAdjudicatorFormView):
         ).first()
         if not invitation or not tournament.pref('institution_participant_registration'):
             return False
-        if invitation.institution_id is not None and tournament.pref('reg_institution_slots'):
+        if invitation.institution_id is not None and tournament.pref('reg_institution_slots') and tournament.pref('reg_block_over_allocated'):
             t_inst = TournamentInstitution.objects.filter(
                 tournament=tournament, institution=invitation.institution,
             ).first()
@@ -779,6 +780,7 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
     template_name = 'answer_tables/institutions.html'
 
     view_permission = Permission.VIEW_REGISTRATION
+    edit_permission = Permission.EDIT_REGISTRATION_SLOTS
 
     def get_table(self):
         t_institutions = self.tournament.tournamentinstitution_set.select_related('institution').prefetch_related(
@@ -897,6 +899,51 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
         return super().get_context_data(**kwargs)
 
 
+class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
+    """Compose and send a custom email to institution contacts (coaches)."""
+
+    template_name = 'email_institution_coaches.html'
+    page_title = gettext_lazy("Email Institution Coaches")
+    page_emoji = '📧'
+    tournament_redirect_pattern_name = 'reg-email-coaches'
+    event = BulkNotification.EventType.INSTITUTION_CUSTOM
+
+    def get_initial(self):
+        return {}
+
+    def get_queryset(self):
+        return Coach.objects.filter(
+            tournament_institution__tournament=self.tournament,
+        ).select_related('tournament_institution__institution').order_by(
+            'tournament_institution__institution__name', 'name',
+        )
+
+    def get_default_send_queryset(self):
+        # Don't exclude coaches already emailed — custom messages can be re-sent.
+        return Coach.objects.none()
+
+    def default_send(self, p, default_send_queryset):
+        return False
+
+    def get_table(self):
+        table = super().get_table()
+        coaches = self.get_queryset()
+
+        table.add_column({'key': 'institution', 'title': _("Institution")}, [
+            c.tournament_institution.institution.name for c in coaches
+        ])
+        table.add_column({'key': 'teams', 'title': _("Teams (req. / alloc.)")}, [
+            '%d / %d' % (c.tournament_institution.teams_requested, c.tournament_institution.teams_allocated)
+            for c in coaches
+        ])
+        table.add_column({'key': 'adjudicators', 'title': _("Adjudicators (req. / alloc.)")}, [
+            '%d / %d' % (c.tournament_institution.adjudicators_requested, c.tournament_institution.adjudicators_allocated)
+            for c in coaches
+        ])
+
+        return table
+
+
 class TeamRegistrationTableView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
     page_emoji = '👯'
     page_title = gettext_lazy("Team Registration")
@@ -1013,6 +1060,7 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, ModelFormSe
 class BaseConfirmRegistrationView(LogActionMixin, TournamentMixin, AdministratorMixin, PostOnlyRedirectView):
     edit_permission = Permission.CONFIRM_REGISTRATION
     action_log_type = ActionLogEntry.ActionType.REGISTRATION_CONFIRM
+    action_log_content_object_attr = 'object'
 
     def get_object(self):
         return get_object_or_404(self.model.objects.all_with_unconfirmed, tournament=self.tournament, pk=self.kwargs['pk'])

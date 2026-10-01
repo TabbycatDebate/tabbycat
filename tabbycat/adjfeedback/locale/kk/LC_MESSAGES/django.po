@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:52\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
 "Language: kk_KZ\n"
@@ -266,6 +266,14 @@ msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr ""
 
 #: adjfeedback/tables.py
+msgid "Whether the adj tests other adjs (click to mark). Adjudication core members are always testers"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "On the adjudication core, so always a tester"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr "Қолжетімсіз"
 
@@ -333,6 +341,10 @@ msgid "Unsubmitted feedback ballots"
 msgstr ""
 
 #: adjfeedback/tables.py
+msgid "% Submitted"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr ""
 
@@ -361,7 +373,11 @@ msgid "There are no feedback options because no rounds have been released to the
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
-msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
+msgid "This tournament expects you to submit feedback on the adjudicator who delivered the adjudication. You may also submit feedback on any other adjudicators available below."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament expects you to submit feedback on all voting adjudicators on the panel (excluding trainees)."
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
@@ -581,7 +597,7 @@ msgstr "Кері байланыс"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
-msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
+msgid "The proportion of an adjudicator's score determined by feedback vs the base score is set on a per-round basis. Click to edit the feedback weight for %(round)s."
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
@@ -643,7 +659,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
-msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgid "The score range for adjudicators is between <strong>%(min_score)s</strong> and <strong>%(max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
@@ -657,6 +673,24 @@ msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Change Feedback Weight"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "The feedback weight determines the proportion of an adjudicator's score that comes from feedback versus their base score. At <strong>0%%</strong>, the score is 100%% base score. At <strong>100%%</strong>, the score is 100%% feedback. This setting applies to <strong>%(round)s</strong>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "Feedback weight (%%)"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Save Feedback Weight"
 msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html
@@ -785,6 +819,11 @@ msgstr ""
 
 #: adjfeedback/views.py
 msgid "Whoops! The value isn't a valid base score."
+msgstr ""
+
+#: adjfeedback/views.py
+#, python-format
+msgid "Feedback weight for %(round)s updated to %(weight)d%%."
 msgstr ""
 
 #: adjfeedback/views.py

@@ -1,17 +1,31 @@
 import { computed, ref, watch } from 'vue'
 import _ from 'lodash'
 
-export function useSortableTable ({ headers, sortableData, getSortableProperty, defaultSortKey, defaultSortOrder, externalFilterKey }) {
-  const sortKey = ref(defaultSortKey || '')
-  const sortOrder = ref(defaultSortOrder || '')
+export function useSortableTable ({ headers, sortableData, getSortableProperty, defaultSortKey, defaultSortOrder, defaultSortHistory, externalFilterKey }) {
   const filterKey = ref('')
+  const initialSortHistory = defaultSortHistory?.length
+    ? defaultSortHistory.map(item => ({
+      key: String(item.key).toLowerCase(),
+      order: item.order === 'desc' ? 'desc' : 'asc',
+    }))
+    : defaultSortKey
+      ? [{ key: String(defaultSortKey).toLowerCase(), order: defaultSortOrder === 'desc' ? 'desc' : 'asc' }]
+      : []
+  const sortHistory = ref(initialSortHistory.slice())
+  const sortKey = computed(() => sortHistory.value[0]?.key || '')
+  const sortOrder = computed(() => sortHistory.value[0]?.order || '')
 
-  const updateSorting = (newSortKey) => {
-    if (sortKey.value === newSortKey) {
-      sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  const updateSorting = (newSortKey, multiSort = false) => {
+    const key = String(newSortKey).toLowerCase()
+    const current = sortHistory.value.find(item => item.key === key)
+    const remaining = sortHistory.value.filter(item => item.key !== key)
+    const nextOrder = !current ? 'desc' : current.order === 'desc' ? 'asc' : ''
+
+    if (!nextOrder) {
+      sortHistory.value = multiSort ? remaining : []
     } else {
-      sortKey.value = newSortKey
-      sortOrder.value = 'desc'
+      const nextSort = { key, order: nextOrder }
+      sortHistory.value = multiSort ? [nextSort, ...remaining] : [nextSort]
     }
   }
 
@@ -37,26 +51,32 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
       return sortableData.value
     }
 
-    const sorted = sortableData.value.slice(0).sort((a, b) => {
-      const aCellData = getSortableProperty(a, orderedHeaderIndex)
-      const bCellData = getSortableProperty(b, orderedHeaderIndex)
-      if (aCellData === '' && bCellData === '') {
-        return 0
-      } else if (aCellData === '') {
-        return 1
-      } else if (bCellData === '') {
-        return -1
+    const criteria = sortHistory.value.map(item => ({
+      ...item,
+      index: _.findIndex(headers.value, head => String(head.key).toLowerCase() === item.key),
+    })).filter(item => item.index !== -1)
+    return sortableData.value.slice(0).sort((a, b) => {
+      for (const { index, order } of criteria) {
+        const aCellData = getSortableProperty(a, index)
+        const bCellData = getSortableProperty(b, index)
+        let comparison = 0
+        if (aCellData === '' && bCellData === '') {
+          comparison = 0
+        } else if (aCellData === '') {
+          comparison = 1
+        } else if (bCellData === '') {
+          comparison = -1
+        } else if (_.isString(aCellData) || _.isString(bCellData)) {
+          comparison = String(aCellData).localeCompare(String(bCellData), undefined, { sensitivity: 'base' })
+        } else {
+          comparison = Number(aCellData) - Number(bCellData)
+        }
+        if (comparison) {
+          return order === 'desc' ? -comparison : comparison
+        }
       }
-      if (_.isString(aCellData) || _.isString(bCellData)) {
-        return String(aCellData).localeCompare(String(bCellData), undefined, { sensitivity: 'base' })
-      }
-      return Number(aCellData) - Number(bCellData)
+      return 0
     })
-
-    if (sortOrder.value === 'desc') {
-      return sorted.reverse()
-    }
-    return sorted
   })
 
   const dataFilteredByKey = computed(() => {
@@ -82,6 +102,7 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
   return {
     sortKey,
     sortOrder,
+    sortHistory,
     filterKey,
     updateSorting,
     dataOrderedByKey,

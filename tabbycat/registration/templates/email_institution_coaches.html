@@ -1,0 +1,49 @@
+{% extends "email_participants.html" %}
+{% load i18n %}
+
+{% block page-alerts %}
+{{ block.super }}
+
+<div class="card mt-3 mb-3">
+  <div class="card-body">
+    <h5 class="card-title">{% trans "Available variables" %}</h5>
+    <p class="card-text">
+      {% blocktrans trimmed %}
+        You can personalise the subject and message using the variables below.
+        They are replaced per recipient when the email is sent.
+      {% endblocktrans %}
+    </p>
+    <div class="row">
+      <div class="col-md-6">
+        <ul class="mb-0">
+          {% verbatim %}
+          <li><code>{{ CONTACT }}</code> — {% endverbatim %}{% trans "name of the institution's contact" %}</li>
+          <li>{% verbatim %}<code>{{ INSTITUTION }}</code> — {% endverbatim %}{% trans "institution name" %}</li>
+          <li>{% verbatim %}<code>{{ TOURN }}</code> — {% endverbatim %}{% trans "tournament name" %}</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <ul class="mb-0">
+          <li>{% verbatim %}<code>{{ TEAMS_REQUESTED }}</code>, <code>{{ TEAMS_ALLOCATED }}</code>{% endverbatim %}</li>
+          <li>{% verbatim %}<code>{{ ADJUDICATORS_REQUESTED }}</code>, <code>{{ ADJUDICATORS_ALLOCATED }}</code>{% endverbatim %}</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr>
+
+    <h6 class="card-subtitle mb-2">{% trans "Arithmetic (for pricing, etc.)" %}</h6>
+    <p class="card-text mb-1">
+      {% blocktrans trimmed %}
+        Use the <code>calc</code> tag for calculations with <code>+</code>, <code>-</code>,
+        <code>*</code>, <code>/</code>:
+      {% endblocktrans %}
+    </p>
+    <ul class="mb-0">
+      <li>{% verbatim %}<code>{% calc "TEAMS_ALLOCATED * 80" %}</code>{% endverbatim %}</li>
+      <li>{% verbatim %}<code>{% calc "TEAMS_ALLOCATED * 80 + ADJUDICATORS_ALLOCATED * 50" %}</code>{% endverbatim %}</li>
+      <li>{% verbatim %}<code>{{ TEAMS_ALLOCATED|mul:80 }}</code>{% endverbatim %} — {% trans "alternative syntax" %}</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

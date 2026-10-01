@@ -95,6 +95,20 @@ class MarginIncludesDissent(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class ScoreAggregationFunction(ChoicePreference):
+    help_text = _("How is the speaker's score from a debate judged by multiple judges "
+        "calculated: Mean (default), or Median (required by Karl Popper rules).")
+    verbose_name = _("Panel score aggregation function")
+    section = scoring
+    name = 'score_aggregation_function'
+    choices = (
+        ('mean', _("Mean (average)")),
+        ('median', _("Median (in even-numbered panels, decimals rounded up)")),
+    )
+    default = 'mean'
+
+
+@tournament_preferences_registry.register
 class BallotIntroduction(LongStringPreference):
     help_text = _("Any explanatory text needed to introduce the ballot form, e.g. speaker scale")
     verbose_name = _("Ballot introduction/explanation")
@@ -520,13 +534,16 @@ class FeedbackPaths(ChoicePreference):
 
 @tournament_preferences_registry.register
 class FeedbackFromTeams(ChoicePreference):
-    verbose_name = _("Expect feedback to be submitted by teams on")
+    verbose_name = _("Allow and expect feedback to be submitted by teams on")
     help_text = _("Used to inform available choices in the feedback forms for teams (both online and printed) and feedback progress; this option is used by, e.g., UADC")
     section = feedback
     name = 'feedback_from_teams'
     choices = (
         ('orallist', _("Orallist only (voting panellists permitted, with prompts to select orallist)")),
-        ('all-adjs', _("All adjudicators in their panels (including trainees)")),
+        ('all-voting-adjs-allowed', _("Allow all voting adjudicators, but only expect the orallist")),
+        ('all-adjs-allowed', _("Allow all adjudicators (including trainees), but only expect the orallist")),
+        ('all-voting-adjs', _("All voting adjudicators (excluding trainees)")),
+        ('all-adjs', _("All adjudicators (including trainees)")),
         ('no-one', _("No one")),
     )
     default = 'orallist'
@@ -1094,6 +1111,16 @@ class SplitVotingBallots(BooleanPreference):
     verbose_name = _("Individual voting ballots")
     section = data_entry
     name = 'individual_ballots'
+    default = False
+
+
+@tournament_preferences_registry.register
+class AllowSelfSplitBallots(BooleanPreference):
+    help_text = _("Allow a solo adjudicator (no panel) to declare their own decision as a "
+        "2:1 split rather than unanimous, per Karl Popper rules.")
+    verbose_name = _("Allow self-split ballots for solo adjudicators")
+    section = data_entry
+    name = 'allow_self_split_ballots'
     default = False
 
 
@@ -1752,6 +1779,15 @@ class ParticipantSlots(BooleanPreference):
     section = registration
     name = 'reg_institution_slots'
     default = False
+
+
+@tournament_preferences_registry.register
+class BlockRegistrationOverAllocated(BooleanPreference):
+    help_text = _("When participant slots are in use, block team and adjudicator registration once an institution's allocated slots are full.")
+    verbose_name = _("Block registration when over allocated slots")
+    section = registration
+    name = 'reg_block_over_allocated'
+    default = True
 
 
 @tournament_preferences_registry.register

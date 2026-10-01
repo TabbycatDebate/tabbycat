@@ -18,7 +18,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
-from .utils import expected_feedback_targets
+from .utils import expected_feedback_targets, team_feedback_allowed_targets
 
 logger = logging.getLogger(__name__)
 
@@ -199,6 +199,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
                                       use_tournament_password=False, ignored_option=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
+    allowed_targets = team_feedback_allowed_targets(tournament.pref('feedback_from_teams'))
 
     def adj_choice(adj, debate, pos):
         value = '%d-%d' % (debate.id, adj.id)
@@ -206,7 +207,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         display = _("Submitted - ") if adj.submitted else ""
         if pos == AdjudicatorAllocation.POSITION_ONLY:
             display += _("%(name)s")
-        elif tournament.pref('feedback_from_teams') == 'all-adjs':
+        elif allowed_targets in ['all-voting-adjs', 'all-adjs']:
             # Translators: e.g. "Megan Pearson (panellist)", with round="Round 3", adjpos="panellist"
             display += _("%(name)s (%(adjpos)s)")
         elif pos == AdjudicatorAllocation.POSITION_CHAIR:
@@ -244,9 +245,9 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         # so that they pass to the AdjudicatorAllocation
         for da in debate.debateadjudicator_set.all():
             da.adjudicator.submitted = da.submitted
-        if tournament.pref('feedback_from_teams') == 'all-adjs':
+        if allowed_targets == 'all-adjs':
             das = debate.adjudicators.with_positions()
-        elif tournament.pref('feedback_from_teams') == 'orallist':
+        elif allowed_targets in ['orallist', 'all-voting-adjs']:
             das = debate.adjudicators.voting_with_positions()
         else:
             das = []

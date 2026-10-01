@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:46\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:40\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -113,6 +113,10 @@ msgid "The reply speaker for this team did not give a substantive speech."
 msgstr "Спикер, говоривший заключительную речь в этой команде нее давал конструктивную речь."
 
 #: results/forms.py
+msgid "This was a 2:1 split decision (self-declared)"
+msgstr ""
+
+#: results/forms.py
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr "Общие баллы команд одинаковы (т.е. ничья)."
 
@@ -168,6 +172,18 @@ msgstr[3] ""
 
 #: results/forms.py
 msgid "There must be exactly 1 team advancing."
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "All speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Substantive speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Reply speeches"
 msgstr ""
 
 #: results/models.py
@@ -252,6 +268,14 @@ msgstr ""
 
 #: results/models.py
 msgid "Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."
+msgstr ""
+
+#: results/models.py
+msgid "self-declared split"
+msgstr ""
+
+#: results/models.py
+msgid "For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per Karl Popper rules."
 msgstr ""
 
 #: results/models.py
@@ -377,6 +401,10 @@ msgstr "турнир"
 
 #: results/models.py
 msgid "sequence"
+msgstr ""
+
+#: results/models.py
+msgid "speech type"
 msgstr ""
 
 #: results/models.py
@@ -555,7 +583,6 @@ msgstr "Неверные результаты"
 
 #: results/templates/assistant_enter_results.html
 #: results/templates/enter_results.html
-#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr "Email будут отправлены судьям, когда бэллот будет подтвержден."
 
@@ -773,14 +800,6 @@ msgstr "Ошибка в %(pos)s поле дублирующего спикера
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
 msgstr "Ошибка в %(pos)s поле баллов: %(error)s"
-
-#: results/templates/debate_postponement_form.html
-msgid "Postponed"
-msgstr ""
-
-#: results/templates/debate_postponement_form.html
-msgid "Postpone"
-msgstr ""
 
 #: results/templates/enter_results.html
 msgid "Ballot Status"

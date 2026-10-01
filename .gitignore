@@ -30,6 +30,7 @@ issues-*.html
 # Tags
 tags
 
+.env
 env/
 venv/
 venv-*/

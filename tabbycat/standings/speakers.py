@@ -4,13 +4,13 @@ import logging
 from functools import partialmethod
 
 from django.db.models import Avg, Case, Count, F, FloatField, Max, Min, Q, StdDev, Sum, When
-from django.db.models.functions import Cast, NullIf
+from django.db.models.functions import Cast, NullIf, Round as RoundScore
 from django.utils.translation import gettext_lazy as _
 
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
-from .metrics import QuerySetMetricAnnotator
+from .metrics import QuerySetMetricAnnotator, SCORE_PRECISION
 from .ranking import BasicRankAnnotator
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     replies = False
     field = 'speakerscore__score'
     where_value = None
+    round_value = True
 
     def get_annotation_filter(self, round):
         """Returns the Q object restricting which speeches the metric counts."""
@@ -45,15 +46,20 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         return annotation_filter
 
     def get_annotation(self, round):
-        """Returns a QuerySet annotated with the metric given. All positional
-        arguments from the third onwards, and all keyword arguments, are passed
-        to get_annotation_metric_query_str()."""
+        annotation = self.get_aggregation(round)
+        if self.round_value:
+            return RoundScore(annotation, precision=SCORE_PRECISION)
+        return annotation
+
+    def get_aggregation(self, round):
+        """Build the unrounded aggregate so derived metrics round only once."""
         return self.function(self.field, filter=self.get_annotation_filter(round))
 
 
 class TeamMetricQuerySetMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
     combinable = False
+    round_value = False
 
     def get_annotation(self, round):
         """Returns a QuerySet annotated with the metric."""
@@ -175,6 +181,7 @@ class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = _("number of speeches given")
     abbr = _("Num")
     function = Count
+    round_value = False
 
 
 class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -214,6 +221,7 @@ class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = _("replies given")
     abbr = _("Num")
     function = Count
+    round_value = False
     replies = True
     listed = False
 
@@ -242,15 +250,15 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
         return super().get_annotated_queryset(queryset, round=round)
 
     def get_annotation(self, round=None):
-        total = TotalSpeakerScoreMetricAnnotator().get_annotation(round)
-        highest = self.MaximumScore().get_annotation(round)
-        lowest = self.MinimumScore().get_annotation(round)
+        total = TotalSpeakerScoreMetricAnnotator().get_aggregation(round)
+        highest = self.MaximumScore().get_aggregation(round)
+        lowest = self.MinimumScore().get_aggregation(round)
 
-        return Case(
+        return RoundScore(Case(
             When(speech_count__gt=2, then=(total - highest - lowest) / (F('speech_count') - 2)),
             When(speech_count__gt=0, then=total / F('speech_count')),
             output_field=FloatField(),
-        )
+        ), precision=SCORE_PRECISION)
 
 
 class SpeakerScoreRankingsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -261,6 +269,7 @@ class SpeakerScoreRankingsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     function = Sum
     ascending = True
     field = 'speakerscore__rank'
+    round_value = False
 
 
 # ==============================================================================

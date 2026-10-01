@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -334,6 +334,34 @@ msgstr[0] "Tiết lộ Kiến nghị cho %(round)s"
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Không có kiến nghị nào cho vòng này được nhập vào Tabbycat."
 
+#: motions/templates/show.html
+msgid "Release Motion"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Release Info Slide"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Releasing..."
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Motions are Released"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Failed to release motions"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Info-slides are released"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Failed to release info-slides"
+msgstr ""
+
 #: motions/utils.py
 msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr ""
@@ -369,6 +397,16 @@ msgid_plural "Reused the %(count)d motions from the previous round."
 msgstr[0] "Sử dụng lại %(count)d kiến nghị từ vòng trước."
 
 #: motions/views.py
+#, python-format
+msgid "%(tournament)s - %(round)s"
+msgstr ""
+
+#: motions/views.py
+msgid "The motion has been released."
+msgid_plural "The motions have been released."
+msgstr[0] ""
+
+#: motions/views.py
 msgid "Released the motion."
 msgid_plural "Released the motions."
 msgstr[0] "Đã công bố kiến nghị."
@@ -377,6 +415,11 @@ msgstr[0] "Đã công bố kiến nghị."
 msgid "Unreleased the motion."
 msgid_plural "Unreleased the motions."
 msgstr[0] "Đã đóng kiến nghị."
+
+#: motions/views.py
+msgid "Released the info-slide."
+msgid_plural "Released the info-slides."
+msgstr[0] ""
 
 #: motions/views.py
 msgid "Round Motions"

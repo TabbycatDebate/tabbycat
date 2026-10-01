@@ -1,5 +1,5 @@
 from collections import defaultdict
-from copy import deepcopy
+from copy import copy
 from itertools import groupby
 
 from asgiref.sync import async_to_sync
@@ -1045,26 +1045,43 @@ class SpeakerRoundStandingsRoundsView(TournamentAPIMixin, TournamentPublicAPIMix
         params_serializer = SpeakerRoundStandingsRoundsParamsSerializer(data=self.request.query_params, context={'tournament': self.tournament})
         params_serializer.is_valid(raise_exception=True)
 
-        speaker_scores = SpeakerScore.objects.select_related('speaker', 'ballot_submission__debate__round__tournament').filter(
+        speaker_scores = SpeakerScore.objects.select_related(
+            'speaker', 'debate_team__debate__round__tournament', 'ballot_submission__debate__round__tournament',
+        ).filter(
             ballot_submission__confirmed=True, speaker_id__in=data.keys(),
         ).order_by('speaker_id', 'debate_team_id', 'position')
 
-        if params_serializer.validated_data.get('ghost', False) == 'true':
+        if params_serializer.validated_data.get('ghost', False):
             speaker_scores = speaker_scores.filter(ghost=True)
-        if params_serializer.validated_data.get('replies', False) == 'true':
+        if params_serializer.validated_data.get('replies', False):
             speaker_scores = speaker_scores.filter(position=self.tournament.reply_position)
-        elif params_serializer.validated_data.get('substantive', 'true') == 'true':
+        elif params_serializer.validated_data.get('substantive', True):
             speaker_scores = speaker_scores.filter(position__lte=self.tournament.last_substantive_position)
 
         for spk in data.values():
-            spk.debateteams = deepcopy(debateteams_by_team_id[spk.team_id])
+            spk.debateteams = [copy(dt) for dt in debateteams_by_team_id[spk.team_id]]
             for dt in spk.debateteams:
                 dt.scores = []
 
         for speaker, all_scores in groupby(speaker_scores, key=lambda ss: ss.speaker_id):
             speaker_rounds = {dt.id: dt for dt in data[speaker].debateteams}
+            speaker_rounds_by_round = {dt.debate.round_id: dt for dt in data[speaker].debateteams}
             for dt, round_scores in groupby(all_scores, key=lambda ss: ss.debate_team_id):
-                speaker_rounds[dt].scores.extend(list(round_scores))
+                round_scores = list(round_scores)
+                if dt not in speaker_rounds:
+                    # A speaker can be moved to another team after ballots have
+                    # been submitted. Associate scores from their former team
+                    # with the current team's entry for that round, if it has
+                    # one, rather than returning the round twice.
+                    score_debate_team = round_scores[0].debate_team
+                    debate_team = speaker_rounds_by_round.get(score_debate_team.debate.round_id)
+                    if debate_team is None:
+                        debate_team = copy(score_debate_team)
+                        debate_team.scores = []
+                        data[speaker].debateteams.append(debate_team)
+                        speaker_rounds_by_round[debate_team.debate.round_id] = debate_team
+                    speaker_rounds[dt] = debate_team
+                speaker_rounds[dt].scores.extend(round_scores)
 
         return data.values()
 
@@ -1500,11 +1517,11 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
         params.is_valid(raise_exception=True)
 
         filters = Q()
-        if params.validated_data.get('adjudicators', 'false') == 'false':
+        if not params.validated_data['adjudicators']:
             filters |= Q(content_type__model='adjudicator')
-        if params.validated_data.get('teams', 'false') == 'false':
+        if not params.validated_data['teams']:
             filters |= Q(content_type__model='team')
-        if params.validated_data.get('venues', 'false') == 'false':
+        if not params.validated_data['venues']:
             filters |= Q(content_type__model='venue')
         return filters
 
@@ -1585,6 +1602,15 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
     create_permission = Permission.EDIT_PREFORMEDPANELS
     update_permission = Permission.EDIT_PREFORMEDPANELS
     destroy_permission = Permission.EDIT_PREFORMEDPANELS
+
+    def get_object(self):
+        # SimpleMetadata probes PUT endpoints with get_object(). This view also
+        # uses PUT for the add_blank collection action, where there is no panel
+        # identifier to look up. Treat that probe as a missing object so DRF can
+        # omit object metadata instead of raising an AssertionError.
+        if self.lookup_url_kwarg not in self.kwargs:
+            raise NotFound
+        return super().get_object()
 
     def get_queryset(self):
         return super().get_queryset().select_related('round', 'round__tournament').prefetch_related(
