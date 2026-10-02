@@ -35,6 +35,8 @@ Development
 
   - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser and ChromeDriver installed.
 
+- Run ``npm test`` for frontend JavaScript tests (``*.test.js``), without a Django server.
+
 - We use `pre-commit <https://pre-commit.com/>`_ to run code style checks (linters). To have them run as a git hook automatically before every commit::
 
     $ pre-commit install

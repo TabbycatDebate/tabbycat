@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -266,6 +266,14 @@ msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr "crwdns33934:0crwdne33934:0"
 
 #: adjfeedback/tables.py
+msgid "Whether the adj tests other adjs (click to mark). Adjudication core members are always testers"
+msgstr "crwdns53669:0crwdne53669:0"
+
+#: adjfeedback/tables.py
+msgid "On the adjudication core, so always a tester"
+msgstr "crwdns53671:0crwdne53671:0"
+
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr "crwdns51568:0crwdne51568:0"
 
@@ -333,6 +341,10 @@ msgid "Unsubmitted feedback ballots"
 msgstr "crwdns33960:0crwdne33960:0"
 
 #: adjfeedback/tables.py
+msgid "% Submitted"
+msgstr "crwdns53673:0crwdne53673:0"
+
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr "crwdns33962:0crwdne33962:0"
 
@@ -361,8 +373,12 @@ msgid "There are no feedback options because no rounds have been released to the
 msgstr "crwdns29462:0crwdne29462:0"
 
 #: adjfeedback/templates/enter_feedback.html
-msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
-msgstr "crwdns33964:0crwdne33964:0"
+msgid "This tournament expects you to submit feedback on the adjudicator who delivered the adjudication. You may also submit feedback on any other adjudicators available below."
+msgstr "crwdns53675:0crwdne53675:0"
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament expects you to submit feedback on all voting adjudicators on the panel (excluding trainees)."
+msgstr "crwdns53677:0crwdne53677:0"
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
@@ -581,8 +597,8 @@ msgstr "crwdns29540:0crwdne29540:0"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
-msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
-msgstr "crwdns29542:0%(round)scrwdne29542:0"
+msgid "The proportion of an adjudicator's score determined by feedback vs the base score is set on a per-round basis. Click to edit the feedback weight for %(round)s."
+msgstr "crwdns53679:0%(round)scrwdne53679:0"
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Score Ratio"
@@ -643,8 +659,8 @@ msgstr "crwdns35568:0crwdne35568:0"
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
-msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
-msgstr "crwdns29564:0%(pref.adj_min_score)scrwdnd29564:0%(pref.adj_max_score)scrwdnd29564:0%(feedback_options)scrwdne29564:0"
+msgid "The score range for adjudicators is between <strong>%(min_score)s</strong> and <strong>%(max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgstr "crwdns53681:0%(min_score)scrwdnd53681:0%(max_score)scrwdnd53681:0%(feedback_options)scrwdne53681:0"
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
@@ -658,6 +674,24 @@ msgstr "crwdns35570:0crwdne35570:0"
 #: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
 msgstr "crwdns35572:0crwdne35572:0"
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Change Feedback Weight"
+msgstr "crwdns53683:0crwdne53683:0"
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "The feedback weight determines the proportion of an adjudicator's score that comes from feedback versus their base score. At <strong>0%%</strong>, the score is 100%% base score. At <strong>100%%</strong>, the score is 100%% feedback. This setting applies to <strong>%(round)s</strong>."
+msgstr "crwdns53685:0%(round)scrwdne53685:0"
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "Feedback weight (%%)"
+msgstr "crwdns53687:0crwdne53687:0"
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Save Feedback Weight"
+msgstr "crwdns53689:0crwdne53689:0"
 
 #: adjfeedback/templates/public_add_feedback.html
 msgid "Who are you?"
@@ -786,6 +820,11 @@ msgstr "crwdns51084:0%(adjudicator)scrwdne51084:0"
 #: adjfeedback/views.py
 msgid "Whoops! The value isn't a valid base score."
 msgstr "crwdns35574:0crwdne35574:0"
+
+#: adjfeedback/views.py
+#, python-format
+msgid "Feedback weight for %(round)s updated to %(weight)d%%."
+msgstr "crwdns53691:0%(round)scrwdnd53691:0%(weight)dcrwdne53691:0"
 
 #: adjfeedback/views.py
 msgid "Feedback Progress"

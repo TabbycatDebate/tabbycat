@@ -1594,6 +1594,15 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
     update_permission = Permission.EDIT_PREFORMEDPANELS
     destroy_permission = Permission.EDIT_PREFORMEDPANELS
 
+    def get_object(self):
+        # SimpleMetadata probes PUT endpoints with get_object(). This view also
+        # uses PUT for the add_blank collection action, where there is no panel
+        # identifier to look up. Treat that probe as a missing object so DRF can
+        # omit object metadata instead of raising an AssertionError.
+        if self.lookup_url_kwarg not in self.kwargs:
+            raise NotFound
+        return super().get_object()
+
     def get_queryset(self):
         return super().get_queryset().select_related('round', 'round__tournament').prefetch_related(
             'preformedpaneladjudicator_set__adjudicator__tournament',

@@ -2,10 +2,47 @@
 Change Log
 ==========
 
-2.12.0 (TBD)
+2.13.0 (TBD)
 ------------
 
 *Release date: TBD*
+
+
+2.12.0 (Ukrainian Levkoy)
+-------------------------
+
+*Release date: 23 September 2026*
+
+- Expanded registration workflows:
+  - Institutions can register by invitation, view and update their responses, and receive confirmation statuses
+  - Team and adjudicator allocations can be capped, edited, and transferred between institutions
+  - Organizers can send bulk and custom emails to institutions and track invitation emails. Thank you to idowolf for improving bulk-email validation!
+- Updated and added tournament formats, which can make changes outside the settings:
+  - BP draws can now take a pullup penalty into account, and optionally have speaker scores in elimination rounds
+  - WSDC draws are now random within brackets, and automatically create criteria with different ranges between substantive and reply
+  - AP odd brackets use bubble-up-bubble down. Thank you to Chirag!
+  - Implemented round-robin draws, including support for schedule groups and a BP round-robin preset
+  - Added a Karl Popper (Czechia) tournament preset with median speaker-score aggregation and self-declared split ballots. Thank you to PiechZ!
+- Ido Wolf worked on tournament schedules:
+  - Redesigned the tournament schedule editor with day-by-day organization and automatic event titles
+  - Added API endpoints and iCalendar export of the public schedule and scheduled debate times
+- Added participant management views:
+  - Tracking institution gender breakdowns and N-1 adjudicator requirements across rounds. Thank you to Alelí for the institutional adjudicator rule table!
+  - New check-in filters for breaking participants
+  - Can automatically create institution conflicts in Edit Database.
+  - Allowed adding and removing speakers from teams in the admin interface. Thank you to Trudeau Okech!
+- Improved draw management with editable side pre-allocations and bulk copying of sides from earlier rounds. Thank you to PiechZ!
+- Added a public elimination-round bracket view, with links to team records. Thank you to Mahor Nagda for adding links!
+- Implemented new features for adjudicator feedback:
+  - Added configurable adjudicator feedback score increments. Thank you to Alekh Bhardwaj!
+  - Improved adjudicator feedback with new submission expectations versus allowable feedback with completion percentages. This makes feedback more flexible if a team wishes to submit feedback on the chair _and_ panellists.
+  - Added records of adjudicators testing others. Thank you to Mahor Nagda!
+- Improved tables with multi-column table sorting by 송은우 (@be-student) and fixed copying
+- API improvements:
+  - Added ballot check-in, adjudicator score, unconfirmed ballot, and public current standings support
+  - Improved round standings, validation, error responses, and action logging
+- Upgraded the frontend to Vue 3 and Vite
+- \+ bug fixes and optimizations!
 
 
 2.11.1

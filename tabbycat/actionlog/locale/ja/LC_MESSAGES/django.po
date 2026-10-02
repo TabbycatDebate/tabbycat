@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -24,6 +24,10 @@ msgstr "動作履歴"
 #: actionlog/models.py
 msgid "Changed adjudicator breaking status"
 msgstr "ジャッジのブレイク状況を変更"
+
+#: actionlog/models.py
+msgid "Changed adjudicator tester status"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Created adjudicator"
@@ -282,6 +286,10 @@ msgid "Saved the sides status of a matchup"
 msgstr "マッチアップのサイドを保存しました"
 
 #: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr ""
+
+#: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
 msgstr "簡易入力機能を用いてジャッジ情報の情報をインポートしました"
 
@@ -304,6 +312,10 @@ msgstr "編集済みスピーカーカテゴリー"
 #: actionlog/models.py
 msgid "Created speaker"
 msgstr "スピーカーを作成"
+
+#: actionlog/models.py
+msgid "Deleted speaker"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Edited speaker"
@@ -391,6 +403,18 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Registered speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
 msgstr ""
 
 #: actionlog/models.py

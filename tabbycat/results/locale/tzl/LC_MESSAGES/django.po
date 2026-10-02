@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:40\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -109,6 +109,10 @@ msgid "The reply speaker for this team did not give a substantive speech."
 msgstr "crwdns32412:0crwdne32412:0"
 
 #: results/forms.py
+msgid "This was a 2:1 split decision (self-declared)"
+msgstr "crwdns54261:0crwdne54261:0"
+
+#: results/forms.py
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr "crwdns32414:0crwdne32414:0"
 
@@ -163,6 +167,18 @@ msgstr[1] "crwdns51754:5%(n)dcrwdne51754:5"
 #: results/forms.py
 msgid "There must be exactly 1 team advancing."
 msgstr "crwdns51756:0crwdne51756:0"
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "All speeches"
+msgstr "crwdns54263:0crwdne54263:0"
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Substantive speeches"
+msgstr "crwdns54265:0crwdne54265:0"
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Reply speeches"
+msgstr "crwdns54267:0crwdne54267:0"
 
 #: results/models.py
 msgid "Tab room"
@@ -247,6 +263,14 @@ msgstr "crwdns53566:0crwdne53566:0"
 #: results/models.py
 msgid "Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."
 msgstr "crwdns53568:0crwdne53568:0"
+
+#: results/models.py
+msgid "self-declared split"
+msgstr "crwdns54269:0crwdne54269:0"
+
+#: results/models.py
+msgid "For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per Karl Popper rules."
+msgstr "crwdns54271:0crwdne54271:0"
 
 #: results/models.py
 msgid "ballot submission"
@@ -372,6 +396,10 @@ msgstr "crwdns52836:0crwdne52836:0"
 #: results/models.py
 msgid "sequence"
 msgstr "crwdns52838:0crwdne52838:0"
+
+#: results/models.py
+msgid "speech type"
+msgstr "crwdns54273:0crwdne54273:0"
 
 #: results/models.py
 msgid "weight"
@@ -547,7 +575,6 @@ msgstr "crwdns32570:0crwdne32570:0"
 
 #: results/templates/assistant_enter_results.html
 #: results/templates/enter_results.html
-#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr "crwdns32572:0crwdne32572:0"
 
@@ -757,14 +784,6 @@ msgstr "crwdns34502:0%(pos)scrwdnd34502:0%(error)scrwdne34502:0"
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
 msgstr "crwdns34504:0%(pos)scrwdnd34504:0%(error)scrwdne34504:0"
-
-#: results/templates/debate_postponement_form.html
-msgid "Postponed"
-msgstr "crwdns51766:0crwdne51766:0"
-
-#: results/templates/debate_postponement_form.html
-msgid "Postpone"
-msgstr "crwdns51768:0crwdne51768:0"
 
 #: results/templates/enter_results.html
 msgid "Ballot Status"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:51\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:35\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -20,6 +20,10 @@ msgstr ""
 #: breakqual/apps.py
 msgid "Break Qualification"
 msgstr "Break Olma Şartları"
+
+#: breakqual/base.py
+msgid "There are too few teams eligible for this break category."
+msgstr ""
 
 #: breakqual/base.py
 #, python-format
@@ -191,6 +195,10 @@ msgstr "Aksi takdirde kalifiye olmuş bir takımın neden break olmadığını a
 #: breakqual/models.py
 msgid "breaking team"
 msgstr "break olan takım"
+
+#: breakqual/templates/bracket.html
+msgid "Bracket"
+msgstr ""
 
 #: breakqual/templates/break_categories_edit.html
 #: breakqual/templates/breaking_index.html
@@ -542,4 +550,9 @@ msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category ass
 msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"
 msgstr[0] "Takımın %(nspeakers)s tane  %(category)s konuşmacı kategorisinden konuşmacısı var."
 msgstr[1] "Takımın %(nspeakers)s tane  %(category)s konuşmacı kategorisinden konuşmacısı var."
+
+#: breakqual/views.py
+#, python-format
+msgid "%(category)s Bracket"
+msgstr ""
 

@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:50\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:41\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: he\n"
@@ -224,6 +224,10 @@ msgid "Always Trainee"
 msgstr ""
 
 #: utils/tables.py
+msgid "self-declared split"
+msgstr ""
+
+#: utils/tables.py
 msgid "in minority"
 msgstr ""
 
@@ -254,13 +258,21 @@ msgid "Room"
 msgstr ""
 
 #: utils/tables.py
+msgid "Scheduled time"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Pull-up team (%(ordinal)s pull-up)"
+msgstr ""
+
+#: utils/tables.py
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: utils/tables.py
 msgid "Teams are from the same institution"
@@ -331,6 +343,10 @@ msgstr ""
 #, python-format
 msgid "Team %(num)d"
 msgstr "קבוצה %(num)d"
+
+#: utils/tables.py
+msgid "Postponed"
+msgstr ""
 
 #: utils/tables.py
 msgid "Postpone"

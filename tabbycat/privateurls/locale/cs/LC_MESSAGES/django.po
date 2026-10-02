@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:47\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -45,6 +45,10 @@ msgstr ""
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
 msgstr "URL této stránky je přizpůsobeno právě vám, %(name)s. <strong>S nikým ji nesdílejte;</strong> kdokoli zná tuto URL může posílat výsledky a/nebo zpětnou vazbu pro vaše debaty. Můžete si tuto stránku uložit do oblíbených a vrátit se sem po každé debatě pro dostupné funkce."
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
+msgstr ""
 
 #: privateurls/templates/private_url_landing.html
 #, python-format
@@ -157,12 +161,16 @@ msgid "Speakers"
 msgstr "Mluvčí"
 
 #: privateurls/views.py
+msgid "Team"
+msgstr "Tým"
+
+#: privateurls/views.py
 msgid "Adjudicators"
 msgstr "Rozhodčí"
 
 #: privateurls/views.py
 msgid "All participants already have private URLs. If you want to delete them, use the Edit Database area."
-msgstr ""
+msgstr "Všichni účastníci již mají soukromé URL. Pokud je chcete smazat, použijte "
 
 #: privateurls/views.py
 #, python-format

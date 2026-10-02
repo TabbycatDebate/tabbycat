@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:52\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -147,7 +147,7 @@ msgstr "%(name)s (প্যানেলিস্ট দেওয়া হয়
 #: adjfeedback/forms.py
 #, python-format
 msgid "This line (for %(adjudicator)s) didn't have a score"
-msgstr "এই লাইন (%(adjudicator)s) কোনো স্কোর ছিল না"
+msgstr "এই লাইন ( %(adjudicator)s) কোনো স্কোর ছিল না"
 
 #: adjfeedback/forms.py
 #, python-format
@@ -266,6 +266,14 @@ msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr "বিচারক ব্রেকিং হিসাবে চিহ্নিত করা হয়েছে কিনা (চিহ্নিত করতে ক্লিক করুন)"
 
 #: adjfeedback/tables.py
+msgid "Whether the adj tests other adjs (click to mark). Adjudication core members are always testers"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "On the adjudication core, so always a tester"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr "অপ্রযোজ্য"
 
@@ -333,6 +341,10 @@ msgid "Unsubmitted feedback ballots"
 msgstr "জমা না দেওয়া প্রতিক্রিয়া ব্যালট"
 
 #: adjfeedback/tables.py
+msgid "% Submitted"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr "অনুপস্থিত প্রতিক্রিয়া দেখুন"
 
@@ -361,8 +373,12 @@ msgid "There are no feedback options because no rounds have been released to the
 msgstr "কোনো প্রতিক্রিয়ার বিকল্প নেই কারণ এখনও জনসাধারণের কাছে কোনো রাউন্ড প্রকাশ করা হয়নি। তারা আছে যখন ফিরে দেখুন!"
 
 #: adjfeedback/templates/enter_feedback.html
-msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
-msgstr "এই টুর্নামেন্টটি আশা করে যে আপনি <strong>শুধুমাত্র সেই বিচারকের উপর মতামত জমা দেবেন যিনি রায় প্রদান করেছেন</strong>। অন্যান্য বিচারকদের প্রতিক্রিয়া জমা দেবেন না।"
+msgid "This tournament expects you to submit feedback on the adjudicator who delivered the adjudication. You may also submit feedback on any other adjudicators available below."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament expects you to submit feedback on all voting adjudicators on the panel (excluding trainees)."
+msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
@@ -581,7 +597,7 @@ msgstr "প্রতিক্রিয়া"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
-msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
+msgid "The proportion of an adjudicator's score determined by feedback vs the base score is set on a per-round basis. Click to edit the feedback weight for %(round)s."
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
@@ -643,7 +659,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
-msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgid "The score range for adjudicators is between <strong>%(min_score)s</strong> and <strong>%(max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
@@ -657,6 +673,24 @@ msgstr "মূল স্কোর"
 
 #: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Change Feedback Weight"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "The feedback weight determines the proportion of an adjudicator's score that comes from feedback versus their base score. At <strong>0%%</strong>, the score is 100%% base score. At <strong>100%%</strong>, the score is 100%% feedback. This setting applies to <strong>%(round)s</strong>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "Feedback weight (%%)"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Save Feedback Weight"
 msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html
@@ -788,6 +822,11 @@ msgid "Whoops! The value isn't a valid base score."
 msgstr "উফফফ! মানটি একটি বৈধ বেইজ স্কোর নয়।"
 
 #: adjfeedback/views.py
+#, python-format
+msgid "Feedback weight for %(round)s updated to %(weight)d%%."
+msgstr ""
+
+#: adjfeedback/views.py
 msgid "Feedback Progress"
 msgstr "প্রতিক্রিয়া অগ্রগতি"
 
@@ -795,8 +834,8 @@ msgstr "প্রতিক্রিয়া অগ্রগতি"
 #, python-format
 msgid "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)"
 msgid_plural "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)"
-msgstr[0] "%(nmissing)d অনুপস্থিত প্রতিক্রিয়া জমা (%(fulfilled).1f%% ফিরে এসেছে)"
-msgstr[1] "%(nmissing)d অনুপস্থিত প্রতিক্রিয়া জমা (%(fulfilled).1f%% ফিরে এসেছে)"
+msgstr[0] "%(nmissing)d অনুপস্থিত প্রতিক্রিয়া জমা (%(fulfilled)। 1f%% ফিরে এসেছে)"
+msgstr[1] "%(nmissing)d অনুপস্থিত প্রতিক্রিয়া জমা (%(fulfilled)। 1f%% ফিরে এসেছে)"
 
 #: adjfeedback/views.py
 #, python-format

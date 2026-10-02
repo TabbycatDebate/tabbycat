@@ -66,6 +66,7 @@ class AdjudicationCore(BaseGroup):
         Permission.EDIT_BASEJUDGESCORES_IND,
         Permission.EDIT_ADJ_BREAK,
         Permission.VIEW_ADJ_BREAK,
+        Permission.EDIT_ADJ_TESTER,
 
         # Motions
         Permission.EDIT_MOTION,

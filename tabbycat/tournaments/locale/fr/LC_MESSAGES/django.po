@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-06 01:33\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:41\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -51,6 +51,26 @@ msgstr "Commentaires"
 msgid "Open"
 msgstr "Ouvert"
 
+#: tournaments/forms.py tournaments/models.py
+msgid "Power-paired"
+msgstr "Jumelé par rang"
+
+#: tournaments/forms.py tournaments/models.py
+msgid "Random"
+msgstr "Aléatoire"
+
+#: tournaments/forms.py
+msgid "Round robin"
+msgstr ""
+
+#: tournaments/forms.py
+msgid "Draw format"
+msgstr ""
+
+#: tournaments/forms.py
+msgid "How preliminary rounds are drawn. The first option matches Tabbycat’s usual default (random draw in round 1, then power-pairing). Round robin opens an extra step to set parallel panels and how many preliminary rounds to create."
+msgstr ""
+
 #: tournaments/forms.py
 msgid "Format Configuration"
 msgstr "Configuration de format"
@@ -78,6 +98,14 @@ msgstr "Si les participants peuvent soumettre les feuilles et évaluations eux-m
 #: tournaments/forms.py
 msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Equity:</strong> [list equity members here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
 msgstr "<strong>Tabulation :</strong> [équipe de tabulation]<br /><strong>Équité :</strong> [équipe d'équité]<br /><strong>Organisation :</strong> [comité d’organisation]<br /><strong>Juges :</strong> [juges en chef]"
+
+#: tournaments/forms.py
+msgid "Parallel preliminary panels per schedule slot"
+msgstr ""
+
+#: tournaments/forms.py
+msgid "With 1, each schedule slot has one database round. With 2, Tabbycat creates two rounds per slot (e.g. A and B) that share the same “current round” slot for navigation and feedback."
+msgstr ""
 
 #: tournaments/forms.py
 msgid "Current preliminary round"
@@ -109,6 +137,14 @@ msgstr "Si toutes les joutes préliminaires ont été achevées, cette plage est
 #, python-format
 msgid "%(name)s (%(abbreviation)s)"
 msgstr "%(name)s (%(abbreviation)s)"
+
+#: tournaments/forms.py
+msgid "Round"
+msgstr "Tour"
+
+#: tournaments/forms.py tournaments/models.py
+msgid "If the event belongs to a specific round, which round"
+msgstr ""
 
 #: tournaments/mixins.py
 #, python-format
@@ -186,20 +222,12 @@ msgid "tournaments"
 msgstr "tournois"
 
 #: tournaments/models.py
-msgid "Random"
-msgstr "Aléatoire"
-
-#: tournaments/models.py
 msgid "Manual"
 msgstr "Manuel"
 
 #: tournaments/models.py
 msgid "Round-robin"
 msgstr "Toutes rondes"
-
-#: tournaments/models.py
-msgid "Power-paired"
-msgstr "Jumelé par rang"
 
 #: tournaments/models.py
 msgid "Elimination"
@@ -226,12 +254,36 @@ msgid "Confirmed"
 msgstr "Confirmé"
 
 #: tournaments/models.py
+msgid "Teams released"
+msgstr ""
+
+#: tournaments/models.py
 msgid "Released"
 msgstr "Distribué"
 
 #: tournaments/models.py
+msgid "Not released"
+msgstr ""
+
+#: tournaments/models.py
+msgid "Info-slides released"
+msgstr ""
+
+#: tournaments/models.py
+msgid "Motions released"
+msgstr "Motions publiées"
+
+#: tournaments/models.py
 msgid "A number that determines the order of the round, should count consecutively from 1 for the first round"
 msgstr "Un numéro qui détermine l'ordre de la joute, qui devrait dénombrer de façon consécutif de 1 pour la première joute"
+
+#: tournaments/models.py
+msgid "schedule group"
+msgstr ""
+
+#: tournaments/models.py
+msgid "Rounds in the same schedule slot (e.g. parallel panels A/B) share this value. Defaults to the sequence number when each slot has only one round."
+msgstr ""
 
 #: tournaments/models.py
 msgid "completed"
@@ -304,12 +356,12 @@ msgid "If marked silent, information about this round (such as its results) will
 msgstr "Si cette joute est marquée comme silencieuse, les informations de la joute (p. ex. les résultats) ne seront pas affichés au public."
 
 #: tournaments/models.py
-msgid "motions released"
-msgstr "motions distribués"
+msgid "motions status"
+msgstr ""
 
 #: tournaments/models.py
-msgid "Whether motions will appear on the public website, assuming that feature is turned on"
-msgstr "Si les motions seront affichées sur le site public, en supposant que la fonctionnalité soit activée"
+msgid "The release status of motions for this round"
+msgstr ""
 
 #: tournaments/models.py
 msgid "starts at"
@@ -392,7 +444,7 @@ msgid "title"
 msgstr "titre"
 
 #: tournaments/models.py
-msgid "e.g. \"Lunch\""
+msgid "Optional custom title; leave blank to use the event type and round"
 msgstr ""
 
 #: tournaments/models.py
@@ -417,10 +469,6 @@ msgstr "heure de fin"
 
 #: tournaments/models.py
 msgid "The time at which the event ends, may be empty"
-msgstr ""
-
-#: tournaments/models.py
-msgid "If the event belongs to a specific round, which round"
 msgstr ""
 
 #: tournaments/models.py
@@ -475,10 +523,6 @@ msgid "Tabbycat"
 msgstr "Tabbycat"
 
 #: tournaments/templates/configure_tournament.html
-msgid "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed."
-msgstr "Afin de finir de créer votre tournoi, sélectionnez une configuration de base. Notez que les paramètres peuvent toujours être changées plus tard (et à plus de la precision) si vous en avez besoin."
-
-#: tournaments/templates/configure_tournament.html
 msgid "Configure Tournament"
 msgstr "Configuration du tournoi"
 
@@ -508,8 +552,28 @@ msgid "You already have a tournament set up using this data set. Reloading the d
 msgstr "Vous avez déjà un tournoi utilisant cette ensemble de données. Recharger les données va <strong>tout supprimer</strong> de ce tournoi."
 
 #: tournaments/templates/create_tournament.html
-msgid "Create Tournament"
-msgstr "Créer tournoi"
+#, python-format
+msgid "Step %(step)s of %(total)s: tournament details"
+msgstr ""
+
+#: tournaments/templates/create_tournament.html
+#, python-format
+msgid "Step %(step)s of %(total)s: format and draw options"
+msgstr ""
+
+#: tournaments/templates/create_tournament.html
+#, python-format
+msgid "Step %(step)s of %(total)s: round robin preliminary setup"
+msgstr ""
+
+#: tournaments/templates/create_tournament.html
+msgctxt "button"
+msgid "Continue"
+msgstr "Continuer"
+
+#: tournaments/templates/create_tournament.html
+msgid "Create tournament"
+msgstr ""
 
 #: tournaments/templates/create_tournament.html
 msgid "Cancel and go back to the site home page"
@@ -678,6 +742,11 @@ msgid "%(category)s Break"
 msgstr "Qualification %(category)s"
 
 #: tournaments/templates/public_tournament_index.html
+#, python-format
+msgid "%(category)s Bracket"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html
 msgid "Breaking Adjudicators"
 msgstr "Qualification des juges"
 
@@ -726,6 +795,14 @@ msgstr "Personnel du tournoi"
 #, python-format
 msgid "Schedule is in time zone: %(schedule_timezone_label)s"
 msgstr "L'horaire est dans le fuseau horaire : %(schedule_timezone_label)s"
+
+#: tournaments/templates/public_tournament_schedule.html
+msgid "Download the iCalendar file to add these events to your calendar app."
+msgstr ""
+
+#: tournaments/templates/public_tournament_schedule.html
+msgid "Add schedule to calendar"
+msgstr ""
 
 #: tournaments/templates/round_complete_check.html
 msgid "Confirm Round Completion"
@@ -945,7 +1022,11 @@ msgid "Public area for <strong>%(tn)s</strong>"
 msgstr "Zone publique de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/tournament_schedule_edit.html
-msgid "This page allows you to set the public schedule for the tournament."
+msgid "View Public Schedule"
+msgstr ""
+
+#: tournaments/templates/tournament_schedule_edit.html
+msgid "Events are grouped by day and ordered by start time. Drag an event into another row's time slot to reorder it."
 msgstr ""
 
 #: tournaments/templates/tournament_schedule_edit.html
@@ -1069,6 +1150,30 @@ msgid "2nd team"
 msgstr "2ème équipe"
 
 #: tournaments/utils.py
+msgid "plaintiff/prosecution"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "defense"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "plaintiff/prosecution team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "defense team"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "Pl"
+msgstr ""
+
+#: tournaments/utils.py
+msgid "Def"
+msgstr ""
+
+#: tournaments/utils.py
 msgid "opening government"
 msgstr "premier gouvernement"
 
@@ -1122,14 +1227,28 @@ msgstr "2O"
 
 #: tournaments/utils.py
 #, python-format
+msgid "Round %(slot)d (%(panel)s)"
+msgstr ""
+
+#: tournaments/utils.py
+#, python-format
+msgid "R%(slot)d%(panel)s"
+msgstr ""
+
+#: tournaments/utils.py
+#, python-format
 msgid "Round %(number)d"
 msgstr "Joute %(number)d"
 
-#. Translators: This stands for "Round %(number)d".
 #: tournaments/utils.py
 #, python-format
 msgid "R%(number)d"
 msgstr "J%(number)d"
+
+#: tournaments/utils.py
+#, python-format
+msgid "R%(slot)-d%(panel)s"
+msgstr ""
 
 #: tournaments/utils.py
 msgid "bye"
@@ -1188,6 +1307,11 @@ msgid "88-team BP dataset"
 msgstr "données à 88 équipes de PB"
 
 #: tournaments/views.py
+#, python-format
+msgid "Tournament %(name)s is ready."
+msgstr ""
+
+#: tournaments/views.py
 msgid "Set Current Round"
 msgstr "Modifier la joute actuelle"
 
@@ -1198,4 +1322,9 @@ msgstr ""
 #: tournaments/views.py
 msgid "Tournament Schedule"
 msgstr "Horaire du tournoi"
+
+#: tournaments/views.py
+#, python-format
+msgid "%(tournament)s Schedule"
+msgstr ""
 

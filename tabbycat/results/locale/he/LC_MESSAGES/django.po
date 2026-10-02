@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:46\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:40\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: he\n"
@@ -29,7 +29,6 @@ msgid_plural "Resaved results for %(count)d ballot submissions."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/admin.py
 msgid "Speaker"
@@ -102,7 +101,6 @@ msgid_plural "%(speaker)s appears to have given %(count)d substantive speeches."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/forms.py
 msgid "The last substantive speaker and reply speaker can't be the same."
@@ -110,6 +108,10 @@ msgstr ""
 
 #: results/forms.py
 msgid "The reply speaker for this team did not give a substantive speech."
+msgstr ""
+
+#: results/forms.py
+msgid "This was a 2:1 split decision (self-declared)"
 msgstr ""
 
 #: results/forms.py
@@ -164,10 +166,21 @@ msgid_plural "There must be exactly %(n)d teams advancing."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/forms.py
 msgid "There must be exactly 1 team advancing."
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "All speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Substantive speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Reply speeches"
 msgstr ""
 
 #: results/models.py
@@ -252,6 +265,14 @@ msgstr ""
 
 #: results/models.py
 msgid "Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."
+msgstr ""
+
+#: results/models.py
+msgid "self-declared split"
+msgstr ""
+
+#: results/models.py
+msgid "For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per Karl Popper rules."
 msgstr ""
 
 #: results/models.py
@@ -380,6 +401,10 @@ msgid "sequence"
 msgstr ""
 
 #: results/models.py
+msgid "speech type"
+msgstr ""
+
+#: results/models.py
 msgid "weight"
 msgstr ""
 
@@ -496,7 +521,6 @@ msgid_plural "The following %(ndebates)s debates appear to have scoresheets from
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/admin_results.html
 #, python-format
@@ -555,7 +579,6 @@ msgstr ""
 
 #: results/templates/assistant_enter_results.html
 #: results/templates/enter_results.html
-#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr ""
 
@@ -578,7 +601,6 @@ msgid_plural "%(ndebates)s debate do not have their sides confirmed. Results for
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/assistant_results.html
 #, python-format
@@ -587,7 +609,6 @@ msgid_plural "%(num_even_panel)s debates have panels with an even number of voti
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/ballot/ballot_debate_info.html
 msgid "Debate Information"
@@ -667,7 +688,6 @@ msgid_plural "There are %(number)s existing ballot sets for this debate."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/ballot/other_ballots_list.html
 msgid "This ballot set is <strong>confirmed</strong>."
@@ -734,7 +754,6 @@ msgid_plural "<em>(identical to versions %(others)s)</em>"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/ballot_entry.html
 #, python-format
@@ -772,14 +791,6 @@ msgstr ""
 #: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
-msgstr ""
-
-#: results/templates/debate_postponement_form.html
-msgid "Postponed"
-msgstr ""
-
-#: results/templates/debate_postponement_form.html
-msgid "Postpone"
 msgstr ""
 
 #: results/templates/enter_results.html
@@ -912,7 +923,6 @@ msgid_plural "This form has already been submitted <strong>%(nsubmissions)s</str
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/public_enter_results.html
 msgid "Submit Ballot"
@@ -920,7 +930,6 @@ msgid_plural "Submit Ballots"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: results/templates/public_enter_results.html
 msgid "When submitting this form your IP address will be stored for logging purposes."

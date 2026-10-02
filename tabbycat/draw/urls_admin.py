@@ -74,4 +74,10 @@ urlpatterns = [
     path('sides/',
         views.SideAllocationsView.as_view(),
         name='draw-side-allocations'),
+    path('sides/update/',
+        views.UpdateSidePreallocationView.as_view(),
+        name='draw-side-allocations-update'),
+    path('sides/bulk/',
+        views.BulkApplySidePreallocationView.as_view(),
+        name='draw-side-allocations-bulk'),
 ]

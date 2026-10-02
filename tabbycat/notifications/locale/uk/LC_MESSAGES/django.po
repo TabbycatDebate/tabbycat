@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:48\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Ukrainian\n"
 "Language: uk_UA\n"
@@ -42,6 +42,10 @@ msgstr ""
 
 #: notifications/forms.py
 msgid "Message"
+msgstr ""
+
+#: notifications/forms.py
+msgid "The {{ URL }} variable must be unlinked for it to work"
 msgstr ""
 
 #: notifications/models.py
@@ -118,6 +122,22 @@ msgstr ""
 
 #: notifications/models.py
 msgid "team draw released"
+msgstr ""
+
+#: notifications/models.py
+msgid "institution registration"
+msgstr ""
+
+#: notifications/models.py
+msgid "participant slots allocated"
+msgstr ""
+
+#: notifications/models.py
+msgid "user invitation"
+msgstr ""
+
+#: notifications/models.py
+msgid "custom institution message"
 msgstr ""
 
 #: notifications/models.py
@@ -210,6 +230,30 @@ msgstr ""
 
 #: notifications/models.py
 msgid "email statuses"
+msgstr ""
+
+#: notifications/models.py
+msgid "participant"
+msgstr ""
+
+#: notifications/models.py
+msgid "The participant (adjudicator or speaker) who owns this device"
+msgstr ""
+
+#: notifications/models.py
+msgid "language"
+msgstr ""
+
+#: notifications/models.py
+msgid "The language preference of the participant at subscription time"
+msgstr ""
+
+#: notifications/models.py
+msgid "WebPush device"
+msgstr ""
+
+#: notifications/models.py
+msgid "WebPush devices"
 msgstr ""
 
 #: notifications/templates/email_participants.html
@@ -389,7 +433,7 @@ msgstr[2] ""
 msgstr[3] ""
 
 #: notifications/views.py
-msgid "No emails were sent — likely because no recipients were selected."
+msgid "No emails were queued — likely because no valid recipients were selected."
 msgstr ""
 
 #: notifications/views.py
@@ -419,4 +463,13 @@ msgstr ""
 #: notifications/views.py
 msgid "Adjudicators"
 msgstr ""
+
+#: notifications/views.py
+#, python-format
+msgid "The email to %(recipients)s was not queued because the email address is invalid."
+msgid_plural "Emails to %(recipients)s were not queued because their email addresses are invalid."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 

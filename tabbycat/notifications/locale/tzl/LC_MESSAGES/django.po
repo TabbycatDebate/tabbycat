@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:38\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -43,6 +43,10 @@ msgstr "crwdns34170:0crwdne34170:0"
 #: notifications/forms.py
 msgid "Message"
 msgstr "crwdns34172:0crwdne34172:0"
+
+#: notifications/forms.py
+msgid "The {{ URL }} variable must be unlinked for it to work"
+msgstr "crwdns54041:0{{ URL }}crwdne54041:0"
 
 #: notifications/models.py
 msgid "email"
@@ -119,6 +123,22 @@ msgstr "crwdns34182:0crwdne34182:0"
 #: notifications/models.py
 msgid "team draw released"
 msgstr "crwdns34184:0crwdne34184:0"
+
+#: notifications/models.py
+msgid "institution registration"
+msgstr "crwdns54043:0crwdne54043:0"
+
+#: notifications/models.py
+msgid "participant slots allocated"
+msgstr "crwdns54045:0crwdne54045:0"
+
+#: notifications/models.py
+msgid "user invitation"
+msgstr "crwdns54047:0crwdne54047:0"
+
+#: notifications/models.py
+msgid "custom institution message"
+msgstr "crwdns54049:0crwdne54049:0"
 
 #: notifications/models.py
 msgid "custom message"
@@ -211,6 +231,30 @@ msgstr "crwdns34214:0crwdne34214:0"
 #: notifications/models.py
 msgid "email statuses"
 msgstr "crwdns34216:0crwdne34216:0"
+
+#: notifications/models.py
+msgid "participant"
+msgstr "crwdns54051:0crwdne54051:0"
+
+#: notifications/models.py
+msgid "The participant (adjudicator or speaker) who owns this device"
+msgstr "crwdns54053:0crwdne54053:0"
+
+#: notifications/models.py
+msgid "language"
+msgstr "crwdns54055:0crwdne54055:0"
+
+#: notifications/models.py
+msgid "The language preference of the participant at subscription time"
+msgstr "crwdns54057:0crwdne54057:0"
+
+#: notifications/models.py
+msgid "WebPush device"
+msgstr "crwdns54059:0crwdne54059:0"
+
+#: notifications/models.py
+msgid "WebPush devices"
+msgstr "crwdns54061:0crwdne54061:0"
 
 #: notifications/templates/email_participants.html
 #, python-format
@@ -387,8 +431,8 @@ msgstr[0] "crwdns34284:1%(email_count)scrwdne34284:1"
 msgstr[1] "crwdns34284:5%(email_count)scrwdne34284:5"
 
 #: notifications/views.py
-msgid "No emails were sent — likely because no recipients were selected."
-msgstr "crwdns34286:0crwdne34286:0"
+msgid "No emails were queued — likely because no valid recipients were selected."
+msgstr "crwdns54063:0crwdne54063:0"
 
 #: notifications/views.py
 msgid "Send Email"
@@ -417,4 +461,11 @@ msgstr "crwdns34300:0crwdne34300:0"
 #: notifications/views.py
 msgid "Adjudicators"
 msgstr "crwdns34302:0crwdne34302:0"
+
+#: notifications/views.py
+#, python-format
+msgid "The email to %(recipients)s was not queued because the email address is invalid."
+msgid_plural "Emails to %(recipients)s were not queued because their email addresses are invalid."
+msgstr[0] "crwdns54065:1%(recipients)scrwdne54065:1"
+msgstr[1] "crwdns54065:5%(recipients)scrwdne54065:5"
 

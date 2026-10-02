@@ -5,6 +5,7 @@ import { computed, defineAsyncComponent, toRef } from 'vue'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import CheckCell from '../tables/CheckCell.vue'
+import AjaxSelectCell from '../tables/AjaxSelectCell.vue'
 import BallotsCell from '../../results/templates/BallotsCell.vue'
 import { useSortableTable } from '../composables/useSortableTable.js'
 
@@ -24,10 +25,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  defaultSortHistory: {
+    type: Array,
+    default: () => [],
+  },
   externalFilterKey: String,
 })
 
-const emit = defineEmits(['toggle-checked'])
+const emit = defineEmits(['saved', 'toggle-checked'])
 
 const rows = computed(() => {
   const rows = []
@@ -53,15 +58,25 @@ const headers = computed(() => {
 
 const sortableData = computed(() => rows.value)
 
+const getCellValue = (cell) => {
+  if (cell.component === 'ajax-select-cell') {
+    return cell.value ?? ''
+  }
+  if (cell.component === 'check-cell') {
+    return cell.checked ?? false
+  }
+  return _.isUndefined(cell.sort) ? cell.text : cell.sort
+}
+
 const getSortableProperty = (row, orderedHeaderIndex) => {
   const cell = row[orderedHeaderIndex]
-  const cellData = _.isUndefined(cell.sort) ? cell.text : cell.sort
-  return cellData
+  return getCellValue(cell)
 }
 
 const {
   sortKey,
   sortOrder,
+  sortHistory,
   updateSorting,
   dataFilteredByKey,
 } = useSortableTable({
@@ -70,6 +85,7 @@ const {
   getSortableProperty,
   defaultSortKey: props.defaultSortKey,
   defaultSortOrder: props.defaultSortOrder,
+  defaultSortHistory: props.defaultSortHistory,
   externalFilterKey: toRef(props, 'externalFilterKey'),
 })
 
@@ -90,9 +106,20 @@ const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
 }
 
 const copyTableData = async () => {
+  // Reuse one detached element while decoding the table's cells.
+  const decoder = document.createElement('textarea')
+  const getPlainText = (html) => {
+    decoder.innerHTML = html.replace(/<[^>]*>?/gm, '')
+    return decoder.value
+  }
   const content = props.tableContent.map(row =>
     row.reduce((acc, cell, index) => {
-      acc[props.tableHeaders[index].key] = (cell.text ? cell.text.replace(/<[^>]*>?/gm, '') : '')
+      const value = ['ajax-select-cell', 'check-cell'].includes(cell.component)
+        ? getCellValue(cell)
+        : cell.text
+      acc[props.tableHeaders[index].key] = typeof value === 'string'
+        ? getPlainText(value)
+        : (value ?? '')
       return acc
     }, {}),
   )
@@ -106,6 +133,7 @@ defineExpose({ copyTableData })
 const componentMap = {
   SmartCell,
   'check-cell': CheckCell,
+  'ajax-select-cell': AjaxSelectCell,
   'ballots-cell': BallotsCell,
   'feedback-trend': FeedbackTrend,
 }
@@ -129,6 +157,7 @@ const resolveCellComponent = (cellData) => {
             :header="header"
             :sort-key="sortKey"
             :sort-order="sortOrder"
+            :sort-history="sortHistory"
             @resort="updateSorting"
           />
         </tr>
@@ -146,6 +175,7 @@ const resolveCellComponent = (cellData) => {
             v-for="(cellData, cellIndex) in row"
             :key="cellIndex"
             :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
+            @saved="emit('saved', $event)"
             @toggle-checked="emit('toggle-checked', $event)"
           />
         </tr>

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:53\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:42\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -224,6 +224,10 @@ msgid "Always Trainee"
 msgstr "crwdns33658:0crwdne33658:0"
 
 #: utils/tables.py
+msgid "self-declared split"
+msgstr "crwdns54347:0crwdne54347:0"
+
+#: utils/tables.py
 msgid "in minority"
 msgstr "crwdns35332:0crwdne35332:0"
 
@@ -252,6 +256,15 @@ msgstr "crwdns51500:0%(predicates)scrwdnd51500:0%(last_predicate)scrwdne51500:0"
 #: utils/tables.py
 msgid "Room"
 msgstr "crwdns51502:0crwdne51502:0"
+
+#: utils/tables.py
+msgid "Scheduled time"
+msgstr "crwdns54349:0crwdne54349:0"
+
+#: utils/tables.py
+#, python-format
+msgid "Pull-up team (%(ordinal)s pull-up)"
+msgstr "crwdns54351:0%(ordinal)scrwdne54351:0"
 
 #: utils/tables.py
 #, python-format
@@ -329,6 +342,10 @@ msgstr "crwdns52267:0crwdne52267:0"
 #, python-format
 msgid "Team %(num)d"
 msgstr "crwdns33708:0%(num)dcrwdne33708:0"
+
+#: utils/tables.py
+msgid "Postponed"
+msgstr "crwdns54353:0crwdne54353:0"
 
 #: utils/tables.py
 msgid "Postpone"

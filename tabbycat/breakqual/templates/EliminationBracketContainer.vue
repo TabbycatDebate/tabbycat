@@ -477,7 +477,10 @@ function connectorsForCol(idx) {
                   <span class="text-muted bracket-side-label">{{ sideLabel(t.side) }}</span>
                 </span>
                 <span class="bracket-col-name text-truncate">
-                  <template v-if="t.team">{{ t.team.short_name }}</template>
+                  <template v-if="t.team">
+                    <a v-if="t.team.url" :href="t.team.url">{{ t.team.short_name }}</a>
+                    <template v-else>{{ t.team.short_name }}</template>
+                  </template>
                   <span v-else class="text-muted">TBD</span>
                 </span>
               </div>

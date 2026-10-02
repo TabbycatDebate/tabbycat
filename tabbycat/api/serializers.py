@@ -1071,6 +1071,7 @@ class VenueCategorySerializer(serializers.ModelSerializer):
 
 class ScheduleEventSerializer(serializers.ModelSerializer):
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-scheduleevent-detail')
+    display_title = serializers.CharField(read_only=True)
     round = fields.TournamentHyperlinkedRelatedField(
         view_name='api-round-detail',
         lookup_field='seq',
@@ -1499,7 +1500,7 @@ class BallotSerializer(serializers.ModelSerializer):
 
                         result.set_speaker(*speaker_args, self.validated_data['speaker'])
                         if self.validated_data.get('ghost', False):
-                            result.set_ghost(*speaker_args)
+                            result.set_ghost(*speaker_args, True)
 
                         if kwargs.get('adjudicator') is not None:
                             speaker_args.insert(0, kwargs['adjudicator'])

@@ -23,6 +23,7 @@ class ActionLogEntry(models.Model):
 
     class ActionType(models.TextChoices):
         ADJUDICATOR_BREAK_SET             = 'br.aj.set', _("Changed adjudicator breaking status")
+        ADJUDICATOR_TESTER_SET            = 'ts.aj.set', _("Changed adjudicator tester status")
         ADJUDICATOR_CREATE                = 'aj.crea', _("Created adjudicator")
         ADJUDICATOR_EDIT                  = 'aj.edit', _("Edited adjudicator")
         ADJUDICATOR_NOTE_SET              = 'aj.note', _("Set adjudicator note")   # obsolete
@@ -87,6 +88,7 @@ class ActionLogEntry(models.Model):
         ROUND_EDIT                        = 'rd.edit', _("Edited round")
         ROUND_START_TIME_SET              = 'rd.st.set', _("Set start time")
         SIDES_SAVE                        = 'ms.save', _("Saved the sides status of a matchup")
+        SIDE_PREALLOCATIONS_SAVE          = 'sa.save', _("Edited side pre-allocations")
         SIMPLE_IMPORT_ADJUDICATORS        = 'si.adju', _("Imported adjudicators using the simple importer")
         SIMPLE_IMPORT_INSTITUTIONS        = 'si.inst', _("Imported institutions using the simple importer")
         SIMPLE_IMPORT_TEAMS               = 'si.team', _("Imported teams using the simple importer")

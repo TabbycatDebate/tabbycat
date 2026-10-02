@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-06 09:38+1000\n"
-"PO-Revision-Date: 2025-07-05 23:46\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: he\n"
@@ -44,6 +44,10 @@ msgstr ""
 #: privateurls/templates/private_url_landing.html
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
 msgstr ""
 
 #: privateurls/templates/private_url_landing.html
@@ -157,6 +161,10 @@ msgid "Speakers"
 msgstr "דובר/תים"
 
 #: privateurls/views.py
+msgid "Team"
+msgstr "קבוצה"
+
+#: privateurls/views.py
 msgid "Adjudicators"
 msgstr ""
 
@@ -171,7 +179,6 @@ msgid_plural "Private URLs were generated for all %(nblank_people)d people."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: privateurls/views.py
 #, python-format
@@ -180,7 +187,6 @@ msgid_plural "The already-existing private URLs for %(nexisting_people)d people 
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: privateurls/views.py
 msgid "URL Key"
