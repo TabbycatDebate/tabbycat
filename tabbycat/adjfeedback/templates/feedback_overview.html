@@ -29,7 +29,7 @@
   {% endif %}
   {% if pref.feedback_paths_rounds == 'all' or pref.feedback_from_teams_rounds == 'all' %}
     {% blocktrans trimmed asvar p2 %}
-      Feedback is also being collected during elimination rounds. Such feedback is recorded and displayed, but does not count towards the scores and statistics shown on this page.
+      Feedback is also being collected during elimination rounds. Such feedback is marked as ignored by default, so it does not count towards the scores and statistics shown on this page unless it is un-ignored.
     {% endblocktrans %}
   {% endif %}
   {% include "components/explainer-card.html" with type="info" %}

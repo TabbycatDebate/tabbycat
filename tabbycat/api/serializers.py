@@ -1420,6 +1420,9 @@ class FeedbackSerializer(serializers.ModelSerializer):
         except related_field.model.DoesNotExist:
             raise serializers.ValidationError("Source is not in debate")
 
+        # Feedback from elimination rounds doesn't count towards scores unless un-ignored
+        data.setdefault('ignored', debate.round.is_break_round)
+
         return super().validate(data)
 
     def get_submitter_fields(self):

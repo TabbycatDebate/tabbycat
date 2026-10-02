@@ -559,7 +559,7 @@ FEEDBACK_ROUNDS_CHOICES = (
 class FeedbackPathsRounds(ChoicePreference):
     verbose_name = _("Expect feedback from adjudicators in")
     help_text = _("Which rounds adjudicators are asked for feedback in. Feedback given in elimination rounds is "
-                  "recorded and shown, but never counts towards adjudicators' scores.")
+                  "marked as ignored by default, so it doesn't count towards adjudicators' scores unless un-ignored.")
     section = feedback
     name = 'feedback_paths_rounds'
     choices = FEEDBACK_ROUNDS_CHOICES
@@ -570,8 +570,8 @@ class FeedbackPathsRounds(ChoicePreference):
 class FeedbackFromTeamsRounds(ChoicePreference):
     verbose_name = _("Expect feedback from teams in")
     help_text = _("Which rounds teams are asked for feedback in. Teams are never asked for feedback in silent "
-                  "rounds. Feedback given in elimination rounds is recorded and shown, but never counts towards "
-                  "adjudicators' scores.")
+                  "rounds. Feedback given in elimination rounds is marked as ignored by default, so it doesn't "
+                  "count towards adjudicators' scores unless un-ignored.")
     section = feedback
     name = 'feedback_from_teams_rounds'
     choices = FEEDBACK_ROUNDS_CHOICES

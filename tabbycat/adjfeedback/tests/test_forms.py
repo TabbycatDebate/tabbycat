@@ -137,3 +137,36 @@ class TestFeedbackFormRoundScope(TestCase):
         self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
         self.assertEqual(self._adj_form_rounds(), ["Round 1"])
         self.assertCountEqual(self._team_form_rounds(), ["Round 1", "Elimination"])
+
+    # ==========================================================================
+    # Elimination round feedback is ignored by default
+    # ==========================================================================
+
+    def _submit(self, form_class, debate, target, **extra):
+        data = {'target': '%d-%d' % (debate.id, target.id), 'score': 3}
+        data.update(extra)
+        form = form_class(data)
+        self.assertTrue(form.is_valid(), form.errors)
+        return form.save()
+
+    def test_adj_feedback_ignored_in_elims_only(self):
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        self.tournament.preferences['feedback__feedback_paths'] = 'with-p-on-c'
+        form_class = make_feedback_form_class_for_adj(self._adj(0), self._fresh_tournament(), {},
+                                                      enforce_required=False)
+        self.assertFalse(self._submit(form_class, self.prelim_debate, self._adj(1)).ignored)
+        self.assertTrue(self._submit(form_class, self.elim_debate, self._adj(2)).ignored)
+
+    def test_team_feedback_ignored_in_elims_only(self):
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        form_class = make_feedback_form_class_for_team(self._team(0), self._fresh_tournament(), {},
+                                                       enforce_required=False)
+        self.assertFalse(self._submit(form_class, self.prelim_debate, self._adj(0)).ignored)
+        self.assertTrue(self._submit(form_class, self.elim_debate, self._adj(0)).ignored)
+
+    def test_ignored_option_cannot_unignore_elim_feedback(self):
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        form_class = make_feedback_form_class_for_team(self._team(0), self._fresh_tournament(), {},
+                                                       enforce_required=False, ignored_option=True)
+        self.assertTrue(self._submit(form_class, self.elim_debate, self._adj(0)).ignored)
+        self.assertTrue(self._submit(form_class, self.prelim_debate, self._adj(0), ignored='on').ignored)

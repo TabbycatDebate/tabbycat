@@ -106,7 +106,7 @@ class BaseFeedbackForm(CustomQuestionsFormMixin, forms.Form):
         af.score = self.cleaned_data['score']
 
         if self._ignored_option:
-            af.ignored = self.cleaned_data['ignored']
+            af.ignored = af.ignored or self.cleaned_data['ignored']
 
         af.save()
         self.save_answers(af)
@@ -187,7 +187,8 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
             """Saves the form and returns the AdjudicatorFeedback object."""
             debate, target = self.cleaned_data['target']
             sa = DebateAdjudicator.objects.get(adjudicator=source, debate=debate)
-            kwargs = dict(adjudicator=target, source_adjudicator=sa, source_team=None)
+            kwargs = dict(adjudicator=target, source_adjudicator=sa, source_team=None,
+                          ignored=debate.round.is_break_round)
             kwargs.update(submission_fields)
             return self.save_adjudicatorfeedback(**kwargs)
 
@@ -271,7 +272,8 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             # Saves the form and returns the m.AdjudicatorFeedback object
             debate, target = self.cleaned_data['target']
             st = DebateTeam.objects.get(team=source, debate=debate)
-            kwargs = dict(adjudicator=target, source_adjudicator=None, source_team=st)
+            kwargs = dict(adjudicator=target, source_adjudicator=None, source_team=st,
+                          ignored=debate.round.is_break_round)
             kwargs.update(submission_fields)
             return self.save_adjudicatorfeedback(**kwargs)
 
