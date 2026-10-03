@@ -46,6 +46,14 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
           <i data-feather="chevron-left" />
         </a>
         <auto-save-counter :last-saved="lastSaved" />
+        <button
+          v-if="store.selectedAllocationItem || store.selectedAllocationTarget"
+          class="btn btn-outline-primary"
+          :title="gettext('Cancel selection (Escape)')"
+          @click="store.clearAllocationSelection()"
+        >
+          {{ gettext('Cancel selection') }}
+        </button>
         <slot name="extra-actions" />
         <button
           v-if="prioritise"
