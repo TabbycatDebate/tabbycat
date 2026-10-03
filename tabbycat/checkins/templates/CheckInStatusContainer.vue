@@ -25,7 +25,7 @@ const props = defineProps({
   },
 })
 
-const { gettext, ngettext, tct } = useDjangoI18n()
+const { gettext, ngettext, interpolate, tct } = useDjangoI18n()
 
 const searchInput = ref(null)
 const searchText = ref('')
@@ -35,6 +35,8 @@ const clearSearch = () => {
   searchText.value = ''
   searchInput.value.focus()
 }
+
+const copyStatus = ref('')
 
 const filterByPresence = ref({ All: true, Absent: false, Present: false })
 const events = ref([...(props.initialEvents ?? [])])
@@ -171,21 +173,30 @@ const peopleByType = computed(() => {
 })
 
 const getToolTipForPerson = (entity) => {
+  const isAdjudicator = entity.type === 'Adjudicator'
   if (!showCodeNames.value && entity.type !== 'Team') {
     if (entity.institution === null) {
       if (entity.identifier[0]) {
-        const subs = [entity.name, entity.type, entity.identifier[0]]
-        return tct('%s, a %s of no institutional affiliation with identifier of %s', subs)
+        const message = isAdjudicator
+          ? gettext('%s, an adjudicator of no institutional affiliation with identifier of %s')
+          : gettext('%s, a speaker of no institutional affiliation with identifier of %s')
+        return interpolate(message, [entity.name, entity.identifier[0]])
       }
-      const subs = [entity.name, entity.type]
-      return tct('%s, a %s of no institutional affiliation with no identifier', subs)
+      const message = isAdjudicator
+        ? gettext('%s, an adjudicator of no institutional affiliation with no identifier')
+        : gettext('%s, a speaker of no institutional affiliation with no identifier')
+      return interpolate(message, [entity.name])
     }
     if (entity.identifier[0]) {
-      const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
-      return tct('%s, a %s from %s with identifier of %s', subs)
+      const message = isAdjudicator
+        ? gettext('%s, an adjudicator from %s with identifier of %s')
+        : gettext('%s, a speaker from %s with identifier of %s')
+      return interpolate(message, [entity.name, entity.institution.name, entity.identifier[0]])
     }
-    const subs = [entity.name, entity.type, entity.institution.name]
-    return tct('%s, a %s from %s with no identifier', subs)
+    const message = isAdjudicator
+      ? gettext('%s, an adjudicator from %s with no identifier')
+      : gettext('%s, a speaker from %s with no identifier')
+    return interpolate(message, [entity.name, entity.institution.name])
   }
   if (entity.speakers && entity.type === 'Team') {
     const speakers = []
@@ -200,17 +211,23 @@ const getToolTipForPerson = (entity) => {
     })
     return tct('%s, a team with speakers %s', [entity.name, speakers.join(', ')])
   }
-  return tct('%s, a %s', [entity.name, entity.type])
+  const message = isAdjudicator ? gettext('%s, an adjudicator') : gettext('%s, a speaker')
+  return interpolate(message, [entity.name])
 }
+
+// Match the availability system: a team missing one substantive speaker is viable.
+const isEntityPresent = entity => entity.type === 'Team'
+  ? entity.speakersIn >= Math.max(1, props.teamSize - 1)
+  : entity.status !== false
 
 const entitiesByPresence = computed(() => {
   const filters = filterByPresence.value
   if (filters.All) {
     return entitiesByType.value
   } else if (filters.Absent) {
-    return _.filter(entitiesByType.value, p => p.status === false)
+    return _.filter(entitiesByType.value, p => !isEntityPresent(p))
   }
-  return _.filter(entitiesByType.value, p => p.status !== false)
+  return _.filter(entitiesByType.value, p => isEntityPresent(p))
 })
 
 const entitiesSortedByName = computed(() => _.sortBy(entitiesByPresence.value, p => p.name.toLowerCase()))
@@ -284,11 +301,49 @@ const entitiesByType = computed(() => (isForVenues.value ? venuesByType.value : 
 
 const stats = computed(() => {
   return {
-    Absent: _.filter(entitiesByType.value, p => p.status === false).length,
-    Present: _.filter(entitiesByType.value, p => p.status !== false).length,
+    Absent: _.filter(entitiesByType.value, p => !isEntityPresent(p)).length,
+    Present: _.filter(entitiesByType.value, p => isEntityPresent(p)).length,
     All: '',
   }
 })
+
+const absentParticipants = computed(() => {
+  if (isForVenues.value) return []
+  const individuals = peopleByType.value.flatMap(entity => entity.type === 'Team' ? entity.speakers : [entity])
+  return _.sortBy(individuals.filter(person => person.status === false), person => person.name.toLowerCase())
+})
+
+const absentParticipantsText = computed(() => absentParticipants.value.map(person => {
+  const role = person.type === 'Adjudicator' ? gettext('Adjudicator') : gettext('Speaker')
+  const affiliation = person.type === 'Speaker' ? person.team : person.institution?.code
+  return affiliation
+    ? tct('%s (%s, %s)', [person.name, role, affiliation])
+    : tct('%s (%s)', [person.name, role])
+}).join('\n'))
+
+const copyAbsentParticipants = async () => {
+  copyStatus.value = ''
+  copyFallback.value = ''
+  const text = absentParticipantsText.value
+  try {
+    await navigator.clipboard.writeText(text)
+    copyStatus.value = gettext('Copied absent participants.')
+  } catch {
+    copyStatus.value = gettext('Could not copy. Please select and copy the list below.')
+    copyFallback.value = text
+  }
+}
+
+const copyFallback = ref('')
+
+// Bootstrap caches titles; refresh them from the current entity on every hover.
+const hideEntityTooltip = event => window.$?.(event.currentTarget).tooltip('hide')
+
+const showEntityTooltip = (event, entity) => {
+  const title = getToolTipForEntity(entity)
+  if (!title) return
+  window.$?.(event.currentTarget).attr('data-original-title', title).tooltip({ html: false }).tooltip('show')
+}
 
 const venuesByName = computed(() => _.groupBy(_.sortBy(annotatedVenues.value, v => v.name.toLowerCase()), p => p.name[0].toUpperCase()))
 
@@ -354,7 +409,7 @@ const resultCount = computed(() => visibleGroups.value.reduce((count, [, entitie
 
 const getEntityStatusClass = (entity) => {
   let css = ''
-  if (entity.type === 'Adjudicator') {
+  if (entity.type !== 'Team') {
     css += 'text-capitalize '
   } else {
     css += 'text-uppercase '
@@ -478,6 +533,60 @@ const forAdmin = toRef(props, 'forAdmin')
 
 <template>
   <div>
+    <div
+      v-if="!isForVenues && speakerGroupings.Team && !peopleFilterByType.Adjudicators"
+      class="alert alert-info"
+    >
+      {{ gettext('The checked-in count includes partial teams missing at most one substantive speaker. Partial teams keep their distinct colour.') }}
+    </div>
+
+    <div
+      v-if="resultCount === 0 && isForVenues"
+      class="alert alert-info"
+    >
+      {{ gettext('No matching rooms found.') }}
+    </div>
+    <div
+      v-if="resultCount === 0 && !isForVenues"
+      class="alert alert-info"
+    >
+      {{ gettext('No matching people found.') }}
+    </div>
+    <div class="alert alert-info">
+      {{ gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.') }}
+    </div>
+
+    <div
+      v-if="copyStatus"
+      class="alert alert-info"
+      role="status"
+    >
+      {{ copyStatus }}
+    </div>
+    <div
+      v-if="!isForVenues"
+      class="text-right mb-3"
+    >
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        :disabled="absentParticipants.length === 0"
+        :title="gettext('Copy absent participants from the selected participant filter')"
+        @click="copyAbsentParticipants"
+      >
+        {{ gettext('Copy') }}
+      </button>
+    </div>
+    <textarea
+      v-if="copyFallback"
+      :value="copyFallback"
+      :aria-label="gettext('Absent participants')"
+      class="form-control mb-3"
+      rows="6"
+      readonly
+      @focus="$event.target.select()"
+    />
+
     <div
       class="mb-3"
       role="search"
@@ -614,24 +723,8 @@ const forAdmin = toRef(props, 'forAdmin')
     </div>
 
     <div
-      v-if="resultCount === 0 && isForVenues"
-      class="alert alert-info"
-    >
-      {{ gettext('No matching rooms found.') }}
-    </div>
-    <div
-      v-if="resultCount === 0 && !isForVenues"
-      class="alert alert-info"
-    >
-      {{ gettext('No matching people found.') }}
-    </div>
-    <div class="alert alert-info">
-      {{ gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.') }}
-    </div>
-
-    <div
       v-for="[grouper, entities] in visibleGroups"
-      :key="entities[0].id"
+      :key="grouper"
       class="card mt-1"
     >
       <div class="card-body p-0">
@@ -660,7 +753,7 @@ const forAdmin = toRef(props, 'forAdmin')
             <div class="row no-gutters">
               <div
                 v-for="entity in entities"
-                :key="entity.id"
+                :key="`${entity.type}:${entity.id}`"
                 class="col-lg-3 col-md-4 col-6 check-in-person"
               >
                 <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
@@ -668,6 +761,9 @@ const forAdmin = toRef(props, 'forAdmin')
                     :class="['col p-2 text-truncate ', getEntityStatusClass(entity)]"
                     data-toggle="tooltip"
                     :title="getToolTipForEntity(entity)"
+                    :data-original-title="getToolTipForEntity(entity)"
+                    @mouseenter="showEntityTooltip($event, entity)"
+                    @mouseleave="hideEntityTooltip"
                   >
                     {{ entity.name }}
                   </div>
