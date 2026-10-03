@@ -1,9 +1,10 @@
 <script setup>
 import _ from 'lodash'
 
-import { computed, ref, toRef } from 'vue'
+import { computed, onMounted, onUnmounted, ref, toRef, watch } from 'vue'
 import { useWebSocket } from '../../templates/composables/useWebSocket.js'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
+import { highlightName, normaliseSearch, searchGroups } from './checkinSearch.js'
 
 
 const props = defineProps({
@@ -24,7 +25,36 @@ const props = defineProps({
   },
 })
 
-const { gettext, tct } = useDjangoI18n()
+const { gettext, ngettext, tct } = useDjangoI18n()
+
+const searchInput = ref(null)
+const searchText = ref(new URLSearchParams(window.location.search).get('checkin_search') || '')
+const searchQuery = computed(() => normaliseSearch(searchText.value))
+
+watch(searchText, (value) => {
+  const url = new URL(window.location.href)
+  if (value) url.searchParams.set('checkin_search', value)
+  else url.searchParams.delete('checkin_search')
+  window.history.replaceState(window.history.state, '', url)
+})
+
+const clearSearch = () => {
+  searchText.value = ''
+  searchInput.value.focus()
+}
+
+const focusSearch = (event) => {
+  const target = event.target
+  if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || event.isComposing ||
+      event.key.length !== 1 || target?.isContentEditable ||
+      target?.closest('input, textarea, select, button, a, [role="textbox"]')) return
+  searchInput.value.focus()
+  searchText.value += event.key
+  event.preventDefault()
+}
+
+onMounted(() => document.addEventListener('keydown', focusSearch))
+onUnmounted(() => document.removeEventListener('keydown', focusSearch))
 
 const filterByPresence = ref({ All: true, Absent: false, Present: false })
 const events = ref([...(props.initialEvents ?? [])])
@@ -339,6 +369,9 @@ const entitiesBySortingSetting = computed(() => {
   return entitiesByTime.value
 })
 
+const visibleGroups = computed(() => searchGroups(entitiesBySortingSetting.value, searchQuery.value))
+const resultCount = computed(() => visibleGroups.value.reduce((count, [, entities]) => count + entities.length, 0))
+
 const getEntityStatusClass = (entity) => {
   let css = ''
   if (entity.type === 'Adjudicator') {
@@ -465,6 +498,53 @@ const forAdmin = toRef(props, 'forAdmin')
 
 <template>
   <div>
+    <div
+      class="mb-3"
+      role="search"
+    >
+      <label
+        class="sr-only"
+        for="checkin-search"
+      >{{ gettext('Search check-ins') }}</label>
+      <div class="input-group">
+        <div
+          class="input-group-prepend"
+          aria-hidden="true"
+        >
+          <span class="input-group-text"><i data-feather="search" /></span>
+        </div>
+        <input
+          id="checkin-search"
+          ref="searchInput"
+          v-model="searchText"
+          class="form-control"
+          type="search"
+          :placeholder="gettext('Start typing to search')"
+          autocomplete="off"
+        >
+        <div
+          v-if="searchText"
+          class="input-group-append"
+        >
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            @click="clearSearch"
+          >
+            {{ gettext('Clear') }}
+          </button>
+        </div>
+      </div>
+      <small
+        class="form-text text-muted"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <template v-if="searchQuery">
+          {{ resultCount }} {{ ngettext('result', 'results', resultCount) }}
+        </template>
+      </small>
+    </div>
     <div class="d-lg-flex justify-content-lg-between mb-3">
       <div class="btn-group mb-md-0 mb-3">
         <button
@@ -554,13 +634,13 @@ const forAdmin = toRef(props, 'forAdmin')
     </div>
 
     <div
-      v-if="entitiesByPresence.length === 0 && isForVenues"
+      v-if="resultCount === 0 && isForVenues"
       class="alert alert-info"
     >
       {{ gettext('No matching rooms found.') }}
     </div>
     <div
-      v-if="entitiesByPresence.length === 0 && !isForVenues"
+      v-if="resultCount === 0 && !isForVenues"
       class="alert alert-info"
     >
       {{ gettext('No matching people found.') }}
@@ -570,7 +650,7 @@ const forAdmin = toRef(props, 'forAdmin')
     </div>
 
     <div
-      v-for="(entities, grouper) in entitiesBySortingSetting"
+      v-for="[grouper, entities] in visibleGroups"
       :key="entities[0].id"
       class="card mt-1"
     >
@@ -609,7 +689,18 @@ const forAdmin = toRef(props, 'forAdmin')
                     data-toggle="tooltip"
                     :title="getToolTipForEntity(entity)"
                   >
-                    {{ entity.name }}
+                    <template
+                      v-for="(part, index) in highlightName(entity.name, searchQuery)"
+                      :key="index"
+                    >
+                      <mark
+                        v-if="part.match"
+                        class="checkin-match"
+                      >{{ part.text }}</mark>
+                      <template v-else>
+                        {{ part.text }}
+                      </template>
+                    </template>
                   </div>
                   <template v-if="forAdmin">
                     <a
@@ -688,3 +779,11 @@ const forAdmin = toRef(props, 'forAdmin')
     </div>
   </div>
 </template>
+
+<style scoped>
+.checkin-match {
+  background: #fff3bf;
+  border-radius: 0.15rem;
+  padding: 0 0.08em;
+}
+</style>
