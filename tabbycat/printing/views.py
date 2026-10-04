@@ -31,14 +31,6 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
     def add_defaults(self):
         default_questions = []
 
-        if self.tournament.pref('feedback_introduction'):
-            default_scale_info = AdjudicatorFeedbackQuestion(
-                text=self.tournament.pref('feedback_introduction'), seq=0,
-                answer_type='comment', # Custom type just for print display
-                required=True, from_team=True, from_adj=True,
-            )
-            default_questions.append(default_scale_info.serialize())
-
         default_scale_question = AdjudicatorFeedbackQuestion(
             text=_("Overall Score"), seq=0,
             answer_type=AdjudicatorFeedbackQuestion.AnswerType.INTEGER_SCALE,
