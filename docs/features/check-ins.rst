@@ -52,6 +52,10 @@ Viewing Check-Ins
 
 On the *People Statuses* section of Check-ins you can view who has or has not been checked-in. This page will live-update with the latest check-ins so you should be able to leave it open to monitor income attendances.
 
+In *By Team* mode, the checked-in count includes viable partial teams: at least one speaker must be present, and at most one substantive speaker may be missing. Partial teams retain their distinct colour. The *Present* and *Absent* filters use this same rule.
+
+Use *Copy* to copy absent participants as a plain-text list for sharing in group chats. The list follows the selected participant type filter and includes missing speakers from partial teams, regardless of whether you are viewing teams or individual people. Each entry includes the participant's role and team or institution. If clipboard access is unavailable, a selectable list is shown instead.
+
 .. image:: images/checkin_statuses.png
 
 The blue "tick" boxes allow you to manually check-in people and/or entire institutions (for *People*) or venues and/or venue groups (for *Venues*) , without the need to scan their identifiers. This style of check-in is designed for use an auditorium roll-call type situation where you might be running through a list of people to the room or identifying absences on a per-institution basis.
