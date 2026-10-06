@@ -16,6 +16,7 @@ const store = useDragAndDropStore()
 const { dragStart, dragEnd, draggableClasses } = useDraggable(props)
 
 const dragStartPanel = (event) => {
+  store.clearAllocationSelection()
   store.setPanelDraggingTracker(true)
   dragStart(event)
 }
