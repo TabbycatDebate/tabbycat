@@ -114,9 +114,9 @@ const copyTableData = async () => {
   }
   const content = props.tableContent.map(row =>
     row.reduce((acc, cell, index) => {
-      const value = ['ajax-select-cell', 'check-cell'].includes(cell.component)
+      const value = cell.export ?? (['ajax-select-cell', 'check-cell'].includes(cell.component)
         ? getCellValue(cell)
-        : cell.text
+        : cell.text)
       acc[props.tableHeaders[index].key] = typeof value === 'string'
         ? getPlainText(value)
         : (value ?? '')
