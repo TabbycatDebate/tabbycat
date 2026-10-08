@@ -58,6 +58,8 @@ class BaseTableBuilder:
     - A *cell dict* is a dict that contains a value under `"text"` that is a
       string, and may optionally contain entries under `"sort"`, `"icon"`,
       `"emoji"`, `"popover"` and `"link"`.
+      `"export"` optionally overrides the value copied to CSV, including for
+      icon-only cells. Boolean export values preserve both true and false.
     - `sort_history` is an optional list of `(key, order)` pairs, in priority
       order, where `order` is either `"asc"` or `"desc"`. It takes precedence
       over the legacy `sort_key` and `sort_order` arguments.
@@ -165,6 +167,7 @@ class BaseTableBuilder:
         cells = [{
             'icon': 'check' if datum else '',
             'sort':  1 if datum else 2,
+            'export': bool(datum),
         } for datum in data]
         self.add_column(header, cells)
 
