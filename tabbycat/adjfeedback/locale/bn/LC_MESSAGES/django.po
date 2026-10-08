@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:57\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -22,6 +22,10 @@ msgid "Integer scales must have a minimum and maximum"
 msgstr "পূর্ণসংখ্যার স্কেলের অবশ্যই একটি সর্বোচ্চ এবং সর্বনিম্ন মান থাকবে"
 
 #: adjfeedback/admin.py
+msgid "Maximum value must be greater than the minimum"
+msgstr ""
+
+#: adjfeedback/admin.py
 msgid "target"
 msgstr "লক্ষ্য"
 
@@ -34,21 +38,8 @@ msgid "source team"
 msgstr "সূত্র দল"
 
 #: adjfeedback/admin.py
-msgid "Target"
-msgstr "লক্ষ্য"
-
-#: adjfeedback/admin.py
 msgid "Source"
 msgstr "সূত্র/উৎস"
-
-#: adjfeedback/admin.py
-msgid "Feedback timestamp and version"
-msgstr "প্রতিক্রিয়া টাইমস্ট্যাম্প এবং সংস্করণ"
-
-#: adjfeedback/admin.py
-#, python-format
-msgid "%(timestamp)s (version %(version)s)"
-msgstr "%(timestamp)s (সংস্করণ %(version)s)"
 
 #: adjfeedback/admin.py
 #, python-format
@@ -104,16 +95,6 @@ msgstr "প্যানেলিস্ট"
 #: adjfeedback/forms.py
 msgid "trainee"
 msgstr "নবিশ বিচারক"
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py
-msgid "Yes"
-msgstr ""
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py
-msgid "No"
-msgstr ""
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py
@@ -217,114 +198,6 @@ msgid "adjudicator base score histories"
 msgstr "বিচারক ভিত্তিক ফলাফল ইতিবৃত্ত সমূহ"
 
 #: adjfeedback/models.py
-msgid "question"
-msgstr "প্রশ্ন"
-
-#: adjfeedback/models.py
-msgid "feedback"
-msgstr "প্রতিক্রিয়া"
-
-#: adjfeedback/models.py
-msgid "answer"
-msgstr "উত্তর"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback boolean answer"
-msgstr "বিচারক প্রতিক্রিয়া বুলিয়ান উত্তর"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback boolean answers"
-msgstr "বিচারক প্রতিক্রিয়া বুলিয়ান উত্তর সমূহ"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback integer answer"
-msgstr "বিচারক প্রতিক্রিয়া পূর্ণসংখ্যক উত্তর"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback integer answers"
-msgstr "বিচারক প্রতিক্রিয়া পূর্ণসংখ্যক উত্তর সমূহ"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback float answer"
-msgstr "বিচারক প্রতিক্রিয়া ভাসমান উত্তর"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback float answers"
-msgstr "বিচারক প্রতিক্রিয়া ভাসমান উত্তর সমূহ"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback string answer"
-msgstr "বিচারক প্রতিক্রিয়া স্ট্রিং উত্তর"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback string answers"
-msgstr "বিচারক প্রতিক্রিয়া স্ট্রিং উত্তর সমূহ"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback multiple select answer"
-msgstr "বিচারক প্রতিক্রিয়া একাধিক নির্বাচন উত্তর"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback multiple select answers"
-msgstr "বিচারক প্রতিক্রিয়া একাধিক নির্বাচন উত্তর"
-
-#: adjfeedback/models.py
-msgid "checkbox"
-msgstr "চেকবক্স"
-
-#: adjfeedback/models.py
-msgid "yes/no (dropdown)"
-msgstr "হ্যাঁ/না (নামানো)"
-
-#: adjfeedback/models.py
-msgid "integer (textbox)"
-msgstr "পূর্ণসংখ্যা (টেক্সট বক্স)"
-
-#: adjfeedback/models.py
-msgid "integer scale"
-msgstr "পূর্ণসংখ্যা মাত্রা"
-
-#: adjfeedback/models.py
-msgid "float"
-msgstr "ডুবন্ত/ ভাসা"
-
-#: adjfeedback/models.py
-msgid "text"
-msgstr "মূলপাঠ/পাঠ্য"
-
-#: adjfeedback/models.py
-msgid "long text"
-msgstr "দীর্ঘ পাঠ্য"
-
-#: adjfeedback/models.py
-msgid "select one"
-msgstr "একটি বাছাই করুন"
-
-#: adjfeedback/models.py
-msgid "select multiple"
-msgstr "বহু বাছাই করুন"
-
-#: adjfeedback/models.py
-msgid "tournament"
-msgstr "প্রতিযোগিতা"
-
-#: adjfeedback/models.py
-msgid "sequence number"
-msgstr "ক্রম সংখ্যা"
-
-#: adjfeedback/models.py
-msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
-msgstr "অংশগ্রহণকারীদের কাছে উক্ত প্রশ্নটি উত্থাপিত হয়েছে, e.g.,\"আপনি কি সিদ্ধান্তটির সাথে একমত পোষণ করেছেন?\""
-
-#: adjfeedback/models.py
-msgid "name"
-msgstr "নাম"
-
-#: adjfeedback/models.py
-msgid "A short name for the question, e.g., \"Agree with decision\""
-msgstr "একটি সংক্ষিপ্ত নাম উক্ত প্রশ্নটির জন্য, e.g.,\"সিদ্ধান্তের সাথে একমত পোষণ করুন\""
-
-#: adjfeedback/models.py
 msgid "reference"
 msgstr "উল্লেখ/ প্রসঙ্গ"
 
@@ -347,42 +220,6 @@ msgstr "দল হতে"
 #: adjfeedback/models.py
 msgid "Teams should be asked this question"
 msgstr "দল সমূহকে উক্ত প্রশ্নটি জিগ্গাসা করা উচিত"
-
-#: adjfeedback/models.py
-msgid "answer type"
-msgstr "উত্তর ধরন"
-
-#: adjfeedback/models.py
-msgid "required"
-msgstr "অপরিহার্য"
-
-#: adjfeedback/models.py
-msgid "Whether participants are required to fill out this field"
-msgstr "অংশগ্রহণকারীদের এই ক্ষেত্রটি পূরণ করতে হবে কিনা"
-
-#: adjfeedback/models.py
-msgid "minimum value"
-msgstr "নুন্যতম দাম"
-
-#: adjfeedback/models.py
-msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
-msgstr "সংখ্যাযুক্ত ক্ষেত্রগুলির জন্য সর্বনিম্ন অনুমোদিত মান (পাঠ্য বা বুলিয়ান ক্ষেত্রগুলির জন্য উপেক্ষা করা)"
-
-#: adjfeedback/models.py
-msgid "maximum value"
-msgstr "সর্বোচ্চ মান"
-
-#: adjfeedback/models.py
-msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
-msgstr "সংখ্যাযুক্ত ক্ষেত্রগুলির জন্য সর্বোচ্চ অনুমোদিত মান (পাঠ্য বা বুলিয়ান ক্ষেত্রগুলির জন্য উপেক্ষা করা)"
-
-#: adjfeedback/models.py
-msgid "choices"
-msgstr "পছন্দ"
-
-#: adjfeedback/models.py
-msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
-msgstr "এক/একাধিক ক্ষেত্র নির্বাচনের জন্য অনুমোদিত পছন্দ (অন্যান্য ক্ষেত্রের জন্য উপেক্ষা করা)"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback question"
@@ -429,6 +266,14 @@ msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr "বিচারক ব্রেকিং হিসাবে চিহ্নিত করা হয়েছে কিনা (চিহ্নিত করতে ক্লিক করুন)"
 
 #: adjfeedback/tables.py
+msgid "Whether the adj tests other adjs (click to mark). Adjudication core members are always testers"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "On the adjudication core, so always a tester"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr "অপ্রযোজ্য"
 
@@ -451,6 +296,14 @@ msgstr "বেইজ স্কোর সম্পাদনা করতে ক�
 #: adjfeedback/tables.py
 msgid "Assigned base score"
 msgstr "নির্ধারিত বেইজ স্কোর"
+
+#: adjfeedback/tables.py
+msgid "Feedback average"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "This adjudicator's feedback average"
+msgstr ""
 
 #: adjfeedback/tables.py
 msgid "The current difference between an adjudicator's base score and current score"
@@ -488,6 +341,10 @@ msgid "Unsubmitted feedback ballots"
 msgstr "জমা না দেওয়া প্রতিক্রিয়া ব্যালট"
 
 #: adjfeedback/tables.py
+msgid "% Submitted"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr "অনুপস্থিত প্রতিক্রিয়া দেখুন"
 
@@ -516,8 +373,12 @@ msgid "There are no feedback options because no rounds have been released to the
 msgstr "কোনো প্রতিক্রিয়ার বিকল্প নেই কারণ এখনও জনসাধারণের কাছে কোনো রাউন্ড প্রকাশ করা হয়নি। তারা আছে যখন ফিরে দেখুন!"
 
 #: adjfeedback/templates/enter_feedback.html
-msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
-msgstr "এই টুর্নামেন্টটি আশা করে যে আপনি <strong>শুধুমাত্র সেই বিচারকের উপর মতামত জমা দেবেন যিনি রায় প্রদান করেছেন</strong>। অন্যান্য বিচারকদের প্রতিক্রিয়া জমা দেবেন না।"
+msgid "This tournament expects you to submit feedback on the adjudicator who delivered the adjudication. You may also submit feedback on any other adjudicators available below."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament expects you to submit feedback on all voting adjudicators on the panel (excluding trainees)."
+msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
@@ -530,6 +391,10 @@ msgstr ""
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
 msgstr "এই প্রতিক্রিয়া জমা দিয়ে কিছু সমস্যা আছে. পর্যালোচনা করুন এবং তাদের সংশোধন করুন।"
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "Save Feedback"
+msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
@@ -618,7 +483,7 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
 #, python-format
-msgid "<span class=\"text-secondary small\">Received as %(as_type)s</span>"
+msgid "Received as %(as_type)s"
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
@@ -732,7 +597,7 @@ msgstr "প্রতিক্রিয়া"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
-msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
+msgid "The proportion of an adjudicator's score determined by feedback vs the base score is set on a per-round basis. Click to edit the feedback weight for %(round)s."
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
@@ -794,7 +659,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
-msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgid "The score range for adjudicators is between <strong>%(min_score)s</strong> and <strong>%(max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
@@ -808,6 +673,24 @@ msgstr "মূল স্কোর"
 
 #: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Change Feedback Weight"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "The feedback weight determines the proportion of an adjudicator's score that comes from feedback versus their base score. At <strong>0%%</strong>, the score is 100%% base score. At <strong>100%%</strong>, the score is 100%% feedback. This setting applies to <strong>%(round)s</strong>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "Feedback weight (%%)"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Save Feedback Weight"
 msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html
@@ -939,6 +822,11 @@ msgid "Whoops! The value isn't a valid base score."
 msgstr "উফফফ! মানটি একটি বৈধ বেইজ স্কোর নয়।"
 
 #: adjfeedback/views.py
+#, python-format
+msgid "Feedback weight for %(round)s updated to %(weight)d%%."
+msgstr ""
+
+#: adjfeedback/views.py
 msgid "Feedback Progress"
 msgstr "প্রতিক্রিয়া অগ্রগতি"
 
@@ -972,4 +860,8 @@ msgid "Updated base score for %(count)d adjudicator."
 msgid_plural "Updated base scores for %(count)d adjudicators."
 msgstr[0] ""
 msgstr[1] "%(count)d বিচারকদের জন্য বেস স্কোর আপডেট করা হয়েছে।"
+
+#: adjfeedback/views.py
+msgid "Custom Feedback Questions"
+msgstr ""
 

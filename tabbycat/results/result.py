@@ -39,10 +39,13 @@ A few notes on error checking:
 """
 
 import logging
+import math
 from functools import wraps
 from itertools import product
-from statistics import mean
+from statistics import mean, median
 from typing import TYPE_CHECKING, Union
+
+from django.utils.translation import gettext_lazy as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
@@ -54,12 +57,25 @@ from .scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedSco
 from .utils import side_and_position_names
 
 if TYPE_CHECKING:
-    from tournaments.models import Tournament
     from participants.models import Adjudicator
+    from tournaments.models import Tournament
 
     from .models import SpeakerScore, SpeakerScoreByAdj
 
 logger = logging.getLogger(__name__)
+
+
+def median_or_rounded_up_mean(values):
+    values = list(values)
+    if len(values) % 2 == 1:
+        return median(values)
+    return math.ceil(mean(values))
+
+
+SCORE_AGGREGATORS = {
+    'mean': mean,
+    'median': median_or_rounded_up_mean,
+}
 
 
 class ResultError(RuntimeError):
@@ -78,7 +94,7 @@ def get_result_class(ballotsub, round=None, tournament=None, overwrite_forfeit=F
 
     forfeit = ballotsub.forfeit and not overwrite_forfeit
     if ballots_per_debate == 'per-debate' or ballotsub.single_adj or forfeit:
-        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round) or scores_in_debate == 'never' or forfeit:
+        if ((teams_in_debate > 2 or scores_in_debate == 'prelim') and round.is_break_round and scores_in_debate != 'always') or scores_in_debate == 'never' or forfeit:
             return ConsensusDebateResult
         return ConsensusDebateResultWithScores
     elif ballots_per_debate == 'per-adj' and (teams_in_debate == 2 or tournament.pref('margin_includes_dissenters')):
@@ -452,7 +468,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
         self.scoresheets = {adj: self.scoresheet_class(
             sides=self.sides,
             positions=getattr(self, 'positions', None),
-            criteria=getattr(self, 'criteria', [])) for adj in self.debateadjs.keys()
+            criteria=getattr(self, 'criteria', []),
+            reply_position=getattr(self, 'reply_position', None)) for adj in self.debateadjs.keys()
         }
 
     def load_scoresheets(self):
@@ -606,11 +623,20 @@ class DebateResultByAdjudicator(BaseDebateResult):
     def teamscore_field_win(self, side):
         return side == self._winner
 
+    def _is_self_split(self):
+        """True if this is a solo-adjudicated debate where the adjudicator has
+        declared their decision as a 2:1 split rather than unanimous (Karl Popper rules)."""
+        return len(self.scoresheets) == 1 and getattr(self.ballotsub, 'self_split', False)
+
     @_requires_decision(None)
     def teamscore_field_votes_given(self, side):
+        if self._is_self_split():
+            return 2 if side == self._winner else 1
         return len(self._adjs_by_side[side])
 
     def teamscore_field_votes_possible(self, side):
+        if self._is_self_split():
+            return 3
         return len(self.scoresheets)
 
     def teamscore_field_has_ghost(self, side):
@@ -639,8 +665,9 @@ class DebateResultByAdjudicator(BaseDebateResult):
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
         majority = self.majority_adjudicators()
+        self_split = self._is_self_split()
         for adj, adjtype in self.debate.adjudicators.with_positions():
-            split = adj not in majority and adjtype != AdjudicatorAllocation.POSITION_TRAINEE
+            split = adjtype != AdjudicatorAllocation.POSITION_TRAINEE and (adj not in majority or self_split)
             yield adj, adjtype, split
 
     def as_dicts(self):
@@ -669,6 +696,7 @@ class DebateResultWithScoresMixin:
         super().__init__(ballotsub, load=False, **kwargs)
 
         self.positions = self.tournament.positions
+        self.reply_position = self.tournament.reply_position
         self.criteria = criteria or []
 
         if load:
@@ -726,12 +754,14 @@ class DebateResultWithScoresMixin:
             if cur_speaker is None:
                 self.set_speaker(side, pos, result.get_speaker(side, pos))
             elif result.get_speaker(side, pos) != cur_speaker:
-                errors.append(ResultError("Inconsistent speaker order", "speaker", side, pos))
+                errors.append(ResultError(_("Inconsistent speaker order"), "speaker", side, pos))
 
             if not self.get_ghost(side, pos) and result.get_ghost(side, pos):
                 self.set_ghost(side, pos, result.get_ghost(side, pos))
             elif self.get_ghost(side, pos) and not result.get_ghost(side, pos):
-                errors.append(ResultError("Inconsistent ghost order", "ghost", side, pos))
+                errors.append(
+                    ResultError(_("Inconsistent marking of duplicate (iron-person) speeches"), "ghost", side, pos),
+                )
 
         return errors
 
@@ -767,6 +797,8 @@ class DebateResultWithScoresMixin:
                 speaker_score, _ = self.ballotsub.speakerscore_set.update_or_create(debate_team=dt,
                     position=pos, defaults=self.get_defaults_fields('speakerscore', side, pos))
                 for criterion in self.criteria:
+                    if not criterion.applies_to_position(pos, self.reply_position):
+                        continue
                     speaker_score.speakercriterionscore_set.update_or_create(
                         criterion=criterion, defaults=self.get_defaults_fields('speakercriterionscore', side, pos, criterion))
 
@@ -847,6 +879,7 @@ class DebateResultWithScoresMixin:
                 "speaker": self.get_speaker(side, pos),
                 "score": sheet.get_score(side, pos),
                 "rank": sheet.get_speaker_rank(side, pos),
+                "criteria": sheet.criteria_scores[side][pos],
             })
 
 
@@ -855,7 +888,12 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        self.scoresheet = self.scoresheet_class(sides=self.sides, positions=getattr(self, 'positions', None), criteria=getattr(self, 'criteria', []))
+        self.scoresheet = self.scoresheet_class(
+            sides=self.sides,
+            positions=getattr(self, 'positions', None),
+            criteria=getattr(self, 'criteria', []),
+            reply_position=getattr(self, 'reply_position', None),
+        )
         if self.scoresheet_class is PolyEliminationScoresheet and self.debate.round.is_last:
             self.scoresheet.number_winners = 1
 
@@ -940,7 +978,7 @@ class ConsensusDebateResult(BaseDebateResult):
                 if self.get_winner() is None or len(self.get_winner()) == 0:
                     self.set_winners(result.scoresheet.winners())
                 elif self.get_winner() != result.scoresheet.winners():
-                    errors.append(ResultError("Winners are not identical", "winners", result.scoresheet.winners(), None))
+                    errors.append(ResultError(_("Winners are not identical"), "winners", result.scoresheet.winners(), None))
 
         for error in errors:
             key, side, pos = error.args[1:]
@@ -1026,20 +1064,22 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
         errors = self.merge_speaker_order(result)
         for side, pos in product(self.sides, self.positions):
             for criterion in self.criteria:
+                if not criterion.applies_to_position(pos, self.reply_position):
+                    continue
                 if self.get_criterion_score(side, pos, criterion) is None:
                     self.set_criterion_score(side, pos, criterion, result.get_criterion_score(side, pos, criterion))
                 elif self.get_criterion_score(side, pos, criterion) != result.get_criterion_score(side, pos, criterion):
-                    errors.append(ResultError('Criterion scores are not identical', 'criterion', side, pos, criterion))
+                    errors.append(ResultError(_('Criterion scores are not identical'), 'criterion', side, pos, criterion))
 
             if self.get_score(side, pos) is None:
                 self.set_score(side, pos, result.get_score(side, pos))
             elif self.get_score(side, pos) != result.get_score(side, pos):
-                errors.append(ResultError('Scores are not identical', 'scores', side, pos))
+                errors.append(ResultError(_('Scores are not identical'), 'scores', side, pos))
 
             if self.get_speaker_rank(side, pos) is None:
                 self.set_speaker_rank(side, pos, result.get_speaker_rank(side, pos))
             elif self.get_speaker_rank(side, pos) != result.get_speaker_rank(side, pos):
-                errors.append(ResultError('Speech ranks are not identical', 'speaker_ranks', side, pos))
+                errors.append(ResultError(_('Speech ranks are not identical'), 'speaker_ranks', side, pos))
         return errors
 
     def get_speaker_rank(self, side: str, position: int) -> int:
@@ -1111,6 +1151,8 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
         for side, pos in product(self.sides, self.positions):
             if self.criteria:
                 for criterion in self.criteria:
+                    if not criterion.applies_to_position(pos, self.reply_position):
+                        continue
                     self.set_criterion_score(adj, side, pos, criterion, result.get_criterion_score(side, pos, criterion))
             else:
                 self.set_score(adj, side, pos, result.get_score(side, pos))
@@ -1128,6 +1170,8 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
                         debate_team=dt, debate_adjudicator=da, position=pos,
                         defaults=self.get_defaults_fields('speakerscorebyadj', adj, side, pos))
                     for criterion in self.criteria:
+                        if not criterion.applies_to_position(pos, self.reply_position):
+                            continue
                         speaker_score_by_adj.speakercriterionscorebyadj_set.update_or_create(
                             criterion=criterion, defaults=self.get_defaults_fields('speakercriterionscorebyadj', adj, side, pos, criterion))
 
@@ -1145,6 +1189,9 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
     # --------------------------------------------------------------------------
     # Model fields
     # --------------------------------------------------------------------------
+
+    def _score_aggregator(self):
+        return SCORE_AGGREGATORS[self.tournament.pref('score_aggregation_function')]
 
     def teamscorebyadj_field_margin(self, adj, side):
         if len(self.sides) > 2:
@@ -1180,7 +1227,18 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated and len(self.sides) == 2:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
+        if self.criteria:
+            # Aggregate criteria separately so the saved speaker score remains
+            # the weighted sum of the saved aggregate criterion scores. This is
+            # significant for medians, which are not distributive over sums.
+            score = 0
+            for criterion in self.criteria:
+                if not criterion.applies_to_position(position, self.reply_position):
+                    continue
+                criterion_score = self.speakercriterionscore_field_score(side, position, criterion)
+                score += criterion_score * type(criterion_score)(criterion.weight)
+            return score
+        return self._score_aggregator()(self.scoresheets[adj].get_score(side, position) for adj in self.relevant_adjudicators())
 
     def speakercriterionscore_field_score(self, side, pos, criterion):
         # Should be decision-decorated
@@ -1188,7 +1246,7 @@ class DebateResultByAdjudicatorWithScores(DebateResultWithScoresMixin, DebateRes
             return None
         if not self._decision_calculated:
             self._calculate_decision()
-        return mean(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
+        return self._score_aggregator()(self.scoresheets[adj].get_criterion_score(side, pos, criterion) for adj in self.relevant_adjudicators())
 
     def speakercriterionscorebyadj_field_score(self, adjudicator, side, pos, criterion):
         return self.scoresheets[adjudicator].get_criterion_score(side, pos, criterion)

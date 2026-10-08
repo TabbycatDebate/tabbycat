@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2022-12-22 03:12\n"
+"PO-Revision-Date: 2025-06-22 16:54\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr ""
 
 #: ../../use/running-a-tournament.rst:24
 msgid "Availability"
-msgstr "Tính khả dụng"
+msgstr "Đánh dấu Sẵn sàng"
 
 #: ../../use/running-a-tournament.rst:26
 msgid "**Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds."

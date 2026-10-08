@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n != 1);
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s di %(cnt)s selezionato",
@@ -39,24 +38,21 @@
     "Cancel": "Annulla",
     "Category": "Categoria",
     "Checked-In": "Registrato",
-    "Choose": "Scegli",
     "Choose a Date": "Scegli una data",
     "Choose a Time": "Scegli un orario",
     "Choose a time": "Scegli un orario",
-    "Choose all": "Scegli tutto",
     "Chosen %s": "%s scelti",
-    "Click to choose all %s at once.": "Fai clic per scegliere tutti i %s in una volta.",
-    "Click to remove all chosen %s at once.": "Fai clic per eliminare tutti i %s in una volta.",
     "December": "Dicembre",
     "February": "Febbraio",
     "Filter": "Filtro",
-    "Hide": "Nascondi",
+    "Friday": "Venerd\u00ec",
     "January": "Gennaio",
     "July": "Luglio",
     "June": "Giugno",
     "March": "Marzo",
     "May": "Maggio",
     "Midnight": "Mezzanotte",
+    "Monday": "Luned\u00ec",
     "Noon": "Mezzogiorno",
     "Note: You are %s hour ahead of server time.": [
       "Nota: Sei %s ora in anticipo rispetto al server.",
@@ -69,22 +65,29 @@
     "November": "Novembre",
     "Now": "Adesso",
     "October": "Ottobre",
-    "Remove": "Elimina",
-    "Remove all": "Elimina tutti",
+    "Saturday": "Sabato",
     "September": "Settembre",
-    "Show": "Mostra",
+    "Sunday": "Domenica",
     "Team": "Team",
-    "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Questa \u00e8 la lista dei %s disponibili. Puoi sceglierne alcuni selezionandoli nella casella qui sotto e poi facendo clic sulla freccia \"Scegli\" tra le due caselle.",
-    "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Questa \u00e8 la lista dei %s scelti. Puoi eliminarne alcuni selezionandoli nella casella qui sotto e poi facendo clic sulla freccia \"Elimina\" tra le due caselle.",
+    "Thursday": "Gioved\u00ec",
     "Today": "Oggi",
     "Tomorrow": "Domani",
+    "Tuesday": "Marted\u00ec",
     "Type into this box to filter down the list of available %s.": "Scrivi in questa casella per filtrare l'elenco dei %s disponibili.",
     "Type into this box to filter down the list of selected %s.": "Scrivi in questa casella per filtrare l'elenco dei %s selezionati.",
     "Unknown": "Sconosciuto",
+    "Wednesday": "Mercoled\u00ec",
     "Yesterday": "Ieri",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Hai selezionato un'azione e non hai ancora apportato alcuna modifica ai campi singoli. Probabilmente stai cercando il pulsante Vai, invece di Salva.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Hai selezionato un'azione, ma non hai ancora salvato le modifiche apportate a campi singoli. Fai clic su OK per salvare. Poi dovrai rieseguire l'azione.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Ci sono aggiornamenti non salvati su singoli campi modificabili. Se esegui un'azione, le modifiche non salvate andranno perse.",
+    "abbrev. day Friday\u0004Fri": "Ven",
+    "abbrev. day Monday\u0004Mon": "Lun",
+    "abbrev. day Saturday\u0004Sat": "Sab",
+    "abbrev. day Sunday\u0004Sun": "Dom",
+    "abbrev. day Thursday\u0004Thur": "Gio",
+    "abbrev. day Tuesday\u0004Tue": "Mar",
+    "abbrev. day Wednesday\u0004Wed": "Mer",
     "abbrev. month April\u0004Apr": "Apr",
     "abbrev. month August\u0004Aug": "Ago",
     "abbrev. month December\u0004Dec": "Dic",
@@ -108,7 +111,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

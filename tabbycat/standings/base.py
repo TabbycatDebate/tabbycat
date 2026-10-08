@@ -28,7 +28,7 @@ class StandingInfo:
 
     The `itermetrics()` and `iterrankings()` methods return iterators over the
     values of `metrics` and `rankings` respectively, in the order specified by
-    `standings.metric_keys`. For example:
+    `standings.metric_keys` (tournament precedence, then extra metrics). For example:
 
     Django template:
 
@@ -201,6 +201,21 @@ class Standings:
         except KeyError:
             raise ValueError("{!r} isn't in these standings.".format(instance))
 
+    def set_metric_display_order(self, keys_in_order):
+        """Reorder metric columns to follow tournament settings (standings
+        precedence, then extra metrics) instead of the order they were
+        computed (e.g. non-combinable SQL metrics are evaluated before
+        combinable ones)."""
+        if not self.metric_keys:
+            return
+        by_key = {k: self._metric_specs[i] for i, k in enumerate(self.metric_keys)}
+        ordered = [k for k in keys_in_order if k in self.metric_keys]
+        for k in self.metric_keys:
+            if k not in ordered:
+                ordered.append(k)
+        self.metric_keys = ordered
+        self._metric_specs = [by_key[k] for k in ordered]
+
     def get_standings(self, instances):
         try:
             return [self.infos[instance] for instance in instances]
@@ -355,7 +370,7 @@ class BaseStandingsGenerator:
             return self.generate_from_queryset(queryset_for_metrics, standings, round)
 
         # Otherwise (not all precedence metrics are SQL-based), need to sort Standings
-        non_qs_ranked_annotators = [annotator for annotator in self.non_queryset_annotators if annotator.key in self.precedence]
+        non_qs_ranked_annotators = [annotator for annotator in self.non_queryset_annotators if not annotator.extra_only]
         self._annotate_metrics(queryset_for_metrics, non_qs_ranked_annotators, standings, round)
 
         standings.sort(self.precedence, self._tiebreak_func)
@@ -366,9 +381,10 @@ class BaseStandingsGenerator:
         logger.debug("Ranking annotators done.")
 
         # Do Draw Strength by Rank annotator after ranking standings
-        non_qs_extra_annotators = [annotator for annotator in self.non_queryset_annotators if annotator.key not in self.precedence]
+        non_qs_extra_annotators = [annotator for annotator in self.non_queryset_annotators if annotator.extra_only]
         self._annotate_metrics(queryset_for_metrics, non_qs_extra_annotators, standings, round)
 
+        standings.set_metric_display_order(self.ordered_metric_keys)
         return standings
 
     def generate_from_queryset(self, queryset, standings, round):
@@ -399,6 +415,7 @@ class BaseStandingsGenerator:
         # Add metrics that aren't used for ranking (done afterwards for "draw strength by rank")
         self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round)
 
+        standings.set_metric_display_order(self.ordered_metric_keys)
         return standings
 
     @staticmethod
@@ -460,6 +477,7 @@ class BaseStandingsGenerator:
                 self.precedence.append(annotator.key)
 
         self.non_queryset_annotators = [a for a in self.metric_annotators if a not in self.distinct_queryset_metric_annotators]
+        self.ordered_metric_keys = [a.key for a in self.metric_annotators]
 
     def _interpret_rankings(self, rankings):
         """Given a list of rankings, sets `self.ranking_annotators` to the

@@ -41,6 +41,10 @@ To help you decide which to choose, here's a summary:
 |                      | registration      |                    | an existing external |
 |                      | systems           |                    | application          |
 +----------------------+-------------------+--------------------+----------------------+
+| **Registration**     | Tournaments       | Less manual        |                      |
+|                      | allowing self-    | intervention;      |                      |
+|                      | registration      | user control       |                      |
++----------------------+-------------------+--------------------+----------------------+
 
 Demonstration data
 ==================
@@ -144,3 +148,16 @@ Application Programming Interface (API)
 =======================================
 
 Participants can be imported in Tabbycat through the :ref:`API <api>`, using authenticated endpoints making ``POST`` requests to the relevant endpoints. There may be tournament registration software which interfaces with Tabbycat, or you may have to program one yourself, in any language.
+
+Participant self-registration
+=============================
+
+Tabbycat has an inbuilt system for participants to self-register which is customisable to the tournament's workflow.
+
+The basic functionality is activated by activating the open team and adjudicator registration in the "Registration" section of the settings. You can also choose which fields they will be asked and how their team name will be constructed. Then, people will find a link on the tournament's main page allowing themselves to register.
+
+Registration statuses can be checked under the Registration tab in the admin sidebar, and each page will also allow custom questions to be added to the relevant registration form.
+
+For intervarsity or slot-controlled tournaments, institutional registration with a coach can be required and optionally require them to request a certain number of teams and adjudicators. In the admin institutional registration list, users can set the number of approved participants. The coach will then be able to register their members.
+
+To ease registration by participants, coaches have "invitation links" generated for them to give out, allowing their members to register as a team or adjudicator. When a team does not have a complete set of speakers, an invitation link is also generated to allow the registered speaker to "invite" their teammates.

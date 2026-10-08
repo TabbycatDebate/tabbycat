@@ -25,9 +25,10 @@ from results.utils import side_and_position_names
 
 if TYPE_CHECKING:
     from django.db.models import QuerySet
+
+    from draw.models import Debate
     from participants.models import Person
     from tournaments.models import Round, Tournament
-    from draw.models import Debate
 
 
 adj_position_names = {
@@ -57,6 +58,10 @@ def _check_in_to(pk: int, to_ids: Set[int]) -> bool:
     except KeyError:
         return False
     return True
+
+
+def _create_url(url: str) -> str:
+    return mark_safe('<a href="%s">%s</a>' % (url, url)) if url else ''
 
 
 class NotificationContextGenerator:
@@ -101,7 +106,7 @@ class AdjudicatorAssignmentEmailGenerator(NotificationContextGenerator):
                     continue
 
                 context_user = cls.context_class(**context, POSITION=adj_position_names[pos],
-                    URL=url + adj.url_key + '/' if adj.url_key else '')
+                    URL=_create_url(url + adj.url_key + '/'))
                 emails.append((context_user, adj))
 
         return emails
@@ -119,7 +124,7 @@ class RandomizedUrlEmailGenerator(NotificationContextGenerator):
 
     @classmethod
     def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
-        return [(cls.context_class(URL=url + p.url_key + '/', KEY=p.url_key, TOURN=str(tournament)), p) for p in to]
+        return [(cls.context_class(URL=_create_url(url + p.url_key + '/'), KEY=p.url_key, TOURN=str(tournament)), p) for p in to]
 
 
 class BallotsEmailGenerator(NotificationContextGenerator):
@@ -216,7 +221,7 @@ class StandingsEmailGenerator(NotificationContextGenerator):
         context = {
             'TOURN': str(round.tournament),
             'ROUND': round.name,
-            'URL': url,
+            'URL': _create_url(url),
         }
 
         for team in teams:
@@ -294,6 +299,93 @@ class TeamSpeakerEmailGenerator(NotificationContextGenerator):
 
                 emails.append((context, speaker))
 
+        return emails
+
+
+class InstitutionRegistrationEmailGenerator(NotificationContextGenerator):
+
+    @dataclass
+    class InstitutionRegistrationContext(EmailContextData):
+        URL: str
+        TOURN: str
+        INSTITUTION: str
+
+    context_class = InstitutionRegistrationContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        return [(cls.context_class(URL=_create_url(url), TOURN=tourn_str, INSTITUTION=person.coach.tournament_institution.institution.name), person) for person in to]
+
+
+class SlotsAllocatedEmailGenerator(NotificationContextGenerator):
+
+    @dataclass
+    class SlotsAllocatedContext(EmailContextData):
+        TEAMS_ALLOCATED: int
+        ADJUDICATORS_ALLOCATED: int
+        INSTITUTION: str
+        URL: str
+        TOURN: str
+
+    context_class = SlotsAllocatedContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        return [
+            (
+                cls.context_class(
+                    URL=_create_url(url),
+                    TOURN=tourn_str,
+                    INSTITUTION=person.coach.tournament_institution.institution.name,
+                    TEAMS_ALLOCATED=person.coach.tournament_institution.teams_allocated,
+                    ADJUDICATORS_ALLOCATED=person.coach.tournament_institution.adjudicators_allocated,
+                ),
+                person,
+            )
+            for person in to
+        ]
+
+
+class InstitutionCustomEmailGenerator(NotificationContextGenerator):
+    """Variables for ad-hoc emails to an institution's contact (coach).
+
+    Exposes the institution name, contact name and the requested/allocated
+    slot counts so organisers can write custom messages (e.g. invoices using
+    arithmetic such as ``{% calc "TEAMS_ALLOCATED * 80" %}``).
+    """
+
+    @dataclass
+    class InstitutionCustomContext(EmailContextData):
+        INSTITUTION: str
+        CONTACT: str
+        TOURN: str
+        TEAMS_REQUESTED: int
+        TEAMS_ALLOCATED: int
+        ADJUDICATORS_REQUESTED: int
+        ADJUDICATORS_ALLOCATED: int
+
+    context_class = InstitutionCustomContext
+
+    @classmethod
+    def generate(cls, to: 'QuerySet[Person]', tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+        tourn_str = str(tournament)
+        emails = []
+        for person in to:
+            t_inst = person.coach.tournament_institution
+            emails.append((
+                cls.context_class(
+                    INSTITUTION=t_inst.institution.name,
+                    CONTACT=person.name,
+                    TOURN=tourn_str,
+                    TEAMS_REQUESTED=t_inst.teams_requested,
+                    TEAMS_ALLOCATED=t_inst.teams_allocated,
+                    ADJUDICATORS_REQUESTED=t_inst.adjudicators_requested,
+                    ADJUDICATORS_ALLOCATED=t_inst.adjudicators_allocated,
+                ),
+                person,
+            ))
         return emails
 
 

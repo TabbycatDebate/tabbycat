@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2021-11-29 01:59\n"
+"PO-Revision-Date: 2025-05-13 00:04\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -257,7 +257,7 @@ msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue: checkins/templates/PeopleStatusMixin.vue:
 msgid "Unaffiliated"
-msgstr ""
+msgstr "Unabhängig"
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "no ½ marks"

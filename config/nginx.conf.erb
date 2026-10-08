@@ -109,6 +109,28 @@ http {
             etag on;
         }
 
+        # Serve root-level static files
+        location = /robots.txt {
+            alias /app/tabbycat/staticfiles/root/robots.txt;
+            access_log off;
+            add_header Cache-Control "public";
+            expires 1d;
+        }
+
+        location = /favicon.ico {
+            alias /app/tabbycat/staticfiles/root/favicon.ico;
+            access_log off;
+            add_header Cache-Control "public";
+            expires 7d;
+        }
+
+        location = /navigatorPush.service.js {
+            alias /app/tabbycat/staticfiles/root/navigatorPush.service.js;
+            access_log off;
+            add_header Cache-Control "public";
+            expires 1d;
+        }
+
         # Pass to wsgi server
         location / {
             proxy_set_header Host $http_host;

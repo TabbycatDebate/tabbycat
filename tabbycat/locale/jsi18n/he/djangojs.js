@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;
     if (typeof v === 'boolean') {
@@ -14,18 +13,24 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s \u05de %(cnt)s \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea",
       "%(sel)s \u05de %(cnt)s \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea",
       "%(sel)s \u05de %(cnt)s \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea",
       "%(sel)s \u05de %(cnt)s \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea"
+    ],
+    "%s selected option not visible": [
+      "\u05d0\u05e4\u05e9\u05e8\u05d5\u05ea \u05e0\u05d1\u05d7\u05e8\u05ea %s \u05d0\u05d9\u05e0\u05d4 \u05d2\u05dc\u05d5\u05d9\u05d4.",
+      "%s \u05d0\u05e4\u05e9\u05e8\u05d5\u05d9\u05d5\u05ea \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea \u05d0\u05d9\u05e0\u05df \u05d2\u05dc\u05d5\u05d9\u05d5\u05ea.",
+      "%s \u05d0\u05e4\u05e9\u05e8\u05d5\u05d9\u05d5\u05ea \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea \u05d0\u05d9\u05e0\u05df \u05d2\u05dc\u05d5\u05d9\u05d5\u05ea.",
+      "%s \u05d0\u05e4\u05e9\u05e8\u05d5\u05d9\u05d5\u05ea \u05e0\u05d1\u05d7\u05e8\u05d5\u05ea \u05d0\u05d9\u05e0\u05df \u05d2\u05dc\u05d5\u05d9\u05d5\u05ea."
     ],
     "6 a.m.": "6 \u05d1\u05d1\u05d5\u05e7\u05e8",
     "6 p.m.": "6 \u05d0\u05d7\u05e8 \u05d4\u05e6\u05d4\u05e8\u05d9\u05d9\u05dd",
@@ -44,6 +49,7 @@
     "December": "\u05d3\u05e6\u05de\u05d1\u05e8",
     "February": "\u05e4\u05d1\u05e8\u05d5\u05d0\u05e8",
     "Filter": "\u05e1\u05d9\u05e0\u05d5\u05df",
+    "Friday": "\u05e9\u05d9\u05e9\u05d9",
     "Hide": "\u05d4\u05e1\u05ea\u05e8",
     "January": "\u05d9\u05e0\u05d5\u05d0\u05e8",
     "July": "\u05d9\u05d5\u05dc\u05d9",
@@ -51,6 +57,7 @@
     "March": "\u05de\u05e8\u05e5",
     "May": "\u05de\u05d0\u05d9",
     "Midnight": "\u05d7\u05e6\u05d5\u05ea",
+    "Monday": "\u05e9\u05e0\u05d9",
     "Noon": "12 \u05d1\u05e6\u05d4\u05e8\u05d9\u05d9\u05dd",
     "Note: You are %s hour ahead of server time.": [
       "\u05d4\u05e2\u05e8\u05d4: \u05d0\u05ea/\u05d4 %s \u05e9\u05e2\u05d4 \u05dc\u05e4\u05e0\u05d9 \u05d6\u05de\u05df \u05d4\u05e9\u05e8\u05ea.",
@@ -69,18 +76,31 @@
     "October": "\u05d0\u05d5\u05e7\u05d8\u05d5\u05d1\u05e8",
     "Remove": "\u05d4\u05e1\u05e8\u05d4",
     "Remove all": "\u05d4\u05e1\u05e8\u05ea \u05d4\u05db\u05dc",
+    "Saturday": "\u05e9\u05d1\u05ea",
     "September": "\u05e1\u05e4\u05d8\u05de\u05d1\u05e8",
     "Show": "\u05d4\u05e6\u05d2",
+    "Sunday": "\u05e8\u05d0\u05e9\u05d5\u05df",
     "Team": "\u05e7\u05d1\u05d5\u05e6\u05d4",
     "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "\u05d6\u05d5 \u05e8\u05e9\u05d9\u05de\u05ea %s \u05d4\u05d6\u05de\u05d9\u05e0\u05d9\u05dd \u05dc\u05d1\u05d7\u05d9\u05e8\u05d4. \u05e0\u05d9\u05ea\u05df \u05dc\u05d1\u05d7\u05d5\u05e8 \u05d7\u05dc\u05e7 \u05e2\"\u05d9 \u05e1\u05d9\u05de\u05d5\u05df \u05d1\u05ea\u05d9\u05d1\u05d4 \u05de\u05ea\u05d7\u05ea \u05d5\u05dc\u05d7\u05d9\u05e6\u05d4 \u05e2\u05dc \u05d7\u05e5  \"\u05d1\u05d7\u05e8\" \u05d1\u05d9\u05df \u05e9\u05ea\u05d9 \u05d4\u05ea\u05d9\u05d1\u05d5\u05ea.",
     "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "\u05d6\u05d5 \u05e8\u05e9\u05d9\u05de\u05ea %s \u05d0\u05e9\u05e8 \u05e0\u05d1\u05d7\u05e8\u05d5. \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e1\u05d9\u05e8 \u05d7\u05dc\u05e7 \u05e2\"\u05d9 \u05d1\u05d7\u05d9\u05e8\u05d4 \u05d1\u05ea\u05d9\u05d1\u05d4 \u05de\u05ea\u05d7\u05ea \u05d5\u05dc\u05d7\u05d9\u05e6\u05d4 \u05e2\u05dc \u05d7\u05e5 \"\u05d4\u05e1\u05e8\u05d4\" \u05d1\u05d9\u05df \u05e9\u05ea\u05d9 \u05d4\u05ea\u05d9\u05d1\u05d5\u05ea.",
+    "Thursday": "\u05d7\u05de\u05d9\u05e9\u05d9",
     "Today": "\u05d4\u05d9\u05d5\u05dd",
     "Tomorrow": "\u05de\u05d7\u05e8",
+    "Tuesday": "\u05e9\u05dc\u05d9\u05e9\u05d9",
     "Type into this box to filter down the list of available %s.": "\u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e7\u05dc\u05d9\u05d3 \u05d1\u05ea\u05d9\u05d1\u05d4 \u05d6\u05d5 \u05db\u05d3\u05d9 \u05dc\u05e1\u05e0\u05df %s.",
+    "Type into this box to filter down the list of selected %s.": "\u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05e7\u05dc\u05d9\u05d3 \u05d1\u05ea\u05d9\u05d1\u05d4 \u05d6\u05d5 \u05db\u05d3\u05d9 \u05dc\u05e1\u05e0\u05df \u05d0\u05ea \u05e8\u05e9\u05d9\u05de\u05ea %s \u05d4\u05e0\u05d1\u05d7\u05e8\u05d9\u05dd.",
+    "Wednesday": "\u05e8\u05d1\u05d9\u05e2\u05d9",
     "Yesterday": "\u05d0\u05ea\u05de\u05d5\u05dc",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "\u05d1\u05d7\u05e8\u05ea \u05e4\u05e2\u05d5\u05dc\u05d4, \u05d0\u05da \u05dc\u05d0 \u05d1\u05d9\u05e6\u05e2\u05ea \u05e9\u05d9\u05e0\u05d5\u05d9\u05d9\u05dd \u05d1\u05e9\u05d3\u05d5\u05ea. \u05db\u05e0\u05e8\u05d0\u05d4 \u05d7\u05d9\u05e4\u05e9\u05ea \u05d0\u05ea \u05db\u05e4\u05ea\u05d5\u05e8 \u05d1\u05e6\u05e2 \u05d1\u05de\u05e7\u05d5\u05dd \u05db\u05e4\u05ea\u05d5\u05e8 \u05e9\u05de\u05d9\u05e8\u05d4.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "\u05d1\u05d7\u05e8\u05ea \u05e4\u05e2\u05d5\u05dc\u05d4, \u05d0\u05da \u05dc\u05d0 \u05e9\u05de\u05e8\u05ea \u05e2\u05d3\u05d9\u05d9\u05df \u05d0\u05ea \u05d4\u05e9\u05d9\u05e0\u05d5\u05d9\u05d9\u05dd \u05dc\u05e9\u05d3\u05d5\u05ea \u05d1\u05d5\u05d3\u05d3\u05d9\u05dd. \u05e0\u05d0 \u05dc\u05dc\u05d7\u05d5\u05e5 \u05e2\u05dc \u05d0\u05d9\u05e9\u05d5\u05e8 \u05db\u05d3\u05d9 \u05dc\u05e9\u05de\u05d5\u05e8. \u05d9\u05d4\u05d9\u05d4 \u05e2\u05dc\u05d9\u05da \u05dc\u05d4\u05e4\u05e2\u05d9\u05dc \u05d0\u05ea \u05d4\u05e4\u05e2\u05d5\u05dc\u05d4 \u05e2\u05d5\u05d3 \u05e4\u05e2\u05dd.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "\u05d9\u05e9 \u05dc\u05da \u05e9\u05d9\u05e0\u05d5\u05d9\u05d9\u05dd \u05e9\u05dc\u05d0 \u05e0\u05e9\u05de\u05e8\u05d5 \u05e2\u05dc \u05e9\u05d3\u05d5\u05ea \u05d9\u05d7\u05d9\u05d3\u05d5\u05ea.  \u05d0\u05dd \u05d0\u05ea\u05d4 \u05de\u05e4\u05e2\u05d9\u05dc \u05e4\u05e2\u05d5\u05dc\u05d4, \u05e9\u05d9\u05e0\u05d5\u05d9\u05d9\u05dd \u05e9\u05dc\u05d0 \u05e0\u05e9\u05de\u05e8\u05d5 \u05d9\u05d0\u05d1\u05d3\u05d5.",
+    "abbrev. day Friday\u0004Fri": "\u05d5",
+    "abbrev. day Monday\u0004Mon": "\u05d1",
+    "abbrev. day Saturday\u0004Sat": "\u05e9",
+    "abbrev. day Sunday\u0004Sun": "\u05d0",
+    "abbrev. day Thursday\u0004Thur": "\u05d4",
+    "abbrev. day Tuesday\u0004Tue": "\u05d2",
+    "abbrev. day Wednesday\u0004Wed": "\u05d3",
     "abbrev. month April\u0004Apr": "\u05d0\u05e4\u05e8\u05f3",
     "abbrev. month August\u0004Aug": "\u05d0\u05d5\u05d2\u05f3",
     "abbrev. month December\u0004Dec": "\u05d3\u05e6\u05de\u05f3",
@@ -93,18 +113,18 @@
     "abbrev. month November\u0004Nov": "\u05e0\u05d5\u05d1\u05f3",
     "abbrev. month October\u0004Oct": "\u05d0\u05d5\u05e7\u05f3",
     "abbrev. month September\u0004Sep": "\u05e1\u05e4\u05d8\u05f3",
-    "one letter Friday\u0004F": "\u05e9",
-    "one letter Monday\u0004M": "\u05e9",
+    "one letter Friday\u0004F": "\u05d5",
+    "one letter Monday\u0004M": "\u05d1",
     "one letter Saturday\u0004S": "\u05e9",
-    "one letter Sunday\u0004S": "\u05e8",
-    "one letter Thursday\u0004T": "\u05d7",
-    "one letter Tuesday\u0004T": "\u05e9",
-    "one letter Wednesday\u0004W": "\u05e8"
+    "one letter Sunday\u0004S": "\u05d0",
+    "one letter Thursday\u0004T": "\u05d4",
+    "one letter Tuesday\u0004T": "\u05d2",
+    "one letter Wednesday\u0004W": "\u05d3"
   };
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

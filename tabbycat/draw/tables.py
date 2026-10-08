@@ -15,6 +15,7 @@ from .generator.bphungarian import BPHungarianDrawGenerator
 
 if TYPE_CHECKING:
     from participants.models import Team
+
     from .models import Debate
 
 
@@ -23,14 +24,6 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.side_history_separator = " " if self.tournament.pref('teams_in_debate') == 4 else " / "
-
-    def highlight_rows_by_column_value(self, column):
-        highlighted_rows = [i for i in range(1, len(self.data))
-                if self.data[i][column] != self.data[i-1][column]]
-        for i in highlighted_rows:
-            self.data[i] = [self._convert_cell(cell) for cell in self.data[i]]
-            for cell in self.data[i]:
-                cell['class'] = cell.get('class', '') + ' highlight-row'
 
     def _prepend_side_header(self, side, name, abbr, text_only=False):
         # Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
@@ -231,6 +224,7 @@ class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.exponent = self.tournament.pref('bp_position_cost_exponent')
+        self.pullup_penalty = self.tournament.pref('draw_pullup_penalty')
 
         cost_pref = self.tournament.pref('bp_position_cost')
         α = self.tournament.pref('bp_renyi_order')  # noqa: N806
@@ -242,6 +236,28 @@ class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
     def get_position_cost(self, pos, team):
         before = self.side_histories_before[team.id]
         return self.position_cost_func(pos, before) ** self.exponent
+
+    def get_pullup_cost(self, team, bracket_level):
+        info = self.standings.get_standing(team)
+        team.points = next(info.itermetrics(), 0) or 0
+        team.npullups = info.metrics.get('npullups', 0)
+        return BPHungarianDrawGenerator.get_pullup_cost(team, bracket_level, self.pullup_penalty)
+
+    def get_assignment_cost(self, pos, team, bracket_level):
+        return self.get_position_cost(pos, team) + self.get_pullup_cost(team, bracket_level)
+
+    def add_npullups_column(self, teams):
+        if not self.pullup_penalty:
+            return
+
+        npullups_infos = self.standings.get_standings(teams)
+        header = {
+            'key': 'npullups',
+            'title': force_str(_("PU")),
+            'tooltip': force_str(_("Number of pullups before this round")),
+        }
+        self.add_column(header, [metricformat(info.metrics.get('npullups', 0))
+                for info in npullups_infos])
 
     def get_imbalance_category(self, team):
         """Returns the highlighting category for the team. Requires
@@ -324,8 +340,12 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
                 })
             self.add_column(header, cells)
 
+        self.add_npullups_column(teams)
+
         # Sides
         sides_lookup = {dt.team_id: dt.side for debate in draw
+                for dt in debate.debateteam_set.all()}
+        bracket_levels = {dt.team_id: debate.bracket for debate in draw
                 for dt in debate.debateteam_set.all()}
         sides = [sides_lookup[team.id] for team in teams]
         poses = [self.tournament.sides.index(side) for side in sides]  # used later
@@ -350,9 +370,10 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
             side_histories_now_highlighted.append(history_str)
         self.add_column(header, side_histories_now_highlighted)
 
-        # Position cost
-        header = {'key': "cost", 'title': _("Cost"), 'tooltip': _("Position cost")}
-        cells = [metricformat(self.get_position_cost(pos, team)) for pos, team in zip(poses, teams)]
+        cost_tooltip = (_("Position cost + pullup penalty") if self.pullup_penalty else _("Position cost"))
+        header = {'key': "cost", 'title': _("Cost"), 'tooltip': cost_tooltip}
+        cells = [metricformat(self.get_assignment_cost(pos, team, bracket_levels[team.id]))
+                for pos, team in zip(poses, teams)]
         self.add_column(header, cells)
 
         # Status
@@ -386,7 +407,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         for side in self.tournament.sides:
             self.add_all_columns_for_team(side)
 
-        self.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
+        self.highlight_column = 0  # highlight first row of a new bracket
 
     def add_permitted_points_column(self):
         if len(self.standings.metric_keys) == 0:  # special case: no metrics used
@@ -440,15 +461,20 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             infos = self.standings.get_standings(teams)
             self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
 
+        self.add_npullups_column(teams)
+
         # Side history after last round
         header = self._prepend_side_header(side, _("side history before this round"), _("Sides"), text_only=True)
         cells = self._side_history_by_team(self.side_histories_before, teams)
         self.add_column(header, cells)
 
-        # Position cost incurred, post-weighting
-        header = self._prepend_side_header(side, _("position cost"), _("Cost"), text_only=True)
+        cost_tooltip = (_("position cost + pullup penalty")
+                if self.pullup_penalty else _("position cost"))
+        header = self._prepend_side_header(side, cost_tooltip, _("Cost"), text_only=True)
         pos = self.tournament.sides.index(side)
-        cells = [metricformat(self.get_position_cost(pos, team)) for team in teams]
+        bracket_levels = [debate.bracket for debate in self.debates]
+        cells = [metricformat(self.get_assignment_cost(pos, team, bracket_levels[i]))
+                for i, team in enumerate(teams)]
         self.add_column(header, cells)
 
         # Highlight according to category

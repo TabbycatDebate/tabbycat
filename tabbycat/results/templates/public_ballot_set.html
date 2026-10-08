@@ -90,6 +90,18 @@
                       {{ position.rank }}
                     </span>
                   {% endif %}
+                  {% if position.criteria %}
+                    <ul>
+                      {% for criterion, score in position.criteria.items %}
+                        <li>
+                          <strong>{{ criterion.name }}</strong>
+                          <span class="badge mr-2 badge-secondary float-right">
+                            {{ score }}
+                          </span>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
                 </li>
               {% endfor %}
               <li class="list-group-item list-group-item-{{ team.win_style }}">

@@ -64,6 +64,11 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
             "hungarian_preshuffled" - Hungarian algorithm, with the rows and
                                       columns of the cost matrix permuted
                                       randomly beforehand.
+
+        "pullup_penalty" - (int) Penalty multiplied by each team's prior pull-up
+                           count (``npullups``) when assigning them to a debate
+                           above their points bracket. Set to 0 to disable.
+                           See WUDC constitution s36.2.7.
     """
 
     requires_even_teams = True
@@ -75,12 +80,15 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         "renyi_order"      : 1.0,
         "exponent"         : 4.0,
         "assignment_method": "hungarian_preshuffled",
+        "pullup_penalty"   : 0,
     }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.check_teams_for_attribute("points")
         self.check_teams_for_attribute("side_history")
+        if self.options["pullup_penalty"]:
+            self.check_teams_for_attribute("npullups")
         self.munkres = munkres.Munkres()
 
     def generate(self):
@@ -217,6 +225,12 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
             return (2 - log2(sum([p ** α for p in probs])) / (1 - α)) * n
         return _position_cost_renyi_entropy
 
+    @staticmethod
+    def get_pullup_cost(team, bracket_level, pullup_penalty):
+        if not pullup_penalty or team.points >= bracket_level:
+            return 0
+        return team.npullups * pullup_penalty
+
     def generate_cost_matrix(self, rooms):
         """Returns a cost matrix for the tournament.
         Rows (inner lists) are teams, in the same order as in `self.teams`.
@@ -226,11 +240,14 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
          - if the team (given its points) is not allowed in the room, use
            DISALLOWED.
          - otherwise, for each position, use the position cost for that position
-           (for a team with that position history).
+           (for a team with that position history), raised to the exponent.
+         - if the team would be pulled up into the room (its points are below
+           the room's bracket level), add ``npullups * pullup_penalty``.
         """
         nteams = len(self.teams)
         cost = self.get_position_cost_function()
         exponent = self.options["exponent"]
+        pullup_penalty = self.options["pullup_penalty"]
 
         costs = []
         for team in self.teams:
@@ -239,7 +256,9 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
                 if team.points not in allowed:
                     row.extend([munkres.DISALLOWED] * 4)
                 else:
-                    row.extend([cost(pos, team.side_history) ** exponent for pos in range(4)])
+                    pullup_cost = self.get_pullup_cost(team, level, pullup_penalty)
+                    row.extend([cost(pos, team.side_history) ** exponent + pullup_cost
+                            for pos in range(4)])
             assert len(row) == nteams
             costs.append(row)
 

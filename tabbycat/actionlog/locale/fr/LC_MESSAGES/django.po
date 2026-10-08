@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 23:07\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -26,12 +26,16 @@ msgid "Changed adjudicator breaking status"
 msgstr "Changé le statut de qualification d'un(e) juge"
 
 #: actionlog/models.py
-msgid "Created adjudicator"
+msgid "Changed adjudicator tester status"
 msgstr ""
 
 #: actionlog/models.py
+msgid "Created adjudicator"
+msgstr "Créé juge"
+
+#: actionlog/models.py
 msgid "Edited adjudicator"
-msgstr ""
+msgstr "Modifié juge"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
@@ -51,7 +55,7 @@ msgstr "Modifié la disponibilité des juges"
 
 #: actionlog/models.py
 msgid "Edited availability"
-msgstr ""
+msgstr "Modifié disponibilités"
 
 #: actionlog/models.py
 msgid "Edited teams availability"
@@ -91,7 +95,7 @@ msgstr "Modifié les catégories de qualification"
 
 #: actionlog/models.py
 msgid "Deleted team break for category"
-msgstr ""
+msgstr "Supprimé la qualification de l'équipe pour la catégorie"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks"
@@ -107,7 +111,7 @@ msgstr "Généré la qualification des équipes pour toutes les catégories"
 
 #: actionlog/models.py
 msgid "Generated the team break for one category"
-msgstr ""
+msgstr "Généré la qualification des équipes pour une catégorie"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks and updated all team breaks"
@@ -147,11 +151,11 @@ msgstr "Modifié des conflits équipe-institution"
 
 #: actionlog/models.py
 msgid "Created debate"
-msgstr ""
+msgstr "Créé débat"
 
 #: actionlog/models.py
 msgid "Edited debate"
-msgstr ""
+msgstr "Modifié débat"
 
 #: actionlog/models.py
 msgid "Auto-prioritized debate importance"
@@ -187,11 +191,11 @@ msgstr "Rétracté un tirage"
 
 #: actionlog/models.py
 msgid "Created feedback question"
-msgstr ""
+msgstr "Créé question d'évaluation"
 
 #: actionlog/models.py
 msgid "Edited feedback question"
-msgstr ""
+msgstr "Modifié question d'évaluation"
 
 #: actionlog/models.py
 msgid "Saved feedback"
@@ -203,11 +207,11 @@ msgstr "Saisi un évaluation du formulaire publique"
 
 #: actionlog/models.py
 msgid "Created institution"
-msgstr ""
+msgstr "Créé institution"
 
 #: actionlog/models.py
 msgid "Edited institution"
-msgstr ""
+msgstr "Modifié institution"
 
 #: actionlog/models.py
 msgid "Saved a matchup manual edit"
@@ -247,7 +251,7 @@ msgstr "Attribué automatiquement des jurys préformés aux débats"
 
 #: actionlog/models.py
 msgid "Deleted preformed panels"
-msgstr ""
+msgstr "Supprimé jurys préformés"
 
 #: actionlog/models.py
 msgid "Auto-prioritized preformed panels"
@@ -267,11 +271,11 @@ msgstr "Marqué la joute comme achevée"
 
 #: actionlog/models.py
 msgid "Created round"
-msgstr ""
+msgstr "Créé joute"
 
 #: actionlog/models.py
 msgid "Edited round"
-msgstr ""
+msgstr "Modifié joute"
 
 #: actionlog/models.py
 msgid "Set start time"
@@ -280,6 +284,10 @@ msgstr "Fixé l’heure de début"
 #: actionlog/models.py
 msgid "Saved the sides status of a matchup"
 msgstr "Enregistré le statut des côtés d'un appariement"
+
+#: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
@@ -303,11 +311,15 @@ msgstr "Modifié les catégories d'orateur"
 
 #: actionlog/models.py
 msgid "Created speaker"
+msgstr "Créé orateur"
+
+#: actionlog/models.py
+msgid "Deleted speaker"
 msgstr ""
 
 #: actionlog/models.py
 msgid "Edited speaker"
-msgstr ""
+msgstr "Modifié orateur"
 
 #: actionlog/models.py
 msgid "Edited speaker category eligibility"
@@ -315,11 +327,11 @@ msgstr "Modifié l’admissibilité pour les catégories d'orateur"
 
 #: actionlog/models.py
 msgid "Created team"
-msgstr ""
+msgstr "Créé équipe"
 
 #: actionlog/models.py
 msgid "Edited team"
-msgstr ""
+msgstr "Modifié équipe"
 
 #: actionlog/models.py
 msgid "Edited adjudicator base score"
@@ -327,11 +339,11 @@ msgstr "Modifié la note de base pour un juge"
 
 #: actionlog/models.py
 msgid "Created tournament"
-msgstr ""
+msgstr "Créé tournoi"
 
 #: actionlog/models.py
 msgid "Edited tournament"
-msgstr ""
+msgstr "Modifié tournoi"
 
 #: actionlog/models.py
 msgid "Updated adjudicator scores in bulk"
@@ -339,7 +351,7 @@ msgstr "Mis à jour les notes de juge en masse"
 
 #: actionlog/models.py
 msgid "Invited user to the instance"
-msgstr ""
+msgstr "Invité un utilisateur au site"
 
 #: actionlog/models.py
 msgid "Edited room categories"
@@ -347,7 +359,7 @@ msgstr "Modifié les catégories de salles"
 
 #: actionlog/models.py
 msgid "Created room category"
-msgstr ""
+msgstr "Créé catégorie de salle"
 
 #: actionlog/models.py
 msgid "Edited room constraints"
@@ -355,11 +367,11 @@ msgstr "Modifié les contraintes de salle"
 
 #: actionlog/models.py
 msgid "Created room"
-msgstr ""
+msgstr "Créé salle"
 
 #: actionlog/models.py
 msgid "Edited room"
-msgstr ""
+msgstr "Modifié salle"
 
 #: actionlog/models.py
 msgid "Auto-allocated rooms"
@@ -368,6 +380,42 @@ msgstr "Attribué automatiquement les salles"
 #: actionlog/models.py
 msgid "Saved a room manual edit"
 msgstr "Enregistré une modification manuelle d'une salle"
+
+#: actionlog/models.py
+msgid "Created question"
+msgstr "Créé question"
+
+#: actionlog/models.py
+msgid "Edited question"
+msgstr "Modifié question"
+
+#: actionlog/models.py
+msgid "Registered institution"
+msgstr "Inscrit institution"
+
+#: actionlog/models.py
+msgid "Registered team"
+msgstr "Inscrit équipe"
+
+#: actionlog/models.py
+msgid "Registered adjudicator"
+msgstr "Inscrit juge"
+
+#: actionlog/models.py
+msgid "Registered speaker"
+msgstr "Inscrit orateur"
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
+msgstr ""
 
 #: actionlog/models.py
 msgid "API"

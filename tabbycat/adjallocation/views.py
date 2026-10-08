@@ -10,11 +10,15 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from adjallocation.models import DebateAdjudicator
 from availability.utils import annotate_availability
+from draw.models import Debate, DebateTeam
+from draw.types import DebateSide
 from options.utils import use_team_code_names
-from participants.models import Adjudicator, Institution, Region
-from participants.prefetch import populate_feedback_scores
+from participants.models import Adjudicator, Institution, Region, Speaker
+from participants.prefetch import populate_feedback_scores, populate_win_counts
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
+from tournaments.models import Round
 from users.permissions import has_permission, Permission
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -104,6 +108,53 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
         return EditDebateAdjsDebateSerializer(
             debates, many=True, context={'sides': self.tournament.sides,
                                          'round': self.round})
+
+
+class MultiRoundEditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
+    template_name = "edit_debate_adjudicators.html"
+    page_title = gettext_lazy("Edit Allocation (Concurrent Rounds)")
+    prefetch_adjs = True
+
+    view_permission = Permission.VIEW_DEBATEADJUDICATORS
+    edit_permission = Permission.EDIT_DEBATEADJUDICATORS
+
+    def debates_or_panels_factory(self, debates):
+        return EditDebateAdjsDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides,
+                                         'round': self.round})
+
+    def get_draw_or_panels_objects(self):
+        """Include debates from all concurrent rounds: elimination (per category)
+        or preliminary parallel panels (same ``schedule_group``)."""
+        parallel_prelims = (
+            self.round.stage == Round.Stage.PRELIMINARY and len(self.tournament.current_rounds) > 1
+        )
+        if not self.round.is_break_round and not parallel_prelims:
+            return super().get_draw_or_panels_objects()
+
+        prefetches = ()
+        if self.prefetch_venues:
+            prefetches += ('venue__venuecategory_set',)
+        if self.prefetch_adjs:
+            prefetches += (Prefetch('debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator')),)
+        if self.prefetch_teams:
+            prefetches += (Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related('team').prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
+                    'team__break_categories',
+                )),
+            )
+        else:
+            prefetches += ('debateteam_set__team__break_categories',)
+
+        draw = Debate.objects.filter(round__in=self.tournament.current_rounds).exclude(
+            debateteam__side=DebateSide.BYE,
+        ).select_related('round__tournament', 'venue').prefetch_related(*prefetches)
+
+        if self.prefetch_teams:
+            populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
+        return draw
 
 
 class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):

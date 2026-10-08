@@ -4,6 +4,10 @@ from django.utils.translation import gettext as _
 
 class ConfirmDrawDeletionForm(forms.Form):
     round_name = forms.CharField(label=_("Full round name"), required=True)
+    overwrite_preformed_panels = forms.BooleanField(
+        label=_("Overwrite preformed panels with current panels"),
+        required=False,
+    )
 
     def __init__(self, round, **kwargs):
         self.round = round

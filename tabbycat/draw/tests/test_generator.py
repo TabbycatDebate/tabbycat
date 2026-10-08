@@ -19,6 +19,13 @@ class TestRandomDrawGenerator(unittest.TestCase):
     teams = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
              (7, 'E'), (8, 'A'), (9, 'D'), (10, 'E'), (11, 'D'), (12, 'A')]
 
+    def test_pullup_penalty_option(self):
+        default = DrawGenerator(2, "random", DUMMY_TEAMS, None)
+        overridden = DrawGenerator(2, "random", DUMMY_TEAMS, None, pullup_penalty=10)
+
+        self.assertEqual(default.options["pullup_penalty"], 0)
+        self.assertEqual(overridden.options["pullup_penalty"], 10)
+
     def test_invalid_option(self):
         teams = [TestTeam(*args, side_history=[0, 0]) for args in self.teams]
 
@@ -35,7 +42,6 @@ class TestRandomDrawGenerator(unittest.TestCase):
                 aff = pairing.teams[0]
                 neg = pairing.teams[1]
                 if aff.seen(neg) or neg.seen(aff) or aff.institution == neg.institution:
-                    print(pairing)
                     self.assertEqual(pairing.flags, ["max_swapped"])
                 else:
                     self.assertEqual(pairing.flags, [])
@@ -345,32 +351,32 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
     # situation with lots of swaps and manually figuring out the anticipated
     # result.
     standings = dict()
-    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((2,  'D', 3, [22, 16, 20, 10]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((3,  'E', 3, [23, 20, 25,  4]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((11, 'B', 3, [1,  12, 23, 22]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((6,  'E', 3, [19, 15, 18,  9]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((17, 'E', 3, [21, 14,  7, 25]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((4,  'B', 3, [18, 25,  5,  3]), {"side_history": [3, 1], "allocated_side": DebateSide.AFF}),
-                    ((14, 'A', 3, [24, 17,  9, 12]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((8,  'A', 3, [15, 24,  1, 15]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((7,  'D', 2, [16,  9, 17, 16]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((9,  'D', 2, [5,   7, 14,  6]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((15, 'B', 2, [8,   6, 12,  8]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((18, 'B', 2, [4,  21,  6, 21]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((22, 'A', 2, [2,  10, 16, 11]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((23, 'A', 2, [3,  19, 11,  5]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((24, 'B', 2, [14,  8, 19, 20]), {"side_history": [3, 1], "allocated_side": DebateSide.AFF}),
-                    ((25, 'A', 2, [10,  4,  3, 17]), {"side_history": [3, 1], "allocated_side": DebateSide.AFF}),
-                    ((1,  'C', 1, [11, 26,  8, 19]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((5,  'C', 1, [9,  13,  4, 23]), {"side_history": [1, 3], "allocated_side": DebateSide.NEG}),
-                    ((10, 'B', 1, [25, 22, 13,  2]), {"side_history": [1, 3], "allocated_side": DebateSide.AFF}),
-                    ((16, 'D', 1, [7,   2, 22,  7]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((20, 'E', 1, [13,  3,  2, 24]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((21, 'A', 1, [17, 18, 26, 18]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF}),
-                    ((19, 'B', 1, [6,  23, 24,  1]), {"side_history": [1, 3], "allocated_side": DebateSide.NEG}),
-                    ((26, 'B', 1, [12,  1, 21, 13]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG}),
-                    ((13, 'C', 0, [20,  5, 10, 26]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG})]
+    standings[1] = [((12, 'B', 4, [26, 11, 15, 14]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 1}),
+                    ((2,  'D', 3, [22, 16, 20, 10]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 1}),
+                    ((3,  'E', 3, [23, 20, 25,  4]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 2}),
+                    ((11, 'B', 3, [1,  12, 23, 22]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 3}),
+                    ((6,  'E', 3, [19, 15, 18,  9]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 4}),
+                    ((17, 'E', 3, [21, 14,  7, 25]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 5}),
+                    ((4,  'B', 3, [18, 25,  5,  3]), {"side_history": [3, 1], "allocated_side": DebateSide.AFF, "subrank": 6}),
+                    ((14, 'A', 3, [24, 17,  9, 12]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 7}),
+                    ((8,  'A', 3, [15, 24,  1, 15]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 8}),
+                    ((7,  'D', 2, [16,  9, 17, 16]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 1}),
+                    ((9,  'D', 2, [5,   7, 14,  6]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 2}),
+                    ((15, 'B', 2, [8,   6, 12,  8]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 3}),
+                    ((18, 'B', 2, [4,  21,  6, 21]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 4}),
+                    ((22, 'A', 2, [2,  10, 16, 11]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 5}),
+                    ((23, 'A', 2, [3,  19, 11,  5]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 6}),
+                    ((24, 'B', 2, [14,  8, 19, 20]), {"side_history": [3, 1], "allocated_side": DebateSide.AFF, "subrank": 7}),
+                    ((25, 'A', 2, [10,  4,  3, 17]), {"side_history": [3, 1], "allocated_side": DebateSide.AFF, "subrank": 8}),
+                    ((1,  'C', 1, [11, 26,  8, 19]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 1}),
+                    ((5,  'C', 1, [9,  13,  4, 23]), {"side_history": [1, 3], "allocated_side": DebateSide.NEG, "subrank": 2}),
+                    ((10, 'B', 1, [25, 22, 13,  2]), {"side_history": [1, 3], "allocated_side": DebateSide.AFF, "subrank": 3}),
+                    ((16, 'D', 1, [7,   2, 22,  7]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 4}),
+                    ((20, 'E', 1, [13,  3,  2, 24]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 5}),
+                    ((21, 'A', 1, [17, 18, 26, 18]), {"side_history": [2, 2], "allocated_side": DebateSide.AFF, "subrank": 6}),
+                    ((19, 'B', 1, [6,  23, 24,  1]), {"side_history": [1, 3], "allocated_side": DebateSide.NEG, "subrank": 7}),
+                    ((26, 'B', 1, [12,  1, 21, 13]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 8}),
+                    ((13, 'C', 0, [20,  5, 10, 26]), {"side_history": [2, 2], "allocated_side": DebateSide.NEG, "subrank": 1})]
 
     expected = dict()
     expected[1] = [dict(
@@ -438,7 +444,62 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
          (20, 19, [], [], [], False),
          (21, 13, [], [], [], False)]]
 
-    combinations = [(1, 1), (1, 2), (1, 3), (1, 4)]
+    expected[5] = [
+        dict(
+            odd_bracket="pullup_top",
+            pairing_method="slide",
+            avoid_conflicts="graph",
+            side_allocations="balance",
+            avoid_history=True,
+            history_penalty=1000,
+            avoid_institution=True,
+            institution_penalty=100,
+            side_penalty=0,
+            pairing_penalty=1,
+        ),
+        [(12,  2, [], [], ['pullup'], True),
+         (3,  14, [], [], [], True),
+         (17, 11, [], [], [], True),  # Prefers a 2-pairing deviation
+         (8,   6, [], [], [], True),
+         (4,   7, [], [], ['pullup'], True),
+         (9,  24, [], [], [], False),
+         (15, 23, [], [], [], True),
+         (18, 25, [], [], [], False),
+         (22,  1, [], [], ['pullup'], True),
+         (5,  21, [], [], [], True),
+         (10, 20, [], [], [], False),
+         (16, 26, [], [], [], True),
+         (19, 13, [], [], ['pullup'], True)]]
+
+    expected[6] = [  # Should be identical to [5]
+        dict(
+            odd_bracket="pullup_top",
+            pairing_method="slide",
+            avoid_conflicts="graph_one",
+            side_allocations="balance",
+            avoid_history=True,
+            history_penalty=1000,
+            avoid_institution=True,
+            institution_penalty=100,
+            side_penalty=0,
+            pairing_penalty=1,
+            pullup_penalty=10,
+        ),
+        [(12,  2, [], [], ['pullup'], True),
+         (3,  14, [], [], [], True),
+         (17, 11, [], [], [], True),
+         (8,   6, [], [], [], True),
+         (4,   7, [], [], ['pullup'], True),
+         (9,  24, [], [], [], False),
+         (15, 23, [], [], [], True),
+         (18, 25, [], [], [], False),
+         (22,  1, [], [], ['pullup'], True),
+         (5,  21, [], [], [], True),
+         (10, 20, [], [], [], False),
+         (16, 26, [], [], [], True),
+         (19, 13, [], [], ['pullup'], True)]]
+
+    combinations = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6)]
 
     def do_draw(self, standings, options):
         standings = [TestTeam(*args, **kwargs) for args, kwargs in standings]
@@ -457,7 +518,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                     expected_teams = (exp_aff, exp_neg)
 
                     if same_affs:
-                        self.assertCountEqual(actual_teams, expected_teams)
+                        self.assertEqual(set(actual_teams), set(expected_teams))
                     else:
                         self.assertEqual(actual_teams, expected_teams)
 

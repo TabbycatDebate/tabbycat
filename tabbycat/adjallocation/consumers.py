@@ -61,7 +61,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             self.return_error(event['extra']['group_name'],
                 _("Draw is already released, unrelease draw to redo auto-allocations."))
             return
-        if round.draw_status != round.Status.CONFIRMED:
+        if round.draw_status not in [round.Status.CONFIRMED, round.Status.TEAMS_RELEASED]:
             self.return_error(event['extra']['group_name'],
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return

@@ -2,9 +2,124 @@
 Change Log
 ==========
 
-2.10.0
-------
+2.13.0 (TBD)
+------------
+
 *Release date: TBD*
+
+
+2.12.0 (Ukrainian Levkoy)
+-------------------------
+
+*Release date: 23 September 2026*
+
+- Expanded registration workflows:
+  - Institutions can register by invitation, view and update their responses, and receive confirmation statuses
+  - Team and adjudicator allocations can be capped, edited, and transferred between institutions
+  - Organizers can send bulk and custom emails to institutions and track invitation emails. Thank you to idowolf for improving bulk-email validation!
+- Updated and added tournament formats, which can make changes outside the settings:
+  - BP draws can now take a pullup penalty into account, and optionally have speaker scores in elimination rounds
+  - WSDC draws are now random within brackets, and automatically create criteria with different ranges between substantive and reply
+  - AP odd brackets use bubble-up-bubble down. Thank you to Chirag!
+  - Implemented round-robin draws, including support for schedule groups and a BP round-robin preset
+  - Added a Karl Popper (Czechia) tournament preset with median speaker-score aggregation and self-declared split ballots. Thank you to PiechZ!
+- Ido Wolf worked on tournament schedules:
+  - Redesigned the tournament schedule editor with day-by-day organization and automatic event titles
+  - Added API endpoints and iCalendar export of the public schedule and scheduled debate times
+- Added participant management views:
+  - Tracking institution gender breakdowns and N-1 adjudicator requirements across rounds. Thank you to Alelí for the institutional adjudicator rule table!
+  - New check-in filters for breaking participants
+  - Can automatically create institution conflicts in Edit Database.
+  - Allowed adding and removing speakers from teams in the admin interface. Thank you to Trudeau Okech!
+- Improved draw management with editable side pre-allocations and bulk copying of sides from earlier rounds. Thank you to PiechZ!
+- Added a public elimination-round bracket view, with links to team records. Thank you to Mahor Nagda for adding links!
+- Implemented new features for adjudicator feedback:
+  - Added configurable adjudicator feedback score increments. Thank you to Alekh Bhardwaj!
+  - Improved adjudicator feedback with new submission expectations versus allowable feedback with completion percentages. This makes feedback more flexible if a team wishes to submit feedback on the chair _and_ panellists.
+  - Added records of adjudicators testing others. Thank you to Mahor Nagda!
+- Improved tables with multi-column table sorting by 송은우 (@be-student) and fixed copying
+- API improvements:
+  - Added ballot check-in, adjudicator score, unconfirmed ballot, and public current standings support
+  - Improved round standings, validation, error responses, and action logging
+- Upgraded the frontend to Vue 3 and Vite
+- \+ bug fixes and optimizations!
+
+
+2.11.1
+------
+*Release date: 2 March 2026*
+
+- Avoid merging ballots based on trainee submissions
+- Avoid sending password reset email on user invitation
+- Remove extraneous HTML when copying into Summernote
+- Fix error on motion/info-slide release
+- Avoid sending push notifications if not configured and fail silently
+- Add validation against setting graph-only pullup option; add error when using draw strength in Australs PP
+- Fix adjudicators disappearing from allocation screen in public speaking tournaments
+- Only show 'Release info-slide' button if round has info-slide
+- Skip teams that are not in standings when calculating draw strength
+- Set sides for bye debates when prefetching; skip adding results for bye debates in commands
+- Avoid crashing when creating tournaments due to blank required FKs
+- Fix duplicate header keys in registration institution table
+- Fix JQuery not being loaded in time; fix checkbox table checks not registering; use form-based submission where possible
+- Fix typo in preferences. Thank you to Polyxeni Damigou for their PR! (#2822)
+
+
+2.11.0 (Tonkinese)
+------------------
+*Release date: 9 November 2025*
+
+- Improved publication control
+  - Created mechanism to release team draw before full draw with adjudicators, and info-slides before motions
+  - Motions and info-slides can be released from presentation interface
+- Improvements to allocation screens
+  - Allocations for concurrent rounds can be made on a single page, ensuring no double-booking
+  - The maximum number of times an adjudicator has met a team or other adjudicator is shown
+  - Room constraints are shown during room allocation
+- Participants can opt-in to receive personalised browser push notifications on draw and motion release
+- On draw deletion, panels can be transferred to preformed
+- Added feedback weight modal in Feedback Overview
+- Added default "access officer" permission group, and increased the scope of CA permissions
+- Show adjudicators' own ballot even when unconfirmed in private URL
+- Improve handling of ``{{ URL }}`` variable in private URL email template
+- Set draw table bracket highlights from frontend to be responsive with sorting.
+- Prevented conflicts when many people simultaneously generate a draw
+- API improvements:
+  - Most (except passwords) tournament preferences are now exposed publicly
+  - Used serializers to validate query parameters
+  - Added registration fields to tournament-institution endpoint
+  - Don't require registration question answers when authenticated
+  - Add user permissions when creating user
+  - Removed ability to disable the API. Thank you to Teymour Aldridge for their PR!
+  - Implemented initial tests for tournament and round APIs. Thank you to Séb for their work!
+- \+ bug fixes and optimizations!
+
+
+2.10.0 (Sphynx)
+---------------
+*Release date: 6 July 2025*
+
+- Created section for participant self-registration
+  - Participants may either register themselves for open tournaments, or have to register through an institution
+  - Team slots for institutions can be easily modified
+  - A new group for the registration team has been added
+  - Custom questions can be added in registration forms, viewable in registration tables and admin participant record pages
+- Added page for specifying a tournament schedule
+- Created page for creating adjudicator feedback questions
+- Adapted the minimum cost matching draw algorithm for WSDC tournaments
+  - Added a draw generator where all teams are in a single graph, rather than by bracket
+  - Implemented pullup priorities by draw strength then times pulled up
+  - Restricted pairings based on the number of times in a position
+- Let tournaments specify a number of teams as a reserve break
+- Updated default permission sets for Equity and CAs
+- Email sending has been refactored to avoid failing totally on individual messages, and logging the failures
+- Added a new "forfeit" selector for 2-team ballots creating a win-loss without speaks
+- Implemented a new option to avoid search engine indexing. Thank you to Teymour Aldridge!
+- New API features:
+  - Participant identification through private URL keys
+  - User identification through API tokens
+  - Generating draws with custom rules
+- \+ bug fixes and optimizations!
 
 
 2.9.3

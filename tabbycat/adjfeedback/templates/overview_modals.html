@@ -15,8 +15,8 @@
             <div class="list-group-item text-info py-3">
               {% tournamenturl 'options-tournament-section' section='feedback' as feedback_options %}
               {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
-                The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
-                <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
+                The score range for adjudicators is between <strong>{{ min_score }}</strong> and
+                <strong>{{ max_score }}</strong>. Decimals are permitted. This can be configured in
                 <a href="{{ feedback_options }}">Feedback settings</a>.
               {% endblocktrans %}
             </div>
@@ -39,6 +39,45 @@
             </div>
 
             {% trans "Save Base Score" as title %}
+            {% include "components/form-submit.html" %}
+
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-feedback-weight" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <form id="feedbackWeightForm" method="POST" action="{% roundurl 'adjfeedback-set-feedback-weight' current_round %}">
+        <div class="modal-body pb-0 pt-0">
+          <div class="list-group list-group-flush">
+
+            {% trans "Change Feedback Weight" as title %}
+            {% include "components/form-title.html" %}
+
+            {% csrf_token %}
+
+            <div class="list-group-item text-info py-3">
+              {% blocktrans trimmed with round=current_round.abbreviation %}
+                The feedback weight determines the proportion of an adjudicator's score that comes from feedback
+                versus their base score. At <strong>0%</strong>, the score is 100% base score. At <strong>100%</strong>,
+                the score is 100% feedback. This setting applies to <strong>{{ round }}</strong>.
+              {% endblocktrans %}
+            </div>
+            <div class="list-group-item">
+              <input id="id_round_id" name="round_id" type="hidden" value="{{ current_round.id }}" />
+              <div class="form-group pb-3">
+                <label>{% trans "Feedback weight (%)" %}</label>
+                <input id="id_feedback_weight_percent" class="form-control" name="feedback_weight_percent"
+                       min="0" max="100" step="1" type="number" required />
+                <input id="id_feedback_weight" name="feedback_weight" type="hidden" />
+              </div>
+            </div>
+
+            {% trans "Save Feedback Weight" as title %}
             {% include "components/form-submit.html" %}
 
             </div>

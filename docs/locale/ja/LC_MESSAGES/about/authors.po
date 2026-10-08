@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2023-08-02 07:06\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../../AUTHORS.rst:3
 msgid "Authors & Acknowledgements"
-msgstr ""
+msgstr "著者と謝辞"
 
 #: ../../../AUTHORS.rst:6
 msgid "Authors"
@@ -28,7 +28,7 @@ msgstr "製作者"
 
 #: ../../../AUTHORS.rst:8
 msgid "Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current active maintainers are:"
-msgstr ""
+msgstr "Tabbycat は、Auckland Australs 2010のにQi-Shan Lim によって作成されました。現在アクティブなメンテナーは以下のとおりです："
 
 #: ../../../AUTHORS.rst:10
 msgid "Philip Belesky (`pb-e-mail <mailto:contact@philipbelesky.com>`_)"
@@ -40,7 +40,7 @@ msgstr "Chuan-Zheng Lee (`cz-e-mail <mailto:czlee@stanford.edu>`_)"
 
 #: ../../../AUTHORS.rst:13
 msgid "Please don't hesitate to contact us with any suggestions, expressions of interest or generally anything relating to Tabbycat."
-msgstr ""
+msgstr "Tabbycatに関連する提案、興味、その他どんな連絡も歓迎しています。"
 
 #: ../../../AUTHORS.rst:16
 msgid "Contributors"
@@ -48,19 +48,19 @@ msgstr "コントリビュータ"
 
 #: ../../../AUTHORS.rst:18
 msgid "Étienne Beaulé has contributed many features, fixes, and suggestions across many aspects of Tabbycat."
-msgstr ""
+msgstr "Étienne BeauléはTabbycatの多くの側面の機能、修正、提案に貢献してきました。"
 
 #: ../../../AUTHORS.rst:19
 msgid "Thevesh Theva contributed the algorithm for calculating the liveness of teams within a particular break category."
-msgstr ""
+msgstr "Thevesh Thevaは特定のブレークカテゴリ内のチームの生存度を計算するためのアルゴリズムを提供しました。"
 
 #: ../../../AUTHORS.rst:20
 msgid "Viran Weerasekera contributed the statistical tests used to estimate the degree to which a motion's results and vetoes are balanced."
-msgstr ""
+msgstr "Viran Weerasekeraは、論題の結果と拒否（veto）がどの程度の優位性を持つのか推定する統計的検定に貢献しました。"
 
 #: ../../../AUTHORS.rst:21
 msgid "Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger contributed to the \"Tournament Logistics\" section of our documentation."
-msgstr ""
+msgstr "Viran Weerasekera、Valerie Tierney、Molly Dale、Madeline SchultzとVail Brombergerはドキュメンテーションの「大会の運用」セクションに貢献しました。"
 
 #: ../../../AUTHORS.rst:24
 msgid "Sponsors"
@@ -68,5 +68,5 @@ msgstr "スポンサー"
 
 #: ../../../AUTHORS.rst:26
 msgid "Thanks to the Western Australian Debating League for sponsoring various features related to organising division-based tournaments and round-robin based draw methods."
-msgstr ""
+msgstr "Western Australian Debating Leagueは、分割ベースの大会やラウンドロビンベースの試合方法に関連するさまざまな機能をスポンサーしています。"
 

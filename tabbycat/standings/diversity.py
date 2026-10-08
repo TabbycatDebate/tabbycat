@@ -113,7 +113,9 @@ def get_diversity_data_sets(t, for_public):
     all_regions = regions_ordered(t)
 
     region_values = [r['id'] for r in all_regions]
-    region_labels = [r['seq'] for r in all_regions]
+    # Keep the region ID in the chart data. Colour sequences repeat after nine
+    # regions, so using the sequence as the label loses the region's identity.
+    region_labels = region_values
 
     data_sets = {
         'speakers_gender': [],
@@ -139,9 +141,14 @@ def get_diversity_data_sets(t, for_public):
         data_sets['speakers_gender'].append(compile_gender_counts(_("All"), speakers, 'gender'))
 
     if t.pref('public_breaking_teams') is True or for_public is False:
-        if speakers.filter(team__breakingteam__isnull=False).count() > 0:
+        # Select speakers from the breaking teams separately. Joining speakers
+        # directly to BreakingTeam produces one row per break category and can
+        # therefore count the same speaker more than once.
+        breaking_teams = t.team_set.filter(breakingteam__isnull=False)
+        breaking_speakers = speakers.filter(team__in=breaking_teams)
+        if breaking_speakers.exists():
             data_sets['speakers_gender'].append(compile_gender_counts(_("Breaking"),
-                    speakers.filter(team__breakingteam__isnull=False), 'gender'))
+                    breaking_speakers, 'gender'))
 
     for sc in SpeakerCategory.objects.filter(tournament=t).order_by('seq'):
         if speakers.filter(categories=sc).count() > 0:
@@ -156,7 +163,7 @@ def get_diversity_data_sets(t, for_public):
 
         if t.pref('public_breaking_teams') is True or for_public is False:
             data_sets['speakers_region'].append(compile_grouped_counts(_("Breaking"),
-                    speakers.filter(team__breakingteam__isnull=False),
+                    breaking_speakers,
                     F('team__institution__region__id'), region_values, region_labels))
 
     # ==========================================================================

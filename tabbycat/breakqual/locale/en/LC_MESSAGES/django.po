@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,10 @@ msgstr ""
 
 #: breakqual/apps.py
 msgid "Break Qualification"
+msgstr ""
+
+#: breakqual/base.py
+msgid "There are too few teams eligible for this break category."
 msgstr ""
 
 #: breakqual/base.py
@@ -62,6 +66,14 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "Number of breaking teams in this category"
+msgstr ""
+
+#: breakqual/models.py
+msgid "Reserve size"
+msgstr ""
+
+#: breakqual/models.py
+msgid "Number of reserve teams in this category."
 msgstr ""
 
 #: breakqual/models.py
@@ -165,6 +177,14 @@ msgid "Withdrawn"
 msgstr ""
 
 #: breakqual/models.py
+msgid "Reserve"
+msgstr ""
+
+#: breakqual/models.py
+msgid "Absent"
+msgstr ""
+
+#: breakqual/models.py
 msgid "remark"
 msgstr ""
 
@@ -174,6 +194,10 @@ msgstr ""
 
 #: breakqual/models.py
 msgid "breaking team"
+msgstr ""
+
+#: breakqual/templates/bracket.html
+msgid "Bracket"
 msgstr ""
 
 #: breakqual/templates/break_categories_edit.html
@@ -526,3 +550,8 @@ msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category ass
 msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"
 msgstr[0] ""
 msgstr[1] ""
+
+#: breakqual/views.py
+#, python-format
+msgid "%(category)s Bracket"
+msgstr ""

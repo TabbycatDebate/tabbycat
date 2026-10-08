@@ -1,0 +1,12 @@
+{% extends "wizard_registration_form.html" %}
+{% load add_field_css i18n %}
+
+{% block registration_header %}
+    {% if pref.institution_register_message %}
+        <div class="card">
+            <div class="card-body pb-0">
+                {{ pref.institution_register_message|safe }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

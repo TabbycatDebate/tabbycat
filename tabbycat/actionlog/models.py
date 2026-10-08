@@ -23,6 +23,7 @@ class ActionLogEntry(models.Model):
 
     class ActionType(models.TextChoices):
         ADJUDICATOR_BREAK_SET             = 'br.aj.set', _("Changed adjudicator breaking status")
+        ADJUDICATOR_TESTER_SET            = 'ts.aj.set', _("Changed adjudicator tester status")
         ADJUDICATOR_CREATE                = 'aj.crea', _("Created adjudicator")
         ADJUDICATOR_EDIT                  = 'aj.edit', _("Edited adjudicator")
         ADJUDICATOR_NOTE_SET              = 'aj.note', _("Set adjudicator note")   # obsolete
@@ -87,12 +88,14 @@ class ActionLogEntry(models.Model):
         ROUND_EDIT                        = 'rd.edit', _("Edited round")
         ROUND_START_TIME_SET              = 'rd.st.set', _("Set start time")
         SIDES_SAVE                        = 'ms.save', _("Saved the sides status of a matchup")
+        SIDE_PREALLOCATIONS_SAVE          = 'sa.save', _("Edited side pre-allocations")
         SIMPLE_IMPORT_ADJUDICATORS        = 'si.adju', _("Imported adjudicators using the simple importer")
         SIMPLE_IMPORT_INSTITUTIONS        = 'si.inst', _("Imported institutions using the simple importer")
         SIMPLE_IMPORT_TEAMS               = 'si.team', _("Imported teams using the simple importer")
         SIMPLE_IMPORT_VENUES              = 'si.venu', _("Imported rooms using the simple importer")
         SPEAKER_CATEGORIES_EDIT           = 'se.ca.edit', _("Edited speaker categories")
         SPEAKER_CREATE                    = 'sp.crea', _("Created speaker")
+        SPEAKER_DELETE                    = 'sp.del', _("Deleted speaker")
         SPEAKER_EDIT                      = 'sp.edit', _("Edited speaker")
         SPEAKER_ELIGIBILITY_EDIT          = 'se.edit', _("Edited speaker category eligibility")
         TEAM_CREATE                       = 'te.crea', _("Created team")
@@ -115,6 +118,9 @@ class ActionLogEntry(models.Model):
         TEAM_REGISTER                     = 'te.reg', _("Registered team")
         ADJUDICATOR_REGISTER              = 'aj.reg', _("Registered adjudicator")
         SPEAKER_REGISTER                  = 'sp.reg', _("Registered speaker")
+        REGISTRATION_CONFIRM              = 're.conf', _("Confirmed registration")
+        SCHEDULE_EVENT_CREATE             = 'sc.crea', _("Created schedule event")
+        SCHEDULE_EVENT_EDIT               = 'sc.edit', _("Edited schedule event")
 
     class Agent(models.TextChoices):
         API = 'a', _("API")

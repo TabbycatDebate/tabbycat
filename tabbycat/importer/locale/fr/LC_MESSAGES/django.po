@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-09-03 20:11\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-06 01:33\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -59,8 +59,8 @@ msgid "Speakers' names"
 msgstr "Noms des orateurs"
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr "Peuvent être séparées avec de nouvelles lignes, tabulations, ou virgules"
+msgid "Can be separated by newlines, tabs, commas or ampersands"
+msgstr "Peuvent être séparées avec de nouvelles lignes, tabulations, virgules, ou esperluettes"
 
 #: importer/forms.py
 msgid "Speakers' email addresses"

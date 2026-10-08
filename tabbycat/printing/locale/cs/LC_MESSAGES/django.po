@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-28 12:44-0400\n"
-"PO-Revision-Date: 2023-02-05 01:00\n"
+"PO-Revision-Date: 2024-08-15 09:30\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -20,12 +20,12 @@ msgstr ""
 
 #: printing/templates/feedback_list.html
 msgid "Feedback Forms"
-msgstr ""
+msgstr "Formuláře Zpětné Vazby"
 
 #: printing/templates/feedback_list.html
 #, python-format
 msgid "Printable Feedback Forms for %(round)s"
-msgstr ""
+msgstr "Tisknutelné Formuláře Zpětné Vazby pro %(round)s"
 
 #: printing/templates/feedback_list.html
 msgid "No feedback questions have been added for either teams or adjudicators to answer."
@@ -68,7 +68,7 @@ msgstr ""
 
 #: printing/templates/randomised_url_sheets.html
 msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
-msgstr ""
+msgstr "Přidejte si prosím následující URL do oblíbených, budete ji používat pro odesílání formulářů během turnaje:"
 
 #: printing/templates/scoresheet_list.html
 msgid "Printable Scoresheets"
@@ -77,11 +77,11 @@ msgstr ""
 #: printing/templates/scoresheet_list.html
 #, python-format
 msgid "for %(round)s"
-msgstr ""
+msgstr "pro %(round)s"
 
 #: printing/templates/scoresheet_list.html
 msgid "Edit Motion(s)"
-msgstr ""
+msgstr "Upravit tez(i/e)"
 
 #: printing/templates/scoresheet_list.html
 msgid "There are no scoresheets available — perhaps the round has not been drawn?"

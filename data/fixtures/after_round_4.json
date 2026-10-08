@@ -1711,215 +1711,6 @@
     }
 },
 {
-    "model": "registration.question",
-    "pk": 1,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 10,
-        "text": "Did you agree with the decision?",
-        "name": "Agree",
-        "answer_type": "bs",
-        "required": true,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 2,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 11,
-        "text": "Did this judge's decision concur with yours?",
-        "name": "Concur",
-        "answer_type": "bs",
-        "required": true,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 3,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 20,
-        "text": "What adjustment should be applied to this judge's speaker scores?",
-        "name": "Adjustment",
-        "answer_type": "f",
-        "required": true,
-        "min_value": -20.0,
-        "max_value": 20.0,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 4,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 30,
-        "text": "Choose one word to describe this adjudicator.",
-        "name": "One word",
-        "answer_type": "t",
-        "required": true,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 5,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 40,
-        "text": "Do you think this adjudicator should be promoted?",
-        "name": "Promote",
-        "answer_type": "bc",
-        "required": false,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 6,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 50,
-        "text": "Do you think this adjudicator should be demoted?",
-        "name": "Demote",
-        "answer_type": "bc",
-        "required": false,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 7,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 60,
-        "text": "How well was this adjudicator's reasoning explained?",
-        "name": "Explanation",
-        "answer_type": "is",
-        "required": true,
-        "min_value": 0.0,
-        "max_value": 10.0,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 8,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 70,
-        "text": "How impartial did you think this adjudicator was?",
-        "name": "Impartial",
-        "answer_type": "is",
-        "required": true,
-        "min_value": 0.0,
-        "max_value": 10.0,
-        "choices": "[]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 9,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 80,
-        "text": "Would you like to see this adjudicator again?",
-        "name": "Again",
-        "answer_type": "ss",
-        "required": false,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[\"Absolutely!\", \"Sure, why not\", \"If I have to\", \"Please don't\"]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 10,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 90,
-        "text": "How would you describe this adjudicator?",
-        "name": "Adjectives",
-        "answer_type": "ms",
-        "required": false,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[\"biased\", \"clear\", \"concise\", \"rambly\", \"attentive\", \"inattentive\"]"
-    }
-},
-{
-    "model": "registration.question",
-    "pk": 11,
-    "fields": {
-        "tournament": 1,
-        "for_content_type": [
-            "adjfeedback",
-            "adjudicatorfeedback"
-        ],
-        "seq": 1000,
-        "text": "Other comments:",
-        "name": "Comments",
-        "answer_type": "tl",
-        "required": false,
-        "min_value": null,
-        "max_value": null,
-        "choices": "[]"
-    }
-},
-{
     "model": "adjfeedback.adjudicatorfeedbackquestion",
     "pk": 1,
     "fields": {
@@ -2292,6 +2083,7 @@
     "fields": {
         "round": 1,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2306,6 +2098,7 @@
     "fields": {
         "round": 1,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2320,6 +2113,7 @@
     "fields": {
         "round": 1,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2334,6 +2128,7 @@
     "fields": {
         "round": 1,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2348,6 +2143,7 @@
     "fields": {
         "round": 1,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2362,6 +2158,7 @@
     "fields": {
         "round": 1,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2376,6 +2173,7 @@
     "fields": {
         "round": 1,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2390,6 +2188,7 @@
     "fields": {
         "round": 1,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2404,6 +2203,7 @@
     "fields": {
         "round": 1,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2418,6 +2218,7 @@
     "fields": {
         "round": 1,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2432,6 +2233,7 @@
     "fields": {
         "round": 1,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2446,6 +2248,7 @@
     "fields": {
         "round": 1,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 0,
         "flags": "[]",
@@ -2460,6 +2263,7 @@
     "fields": {
         "round": 2,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 3,
         "flags": "[]",
@@ -2474,6 +2278,7 @@
     "fields": {
         "round": 2,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 12,
         "flags": "[]",
@@ -2488,6 +2293,7 @@
     "fields": {
         "round": 2,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 6,
         "flags": "[]",
@@ -2502,6 +2308,7 @@
     "fields": {
         "round": 2,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 7,
         "flags": "[]",
@@ -2516,6 +2323,7 @@
     "fields": {
         "round": 2,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 4,
         "flags": "[\"1u1d_inst\"]",
@@ -2530,6 +2338,7 @@
     "fields": {
         "round": 2,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 5,
         "flags": "[\"1u1d_other\"]",
@@ -2544,6 +2353,7 @@
     "fields": {
         "round": 2,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2558,6 +2368,7 @@
     "fields": {
         "round": 2,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 8,
         "flags": "[]",
@@ -2572,6 +2383,7 @@
     "fields": {
         "round": 2,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 11,
         "flags": "[]",
@@ -2586,6 +2398,7 @@
     "fields": {
         "round": 2,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 10,
         "flags": "[]",
@@ -2600,6 +2413,7 @@
     "fields": {
         "round": 2,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2614,6 +2428,7 @@
     "fields": {
         "round": 2,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 9,
         "flags": "[]",
@@ -2628,6 +2443,7 @@
     "fields": {
         "round": 3,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 4,
         "flags": "[]",
@@ -2642,6 +2458,7 @@
     "fields": {
         "round": 3,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 3,
         "flags": "[]",
@@ -2656,6 +2473,7 @@
     "fields": {
         "round": 3,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 8,
         "flags": "[]",
@@ -2670,6 +2488,7 @@
     "fields": {
         "round": 3,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 9,
         "flags": "[]",
@@ -2684,6 +2503,7 @@
     "fields": {
         "round": 3,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 12,
         "flags": "[\"1u1d_other\"]",
@@ -2698,6 +2518,7 @@
     "fields": {
         "round": 3,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 6,
         "flags": "[]",
@@ -2712,6 +2533,7 @@
     "fields": {
         "round": 3,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2726,6 +2548,7 @@
     "fields": {
         "round": 3,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 5,
         "flags": "[]",
@@ -2740,6 +2563,7 @@
     "fields": {
         "round": 3,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2754,6 +2578,7 @@
     "fields": {
         "round": 3,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 11,
         "flags": "[\"1u1d_inst\"]",
@@ -2768,6 +2593,7 @@
     "fields": {
         "round": 3,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 10,
         "flags": "[]",
@@ -2782,6 +2608,7 @@
     "fields": {
         "round": 3,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 7,
         "flags": "[]",
@@ -2796,6 +2623,7 @@
     "fields": {
         "round": 4,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 7,
         "flags": "[]",
@@ -2810,6 +2638,7 @@
     "fields": {
         "round": 4,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 3.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2824,6 +2653,7 @@
     "fields": {
         "round": 4,
         "venue": 18,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 9,
         "flags": "[]",
@@ -2838,6 +2668,7 @@
     "fields": {
         "round": 4,
         "venue": 15,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 8,
         "flags": "[]",
@@ -2852,6 +2683,7 @@
     "fields": {
         "round": 4,
         "venue": 21,
+        "scheduled_at": null,
         "bracket": 1.0,
         "room_rank": 10,
         "flags": "[]",
@@ -2866,6 +2698,7 @@
     "fields": {
         "round": 4,
         "venue": 13,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 12,
         "flags": "[]",
@@ -2880,6 +2713,7 @@
     "fields": {
         "round": 4,
         "venue": 17,
+        "scheduled_at": null,
         "bracket": 0.5,
         "room_rank": 11,
         "flags": "[]",
@@ -2894,6 +2728,7 @@
     "fields": {
         "round": 4,
         "venue": 1,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 5,
         "flags": "[]",
@@ -2908,6 +2743,7 @@
     "fields": {
         "round": 4,
         "venue": 19,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 6,
         "flags": "[]",
@@ -2922,6 +2758,7 @@
     "fields": {
         "round": 4,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 2.5,
         "room_rank": 2,
         "flags": "[]",
@@ -2936,6 +2773,7 @@
     "fields": {
         "round": 4,
         "venue": 14,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 4,
         "flags": "[]",
@@ -2950,6 +2788,7 @@
     "fields": {
         "round": 4,
         "venue": 20,
+        "scheduled_at": null,
         "bracket": 2.0,
         "room_rank": 3,
         "flags": "[]",
@@ -2964,6 +2803,7 @@
     "fields": {
         "round": 6,
         "venue": 23,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 1,
         "flags": "[]",
@@ -2978,6 +2818,7 @@
     "fields": {
         "round": 6,
         "venue": 22,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 2,
         "flags": "[]",
@@ -2992,6 +2833,7 @@
     "fields": {
         "round": 7,
         "venue": 9,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 2,
         "flags": "[]",
@@ -3006,6 +2848,7 @@
     "fields": {
         "round": 7,
         "venue": 16,
+        "scheduled_at": null,
         "bracket": 0.0,
         "room_rank": 1,
         "flags": "[]",
@@ -4567,6 +4410,7 @@
     "pk": 1,
     "fields": {
         "name": "Georgia Crawford",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4581,6 +4425,7 @@
     "pk": 2,
     "fields": {
         "name": "Wanda Griffin",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4595,6 +4440,7 @@
     "pk": 3,
     "fields": {
         "name": "Helen Keller",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4609,6 +4455,7 @@
     "pk": 4,
     "fields": {
         "name": "Russell Warren",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4623,6 +4470,7 @@
     "pk": 5,
     "fields": {
         "name": "Angel Rhodes",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4637,6 +4485,7 @@
     "pk": 6,
     "fields": {
         "name": "Terry Henderson",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4651,6 +4500,7 @@
     "pk": 7,
     "fields": {
         "name": "Kyle Ruiz",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4665,6 +4515,7 @@
     "pk": 8,
     "fields": {
         "name": "Randolph Lambert",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4679,6 +4530,7 @@
     "pk": 9,
     "fields": {
         "name": "Sergio Pittman",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4693,6 +4545,7 @@
     "pk": 10,
     "fields": {
         "name": "Earnest Becker",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4707,6 +4560,7 @@
     "pk": 11,
     "fields": {
         "name": "Ellis Rowe",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4721,6 +4575,7 @@
     "pk": 12,
     "fields": {
         "name": "Robin Roberson",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4735,6 +4590,7 @@
     "pk": 13,
     "fields": {
         "name": "Gwen Newman",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4749,6 +4605,7 @@
     "pk": 14,
     "fields": {
         "name": "Robyn Caldwell",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4763,6 +4620,7 @@
     "pk": 15,
     "fields": {
         "name": "Angie Holt",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4777,6 +4635,7 @@
     "pk": 16,
     "fields": {
         "name": "Melvin Jordan",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4791,6 +4650,7 @@
     "pk": 17,
     "fields": {
         "name": "Gladys Burke",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4805,6 +4665,7 @@
     "pk": 18,
     "fields": {
         "name": "Patty Saunders",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4819,6 +4680,7 @@
     "pk": 19,
     "fields": {
         "name": "Thomas Pierce",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4833,6 +4695,7 @@
     "pk": 20,
     "fields": {
         "name": "Stella Lindsey",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4847,6 +4710,7 @@
     "pk": 21,
     "fields": {
         "name": "Adrian May",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4861,6 +4725,7 @@
     "pk": 22,
     "fields": {
         "name": "Taylor Brown",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4875,6 +4740,7 @@
     "pk": 23,
     "fields": {
         "name": "Bethany Chambers",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4889,6 +4755,7 @@
     "pk": 24,
     "fields": {
         "name": "Pamela Bryan",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4903,6 +4770,7 @@
     "pk": 25,
     "fields": {
         "name": "Janet Nunez",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4917,6 +4785,7 @@
     "pk": 26,
     "fields": {
         "name": "Owen Chandler",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4931,6 +4800,7 @@
     "pk": 27,
     "fields": {
         "name": "Lillie Rodriquez",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4945,6 +4815,7 @@
     "pk": 28,
     "fields": {
         "name": "Rufus Dennis",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4959,6 +4830,7 @@
     "pk": 29,
     "fields": {
         "name": "Marty Love",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4973,6 +4845,7 @@
     "pk": 30,
     "fields": {
         "name": "Shelia Wright",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -4987,6 +4860,7 @@
     "pk": 31,
     "fields": {
         "name": "Clark Mills",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5001,6 +4875,7 @@
     "pk": 32,
     "fields": {
         "name": "Randy Carroll",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5015,6 +4890,7 @@
     "pk": 33,
     "fields": {
         "name": "Casey Sparks",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5029,6 +4905,7 @@
     "pk": 34,
     "fields": {
         "name": "Candace Bowen",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5043,6 +4920,7 @@
     "pk": 35,
     "fields": {
         "name": "Jaime Long",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5057,6 +4935,7 @@
     "pk": 36,
     "fields": {
         "name": "Leon Hall",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5071,6 +4950,7 @@
     "pk": 37,
     "fields": {
         "name": "Morris Nichols",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5085,6 +4965,7 @@
     "pk": 38,
     "fields": {
         "name": "Benjamin Padilla",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5099,6 +4980,7 @@
     "pk": 39,
     "fields": {
         "name": "Phil Lyons",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5113,6 +4995,7 @@
     "pk": 40,
     "fields": {
         "name": "Clay Holland",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5127,6 +5010,7 @@
     "pk": 41,
     "fields": {
         "name": "Elena Cobb",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5141,6 +5025,7 @@
     "pk": 42,
     "fields": {
         "name": "Shawn Torres",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5155,6 +5040,7 @@
     "pk": 43,
     "fields": {
         "name": "Willis Carson",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5169,6 +5055,7 @@
     "pk": 44,
     "fields": {
         "name": "Wendell Nelson",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5183,6 +5070,7 @@
     "pk": 45,
     "fields": {
         "name": "Felicia Welch",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5197,6 +5085,7 @@
     "pk": 46,
     "fields": {
         "name": "Cory Meyer",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5211,6 +5100,7 @@
     "pk": 47,
     "fields": {
         "name": "Stacy Frazier",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5225,6 +5115,7 @@
     "pk": 48,
     "fields": {
         "name": "Claire Dunn",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5239,6 +5130,7 @@
     "pk": 49,
     "fields": {
         "name": "Eloise Munoz",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5253,6 +5145,7 @@
     "pk": 50,
     "fields": {
         "name": "Patricia Palmer",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5267,6 +5160,7 @@
     "pk": 51,
     "fields": {
         "name": "Stewart Day",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5281,6 +5175,7 @@
     "pk": 52,
     "fields": {
         "name": "Timmy Craig",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5295,6 +5190,7 @@
     "pk": 53,
     "fields": {
         "name": "Patrick Kelly",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5309,6 +5205,7 @@
     "pk": 54,
     "fields": {
         "name": "Kristopher Hayes",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5323,6 +5220,7 @@
     "pk": 55,
     "fields": {
         "name": "Andy Lane",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5337,6 +5235,7 @@
     "pk": 56,
     "fields": {
         "name": "Scott Mcdonald",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5351,6 +5250,7 @@
     "pk": 57,
     "fields": {
         "name": "Charlene Cortez",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5365,6 +5265,7 @@
     "pk": 58,
     "fields": {
         "name": "Leigh Holmes",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5379,6 +5280,7 @@
     "pk": 59,
     "fields": {
         "name": "Alma Spencer",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5393,6 +5295,7 @@
     "pk": 60,
     "fields": {
         "name": "Winston Castro",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5407,6 +5310,7 @@
     "pk": 61,
     "fields": {
         "name": "Emilio Simmons",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5421,6 +5325,7 @@
     "pk": 62,
     "fields": {
         "name": "Ron Delgado",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5435,6 +5340,7 @@
     "pk": 63,
     "fields": {
         "name": "Nadine Barber",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5449,6 +5355,7 @@
     "pk": 64,
     "fields": {
         "name": "Gail Adkins",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5463,6 +5370,7 @@
     "pk": 65,
     "fields": {
         "name": "Willard Walton",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5477,6 +5385,7 @@
     "pk": 66,
     "fields": {
         "name": "Jackie Peterson",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5491,6 +5400,7 @@
     "pk": 67,
     "fields": {
         "name": "Terry Thornton",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5505,6 +5415,7 @@
     "pk": 68,
     "fields": {
         "name": "Norman Rodgers",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5519,6 +5430,7 @@
     "pk": 69,
     "fields": {
         "name": "Mattie Lee",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5533,6 +5445,7 @@
     "pk": 70,
     "fields": {
         "name": "Woodrow Harvey",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5547,6 +5460,7 @@
     "pk": 71,
     "fields": {
         "name": "Javier Chavez",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5561,6 +5475,7 @@
     "pk": 72,
     "fields": {
         "name": "Janie Daniels",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5575,6 +5490,7 @@
     "pk": 73,
     "fields": {
         "name": "Levi Flores",
+        "last_name": null,
         "email": "leviflores@gmail.com",
         "phone": "(400) 258-4262",
         "anonymous": false,
@@ -5589,6 +5505,7 @@
     "pk": 74,
     "fields": {
         "name": "Boyd Pierce",
+        "last_name": null,
         "email": "boydpierce@yahoo.com",
         "phone": "(645) 106-7743",
         "anonymous": false,
@@ -5603,6 +5520,7 @@
     "pk": 75,
     "fields": {
         "name": "Eunice Mcbride",
+        "last_name": null,
         "email": "eunicemcbride@outlook.com",
         "phone": "(549) 309-9187",
         "anonymous": false,
@@ -5617,6 +5535,7 @@
     "pk": 76,
     "fields": {
         "name": "Ramona Cobb",
+        "last_name": null,
         "email": "ramonacobb@yahoo.com",
         "phone": "(440) 487-5776",
         "anonymous": false,
@@ -5631,6 +5550,7 @@
     "pk": 77,
     "fields": {
         "name": "Justin Ford",
+        "last_name": null,
         "email": "justinford@outlook.com",
         "phone": "(618) 921-9188",
         "anonymous": false,
@@ -5645,6 +5565,7 @@
     "pk": 78,
     "fields": {
         "name": "Luis Bennett",
+        "last_name": null,
         "email": "luisbennett@gmail.com",
         "phone": "(730) 097-8797",
         "anonymous": false,
@@ -5659,6 +5580,7 @@
     "pk": 79,
     "fields": {
         "name": "Mandy Estrada",
+        "last_name": null,
         "email": "mandyestrada@gmail.com",
         "phone": "(559) 299-0471",
         "anonymous": false,
@@ -5673,6 +5595,7 @@
     "pk": 80,
     "fields": {
         "name": "Leigh Mcgee",
+        "last_name": null,
         "email": "leighmcgee@gmail.com",
         "phone": "(844) 760-9302",
         "anonymous": false,
@@ -5687,6 +5610,7 @@
     "pk": 81,
     "fields": {
         "name": "Jacqueline Freeman",
+        "last_name": null,
         "email": "jacquelinefreeman@yahoo.com",
         "phone": "(297) 916-1716",
         "anonymous": false,
@@ -5701,6 +5625,7 @@
     "pk": 82,
     "fields": {
         "name": "Holly Howard",
+        "last_name": null,
         "email": "hollyhoward@gmail.com",
         "phone": "(958) 783-2610",
         "anonymous": false,
@@ -5715,6 +5640,7 @@
     "pk": 83,
     "fields": {
         "name": "Pedro Burgess",
+        "last_name": null,
         "email": "pedroburgess@yahoo.com",
         "phone": "(854) 441-0104",
         "anonymous": false,
@@ -5729,6 +5655,7 @@
     "pk": 84,
     "fields": {
         "name": "Kristy Carr",
+        "last_name": null,
         "email": "kristycarr@yahoo.com",
         "phone": "(644) 607-3297",
         "anonymous": false,
@@ -5743,6 +5670,7 @@
     "pk": 85,
     "fields": {
         "name": "Wilma Vaughn",
+        "last_name": null,
         "email": "wilmavaughn@outlook.com",
         "phone": "(398) 759-9537",
         "anonymous": false,
@@ -5757,6 +5685,7 @@
     "pk": 86,
     "fields": {
         "name": "Virginia Mccarthy",
+        "last_name": null,
         "email": "virginiamccarthy@gmail.com",
         "phone": "(455) 177-0459",
         "anonymous": false,
@@ -5771,6 +5700,7 @@
     "pk": 87,
     "fields": {
         "name": "Tasha Jenkins",
+        "last_name": null,
         "email": "tashajenkins@outlook.com",
         "phone": "(875) 519-9891",
         "anonymous": false,
@@ -5785,6 +5715,7 @@
     "pk": 88,
     "fields": {
         "name": "Toby Wong",
+        "last_name": null,
         "email": "tobywong@gmail.com",
         "phone": "(404) 641-5999",
         "anonymous": false,
@@ -5799,6 +5730,7 @@
     "pk": 89,
     "fields": {
         "name": "Jo Allen",
+        "last_name": null,
         "email": "joallen@yahoo.com",
         "phone": "(761) 993-2983",
         "anonymous": false,
@@ -5813,6 +5745,7 @@
     "pk": 90,
     "fields": {
         "name": "Billy Griffin",
+        "last_name": null,
         "email": "billygriffin@outlook.com",
         "phone": "(430) 532-2939",
         "anonymous": false,
@@ -5827,6 +5760,7 @@
     "pk": 91,
     "fields": {
         "name": "Angela Reed",
+        "last_name": null,
         "email": "angelareed@yahoo.com",
         "phone": "(936) 500-1228",
         "anonymous": false,
@@ -5841,6 +5775,7 @@
     "pk": 92,
     "fields": {
         "name": "Hugo Lewis",
+        "last_name": null,
         "email": "hugolewis@outlook.com",
         "phone": "(422) 585-9609",
         "anonymous": false,
@@ -5855,6 +5790,7 @@
     "pk": 93,
     "fields": {
         "name": "Cassandra Wilson",
+        "last_name": null,
         "email": "cassandrawilson@gmail.com",
         "phone": "(604) 306-2084",
         "anonymous": false,
@@ -5869,6 +5805,7 @@
     "pk": 94,
     "fields": {
         "name": "George Willis",
+        "last_name": null,
         "email": "georgewillis@yahoo.com",
         "phone": "(222) 204-5944",
         "anonymous": false,
@@ -5883,6 +5820,7 @@
     "pk": 95,
     "fields": {
         "name": "Jamie Hodges",
+        "last_name": null,
         "email": "jamiehodges@outlook.com",
         "phone": "(737) 122-6102",
         "anonymous": false,
@@ -5897,6 +5835,7 @@
     "pk": 96,
     "fields": {
         "name": "Bennie Rodriguez",
+        "last_name": null,
         "email": "bennierodriguez@gmail.com",
         "phone": "(537) 641-2175",
         "anonymous": false,
@@ -5911,6 +5850,7 @@
     "pk": 97,
     "fields": {
         "name": "Allison Martin",
+        "last_name": null,
         "email": "allisonmartin@outlook.com",
         "phone": "(525) 384-2715",
         "anonymous": false,
@@ -5925,6 +5865,7 @@
     "pk": 98,
     "fields": {
         "name": "Kristi Elliott",
+        "last_name": null,
         "email": "kristielliott@gmail.com",
         "phone": "(790) 289-5430",
         "anonymous": false,
@@ -5939,6 +5880,7 @@
     "pk": 99,
     "fields": {
         "name": "Pearl Graves",
+        "last_name": null,
         "email": "pearlgraves@outlook.com",
         "phone": "(317) 721-2439",
         "anonymous": false,
@@ -5953,6 +5895,7 @@
     "pk": 159,
     "fields": {
         "name": "New Adjudicator Shared",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5967,6 +5910,7 @@
     "pk": 160,
     "fields": {
         "name": "New Adjudicator Shared",
+        "last_name": null,
         "email": null,
         "phone": "",
         "anonymous": false,
@@ -5991,6 +5935,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🌩",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6011,6 +5956,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🎃",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6031,6 +5977,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🆒",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6051,6 +5998,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🍌",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -6073,6 +6021,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🆘",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -6095,6 +6044,7 @@
         "seed": null,
         "type": "N",
         "emoji": "💎",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -6117,6 +6067,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🕯",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6137,6 +6088,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🎖",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6157,6 +6109,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🖨",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6178,6 +6131,7 @@
         "seed": null,
         "type": "N",
         "emoji": "😴",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6199,6 +6153,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🌶",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6219,6 +6174,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🙌",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6239,6 +6195,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🖖",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6259,6 +6216,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🖕",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6279,6 +6237,7 @@
         "seed": null,
         "type": "N",
         "emoji": "⛏",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6299,6 +6258,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🐦",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6319,6 +6279,7 @@
         "seed": null,
         "type": "N",
         "emoji": "😮",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6340,6 +6301,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🌷",
+        "registration_status": "C",
         "break_categories": [
             1,
             2
@@ -6361,6 +6323,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🕵",
+        "registration_status": "C",
         "break_categories": [
             1,
             2,
@@ -6383,6 +6346,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🚬",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6403,6 +6367,7 @@
         "seed": null,
         "type": "N",
         "emoji": "👠",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6423,6 +6388,7 @@
         "seed": null,
         "type": "N",
         "emoji": "👓",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6443,6 +6409,7 @@
         "seed": null,
         "type": "N",
         "emoji": "👊",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -6463,6 +6430,7 @@
         "seed": null,
         "type": "N",
         "emoji": "🍓",
+        "registration_status": "C",
         "break_categories": [
             1
         ]
@@ -7127,7 +7095,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7141,7 +7110,8 @@
         "trainee": false,
         "breaking": true,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7155,7 +7125,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7169,7 +7140,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7183,7 +7155,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7197,7 +7170,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7211,7 +7185,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7225,7 +7200,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7239,7 +7215,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7253,7 +7230,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7267,7 +7245,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7281,7 +7260,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7295,7 +7275,8 @@
         "trainee": false,
         "breaking": false,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7309,7 +7290,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7323,7 +7305,8 @@
         "trainee": false,
         "breaking": true,
         "independent": true,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7337,7 +7320,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7351,7 +7335,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7365,7 +7350,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7379,7 +7365,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7393,7 +7380,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7407,7 +7395,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7421,7 +7410,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7435,7 +7425,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7449,7 +7440,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7463,7 +7455,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7477,7 +7470,8 @@
         "trainee": false,
         "breaking": true,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7491,7 +7485,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7505,7 +7500,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -7519,7 +7515,8 @@
         "trainee": false,
         "breaking": false,
         "independent": false,
-        "adj_core": false
+        "adj_core": false,
+        "registration_status": "C"
     }
 },
 {
@@ -24931,6 +24928,7 @@
     "fields": {
         "tournament": 1,
         "seq": 1,
+        "schedule_group": 1,
         "completed": true,
         "name": "Round 1",
         "abbreviation": "R1",
@@ -24940,7 +24938,7 @@
         "draw_status": "R",
         "feedback_weight": 0.7,
         "silent": false,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -24951,6 +24949,7 @@
     "fields": {
         "tournament": 1,
         "seq": 2,
+        "schedule_group": 2,
         "completed": true,
         "name": "Round 2",
         "abbreviation": "R2",
@@ -24960,7 +24959,7 @@
         "draw_status": "R",
         "feedback_weight": 0.7,
         "silent": false,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -24971,6 +24970,7 @@
     "fields": {
         "tournament": 1,
         "seq": 3,
+        "schedule_group": 3,
         "completed": true,
         "name": "Round 3",
         "abbreviation": "R3",
@@ -24980,7 +24980,7 @@
         "draw_status": "C",
         "feedback_weight": 0.7,
         "silent": false,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -24991,6 +24991,7 @@
     "fields": {
         "tournament": 1,
         "seq": 4,
+        "schedule_group": 4,
         "completed": false,
         "name": "Round 4",
         "abbreviation": "R4",
@@ -25000,7 +25001,7 @@
         "draw_status": "C",
         "feedback_weight": 0.7,
         "silent": false,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25011,6 +25012,7 @@
     "fields": {
         "tournament": 1,
         "seq": 5,
+        "schedule_group": 5,
         "completed": false,
         "name": "Open Quarterfinal",
         "abbreviation": "OQF",
@@ -25020,7 +25022,7 @@
         "draw_status": "N",
         "feedback_weight": 0.7,
         "silent": true,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25031,6 +25033,7 @@
     "fields": {
         "tournament": 1,
         "seq": 6,
+        "schedule_group": 6,
         "completed": false,
         "name": "ESL Semifinal",
         "abbreviation": "SSF",
@@ -25040,7 +25043,7 @@
         "draw_status": "N",
         "feedback_weight": 0.7,
         "silent": true,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25051,6 +25054,7 @@
     "fields": {
         "tournament": 1,
         "seq": 7,
+        "schedule_group": 7,
         "completed": false,
         "name": "Open Semifinal",
         "abbreviation": "OSF",
@@ -25060,7 +25064,7 @@
         "draw_status": "C",
         "feedback_weight": 0.7,
         "silent": true,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25071,6 +25075,7 @@
     "fields": {
         "tournament": 1,
         "seq": 8,
+        "schedule_group": 8,
         "completed": false,
         "name": "ESL Grand Final",
         "abbreviation": "SGF",
@@ -25080,7 +25085,7 @@
         "draw_status": "N",
         "feedback_weight": 0.7,
         "silent": true,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25091,6 +25096,7 @@
     "fields": {
         "tournament": 1,
         "seq": 9,
+        "schedule_group": 9,
         "completed": false,
         "name": "Novice Grand Final",
         "abbreviation": "NGF",
@@ -25100,7 +25106,7 @@
         "draw_status": "N",
         "feedback_weight": 0.7,
         "silent": true,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25111,6 +25117,7 @@
     "fields": {
         "tournament": 1,
         "seq": 10,
+        "schedule_group": 10,
         "completed": false,
         "name": "Open Grand Final",
         "abbreviation": "OGF",
@@ -25120,7 +25127,7 @@
         "draw_status": "N",
         "feedback_weight": 0.7,
         "silent": true,
-        "motions_released": false,
+        "motions_status": "N",
         "starts_at": null,
         "weight": 1
     }
@@ -25526,12 +25533,223 @@
     }
 },
 {
-    "model": "dynamic_preferences.globalpreferencemodel",
+    "model": "registration.question",
     "pk": 1,
     "fields": {
-        "section": "global",
-        "name": "enable_api",
-        "raw_value": "True"
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 10,
+        "text": "Did you agree with the decision?",
+        "help_text": "",
+        "name": "Agree",
+        "answer_type": "bs",
+        "required": true,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 2,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 11,
+        "text": "Did this judge's decision concur with yours?",
+        "help_text": "",
+        "name": "Concur",
+        "answer_type": "bs",
+        "required": true,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 3,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 20,
+        "text": "What adjustment should be applied to this judge's speaker scores?",
+        "help_text": "",
+        "name": "Adjustment",
+        "answer_type": "f",
+        "required": true,
+        "min_value": -20.0,
+        "max_value": 20.0,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 4,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 30,
+        "text": "Choose one word to describe this adjudicator.",
+        "help_text": "",
+        "name": "One word",
+        "answer_type": "t",
+        "required": true,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 5,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 40,
+        "text": "Do you think this adjudicator should be promoted?",
+        "help_text": "",
+        "name": "Promote",
+        "answer_type": "bc",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 6,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 50,
+        "text": "Do you think this adjudicator should be demoted?",
+        "help_text": "",
+        "name": "Demote",
+        "answer_type": "bc",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 7,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 60,
+        "text": "How well was this adjudicator's reasoning explained?",
+        "help_text": "",
+        "name": "Explanation",
+        "answer_type": "is",
+        "required": true,
+        "min_value": 0.0,
+        "max_value": 10.0,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 8,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 70,
+        "text": "How impartial did you think this adjudicator was?",
+        "help_text": "",
+        "name": "Impartial",
+        "answer_type": "is",
+        "required": true,
+        "min_value": 0.0,
+        "max_value": 10.0,
+        "choices": "[]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 9,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 80,
+        "text": "Would you like to see this adjudicator again?",
+        "help_text": "",
+        "name": "Again",
+        "answer_type": "ss",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[\"Absolutely!\", \"Sure, why not\", \"If I have to\", \"Please don't\"]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 10,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 90,
+        "text": "How would you describe this adjudicator?",
+        "help_text": "",
+        "name": "Adjectives",
+        "answer_type": "ms",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[\"biased\", \"clear\", \"concise\", \"rambly\", \"attentive\", \"inattentive\"]"
+    }
+},
+{
+    "model": "registration.question",
+    "pk": 11,
+    "fields": {
+        "tournament": 1,
+        "for_content_type": [
+            "adjfeedback",
+            "adjudicatorfeedback"
+        ],
+        "seq": 1000,
+        "text": "Other comments:",
+        "help_text": "",
+        "name": "Comments",
+        "answer_type": "tl",
+        "required": false,
+        "min_value": null,
+        "max_value": null,
+        "choices": "[]"
     }
 }
 ]

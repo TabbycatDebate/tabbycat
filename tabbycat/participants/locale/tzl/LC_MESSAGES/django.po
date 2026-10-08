@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:59\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -17,6 +17,14 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/participants/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 942\n"
+
+#: participants/admin.py
+msgid "Create institution conflict"
+msgstr "crwdns54181:0crwdne54181:0"
+
+#: participants/admin.py
+msgid "Automatically create a conflict between the selected institution and this participant."
+msgstr "crwdns54183:0crwdne54183:0"
 
 #: participants/admin.py
 #, python-format
@@ -71,6 +79,23 @@ msgstr[1] "crwdns31876:5%(count)dcrwdne31876:5"
 msgid "Participants"
 msgstr "crwdns31878:0crwdne31878:0"
 
+#: participants/forms.py
+msgid "Speaker's full name"
+msgstr "crwdns54185:0crwdne54185:0"
+
+#: participants/forms.py
+#, python-format
+msgid "You must type '%(name)s' exactly to confirm deletion."
+msgstr "crwdns54187:0%(name)scrwdne54187:0"
+
+#: participants/models.py
+msgid "Unconfirmed"
+msgstr "crwdns54189:0crwdne54189:0"
+
+#: participants/models.py
+msgid "Confirmed"
+msgstr "crwdns54191:0crwdne54191:0"
+
 #: participants/models.py
 msgid "name"
 msgstr "crwdns31880:0crwdne31880:0"
@@ -108,6 +133,30 @@ msgstr "crwdns31894:0crwdne31894:0"
 #: participants/models.py
 msgid "tournament"
 msgstr "crwdns31896:0crwdne31896:0"
+
+#: participants/models.py
+msgid "Team slots requested"
+msgstr "crwdns53536:0crwdne53536:0"
+
+#: participants/models.py
+msgid "Team slots allocated"
+msgstr "crwdns53538:0crwdne53538:0"
+
+#: participants/models.py
+msgid "Adjudicator slots requested"
+msgstr "crwdns53540:0crwdne53540:0"
+
+#: participants/models.py
+msgid "Adjudicator slots allocated"
+msgstr "crwdns53542:0crwdne53542:0"
+
+#: participants/models.py
+msgid "tournament institution"
+msgstr "crwdns53544:0crwdne53544:0"
+
+#: participants/models.py
+msgid "tournament institutions"
+msgstr "crwdns53546:0crwdne53546:0"
 
 #. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
 #: participants/models.py
@@ -154,6 +203,14 @@ msgstr "crwdns31916:0crwdne31916:0"
 #: participants/models.py
 msgid "speaker categories"
 msgstr "crwdns31918:0crwdne31918:0"
+
+#: participants/models.py
+msgid "last name"
+msgstr "crwdns53548:0crwdne53548:0"
+
+#: participants/models.py
+msgid "The last name may be used for team names or code names"
+msgstr "crwdns53550:0crwdne53550:0"
 
 #: participants/models.py
 msgid "email address"
@@ -220,6 +277,18 @@ msgid "persons"
 msgstr "crwdns31948:0crwdne31948:0"
 
 #: participants/models.py
+msgid "Redacted"
+msgstr "crwdns53552:0crwdne53552:0"
+
+#: participants/models.py
+msgid "coach"
+msgstr "crwdns53554:0crwdne53554:0"
+
+#: participants/models.py
+msgid "coaches"
+msgstr "crwdns53556:0crwdne53556:0"
+
+#: participants/models.py
 msgid "full name/suffix"
 msgstr "crwdns31950:0crwdne31950:0"
 
@@ -272,8 +341,8 @@ msgid "seed"
 msgstr "crwdns52369:0crwdne52369:0"
 
 #: participants/models.py
-msgid "Used as initial ranking to power-pair the first round"
-msgstr "crwdns52371:0crwdne52371:0"
+msgid "Used as initial ranking to power-pair the first round, and to order teams for round-robin draws (including BP preset schedules, which require unique seeds 1 through n)."
+msgstr "crwdns54193:0crwdne54193:0"
 
 #: participants/models.py
 msgid "institution conflicts"
@@ -304,6 +373,14 @@ msgid "emoji"
 msgstr "crwdns31988:0crwdne31988:0"
 
 #: participants/models.py
+msgid "registration status"
+msgstr "crwdns54195:0crwdne54195:0"
+
+#: participants/models.py
+msgid "Whether the team's registration has been confirmed by tournament staff"
+msgstr "crwdns54197:0crwdne54197:0"
+
+#: participants/models.py
 msgid "team"
 msgstr "crwdns31990:0crwdne31990:0"
 
@@ -318,10 +395,6 @@ msgstr "crwdns31994:0crwdne31994:0"
 #: participants/models.py
 msgid "Teams must have a full name if they don't use the institutional prefix."
 msgstr "crwdns31996:0crwdne31996:0"
-
-#: participants/models.py
-msgid "Teams must have a short name if they don't use the institutional prefix."
-msgstr "crwdns31998:0crwdne31998:0"
 
 #: participants/models.py
 msgid "speaker"
@@ -368,6 +441,18 @@ msgid "adjudication core"
 msgstr "crwdns32020:0crwdne32020:0"
 
 #: participants/models.py
+msgid "tester"
+msgstr "crwdns54199:0crwdne54199:0"
+
+#: participants/models.py
+msgid "Whether this adjudicator tests other adjudicators. Members of the adjudication core count as testers whether or not this is checked"
+msgstr "crwdns54201:0crwdne54201:0"
+
+#: participants/models.py
+msgid "Whether the adjudicator's registration has been confirmed by tournament staff"
+msgstr "crwdns54203:0crwdne54203:0"
+
+#: participants/models.py
 msgid "adjudicator"
 msgstr "crwdns32022:0crwdne32022:0"
 
@@ -391,11 +476,26 @@ msgstr "crwdns32030:0crwdne32030:0"
 msgid "Speaks"
 msgstr "crwdns32032:0crwdne32032:0"
 
+#: participants/templates/adjudicator_record.html participants/views.py
+#, python-format
+msgid "Record for %(name)s"
+msgstr "crwdns32188:0%(name)scrwdne32188:0"
+
 #: participants/templates/adjudicator_record.html
 #: participants/templates/team_record.html
 #, python-format
 msgid "About %(name)s"
 msgstr "crwdns32074:0%(name)scrwdne32074:0"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Edit Database"
+msgstr "crwdns54205:0crwdne54205:0"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed."
+msgstr "crwdns54207:0crwdne54207:0"
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Independent adjudicator"
@@ -423,6 +523,11 @@ msgstr "crwdns35240:0crwdne35240:0"
 #: participants/templates/adjudicator_registration_card.html
 msgid "The institutional affiliations of adjudicators are not public at this tournament."
 msgstr "crwdns51326:0crwdne51326:0"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Custom Questions:"
+msgstr "crwdns53558:0crwdne53558:0"
 
 #: participants/templates/adjudicator_registration_card.html
 #: participants/templates/team_registration_card.html
@@ -458,10 +563,6 @@ msgstr "crwdns35252:0crwdne35252:0"
 msgid "Room Constraints:"
 msgstr "crwdns51328:0crwdne51328:0"
 
-#: participants/templates/admin/participants/adjudicator/change_form.html
-msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "crwdns32084:0crwdne32084:0"
-
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
@@ -491,10 +592,6 @@ msgstr "crwdns32094:0%(object_name)scrwdne32094:0"
 msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
 msgstr "crwdns32096:0%(objects_name)scrwdne32096:0"
 
-#: participants/templates/admin/participants/team/change_form.html
-msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "crwdns34392:0crwdne34392:0"
-
 #: participants/templates/current_round/common.html
 #, python-format
 msgid "The round begins at %(start_time)s"
@@ -503,6 +600,10 @@ msgstr "crwdns32050:0%(start_time)scrwdne32050:0"
 #: participants/templates/current_round/common.html
 msgid "Teams:"
 msgstr "crwdns32052:0crwdne32052:0"
+
+#: participants/templates/current_round/common.html
+msgid "The adjudicators for this debate have not yet been released."
+msgstr "crwdns54209:0crwdne54209:0"
 
 #: participants/templates/current_round/common.html
 msgid "Adjudicator:"
@@ -533,8 +634,8 @@ msgid "Motion:"
 msgstr "crwdns32064:0crwdne32064:0"
 
 #: participants/templates/current_round/common.html
-msgid "View Info Slide"
-msgstr "crwdns52828:0crwdne52828:0"
+msgid "View Info-slide"
+msgstr "crwdns54211:0crwdne54211:0"
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -782,6 +883,13 @@ msgstr[0] "crwdns51378:1%(team)scrwdnd51378:1%(ndebates)scrwdne51378:1"
 msgstr[1] "crwdns51378:5%(team)scrwdnd51378:5%(ndebates)scrwdne51378:5"
 
 #: participants/templates/in_this_round.html
+#, python-format
+msgid "It looks like you are competing in %(ndebates)s debate this round."
+msgid_plural "It looks like you are competing in %(ndebates)s debates this round."
+msgstr[0] "crwdns54213:1%(ndebates)scrwdne54213:1"
+msgstr[1] "crwdns54213:5%(ndebates)scrwdne54213:5"
+
+#: participants/templates/in_this_round.html
 msgid "If this is an error, please contact a tab director immediately."
 msgstr "crwdns32136:0crwdne32136:0"
 
@@ -805,6 +913,14 @@ msgstr "crwdns32118:0crwdne32118:0"
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
 msgstr "crwdns32120:0crwdne32120:0"
+
+#: participants/templates/participants_subnav.html
+msgid "Gender Diversity"
+msgstr "crwdns54215:0crwdne54215:0"
+
+#: participants/templates/participants_subnav.html
+msgid "Adjudicator Rule"
+msgstr "crwdns54217:0crwdne54217:0"
 
 #: participants/templates/participants_subnav.html
 msgid "Emails have already been sent."
@@ -839,6 +955,35 @@ msgstr "crwdns32130:0%(edit_db_url)scrwdne32130:0"
 #: participants/templates/speaker_categories_edit.html
 msgid "Save Speaker Categories"
 msgstr "crwdns32132:0crwdne32132:0"
+
+#: participants/templates/speaker_confirm_delete.html
+msgid "Confirm Speaker Deletion"
+msgstr "crwdns54219:0crwdne54219:0"
+
+#: participants/templates/speaker_confirm_delete.html
+#: participants/templates/speaker_create.html
+msgid "Back to Team Record"
+msgstr "crwdns54221:0crwdne54221:0"
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Do you really want to delete <strong>%(name)s</strong> from %(team)s? This will permanently remove the speaker and <strong>cannot be undone</strong>. Any ballot scores attributed to this speaker will also be deleted."
+msgstr "crwdns54223:0%(name)scrwdnd54223:0%(team)scrwdne54223:0"
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Yes, delete %(name)s"
+msgstr "crwdns54225:0%(name)scrwdne54225:0"
+
+#: participants/templates/speaker_create.html
+#: participants/templates/team_registration_card.html
+msgid "Add Speaker"
+msgstr "crwdns54227:0crwdne54227:0"
+
+#: participants/templates/speaker_create.html
+#, python-format
+msgid "for %(name)s"
+msgstr "crwdns54229:0%(name)scrwdne54229:0"
 
 #: participants/templates/team_registration_card.html
 msgid "Team name:"
@@ -879,6 +1024,10 @@ msgstr "crwdns32158:0crwdne32158:0"
 #: participants/templates/team_registration_card.html
 msgid "Speaker categories:"
 msgstr "crwdns34424:0crwdne34424:0"
+
+#: participants/templates/team_registration_card.html
+msgid "Delete"
+msgstr "crwdns54231:0crwdne54231:0"
 
 #: participants/templatetags/team_name_for_data_entry.py
 #, python-format
@@ -934,6 +1083,28 @@ msgid "Number of independent adjudicators"
 msgstr "crwdns32184:0crwdne32184:0"
 
 #: participants/views.py
+msgid "Institution Gender Diversity"
+msgstr "crwdns54233:0crwdne54233:0"
+
+#: participants/views.py
+msgid "N/A"
+msgstr "crwdns54235:0crwdne54235:0"
+
+#: participants/views.py
+msgid "Institution"
+msgstr "crwdns54237:0crwdne54237:0"
+
+#: participants/views.py
+#, python-format
+msgid "Speakers (%(gender)s)"
+msgstr "crwdns54239:0%(gender)scrwdne54239:0"
+
+#: participants/views.py
+#, python-format
+msgid "Adjudicators (%(gender)s)"
+msgstr "crwdns54241:0%(gender)scrwdne54241:0"
+
+#: participants/views.py
 msgid "Code name"
 msgstr "crwdns32186:0crwdne32186:0"
 
@@ -946,13 +1117,32 @@ msgid "Results"
 msgstr "crwdns32190:0crwdne32190:0"
 
 #: participants/views.py
-#, python-format
-msgid "Record for %(name)s"
-msgstr "crwdns32188:0%(name)scrwdne32188:0"
-
-#: participants/views.py
 msgid "Previous Rounds"
 msgstr "crwdns32192:0crwdne32192:0"
+
+#: participants/views.py
+#, python-format
+msgid "Add Speaker to %(team)s"
+msgstr "crwdns54243:0%(team)scrwdne54243:0"
+
+#: participants/views.py
+msgid "Cancel and return to team record"
+msgstr "crwdns54245:0crwdne54245:0"
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was added as a speaker."
+msgstr "crwdns54247:0%(name)scrwdne54247:0"
+
+#: participants/views.py
+#, python-format
+msgid "Delete %(name)s"
+msgstr "crwdns54249:0%(name)scrwdne54249:0"
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was deleted."
+msgstr "crwdns54251:0%(name)scrwdne54251:0"
 
 #: participants/views.py
 #, python-format
@@ -968,4 +1158,12 @@ msgstr "crwdns51384:0crwdne51384:0"
 #: participants/views.py
 msgid "Speaker Category Eligibility"
 msgstr "crwdns32198:0crwdne32198:0"
+
+#: participants/views.py
+msgid "Adjudicator Requirement"
+msgstr "crwdns54253:0crwdne54253:0"
+
+#: participants/views.py
+msgid "Registered"
+msgstr "crwdns54255:0crwdne54255:0"
 

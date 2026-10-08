@@ -9,7 +9,7 @@ class TestAvailability(BaseMinimalTournamentTestCase):
 
     def setUp(self):
         super().setUp()
-        self.round = Round.objects.create(tournament=self.tournament, seq=1)
+        self.round = Round.objects.create(tournament=self.tournament, seq=1, schedule_group=1)
 
     def tearDown(self):
         super().tearDown()

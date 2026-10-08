@@ -25,6 +25,8 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
       - Pull up from bottom
       - Pull up from middle
       - Pull up at random
+      - Pull up from the lowest draw strength by rank
+      - Pull up from the least pulled up, then the lowest draw strength by rank
 
       If sides are `Random` or `Balance`:
 
@@ -49,24 +51,29 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
       - Fold
       - Adjacent
       - Random
+      - Fold top, adjacent rest
 
   * - :ref:`Conflict avoidance method <draw-conflict-avoidance>`
     - How to avoid conflicts
     - - Off
       - One-up-one-down
-      - Minimum cost matching
+      - Minimum cost matching (pullups determined beforehand)
+      - Minimum cost matching (including pullups)
 
   * - :ref:`Pullup restriction <draw-pullup-restriction>`
     - Whether and how to restrict pullups
     - - No restriction
       - Choose from teams who have been pulled up the fewest times so far
       - Choose from teams with the lowest draw strength by speaks so far
+      - Choose from teams with the lowest draw strength by wins so far
 
 .. caution:: The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
 The big picture
 ===============
-When generating a power-paired draw, Tabbycat goes through five steps:
+When generating a power-paired draw, Tabbycat looks at the "conflict avoidance" option for how to generate the draw.
+
+In the most basic forms (either "off" or "one-up-one-down"), the process is done in five steps:
 
 1. First, it divides teams into "raw brackets", grouping them by the number of wins.
 2. Second, it resolves odd brackets, applying the odd brackets rule to make sure there is an even number of teams in each bracket. This is often called "pulling up" teams.
@@ -74,8 +81,7 @@ When generating a power-paired draw, Tabbycat goes through five steps:
 4. Fourth, if enabled, it adjusts pairings to avoid conflicts.
 5. Finally, it assigns sides to teams in each debate.
 
-For each of these steps except the first, Tabbycat allows you to choose between
-a number of different methods.
+For each of these steps Tabbycat allows you to choose between a number of different methods.
 
 Explanations of options
 =======================
@@ -182,7 +188,13 @@ It's a bit more complicated than that, for two reasons:
 * History conflicts are prioritised over (*i.e.*, "worse than") institution conflicts. So it's fine to resolve a history conflict by creating an institution conflict, but not the vice versa.
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
 
-**Minimum cost matching** is a more flexible method designed for APDA and other formats. This method creates a graph between teams in a bracket, weighing all possible pairings for conflicts, and finding the minimum weight matching with the `Blossom algorithm <https://en.wikipedia.org/wiki/Blossom_algorithm>`_. In addition to history and institution conflicts, it can try to minimize the number of times teams have seen a pulled-up team, and stabilize side balance.
+**Minimum cost matching** is a set of more flexible methods designed for APDA and other formats. These methods create either graphs between teams in the same bracket or a single graph between all teams, weighing all possible pairings for conflicts, and finding the minimum weight matching with the `Blossom algorithm <https://en.wikipedia.org/wiki/Blossom_algorithm>`_. Depending on the penalties set, this can have a greater effect than one-up-one-down.
+
+In addition to history and institution conflicts, it can try to minimize the number of times teams have seen a pulled-up team, and stabilise side balance. There is also an option to have the pullups decided by this method versus being decided beforehand. Having them decided beforehand is faster, but can result in a less optimal full draw. The difference is that when pullups are predetermined, the generator will create and solve for graphs for each bracket, rather than create one single big graph between all teams.
+
+When sides are pre-allocated, this general graph problem reduces to a bipartite graph, where we can apply to `Hungarian algorithm <https://en.wikipedia.org/wiki/Hungarian_algorithm>`_ with the same penalties as would be set under the general case.
+
+Random draws, such as for the first round, can also use this approach, ignoring pairing and pullup penalties.
 
 .. _draw-pullup-restriction:
 

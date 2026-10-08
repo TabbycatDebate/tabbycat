@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:54\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -21,6 +21,71 @@ msgstr ""
 #: privateurls/apps.py
 msgid "Private URL Management"
 msgstr "Özel URL Yönetimi"
+
+#: privateurls/templates/private_url_landing.html
+msgid "Private URL"
+msgstr "Özel URL"
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "for %(name)s"
+msgstr "%(name)s için"
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "(%(team)s)"
+msgstr "(%(team)s)"
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Your team has an incomplete number of speakers. Please share the registration link with your partner(s): <a href=\"%(link)s\">%(link)s</a>"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
+msgstr "Bu sayfanın URL'si sizin için kişiseldir, %(name)s. <strong>Kimseyle paylaşmayın;</strong> bu URL'yi bilen herkes tartışmalarınız için sonuç ve/veya geri bildirim gönderebilir. Bu sayfayı yer imlerine ekleyebilir ve mevcut eylemler için her maçtan sonra buraya dönebilirsiniz."
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Revoke check-in from %(check_time)s"
+msgstr "%(check_time)s'den itibaren girişleri iptal et"
+
+#: privateurls/templates/private_url_landing.html
+msgid "Check in"
+msgstr "Giriş"
+
+#. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "You have been checked in at %(check_time)s"
+msgstr "%(check_time)s zamanında giriş yaptınız."
+
+#: privateurls/templates/private_url_landing.html
+msgid "You are not currently checked in."
+msgstr "Şu anda giriş yapmadınız."
+
+#: privateurls/templates/private_url_landing.html
+msgid "Show barcode for check-in"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Submit Ballot for %(round)s"
+msgstr "%(round)s için ballot gönder"
+
+#: privateurls/templates/private_url_landing.html
+msgid "Submit Feedback"
+msgstr "Geri Bildirim Yolla"
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Registration (%(name)s)"
+msgstr "Kayıt (%(name)s)"
 
 #: privateurls/templates/private_urls.html privateurls/views.py
 msgid "Private URLs"
@@ -83,62 +148,6 @@ msgstr "URL'ler oluştur"
 msgid "All participants already have private URLs."
 msgstr "Tüm katılımcıların zaten özel URL'leri var."
 
-#: privateurls/templates/public_url_landing.html
-msgid "Private URL"
-msgstr "Özel URL"
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "for %(name)s"
-msgstr "%(name)s için"
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "(%(team)s)"
-msgstr "(%(team)s)"
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
-msgstr "Bu sayfanın URL'si sizin için kişiseldir, %(name)s. <strong>Kimseyle paylaşmayın;</strong> bu URL'yi bilen herkes tartışmalarınız için sonuç ve/veya geri bildirim gönderebilir. Bu sayfayı yer imlerine ekleyebilir ve mevcut eylemler için her maçtan sonra buraya dönebilirsiniz."
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "Revoke check-in from %(check_time)s"
-msgstr "%(check_time)s'den itibaren girişleri iptal et"
-
-#: privateurls/templates/public_url_landing.html
-msgid "Check in"
-msgstr "Giriş"
-
-#. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "You have been checked in at %(check_time)s"
-msgstr "%(check_time)s zamanında giriş yaptınız."
-
-#: privateurls/templates/public_url_landing.html
-msgid "You are not currently checked in."
-msgstr "Şu anda giriş yapmadınız."
-
-#: privateurls/templates/public_url_landing.html
-msgid "Show barcode for check-in"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "Submit Ballot for %(round)s"
-msgstr "%(round)s için ballot gönder"
-
-#: privateurls/templates/public_url_landing.html
-msgid "Submit Feedback"
-msgstr "Geri Bildirim Yolla"
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "Registration (%(name)s)"
-msgstr "Kayıt (%(name)s)"
-
 #: privateurls/views.py
 msgid "no URL"
 msgstr "URL yok"
@@ -150,6 +159,10 @@ msgstr "URL"
 #: privateurls/views.py
 msgid "Speakers"
 msgstr "Konuşmacılar"
+
+#: privateurls/views.py
+msgid "Team"
+msgstr "Takım"
 
 #: privateurls/views.py
 msgid "Adjudicators"

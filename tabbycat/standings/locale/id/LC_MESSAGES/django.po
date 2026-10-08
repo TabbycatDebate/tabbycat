@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:52\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -149,6 +149,46 @@ msgstr "poin tim"
 msgid "Team"
 msgstr "Tim"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr "Kemenangan"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr "jumlah posisi pertama"
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr "1sts"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr "jumlah posisi kedua"
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr "2nds"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr "jumlah posisi ketiga"
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr "3rds"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr "jumlah juri yang memberikan suara untuk tim ini"
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr "Balot"
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr "suara/balot yang dimiliki"
+
 #: standings/speakers.py
 msgid "standard deviation"
 msgstr "standar deviasi"
@@ -196,10 +236,6 @@ msgstr "Poin"
 #: standings/teams.py
 msgid "wins"
 msgstr "kemenangan"
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
-msgstr "Kemenangan"
 
 #: standings/teams.py
 msgid "total speaker score"
@@ -250,6 +286,14 @@ msgid "AISS"
 msgstr "RNIP"
 
 #: standings/teams.py
+msgid "draw strength by rank"
+msgstr ""
+
+#: standings/teams.py
+msgid "DSR"
+msgstr ""
+
+#: standings/teams.py
 msgid "draw strength by wins"
 msgstr "kekuatan undian berdasarkan kemenangan"
 
@@ -280,42 +324,6 @@ msgstr ""
 #: standings/teams.py
 msgid "SPu"
 msgstr ""
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr "jumlah juri yang memberikan suara untuk tim ini"
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr "Balot"
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr "suara/balot yang dimiliki"
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr "jumlah posisi pertama"
-
-#: standings/teams.py
-msgid "1sts"
-msgstr "1sts"
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr "jumlah posisi kedua"
-
-#: standings/teams.py
-msgid "2nds"
-msgstr "2nds"
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr "jumlah posisi ketiga"
-
-#: standings/teams.py
-msgid "3rds"
-msgstr "3rds"
 
 #: standings/teams.py
 msgid "number of times ironed"

@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags static i18n team_name_for_data_entry %}
 
-{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
-
+{% block noindex %}<meta name="robots" content="noindex" />{% endblock %}
 {% block page-subnav-sections %}
   {% if for_admin %}
     <a class="btn btn-outline-primary" href="{% roundurl 'results-round-list' debate.round %}">

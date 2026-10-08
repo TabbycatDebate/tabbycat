@@ -1,6 +1,7 @@
-{% if alone %}<div class="list-item-group">{% endif %}
+{% if alone %}<div class="list-group">{% endif %}
 
   <a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
+   {% if data_toggle %}data-toggle="{{ data_toggle }}"{% endif %} {% if data_target %}data-target="{{ data_target }}"{% endif %}
    class="{% if not child %}list-group-item {% endif %}list-group-item-action
    {% if to_complete %}
     bg-{% if type %}{{ type }}{% else %}primary{% endif %} text-white

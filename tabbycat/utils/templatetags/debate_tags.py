@@ -9,6 +9,7 @@ from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
 
 from draw.types import DebateSide
+from options.utils import use_team_code_names
 from tournaments.utils import get_side_name
 from users.permissions import has_permission
 
@@ -255,3 +256,21 @@ def prep_time():
 def haspermission(context, permission):
     # If returned directly from the object it will have to lookup tournament
     return has_permission(context['user'], permission, context['tournament'])
+
+
+@register.simple_tag(takes_context=True)
+def team_name_for_display(context, team, long=False):
+    if use_team_code_names(context['tournament'], context.get('for_admin', False), user=context['user']):
+        return team.code_name
+    else:
+        return team.long_name if long else team.short_name
+
+
+@register.filter
+def any_dts_different_round(dts):
+    seen = set()
+    for dts in dts:
+        if dts.debate.round in seen:
+            return True
+        seen.add(dts.debate.round)
+    return False

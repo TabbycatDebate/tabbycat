@@ -1,4 +1,5 @@
 import logging
+import unicodedata
 from warnings import warn
 
 from django.contrib.contenttypes.fields import GenericRelation
@@ -17,6 +18,11 @@ from utils.models import UniqueConstraint
 from .emoji import EMOJI_FIELD_CHOICES
 
 logger = logging.getLogger(__name__)
+
+
+class RegistrationStatus(models.TextChoices):
+    UNCONFIRMED = 'U', _("Unconfirmed")
+    CONFIRMED = 'C', _("Confirmed")
 
 
 class Region(models.Model):
@@ -180,6 +186,10 @@ class Person(models.Model):
             return self.name
         return self.code_name
 
+    @property
+    def normalized_name(self):
+        return unicodedata.normalize('NFKD', self.name)
+
 
 class Coach(Person):
     tournament_institution = models.ForeignKey(
@@ -208,6 +218,13 @@ class TeamManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['short_name', 'long_name']
 
     def get_queryset(self):
+        return super().get_queryset().select_related('institution').filter(
+            registration_status=RegistrationStatus.CONFIRMED,
+        )
+
+    @property
+    def all_with_unconfirmed(self):
+        """Returns all teams including unconfirmed ones (for use in registration app)"""
         return super().get_queryset().select_related('institution')
 
 
@@ -240,7 +257,8 @@ class Team(models.Model):
         verbose_name=_("break categories"))
 
     seed = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("seed"),
-        help_text=_("Used as initial ranking to power-pair the first round"))
+        help_text=_("Used as initial ranking to power-pair the first round, and to order teams for round-robin draws "
+            "(including BP preset schedules, which require unique seeds 1 through n)."))
 
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.TeamInstitutionConflict',
@@ -267,6 +285,14 @@ class Team(models.Model):
     emoji = models.CharField(max_length=3, default=None, choices=EMOJI_FIELD_CHOICES,
         blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
+
+    registration_status = models.CharField(
+        max_length=1,
+        choices=RegistrationStatus.choices,
+        default=RegistrationStatus.CONFIRMED,
+        verbose_name=_("registration status"),
+        help_text=_("Whether the team's registration has been confirmed by tournament staff"),
+    )
 
     answers = GenericRelation(Answer)
 
@@ -426,7 +452,14 @@ class AdjudicatorManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(AdjudicatorManager, self).get_queryset().select_related('institution')
+        return super().get_queryset().select_related('institution').filter(
+            registration_status=RegistrationStatus.CONFIRMED,
+        )
+
+    @property
+    def all_with_unconfirmed(self):
+        """Returns all adjudicators including unconfirmed ones (for use in registration app)"""
+        return super().get_queryset().select_related('institution')
 
 
 class Adjudicator(Person):
@@ -461,6 +494,18 @@ class Adjudicator(Person):
         verbose_name=_("independent"))
     adj_core = models.BooleanField(default=False, blank=True,
         verbose_name=_("adjudication core"))
+    is_tester = models.BooleanField(default=False, blank=True,
+        verbose_name=_("tester"),
+        help_text=_("Whether this adjudicator tests other adjudicators. Members of "
+            "the adjudication core count as testers whether or not this is checked"))
+
+    registration_status = models.CharField(
+        max_length=1,
+        choices=RegistrationStatus.choices,
+        default=RegistrationStatus.CONFIRMED,
+        verbose_name=_("registration status"),
+        help_text=_("Whether the adjudicator's registration has been confirmed by tournament staff"),
+    )
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
     venue_constraints = GenericRelation('venues.VenueConstraint', related_query_name='adjudicator',

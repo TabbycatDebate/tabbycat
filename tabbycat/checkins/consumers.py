@@ -1,6 +1,5 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
 from options.utils import use_team_code_names_data_entry
@@ -40,42 +39,39 @@ class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
 
         use_team_code_names = use_team_code_names_data_entry(self.tournament, True)
 
-        for barcode in barcode_ids:
-            try:
-                identifier = Identifier.objects.get(barcode=barcode)
-                if content['status'] is True:
-                    # If checking-in someone
-                    checkin = Event.objects.create(identifier=identifier,
-                                                   tournament=self.tournament)
-                    checkin_dict = checkin.serialize()
+        identifiers = {i.barcode: i for i in Identifier.objects.filter(barcode__in=barcode_ids)}
+        non_existent_barcodes = set(barcode_ids) - set(identifiers.keys())
+        if non_existent_barcodes and len(non_existent_barcodes) == len(barcode_ids):
+            msg = _("Sent checkin identifier doesn't exist")
+            self.send_error(_("Checkins"), msg, content)
+            return
 
-                    if hasattr(identifier.owner, 'matchup'):
-                        if use_team_code_names:
-                            checkin_dict['owner_name'] = identifier.owner.matchup_codes
-                        else:
-                            checkin_dict['owner_name'] = identifier.owner.matchup
+        for identifier in identifiers.values():
+            if content['status'] is True:
+                # If checking-in someone
+                checkin = Event.objects.create(identifier=identifier,
+                                                tournament=self.tournament)
+                checkin_dict = checkin.serialize()
+
+                if hasattr(identifier.owner, 'matchup'):
+                    if use_team_code_names:
+                        checkin_dict['owner_name'] = identifier.owner.matchup_codes
                     else:
-                        checkin_dict['owner_name'] = identifier.owner.name
-
-                    return_content['checkins'].append(checkin_dict)
+                        checkin_dict['owner_name'] = identifier.owner.matchup
                 else:
-                    # If undoing/revoking a check-in
-                    if content['type'] == 'people':
-                        window = 'checkin_window_people'
-                    else:
-                        window = 'checkin_window_venues'
+                    checkin_dict['owner_name'] = identifier.owner.name
 
-                    checkins = get_unexpired_checkins(self.tournament, window)
-                    checkins.filter(identifier=identifier).delete()
-                    return_content['checkins'].append({'identifier': barcode})
+                return_content['checkins'].append(checkin_dict)
+            else:
+                # If undoing/revoking a check-in
+                if content['type'] == 'people':
+                    window = 'checkin_window_people'
+                else:
+                    window = 'checkin_window_venues'
 
-            except ObjectDoesNotExist:
-                # Only raise an error for single check-ins as for multi-check-in
-                # events via the status page its clear what has failed or not
-                if len(barcode_ids) == 1:
-                    msg = _("Sent checkin identifier doesn't exist")
-                    self.send_error(_("Checkins"), msg, content)
-                    return
+                checkins = get_unexpired_checkins(self.tournament, window)
+                checkins.filter(identifier=identifier).delete()
+                return_content['checkins'].append({'identifier': identifier.barcode})
 
         if len(return_content['checkins']) == 0 and content['status'] is not False:
             msg = _("No checkin identifiers exist for sent barcodes")

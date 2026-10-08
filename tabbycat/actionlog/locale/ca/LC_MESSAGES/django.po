@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:56\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -23,31 +23,35 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Changed adjudicator breaking status"
+msgstr "Canviat l'estat de la persona jutgessa al tall"
+
+#: actionlog/models.py
+msgid "Changed adjudicator tester status"
 msgstr ""
 
 #: actionlog/models.py
 msgid "Created adjudicator"
-msgstr ""
+msgstr "Persona jutgessa creada"
 
 #: actionlog/models.py
 msgid "Edited adjudicator"
-msgstr ""
+msgstr "Persona jutgessa editada"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
-msgstr ""
+msgstr "Nota de la jutgessa assignada"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators"
-msgstr ""
+msgstr "Panells ubicats automàticament"
 
 #: actionlog/models.py
 msgid "Saved adjudicator allocation"
-msgstr ""
+msgstr "Ubicació de la jutgessa guardada"
 
 #: actionlog/models.py
 msgid "Edited adjudicators availability"
-msgstr ""
+msgstr "Disponibilitat de les persones jutgesses editada"
 
 #: actionlog/models.py
 msgid "Edited availability"
@@ -119,7 +123,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Generated check in identifiers for adjudicators"
-msgstr ""
+msgstr "Identificadors de registre de les persones jutgesses generats correctament"
 
 #: actionlog/models.py
 msgid "Generated check in identifiers for speakers"
@@ -282,6 +286,10 @@ msgid "Saved the sides status of a matchup"
 msgstr ""
 
 #: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr ""
+
+#: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
 msgstr ""
 
@@ -303,6 +311,10 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Created speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Deleted speaker"
 msgstr ""
 
 #: actionlog/models.py
@@ -367,6 +379,42 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Saved a room manual edit"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
 msgstr ""
 
 #: actionlog/models.py

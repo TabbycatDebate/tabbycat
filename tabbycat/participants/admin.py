@@ -11,6 +11,7 @@ from adjfeedback.models import AdjudicatorBaseScoreHistory
 from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
 from draw.models import TeamSideAllocation
+from registration.admin import AnswerInline
 from tournaments.models import Tournament
 from utils.admin import ModelAdmin
 from venues.admin import VenueConstraintInline
@@ -65,6 +66,11 @@ class TournamentInstitutionAdmin(ModelAdmin):
         'adjudicators_allocated',
     )
     search_fields = ('institution__name', 'tournament__name')
+    list_select_related = ('institution', 'tournament')
+    inlines = (AnswerInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('answers__question')
 
 # ==============================================================================
 # Coach
@@ -81,6 +87,10 @@ class CoachAdmin(ModelAdmin):
     )
     ordering = ("name",)
     search_fields = ('name', )
+    inlines = (AnswerInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('answers__question')
 
 # ==============================================================================
 # Speaker
@@ -94,6 +104,10 @@ class SpeakerAdmin(ModelAdmin):
     search_fields = ('name', 'team__short_name', 'team__long_name',
                      'team__institution__name', 'team__institution__code')
     raw_id_fields = ('team', )
+    inlines = (AnswerInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('answers__question')
 
 
 # ==============================================================================
@@ -120,7 +134,49 @@ class TeamSideAllocationInline(admin.TabularInline):
     model = TeamSideAllocation
 
 
-class TeamForm(forms.ModelForm):
+class InstitutionConflictFormMixin(forms.Form):
+    """Adds and positions an institution-conflict checkbox on a participant form."""
+
+    create_institution_conflict = forms.BooleanField(
+        initial=True,
+        required=False,
+        label=_("Create institution conflict"),
+        help_text=_("Automatically create a conflict between the selected institution and this participant."),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        field_names = list(self.fields)
+        field_names.remove('create_institution_conflict')
+        field_names.insert(field_names.index('institution') + 1, 'create_institution_conflict')
+        self.order_fields(field_names)
+
+
+class InstitutionConflictAdminMixin:
+    institution_conflict_model = None
+    institution_conflict_object_field = None
+
+    def get_fields(self, request, obj=None):
+        field_names = list(super().get_fields(request, obj))
+        field_names.remove('create_institution_conflict')
+        field_names.insert(field_names.index('institution') + 1, 'create_institution_conflict')
+        return field_names
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        instance = form.instance
+        if ('institution' in form.changed_data and
+                form.cleaned_data.get('create_institution_conflict') and instance.institution_id):
+            self.institution_conflict_model.objects.bulk_create([
+                self.institution_conflict_model(
+                    institution=instance.institution,
+                    **{self.institution_conflict_object_field: instance},
+                ),
+            ], ignore_conflicts=True)
+
+
+class TeamForm(InstitutionConflictFormMixin, forms.ModelForm):
+
     class Meta:
         model = Team
         fields = '__all__'
@@ -154,26 +210,29 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'team':
-            kwargs["queryset"] = Team.objects.select_related('tournament')
+            kwargs["queryset"] = Team.objects.all_with_unconfirmed.select_related('tournament')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(Team)
-class TeamAdmin(ModelAdmin):
+class TeamAdmin(InstitutionConflictAdminMixin, ModelAdmin):
     form = TeamForm
+    institution_conflict_model = TeamInstitutionConflict
+    institution_conflict_object_field = 'team'
     list_display = ('long_name', 'short_name', 'emoji_code', 'institution',
-                    'tournament')
+                    'tournament', 'registration_status')
     search_fields = ('reference', 'short_name', 'code_name', 'institution__name',
                      'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'institution', 'break_categories')
+    list_filter = ('tournament', 'institution', 'break_categories', 'registration_status')
+    list_editable = ('registration_status',)
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
                AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
-               RoundAvailabilityInline)
+               RoundAvailabilityInline, AnswerInline)
     actions = ['delete_url_key', 'assign_emoji', 'assign_code_names']
 
     def get_queryset(self, request):
-        # can't use select_related, because TeamManager always puts a select_related on this
-        return super().get_queryset(request).select_related('tournament')
+        # Show all teams including unconfirmed in admin
+        return Team.objects.all_with_unconfirmed.select_related('tournament').prefetch_related('answers__question')
 
     @admin.display(description=_("Emoji & Code"))
     def emoji_code(self, obj):
@@ -249,7 +308,8 @@ class AdjudicatorBaseScoreHistoryInline(admin.TabularInline):
     extra = 1
 
 
-class AdjudicatorForm(forms.ModelForm):
+class AdjudicatorForm(InstitutionConflictFormMixin, forms.ModelForm):
+
     class Meta:
         model = Adjudicator
         fields = '__all__'
@@ -260,21 +320,23 @@ class AdjudicatorForm(forms.ModelForm):
 
 
 @admin.register(Adjudicator)
-class AdjudicatorAdmin(ModelAdmin):
+class AdjudicatorAdmin(InstitutionConflictAdminMixin, ModelAdmin):
     form = AdjudicatorForm
+    institution_conflict_model = AdjudicatorInstitutionConflict
+    institution_conflict_object_field = 'adjudicator'
     list_display = ('name', 'institution', 'tournament', 'trainee',
-                    'independent', 'adj_core', 'gender', 'base_score')
+                    'independent', 'adj_core', 'gender', 'base_score', 'registration_status')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
-    list_filter = ('tournament', 'institution')
-    list_editable = ('independent', 'adj_core', 'trainee', 'base_score')
+    list_filter = ('tournament', 'institution', 'registration_status')
+    list_editable = ('independent', 'adj_core', 'trainee', 'base_score', 'registration_status')
     inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorBaseScoreHistoryInline,
-               RoundAvailabilityInline)
+               RoundAvailabilityInline, AnswerInline)
     actions = ['delete_url_key']
 
     def get_queryset(self, request):
-        # can't use select_related, because TeamManager always puts a select_related on this
-        return super().get_queryset(request).select_related('tournament')
+        # Show all adjudicators including unconfirmed in admin
+        return Adjudicator.objects.all_with_unconfirmed.select_related('tournament').prefetch_related('answers__question')
 
     @admin.display(description=_("Delete URL Key"))
     def delete_url_key(self, request, queryset):

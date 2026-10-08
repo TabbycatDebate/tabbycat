@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-08-19 08:24\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:50\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -20,45 +20,45 @@ msgstr ""
 #: importer/forms.py
 #, python-format
 msgid "line %(lineno)d: %(message)s"
-msgstr ""
+msgstr "%(lineno)d行目：%(message)s"
 
 #: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) didn't have a code"
-msgstr ""
+msgstr "この行（%(institution)s）にはコードが指定されていません"
 
 #: importer/forms.py
 #, python-format
 msgid "This line (for %(institution)s) had too many columns"
-msgstr ""
+msgstr "この行（%(institution)s）の列が多すぎます"
 
 #: importer/forms.py
 msgid "There were no institutions to import."
-msgstr ""
+msgstr "追加するインステが見つかりませんでした。"
 
 #: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d institution at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d institutions at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
-msgstr[0] ""
+msgstr[0] "一度に%(max_allowed)dインステまでしか入力できません（%(given)d行入力）。小分けにして入力してください。"
 
 #: importer/forms.py
 msgid "There were no rooms to import."
-msgstr ""
+msgstr "追加する部屋が見つかりませんでした。"
 
 #: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d room at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d rooms at a time. (You currently have %(given)d.) Try splitting your import into smaller chunks."
-msgstr[0] ""
+msgstr[0] "一度に%(max_allowed)d部屋までしか入力できません（%(given)d行入力）。小分けにして入力してください。"
 
 #: importer/forms.py
 msgid "Speakers' names"
-msgstr "スピーカーの名前"
+msgstr "スピーカー名"
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr "改行、タブ、カンマで分けれます"
+msgid "Can be separated by newlines, tabs, commas or ampersands"
+msgstr ""
 
 #: importer/forms.py
 msgid "Speakers' email addresses"
@@ -66,23 +66,23 @@ msgstr "スピーカーのメールアドレス"
 
 #: importer/forms.py
 msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
-msgstr ""
+msgstr "任意。Private URLを配信するのに便利です。スピーカー名と同じ順で入力してください"
 
 #: importer/forms.py
 msgid "Name (excluding institution name)"
-msgstr "名前（インステチューションなし）"
+msgstr "チーム名（インステ名なし）"
 
 #: importer/forms.py
 msgid "Prefix team name with institution name?"
-msgstr ""
+msgstr "チーム名の前にインステ名を付けますか？"
 
 #: importer/forms.py
 msgid "Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"
-msgstr ""
+msgstr "インステ名を入れないでください（代わりに「チーム名の前にインステ名を付けますか？」をチェックしてください）。"
 
 #: importer/forms.py
 msgid "(Not applicable to unaffiliated teams)"
-msgstr ""
+msgstr "（インステ無所属の場合、適応されません）"
 
 #: importer/forms.py
 msgid "One speaker's name per line"
@@ -91,7 +91,7 @@ msgstr "選手を1行ごとに表記してください"
 #: importer/forms.py
 #, python-format
 msgid "Speaker %d"
-msgstr ""
+msgstr "スピーカー%d"
 
 #: importer/forms.py
 #, python-format
@@ -116,20 +116,20 @@ msgstr ""
 
 #: importer/forms.py
 msgid "There must be at least one speaker."
-msgstr ""
+msgstr "少なくとも1人のスピーカーが要ります。"
 
 #: importer/forms.py
 #, python-format
 msgid "%(email)s is not a valid email address."
-msgstr ""
+msgstr "%(email)sは有効なメールアドレスではありません。"
 
 #: importer/forms.py
 msgid "There are more email addresses than speakers."
-msgstr ""
+msgstr "スピーカーの数より多くのメールアドレスがあります。"
 
 #: importer/forms.py
 msgid "Every team in a single tournament from the same institution must have a different name. Please correct the duplicate data."
-msgstr ""
+msgstr "同じ大会・同じインステのチーム名は被ってはいけません。重複するデータを修正してください。"
 
 #: importer/forms.py
 msgid "Rating"
@@ -138,7 +138,7 @@ msgstr "評価"
 #: importer/forms.py
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
-msgstr ""
+msgstr "%(min)d～%(max)dの間で入力してください。"
 
 #: importer/forms.py
 msgid "Unaffiliated (no institution)"
@@ -153,13 +153,13 @@ msgstr ""
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d team at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d teams at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
-msgstr[0] ""
+msgstr[0] "一度に%(max_allowed)dチームまでしか入力できません（現在%(given)d行入力）。小分けにして入力してください。"
 
 #: importer/forms.py
 #, python-format
 msgid "Sorry, you can only import up to %(max_allowed)d adjudicator at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
 msgid_plural "Sorry, you can only import up to %(max_allowed)d adjudicators at a time. (These numbers currently add to %(given)d.) Try splitting your import into smaller chunks."
-msgstr[0] ""
+msgstr[0] "一度に%(max_allowed)d人のジャッジまでしか入力できません（現在%(given)d行入力）。小分けにして入力してください。"
 
 #: importer/forms.py
 msgid "XML"
@@ -167,28 +167,28 @@ msgstr ""
 
 #: importer/forms.py
 msgid "The Debate XML archive to parse"
-msgstr ""
+msgstr "処理するXMLアーカイブ"
 
 #: importer/templates/archive_export_index.html
 msgid "Export Tournament Archive"
-msgstr ""
+msgstr "大会のアーカイブをエクスポート"
 
 #: importer/templates/archive_export_index.html
 msgid "Tournaments can be exported in an <a href=\"https://en.wikipedia.org/wiki/XML\">XML format</a> for use outside Tabbycat."
-msgstr ""
+msgstr "<a href=\"https://en.wikipedia.org/wiki/XML\">XML形式</a>で大会情報をエクスポートすることができます。"
 
 #: importer/templates/archive_export_index.html
 msgid "Export all data"
-msgstr "全てのデータをエクスポート"
+msgstr "すべてのデータをエクスポート"
 
 #: importer/templates/archive_importer.html
 msgctxt "page title"
 msgid "Import Tournament Archive"
-msgstr "トーナメントのアーカイブをインポート"
+msgstr "大会のアーカイブをインポート"
 
 #: importer/templates/archive_importer.html
 msgid "This form will create a tournament with the data provided as a Debate XML format."
-msgstr ""
+msgstr "Debate XML形式のデータを使って大会を作成します。"
 
 #: importer/templates/archive_importer.html
 msgid "Import"
@@ -196,7 +196,7 @@ msgstr "インポート"
 
 #: importer/templates/archive_importer.html
 msgid "Go back to the site home page"
-msgstr ""
+msgstr "トップページに戻る"
 
 #: importer/templates/simple_import_adjudicators_details.html
 #: importer/templates/simple_import_adjudicators_numbers.html
@@ -214,24 +214,24 @@ msgstr "ジャッジを追加"
 #: importer/templates/simple_import_venues_raw.html
 #, python-format
 msgid "(Step %(step)s of %(count)s)"
-msgstr ""
+msgstr "（ステップ%(step)s/%(count)s）"
 
 #: importer/templates/simple_import_adjudicators_details.html
 #: importer/templates/simple_import_institutions_details.html
 #: importer/templates/simple_import_teams_details.html
 #: importer/templates/simple_import_venues_details.html
 msgid "Previous Step"
-msgstr ""
+msgstr "戻る"
 
 #: importer/templates/simple_import_adjudicators_details.html
 #, python-format
 msgid "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this tournament's configuration</a>, an adjudicator's rating must be between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email addresses is optional but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback or ballots."
-msgstr ""
+msgstr "ジャッジのスコア範囲は<strong>%(min)s～%(max)s</strong>と<a href=\"%(options_feedback)s\" class=\"alert-link\">設定</a>されています。メールアドレスの入力は任意ですが、フィードバックやバロット送信に使う<a href=\"%(privateurls_url)s\" class=\"alert-link\">Private URL</a>を使う場合入力すると便利です。"
 
 #: importer/templates/simple_import_adjudicators_details.html
 #, python-format
 msgid "Adjudicators for %(institution)s"
-msgstr ""
+msgstr "%(institution)sのジャッジ"
 
 #: importer/templates/simple_import_adjudicators_details.html
 msgid "Unaffiliated Adjudicators"
@@ -239,97 +239,97 @@ msgstr "無所属のジャッジ"
 
 #: importer/templates/simple_import_adjudicators_details.html
 msgid "Save All Adjudicators"
-msgstr "すべてのジャッジを保存する"
+msgstr "すべてのジャッジを保存"
 
 #: importer/templates/simple_import_adjudicators_numbers.html
 #, python-format
 msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding adjudicators."
-msgstr ""
+msgstr "ジャッジを追加する前に<a href=\"%(import_institutions_url)s\" class=\"alert-link\">インステを追加</a>してください。"
 
 #: importer/templates/simple_import_adjudicators_numbers.html
 msgid "Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings."
-msgstr ""
+msgstr "インステごとに追加するジャッジの数を入力してください。次のステップでは名前とスコアを入力します。"
 
 #: importer/templates/simple_import_adjudicators_numbers.html
 msgid "You can add up to 198 adjudicators at a time. If you have more than 198 adjudicators, split them into chunks. (Please don't try to add more than 198 in one go; the system will crash, and you will lose data.)"
-msgstr ""
+msgstr "同時に198人のジャッジを追加できます。198人以上いる場合、小分けにしてください（198より多くのジャッジをいっぺんに追加しようとしないでください、クラッシュしデータが失われます）。"
 
 #: importer/templates/simple_import_adjudicators_numbers.html
 #: importer/templates/simple_import_teams_numbers.html
 msgctxt "button"
 msgid "Next Step"
-msgstr ""
+msgstr "次のステップ"
 
 #: importer/templates/simple_import_index.html
 msgid "Simple Importer"
-msgstr "簡単入力"
+msgstr "簡易入力"
 
 #: importer/templates/simple_import_index.html
 msgid "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments."
-msgstr ""
+msgstr "Tabbycatにデータを入力する方法は<a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">複数あります</a>。どれがよいかは大会の規模とあなたの技術力次第で変わります。この<strong>簡易入力</strong>はもっとも簡単で、小～中規模の大会では簡単に使えます。"
 
 #: importer/templates/simple_import_index.html
 msgid "Add Institutions"
-msgstr "大学・団体を追加する"
+msgstr "インステを追加"
 
 #: importer/templates/simple_import_index.html
 msgid "Add Teams"
-msgstr "チームを追加する"
+msgstr "チームを追加"
 
 #: importer/templates/simple_import_index.html
 msgid "Add Adjudicators"
-msgstr "ジャッジを追加する"
+msgstr "ジャッジを追加"
 
 #: importer/templates/simple_import_index.html
 msgid "Add Rooms"
-msgstr "ラウンド部屋を追加する"
+msgstr "部屋を追加"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Room Categories"
-msgstr "ラウンド部屋の種類を追加・修正する"
+msgstr "部屋のカテゴリーを追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Room Constraints"
-msgstr ""
+msgstr "部屋の制約条件を追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Team Conflicts"
-msgstr "ジャッジ - チーム間のコンフリクトを追加・修正する"
+msgstr "ジャッジ・チーム間コンフリクトを追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
-msgstr "ジャッジ間コンフリクトを追加・修正する"
+msgstr "ジャッジ間コンフリクトを追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Adjudicator-Institution Conflicts"
-msgstr "ジャッジ - 大学間のコンフリクトを追加・修正する"
+msgstr "ジャッジ・インステ間のコンフリクトを追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Team-Institution Conflicts"
-msgstr ""
+msgstr "チーム・インステ間コンフリクトを追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Break Categories"
-msgstr ""
+msgstr "ブレイクカテゴリーを追加・編集"
 
 #: importer/templates/simple_import_index.html
 msgid "Add/Edit Speaker Categories"
-msgstr ""
+msgstr "スピーカーカテゴリーを追加・編集"
 
 #: importer/templates/simple_import_institutions_details.html
 #: importer/templates/simple_import_institutions_raw.html
 msgctxt "page title"
 msgid "Add Institutions"
-msgstr "大学・団体を追加する"
+msgstr "インステを追加"
 
 #: importer/templates/simple_import_institutions_details.html
 msgid "Save All Institutions"
-msgstr "すべての大学・団体を保存する"
+msgstr "すべてのインステを保存"
 
 #: importer/templates/simple_import_institutions_raw.html
 #: importer/templates/simple_import_venues_raw.html
 msgid "There are some problems with the data on this form:"
-msgstr ""
+msgstr "フォーム上のデータに問題があります："
 
 #: importer/templates/simple_import_institutions_raw.html
 #: importer/templates/simple_import_venues_raw.html
@@ -340,7 +340,7 @@ msgstr "次のステップ"
 #: importer/templates/simple_import_teams_numbers.html
 msgctxt "page title"
 msgid "Add Teams"
-msgstr "チームを追加する"
+msgstr "チームを追加"
 
 #: importer/templates/simple_import_teams_details.html
 #, python-format
@@ -349,7 +349,7 @@ msgstr "%(institution)sのチーム"
 
 #: importer/templates/simple_import_teams_details.html
 msgid "Unaffiliated Teams"
-msgstr ""
+msgstr "無所属のチーム"
 
 #: importer/templates/simple_import_teams_details.html
 msgid "Save All Teams"
@@ -358,47 +358,45 @@ msgstr "すべてのチームを保存"
 #: importer/templates/simple_import_teams_numbers.html
 #, python-format
 msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding teams."
-msgstr ""
+msgstr "チームを追加する前に<a href=\"%(import_institutions_url)s\" class=\"alert-link\">インステを追加</a>してください。"
 
 #: importer/templates/simple_import_teams_numbers.html
 msgid "Specify the number of new teams to add per institution. In the next step you can specify team and speaker names."
-msgstr ""
+msgstr "インステごとに追加するチームの数を入力してください。次のステップではチームとスピーカー名を入力します。"
 
 #: importer/templates/simple_import_teams_numbers.html
 msgid "You can add up to 141 teams at a time. If you have more than 141 teams, split them into chunks. (Please don't try to add more than 141 in one go; the system will crash, and you will lose data.)"
-msgstr ""
+msgstr "同時に141人のジャッジを追加できます。141人以上いる場合、小分けにしてください（141より多くのジャッジをいっぺんに追加しようとしないでください、クラッシュしデータが失われます）。"
 
 #: importer/templates/simple_import_venues_details.html
 #: importer/templates/simple_import_venues_raw.html
 msgctxt "page title"
 msgid "Add Rooms"
-msgstr "ラウンド部屋を追加する"
+msgstr "部屋を追加"
 
 #: importer/templates/simple_import_venues_details.html
 msgid "Priorities indicate how much you want to use the room. Larger numbers indicate higher priority. If you have more rooms than debates, the rooms with the lowest priorities will not be used."
-msgstr "ラウンド部屋の使用優先度を設定できます。\n"
-"大きい数字であるほど、優先度が高いことを示します。\n"
-"ラウンド部屋が試合数より多い場合、優先度が低い部屋が省かれます。"
+msgstr "ラウンド部屋の優先度を設定できます。大きい数字であるほど、優先度が高いことを示します。ラウンド部屋が試合数より多い場合、優先度が低い部屋は使われません。"
 
 #: importer/templates/simple_import_venues_details.html
 msgid "Save All Rooms"
-msgstr "すべてのラウンド部屋を保存する"
+msgstr "すべての部屋を保存"
 
 #: importer/templates/simple_import_venues_raw.html
 msgid "Paste a list of rooms with one room per line and following the format of: <code>name,priority</code>. For example:"
-msgstr ""
+msgstr "1行に1部屋、以下の形式で入力してください：<code>名前,優先度</code>（間はスペースなしの半角カンマで区切ってください）。例："
 
 #: importer/views.py
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
-msgstr[0] "%(count)d大学追加しました。"
+msgstr[0] "%(count)dインステ追加しました。"
 
 #: importer/views.py
 #, python-format
 msgid "Added %(count)d room."
 msgid_plural "Added %(count)d rooms."
-msgstr[0] "ラウンド部屋を%(count)d追加しました。"
+msgstr[0] "%(count)d部屋追加しました。"
 
 #: importer/views.py
 #, python-format
@@ -409,23 +407,23 @@ msgstr[0] "%(count)dチーム追加しました。"
 #: importer/views.py
 #, python-format
 msgid "Adjudicator %(number)d"
-msgstr ""
+msgstr "ジャッジ%(number)d"
 
 #: importer/views.py
 #, python-format
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
-msgstr[0] ""
+msgstr[0] "%(count)d人のジャッジを追加しました。"
 
 #: importer/views.py
 msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
-msgstr ""
+msgstr "デモ用の大会を作成するにあたって、エラーが発生しました。再試行する前に、既存のデモ用大会<strong>と</strong>データベース編集エリアのインステを削除してください。"
 
 #: importer/views.py
 msgid "Created new demo tournament. You can now configure it below."
-msgstr ""
+msgstr "新しいデモ用の大会を作成しました。以下で設定してください。"
 
 #: importer/views.py
 msgid "Tournament archive has been imported."
-msgstr ""
+msgstr "大会のアーカイブをインポートしました。"
 

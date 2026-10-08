@@ -1,0 +1,443 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:33\n"
+"Last-Translator: \n"
+"Language-Team: Chinese Traditional\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: zh-TW\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 922\n"
+
+#: adjallocation/allocators/base.py
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
+msgstr "沒有可用的評審。在自動分配前，請確保已有評審被標記為本回合可用。"
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
+msgstr[0] "%(count)s 個分數高於允許的評審最高分數上限（%(score).1f）。"
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgstr[0] "%(count)s 個分數低於允許的評審最低分數下限（%(score).1f）。"
+
+#: adjallocation/allocators/hungarian.py
+msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
+msgstr "沒有符合資格擔任主席或小組評審的評審。請嘗試將「分配為主席或小組評審所需的最低回饋分數」設定調低至低於至少部分評審的目前分數，然後再試一次。"
+
+#: adjallocation/allocators/hungarian.py
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr "這回合沒有任何辯論賽事。可能你還沒建立賽程抽籤？"
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
+msgstr "有 %(debate_count)s 場辯論賽，但只有 %(adj_count)s 名投票評審。"
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
+msgstr "有 %(panel_debates)s 場小組辯論，但只有 %(panellists)s 名可用的小組評審（少於所需的 %(needed)s 名）。"
+
+#: adjallocation/allocators/hungarian.py
+#, python-format
+msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
+msgstr "有 %(debates_count)s 場辯論，但只有 %(voting_count)s 名投票評審。"
+
+#: adjallocation/apps.py
+msgid "Adjudicator Allocation"
+msgstr "評審分配"
+
+#: adjallocation/consumers.py
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr "賽程抽籤已發布，請先取消發布才能重新自動分配。"
+
+#: adjallocation/consumers.py
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr "賽程抽籤尚未確認，請先確認賽程抽籤才能執行自動分配。"
+
+#: adjallocation/consumers.py
+msgid "There are no preformed panels available to allocate."
+msgstr "沒有可用的預設小組可供分配。"
+
+#: adjallocation/consumers.py
+msgid "Successfully auto-allocated preformed panels to debates."
+msgstr "已成功自動分配預設小組至辯論賽事。"
+
+#: adjallocation/consumers.py
+#, python-format
+msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
+msgstr[0] "已成功自動分配評審至辯論賽事，但出現 %(count)d 個警告："
+
+#: adjallocation/consumers.py
+msgid "Successfully auto-allocated adjudicators to debates."
+msgstr "已成功自動分配評審至辯論賽事。"
+
+#: adjallocation/consumers.py
+msgid "There aren't any panels to fill. Create panels first."
+msgstr "目前沒有可填補的小組，請先建立小組。"
+
+#: adjallocation/consumers.py
+#, python-format
+msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
+msgstr[0] "已成功自動分配評審至預設小組，但出現 %(count)d 個警告："
+
+#: adjallocation/consumers.py
+msgid "Successfully auto-allocated adjudicators to preformed panels."
+msgstr "已成功自動分配評審至預設小組。"
+
+#: adjallocation/consumers.py
+msgid "You have no break category set as 'is general' so debate importances can't be calculated."
+msgstr "你沒有設定任何分類為「一般」，因此無法計算辯論重要性。"
+
+#: adjallocation/consumers.py
+msgid "Succesfully auto-prioritised debates."
+msgstr "已成功自動優先排序辯論賽事。"
+
+#: adjallocation/consumers.py
+msgid "You have no break category set as 'is general' so panel importances can't be calculated."
+msgstr "你沒有設定任何分類為「一般」，因此無法計算小組重要性。"
+
+#: adjallocation/consumers.py
+msgid "Succesfully auto-prioritised preformed panels."
+msgstr "已成功自動優先排序預設小組。"
+
+#: adjallocation/consumers.py
+msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
+msgstr "由於這是第一回合，預設小組尚未標註賽程分組與是否現場。"
+
+#: adjallocation/consumers.py
+msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
+msgstr "前一回合的賽程抽籤不存在，因此無法為預設小組標註賽程分組與是否現場。"
+
+#: adjallocation/consumers.py
+msgid "Succesfully created new preformed panels for this round."
+msgstr "已成功為本回合建立新的預設小組。"
+
+#: adjallocation/models.py
+msgid "chair"
+msgstr "主席評審"
+
+#: adjallocation/models.py
+msgid "panellist"
+msgstr "陪審評審"
+
+#: adjallocation/models.py
+msgid "trainee"
+msgstr "見習評審"
+
+#: adjallocation/models.py
+msgid "debate"
+msgstr "辯論"
+
+#: adjallocation/models.py
+msgid "adjudicator"
+msgstr "裁判"
+
+#: adjallocation/models.py
+msgid "type"
+msgstr "類型"
+
+#: adjallocation/models.py
+msgid "available?"
+msgstr "是否可用？"
+
+#: adjallocation/models.py
+msgid "debate adjudicator"
+msgstr "辯論評審"
+
+#: adjallocation/models.py
+msgid "debate adjudicators"
+msgstr "辯論評審"
+
+#: adjallocation/models.py
+msgid "team"
+msgstr "隊伍"
+
+#: adjallocation/models.py
+msgid "adjudicator-team conflict"
+msgstr "評審與隊伍衝突"
+
+#: adjallocation/models.py
+msgid "adjudicator-team conflicts"
+msgstr "隊伍間衝突"
+
+#: adjallocation/models.py
+msgid "adjudicator 1"
+msgstr "評審 1"
+
+#: adjallocation/models.py
+msgid "adjudicator 2"
+msgstr "評審 2"
+
+#: adjallocation/models.py
+msgid "adjudicator-adjudicator conflict"
+msgstr "評審間衝突"
+
+#: adjallocation/models.py
+msgid "adjudicator-adjudicator conflicts"
+msgstr "評審間衝突"
+
+#: adjallocation/models.py
+msgid "institution"
+msgstr "機構"
+
+#: adjallocation/models.py
+msgid "adjudicator-institution conflict"
+msgstr "評審與機構衝突"
+
+#: adjallocation/models.py
+msgid "adjudicator-institution conflicts"
+msgstr "評審與機構衝突"
+
+#: adjallocation/models.py
+msgid "team-institution conflict"
+msgstr "隊伍與機構衝突"
+
+#: adjallocation/models.py
+msgid "team-institution conflicts"
+msgstr "隊伍與機構衝突"
+
+#: adjallocation/models.py
+msgid "round"
+msgstr "回合"
+
+#: adjallocation/models.py
+msgid "importance"
+msgstr "重要程度"
+
+#: adjallocation/models.py
+msgid "minimum bracket"
+msgstr "最低分組數"
+
+#: adjallocation/models.py
+msgid "Estimate of the lowest bracket for which this panel might be"
+msgstr "預估評審小組對應的最低分組區段"
+
+#: adjallocation/models.py
+msgid "maximum bracket"
+msgstr "最高分組數"
+
+#: adjallocation/models.py
+msgid "Estimate of the highest bracket for which this panel might be"
+msgstr "預估評審小組對應的最高分組區段"
+
+#: adjallocation/models.py
+msgid "room rank"
+msgstr "賽事排行"
+
+#: adjallocation/models.py
+msgid "Sequential number of panel, not used in any algorithms"
+msgstr "評審序號，不用於任何演算法中"
+
+#: adjallocation/models.py
+msgid "liveness"
+msgstr "晉級機率"
+
+#: adjallocation/models.py
+msgid "Number of categories this room is expected to be live for"
+msgstr "在本賽場中的比賽類別數"
+
+#: adjallocation/models.py
+msgid "preformed panel"
+msgstr "已分組評審"
+
+#: adjallocation/models.py
+msgid "preformed panels"
+msgstr "已分組評審"
+
+#: adjallocation/models.py
+msgid "panel"
+msgstr "評審"
+
+#: adjallocation/models.py
+msgid "preformed panel adjudicator"
+msgstr "已分組評審團"
+
+#: adjallocation/models.py
+msgid "preformed panel adjudicators"
+msgstr "已分組評審團"
+
+#: adjallocation/preformed/base.py
+msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
+msgstr "沒有可用的預設評審團。你有為本輪分配預設評審團嗎？如果沒有，請嘗試直接自動分配裁判。"
+
+#: adjallocation/templates/preformed_index.html adjallocation/views.py
+msgid "Preformed Panels"
+msgstr "已分組評審團"
+
+#: adjallocation/templates/preformed_index.html
+msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
+msgstr "預設評審團是指在賽程抽籤產生之前，已為某輪指定的一組評審。你可以在一般的評審分配過程中，手動或自動套用這些分組。這可以加快分配速度，或讓你更有策略地組成合適的評審團。"
+
+#: adjallocation/templates/preformed_index.html
+msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
+msgstr "請注意，只有被標記為「可參加」該輪的評審才能被分配到該輪比賽，因此你可能需要提前設定他們的可參加狀態。"
+
+#: adjallocation/templates/preformed_index.html
+#, python-format
+msgid "Edit Preformed Panels for %(round)s"
+msgstr "編輯 %(round)s 的預設評審團"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> (personal)"
+msgstr "衝突：<strong>%(adjudicator)s</strong> & <strong>%(team)s</strong>（個人）"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "衝突：<strong>%(adjudicator)s</strong> & <strong>%(team)s</strong> 由於 <strong>%(institution)s</strong>"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> (personal)"
+msgstr "衝突：<strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong>（個人）"
+
+#: adjallocation/utils.py
+#, python-format
+msgid "Conflict: <strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> via institution <strong>%(institution)s</strong>"
+msgstr "衝突：<strong>%(adjudicator1)s</strong> & <strong>%(adjudicator2)s</strong> 由於 <strong>%(institution)s</strong>"
+
+#: adjallocation/views.py
+msgid "Male"
+msgstr "男"
+
+#: adjallocation/views.py
+msgid "Female"
+msgstr "女"
+
+#: adjallocation/views.py
+msgid "Other"
+msgstr "其他"
+
+#: adjallocation/views.py
+msgid "Unknown"
+msgstr "未知"
+
+#: adjallocation/views.py
+msgid "Edit Allocation"
+msgstr "編輯分配"
+
+#: adjallocation/views.py
+msgid "Edit Allocation (Concurrent Rounds)"
+msgstr ""
+
+#: adjallocation/views.py
+msgid "Edit Panels"
+msgstr "編輯評審"
+
+#: adjallocation/views.py
+msgid "Return to Panels Overview"
+msgstr "返回評審總覽"
+
+#: adjallocation/views.py
+msgid "Adjudicator-Team Conflicts"
+msgstr "儲存裁判與隊伍衝突紀錄"
+
+#: adjallocation/views.py
+msgid "Save Adjudicator-Team Conflicts"
+msgstr "儲存裁判與隊伍衝突紀錄"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] "已儲存 %(count)d 筆裁判與隊伍衝突紀錄。"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] "已刪除 %(count)d 筆評審與隊伍衝突紀錄。"
+
+#: adjallocation/views.py
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr "裁判與隊伍衝突紀錄沒有變更。"
+
+#: adjallocation/views.py
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr "評審間衝突紀錄"
+
+#: adjallocation/views.py
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr "儲存評審間衝突紀錄"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "已儲存 %(count)d 筆評審間衝突紀錄。"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] "已刪除 %(count)d 筆評審間衝突紀錄。"
+
+#: adjallocation/views.py
+msgid "No changes were made to adjudicator-adjudicator conflicts."
+msgstr "評審間衝突紀錄沒有變更。"
+
+#: adjallocation/views.py
+msgid "Adjudicator-Institution Conflicts"
+msgstr "評審與機構間衝突"
+
+#: adjallocation/views.py
+msgid "Save Adjudicator-Institution Conflicts"
+msgstr "儲存評審與機構間衝突"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d adjudicator-institution conflict."
+msgid_plural "Saved %(count)d adjudicator-institution conflicts."
+msgstr[0] "已儲存 %(count)d 筆評審與機構間衝突。"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d adjudicator-institution conflict."
+msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
+msgstr[0] "已刪除 %(count)d 筆評審與機構間衝突。"
+
+#: adjallocation/views.py
+msgid "No changes were made to adjudicator-institution conflicts."
+msgstr "評審與機構間衝突紀錄沒有變更。"
+
+#: adjallocation/views.py
+msgid "Team-Institution Conflicts"
+msgstr "隊伍與機構衝突"
+
+#: adjallocation/views.py
+msgid "Save Team-Institution Conflicts"
+msgstr "儲存隊伍與機構衝突"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Saved %(count)d team-institution conflict."
+msgid_plural "Saved %(count)d team-institution conflicts."
+msgstr[0] "已儲存 %(count)d 筆隊伍與機構間衝突。"
+
+#: adjallocation/views.py
+#, python-format
+msgid "Deleted %(count)d team-institution conflict."
+msgid_plural "Deleted %(count)d team-institution conflicts."
+msgstr[0] "已刪除 %(count)d 筆隊伍與機構間衝突。"
+
+#: adjallocation/views.py
+msgid "No changes were made to team-institution conflicts."
+msgstr "隊伍與機構間衝突紀錄沒有變更。"
+

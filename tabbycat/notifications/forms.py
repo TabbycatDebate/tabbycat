@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
@@ -42,4 +44,10 @@ class BasicEmailForm(forms.Form):
         return self.clean_as_template('subject_line')
 
     def clean_message_body(self) -> str:
-        return self.clean_as_template('message_body')
+        message = self.clean_as_template('message_body')
+
+        # Check if {{ URL }} is used within an <a> tag, sorry Zalgo
+        if re.search(r'<a\s[^>]*{{\s*URL\s*}}[^>]*>', message, re.IGNORECASE | re.DOTALL):
+            raise forms.ValidationError(_("The {{ URL }} variable must be unlinked for it to work"))
+
+        return message

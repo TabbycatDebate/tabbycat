@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "Vybr\u00e1na je %(sel)s polo\u017eka z celkem %(cnt)s.",
@@ -28,6 +27,12 @@
       "Vybran\u00fdch je %(sel)s polo\u017eek z celkem %(cnt)s."
     ],
     "%1:": "%1:",
+    "%s selected option not visible": [
+      "%s vybran\u00e1 volba nen\u00ed viditeln\u00e1",
+      "%s vybran\u00e9 volby nejsou viditeln\u00e9",
+      "%s vybran\u00e9 volby nejsou viditeln\u00e9",
+      "%s vybran\u00e9 volby nejsou viditeln\u00e9"
+    ],
     "6 a.m.": "6h r\u00e1no",
     "6 p.m.": "6h ve\u010der",
     "Add": "P\u0159idat",
@@ -48,14 +53,15 @@
     "Delete": "Smazat",
     "February": "\u00fanor",
     "Filter": "Filtr",
+    "Friday": "P\u00e1tek",
     "General": "Obecn\u00e9",
-    "Hide": "Skr\u00fdt",
     "January": "leden",
     "July": "\u010dervenec",
     "June": "\u010derven",
     "March": "b\u0159ezen",
     "May": "kv\u011bten",
     "Midnight": "P\u016flnoc",
+    "Monday": "Pond\u011bl\u00ed",
     "No": "Ne",
     "Noon": "Poledne",
     "Note: You are %s hour ahead of server time.": [
@@ -75,21 +81,32 @@
     "October": "\u0159\u00edjen",
     "Remove": "Odebrat",
     "Remove all": "Odebrat v\u0161e",
+    "Saturday": "Sobota",
     "September": "z\u00e1\u0159\u00ed",
-    "Show": "Zobrazit",
+    "Sunday": "Ned\u011ble",
     "Team": "T\u00fdm",
     "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Seznam dostupn\u00fdch polo\u017eek %s. Jednotliv\u011b je lze vybrat tak, \u017ee na n\u011b v r\u00e1me\u010dku klepnete a pak klepnete na \u0161ipku \"Vybrat\" mezi r\u00e1me\u010dky.",
     "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Seznam vybran\u00fdch polo\u017eek %s. Jednotliv\u011b je lze odebrat tak, \u017ee na n\u011b v r\u00e1me\u010dku klepnete a pak klepnete na \u0161ipku \"Odebrat mezi r\u00e1me\u010dky.",
+    "Thursday": "\u010ctvrtek",
     "Today": "Dnes",
     "Tomorrow": "Z\u00edtra",
+    "Tuesday": "\u00dater\u00fd",
     "Type into this box to filter down the list of available %s.": "Chcete-li filtrovat ze seznamu dostupn\u00fdch polo\u017eek %s, za\u010dn\u011bte ps\u00e1t do tohoto pole.",
+    "Type into this box to filter down the list of selected %s.": "Zad\u00e1n\u00edm do tohoto pole vyfiltrujete seznam vybran\u00fdch %s.",
     "Warning: you have unsaved changes": "Varov\u00e1n\u00ed: m\u00e1te neulo\u017een\u00e9 zm\u011bny",
+    "Wednesday": "St\u0159eda",
     "Yes": "Ano",
     "Yesterday": "V\u010dera",
-    "You have already submitted this form. Are you sure you want to submit it again?": "Tento formul\u00e1\u0159 jste ji\u017e odeslali. Opravdu jej chcete odeslat znovu?",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Byla vybr\u00e1na operace, ale dosud nedo\u0161lo k ulo\u017een\u00ed zm\u011bn jednotliv\u00fdch pol\u00ed. Patrn\u011b vyu\u017eijete tla\u010d\u00edtko Prov\u00e9st sp\u00ed\u0161e ne\u017e tla\u010d\u00edtko Ulo\u017eit.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Byla vybr\u00e1na operace, ale dosud nedo\u0161lo k ulo\u017een\u00ed zm\u011bn jednotliv\u00fdch pol\u00ed. Ulo\u017e\u00edte klepnut\u00edm na tla\u010d\u00edtko OK. Pak bude t\u0159eba operaci spustit znovu.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "V jednotliv\u00fdch pol\u00edch jsou neulo\u017een\u00e9 zm\u011bny, kter\u00e9 budou ztraceny, pokud operaci provedete.",
+    "abbrev. day Friday\u0004Fri": "P\u00e1t",
+    "abbrev. day Monday\u0004Mon": "Pon",
+    "abbrev. day Saturday\u0004Sat": "Sob",
+    "abbrev. day Sunday\u0004Sun": "Ned",
+    "abbrev. day Thursday\u0004Thur": "\u010ctv",
+    "abbrev. day Tuesday\u0004Tue": "\u00date",
+    "abbrev. day Wednesday\u0004Wed": "St\u0159",
     "abbrev. month April\u0004Apr": "Dub",
     "abbrev. month August\u0004Aug": "Srp",
     "abbrev. month December\u0004Dec": "Pro",
@@ -115,7 +132,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

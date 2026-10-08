@@ -1,20 +1,57 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
+{% load debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">⌛</span> {% trans "Schedule" %}{% endblock %}
 {% block page-title %}⌛{% trans "Schedule" %}{% endblock %}
 
+{% block page-subnav-actions %}
+  {% if pref.public_schedule %}
+    <a
+      class="btn btn-outline-primary"
+      href="{% tournamenturl 'tournament-public-schedule' %}"
+      target="_blank"
+      rel="noopener"
+    >
+      <i class="mr-1" data-feather="external-link"></i>{% trans "View Public Schedule" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
-{% blocktrans trimmed asvar p1 %}
-This page allows you to set the public schedule for the tournament.
-{% endblocktrans %}
+  {% blocktrans trimmed asvar p1 %}
+    Events are grouped by day and ordered by start time. Drag an event into another row's time slot to reorder it.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
 
+  <form id="schedule-add-day-form"></form>
 
+  <form method="POST" id="schedule-form">
+    {% csrf_token %}
+    <div id="vueMount">
+      <schedule-editor-container :initial-data="scheduleEditorData"></schedule-editor-container>
+    </div>
 
-{% include "components/explainer-card.html" with type="info" %}
-
-{% trans "Save Schedule" as save_text %}
-{% include "components/formset.html" with quadruple=True %}
+    {% if can_edit %}
+      <div class="card mt-3">
+        <div class="list-group list-group-flush">
+          {% trans "Save Schedule" as title %}
+          {% include "components/form-submit.html" %}
+        </div>
+      </div>
+    {% endif %}
+  </form>
 
 {% endblock content %}
+
+{% block js %}
+
+  {{ schedule_editor_data|json_script:"schedule-editor-data" }}
+  <script>
+    window.vueData = {
+      scheduleEditorData: JSON.parse(document.getElementById('schedule-editor-data').textContent),
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock js %}

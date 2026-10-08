@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2024-01-22 12:34\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:49\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Language: bn_BD\n"
@@ -59,8 +59,8 @@ msgid "Speakers' names"
 msgstr "বক্তাদের নাম"
 
 #: importer/forms.py
-msgid "Can be separated by newlines, tabs or commas"
-msgstr "নতুন লাইন, ট্যাব বা কমা দ্বারা পৃথক করা যেতে পারে"
+msgid "Can be separated by newlines, tabs, commas or ampersands"
+msgstr ""
 
 #: importer/forms.py
 msgid "Speakers' email addresses"

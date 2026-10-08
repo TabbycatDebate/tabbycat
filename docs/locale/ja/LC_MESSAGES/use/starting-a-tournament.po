@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:26\n"
+"PO-Revision-Date: 2025-02-15 10:33\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,55 +20,55 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:5
 msgid "Starting a Tournament"
-msgstr ""
+msgstr "大会を開始する"
 
 #: ../../use/starting-a-tournament.rst:7
 msgid "This page outlines a few things you should do at the start of a tournament, after you've :ref:`imported the initial data <importing-initial-data>`. Once you've done these, proceed to :ref:`running a tournament <running-a-tournament>`."
-msgstr ""
+msgstr "このページには、:ref:`初期データを入力<importing-initial-data>`した後に大会の最初にやるべきことが書いてあります。すべて実施後、:ref:`大会を運営する<running-a-tournament>`を読んでください。"
 
 #: ../../use/starting-a-tournament.rst:9
 msgid "Tabbycat is developed for — and tested on — modern web browsers. If you are using **Internet Explorer versions 8, 7, or 6** the interface may look odd or not function properly. Switch to a newer browser if possible."
-msgstr ""
+msgstr "Tabbycatは近代的なWebブラウザ向けに開発・テストされています。 **Internet Explorerのバージョン8、7、または6**を使用している場合、インターフェイスがおかしくなったり、正しく機能しない可能性があります。 可能であれば別のブラウザに切り替えてください。"
 
 #: ../../use/starting-a-tournament.rst:13
 msgid "Tournament configuration"
-msgstr ""
+msgstr "大会設定"
 
 #: ../../use/starting-a-tournament.rst:15
 msgid "After importing all your data you can log into the site as an administrator by loading up the homepage and then using the **Login** button in the lower-right. From there you should go to the administration section of your tournament, and then go to the tournament configuration page by clicking **Setup** then **Configuration** in the menu."
-msgstr ""
+msgstr "大会データを入力した後、右下の**ログイン**ボタンからサイトに管理者としてログインできます。そこから大会の管理者エリアにアクセスし、メニューの**セットアップ**の**設定**へ行きます。"
 
 #: ../../use/starting-a-tournament.rst:17
 msgid "Here you can adjust the debate rules and interface options to your liking then hit **Save** when finished. We also offer a number of presets that apply particular rule sets (such as the Australs rules) or feature sets (such as displaying information normally released during briefs on the website)."
-msgstr ""
+msgstr "ここでは、試合のルールとインターフェイスの設定を好みに合わせて設定し、**保存**をクリックします。 また、特定のルールセット（Australsルールなど）や設定群（通常リリースされる情報を公開ページ上に公開する）を適用する多くのプリセットも提供しています。"
 
 #: ../../use/starting-a-tournament.rst:20
 msgid "Special data types and options"
-msgstr ""
+msgstr "特殊なデータ型と設定"
 
 #: ../../use/starting-a-tournament.rst:22
 msgid "There are a few optional fields that are not covered in the initial data templates, in the visual importer, or that may only be relevant in particular scenarios. It's worth going over these quickly to see if they are needed for your tournament. You can view and edit these fields in the **Edit Database** area (link is in the menu under **Setup**)."
-msgstr ""
+msgstr "初期データのプリセット、やGUIではカバーしきれなかったり特殊な状況でしか使用しない設定がいくつか存在します。自分の大会にこれらの設定が必要かどうか軽く確認しておく価値があります。これらの設定は**データベース編集エリア**（リンクは**セットアップ**の下のメニューにあります）から閲覧・編集できます。"
 
 #: ../../use/starting-a-tournament.rst:25
 msgid "Adjudicator Feedback > Adj Feedback Questions"
-msgstr ""
+msgstr "ジャッジのフィードバック > ジャッジフィードバックの質問事項"
 
 #: ../../use/starting-a-tournament.rst:25
 msgid "As described in :ref:`adjudicator-feedback`, the types of questions that can be posed for adjudicator feedback are able to be heavily customised. If you are customising your feedback form it should be done here, and before the tournament starts."
-msgstr ""
+msgstr ":ref:`adjudicator-feedback`に記述されているように、ジャッジフィードバックで質問できる質問の種類はカスタマイズ可能です。 フィードバックフォームをカスタマイズする場合、この項目から、大会開始前に行ってください。"
 
 #: ../../use/starting-a-tournament.rst:30
 msgid "Authentication and Authorisation > Users"
-msgstr ""
+msgstr "認証と認可 > ユーザー"
 
 #: ../../use/starting-a-tournament.rst:28
 msgid "Here you can add new admin users (those with full access) as well as new assistant users those (who can only do common data-entry tasks but not edit or view the full tab interface). See :ref:`user-accounts` for information on how to do this."
-msgstr ""
+msgstr "ここでは、新しい管理者ユーザー（フルアクセス権を持つユーザー）と新しいアシスタントユーザー（一般的なデータ入力タスクは行えるがすべてのインターフェースの編集や表示はできないユーザー）を追加できます。これを行う方法については :ref:`user-accounts`を参照してください。"
 
 #: ../../use/starting-a-tournament.rst:30
 msgid "The people you're adding accounts for should be physically present when you do this, so that they can enter their password."
-msgstr ""
+msgstr "アカウントを作成する対象の人は、アカウントを作成するときにパスワードを要求されるので物理的に傍にいるべきです。"
 
 #: ../../use/starting-a-tournament.rst:33
 msgid "Participants > Regions"
@@ -76,15 +76,15 @@ msgstr ""
 
 #: ../../use/starting-a-tournament.rst:33
 msgid "Optionally, each institution may belong to a *Region*. An institution's region is used within the adjudicator allocation process to visually identify teams and adjudicators for the purposes of highlighting diversity issues.  These have traditionally been used for geographic regions (such as Oceania), although could be repurposed as arbitrary markers of information — for example they could be used to denote teams from a particular State, institutional size, or circuit."
-msgstr ""
+msgstr "各インステは任意で**地域**に所属できます。ダイバーシティーを確保するために、チーム・ジャッジの所属するインステの地域はジャッジの配置の際に視覚的に表示されます。通常、地理的な地域（オセアニア地域など）の表示に使用されますが、任意の情報のマーカーとしてもしようできますー例えば、特定の国、インステサイズやサーキット出身のチームを表示するために使用できます。"
 
 #: ../../use/starting-a-tournament.rst:41
 msgid "Participants > Adjudicators"
-msgstr ""
+msgstr "参加者 > ジャッジ"
 
 #: ../../use/starting-a-tournament.rst:36
 msgid "An adjudicators *Base Score* represents their relative ability to judge important rooms, where adjudicators with higher numbers will, relative to the other adjudicators, be placed in better roles (ie as Chairs) and in the rooms you deem most important in each round. If you are running a small tournament, and plan to do your allocations manually, you can set everyone's number to the same amount."
-msgstr ""
+msgstr "ジャッジの**ベーススコア**は重要なラウンドを審査できる相対的な能力を示します。点数の高いジャッジは他のジャッジに比べ、より良い役職（すなわち、チェア）やより重要とみなされる試合にアロケされます。小さな大会を運営しておりアロケを手動で行う場合、全員の点数を同じ値にしても問題ありません。"
 
 #: ../../use/starting-a-tournament.rst:37
 msgid "For larger tournaments, particularly those that collect feedback, see the :ref:`adjudicator-feedback` section for more information on how base scores and other variables influence the automated allocation process."

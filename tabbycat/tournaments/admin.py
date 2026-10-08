@@ -23,8 +23,8 @@ class TournamentAdmin(ModelAdmin):
 class RoundAdmin(ModelAdmin):
     list_display = ('name', 'tournament', 'seq', 'abbreviation', 'stage',
                     'draw_type', 'draw_status', 'feedback_weight', 'silent',
-                    'motions_released', 'starts_at', 'completed')
-    list_editable = ('feedback_weight', 'silent', 'motions_released', 'completed')
+                    'motions_status', 'starts_at', 'completed')
+    list_editable = ('feedback_weight', 'silent', 'motions_status', 'completed')
     list_filter = ('tournament', )
     search_fields = ('name', 'seq', 'abbreviation', 'stage', 'draw_type', 'draw_status')
     ordering = ('tournament__slug', 'seq')
@@ -32,7 +32,7 @@ class RoundAdmin(ModelAdmin):
 
 @admin.register(ScheduleEvent)
 class ScheduleEventAdmin(ModelAdmin):
-    list_display = ('tournament', 'title', 'type', 'start_time', 'end_time', 'round')
+    list_display = ('tournament', 'display_title', 'type', 'start_time', 'end_time', 'round')
     list_filter = ('tournament', 'type')
     search_fields = ('title',)
     ordering = ('tournament', 'start_time')

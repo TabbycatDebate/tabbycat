@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2020-07-05 17:28\n"
+"PO-Revision-Date: 2025-02-15 07:22\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../../use/finishing-a-tournament.rst:10
 msgid "Tab Release"
-msgstr "タブ公開"
+msgstr "タブリリース設定"
 
 #: ../../use/finishing-a-tournament.rst:12
 msgid "Tabs can be released using the *Tab released* option under **Setup** > **Configuration**. Tabbycat offers the following system tabs:"

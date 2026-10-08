@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2024-01-19 13:49\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -149,6 +149,46 @@ msgstr "punts d'equip"
 msgid "Team"
 msgstr "Equip"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr "Victòries"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr "nombre de primers"
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr "1rs"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr "nombre de segons"
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr "2ns"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr "nombre de tercers"
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr "3rs"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr "Taula de resultats"
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr ""
+
 #: standings/speakers.py
 msgid "standard deviation"
 msgstr "desviació estàndard"
@@ -196,10 +236,6 @@ msgstr "Pts."
 #: standings/teams.py
 msgid "wins"
 msgstr "victòries"
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
-msgstr "Victòries"
 
 #: standings/teams.py
 msgid "total speaker score"
@@ -250,6 +286,14 @@ msgid "AISS"
 msgstr ""
 
 #: standings/teams.py
+msgid "draw strength by rank"
+msgstr ""
+
+#: standings/teams.py
+msgid "DSR"
+msgstr ""
+
+#: standings/teams.py
 msgid "draw strength by wins"
 msgstr ""
 
@@ -280,42 +324,6 @@ msgstr ""
 #: standings/teams.py
 msgid "SPu"
 msgstr ""
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr ""
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr "Taula de resultats"
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr "nombre de primers"
-
-#: standings/teams.py
-msgid "1sts"
-msgstr "1rs"
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr "nombre de segons"
-
-#: standings/teams.py
-msgid "2nds"
-msgstr "2ns"
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr "nombre de tercers"
-
-#: standings/teams.py
-msgid "3rds"
-msgstr "3rs"
 
 #: standings/teams.py
 msgid "number of times ironed"

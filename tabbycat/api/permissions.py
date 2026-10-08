@@ -1,4 +1,3 @@
-from dynamic_preferences.registries import global_preferences_registry
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import BasePermission, SAFE_METHODS
@@ -22,13 +21,6 @@ class URLKeyAuthentication(TokenAuthentication):
             raise AuthenticationFailed('Invalid URL key.')
 
         return (None, person)
-
-
-class APIEnabledPermission(BasePermission):
-    message = "The API has been disabled on this site."
-
-    def has_permission(self, request, view):
-        return global_preferences_registry.manager()['global__enable_api']
 
 
 class PublicPreferencePermission(BasePermission):

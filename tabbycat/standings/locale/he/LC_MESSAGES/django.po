@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:47\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2026-09-21 00:40\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Hebrew\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==2 ? 1 : 2);\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: he\n"
@@ -149,6 +149,46 @@ msgstr ""
 msgid "Team"
 msgstr "קבוצה"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr ""
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr ""
+
 #: standings/speakers.py
 msgid "standard deviation"
 msgstr ""
@@ -195,10 +235,6 @@ msgstr ""
 
 #: standings/teams.py
 msgid "wins"
-msgstr ""
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
 msgstr ""
 
 #: standings/teams.py
@@ -250,6 +286,14 @@ msgid "AISS"
 msgstr ""
 
 #: standings/teams.py
+msgid "draw strength by rank"
+msgstr ""
+
+#: standings/teams.py
+msgid "DSR"
+msgstr ""
+
+#: standings/teams.py
 msgid "draw strength by wins"
 msgstr ""
 
@@ -279,42 +323,6 @@ msgstr ""
 
 #: standings/teams.py
 msgid "SPu"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr ""
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr ""
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr ""
-
-#: standings/teams.py
-msgid "1sts"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr ""
-
-#: standings/teams.py
-msgid "2nds"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr ""
-
-#: standings/teams.py
-msgid "3rds"
 msgstr ""
 
 #: standings/teams.py

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 23:07\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:41\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -224,6 +224,10 @@ msgid "Always Trainee"
 msgstr "Toujours Stagiaire"
 
 #: utils/tables.py
+msgid "self-declared split"
+msgstr ""
+
+#: utils/tables.py
 msgid "in minority"
 msgstr "en minorité"
 
@@ -252,6 +256,15 @@ msgstr "Cette salle %(predicates)s, et %(last_predicate)s."
 #: utils/tables.py
 msgid "Room"
 msgstr "Salle"
+
+#: utils/tables.py
+msgid "Scheduled time"
+msgstr ""
+
+#: utils/tables.py
+#, python-format
+msgid "Pull-up team (%(ordinal)s pull-up)"
+msgstr ""
 
 #: utils/tables.py
 #, python-format
@@ -331,8 +344,24 @@ msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
 
 #: utils/tables.py
+msgid "Postponed"
+msgstr ""
+
+#: utils/tables.py
 msgid "Postpone"
 msgstr "Reporter"
+
+#: utils/tables.py
+msgid "Event"
+msgstr "Évènement"
+
+#: utils/tables.py
+msgid "Start Time"
+msgstr "Heure de début"
+
+#: utils/tables.py
+msgid "End Time"
+msgstr "Heure de fin"
 
 #: utils/views.py
 msgid "Whoops! You're not meant to type that URL into your browser."

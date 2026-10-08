@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:51\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Language: ro_RO\n"
@@ -19,35 +19,39 @@ msgstr ""
 
 #: actionlog/apps.py
 msgid "Action Log"
-msgstr ""
+msgstr "Istoric al modificărilor"
 
 #: actionlog/models.py
 msgid "Changed adjudicator breaking status"
+msgstr "Modificarea eligibilității arbitrului pentru rundele eliminatorii"
+
+#: actionlog/models.py
+msgid "Changed adjudicator tester status"
 msgstr ""
 
 #: actionlog/models.py
 msgid "Created adjudicator"
-msgstr ""
+msgstr "Arbitru adăugat"
 
 #: actionlog/models.py
 msgid "Edited adjudicator"
-msgstr ""
+msgstr "Arbitru modificat"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
-msgstr ""
+msgstr "Stabilire scor inițial arbitru"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators"
-msgstr ""
+msgstr "Alocare automată a arbitrilor"
 
 #: actionlog/models.py
 msgid "Saved adjudicator allocation"
-msgstr ""
+msgstr "Alocarea arbitrilor a fost salvată"
 
 #: actionlog/models.py
 msgid "Edited adjudicators availability"
-msgstr ""
+msgstr "Disponibilitatea arbitrilor a fost modificată"
 
 #: actionlog/models.py
 msgid "Edited availability"
@@ -119,7 +123,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Generated check in identifiers for adjudicators"
-msgstr ""
+msgstr "Codurile unice de prezența a arbitrilor au fost create"
 
 #: actionlog/models.py
 msgid "Generated check in identifiers for speakers"
@@ -131,15 +135,15 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Edited adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "Conflictele dintre arbitri au fost modificate"
 
 #: actionlog/models.py
 msgid "Edited adjudicator-institution conflicts"
-msgstr ""
+msgstr "Conflictele instituționale au fost modificate"
 
 #: actionlog/models.py
 msgid "Edited adjudicator-team conflicts"
-msgstr ""
+msgstr "Conflictele individuale au fost modificate"
 
 #: actionlog/models.py
 msgid "Edited team-institution conflicts"
@@ -231,11 +235,11 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators to preformed panels"
-msgstr ""
+msgstr "Arbitri au fost alocați automat către completele predefinite"
 
 #: actionlog/models.py
 msgid "Edited preformed panel adjudicator"
-msgstr ""
+msgstr "Completele predefinite au fost modificate"
 
 #: actionlog/models.py
 msgid "Created preformed panels"
@@ -282,8 +286,12 @@ msgid "Saved the sides status of a matchup"
 msgstr ""
 
 #: actionlog/models.py
-msgid "Imported adjudicators using the simple importer"
+msgid "Edited side pre-allocations"
 msgstr ""
+
+#: actionlog/models.py
+msgid "Imported adjudicators using the simple importer"
+msgstr "Arbitrii au fost adaugați prin metoda manuală"
 
 #: actionlog/models.py
 msgid "Imported institutions using the simple importer"
@@ -306,6 +314,10 @@ msgid "Created speaker"
 msgstr ""
 
 #: actionlog/models.py
+msgid "Deleted speaker"
+msgstr ""
+
+#: actionlog/models.py
 msgid "Edited speaker"
 msgstr ""
 
@@ -323,7 +335,7 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Edited adjudicator base score"
-msgstr ""
+msgstr "Scorul inițial al arbitrului a fost modificat"
 
 #: actionlog/models.py
 msgid "Created tournament"
@@ -367,6 +379,42 @@ msgstr ""
 
 #: actionlog/models.py
 msgid "Saved a room manual edit"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
 msgstr ""
 
 #: actionlog/models.py

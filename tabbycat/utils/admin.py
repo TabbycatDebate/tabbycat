@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.admin.options import get_content_type_for_model
 from django.utils.translation import gettext_lazy as _
 
 from .misc import get_ip_address
@@ -27,15 +26,13 @@ class ModelAdmin(admin.ModelAdmin):
     def log_change(self, request, object, message):
         return super().log_change(request, object, self.add_ip_to_message(request, message))
 
-    def log_deletion(self, request, object, object_repr, message=[]):
+    def log_deletions(self, request, queryset):
         from django.contrib.admin.models import DELETION, LogEntry
-        return LogEntry.objects.log_action(
+        return LogEntry.objects.log_actions(
             user_id=request.user.pk,
-            content_type_id=get_content_type_for_model(object).pk,
-            object_id=object.pk,
-            object_repr=object_repr,
+            queryset=queryset,
             action_flag=DELETION,
-            change_message=self.add_ip_to_message(request, message),
+            change_message=self.add_ip_to_message(request, ''),
         )
 
 

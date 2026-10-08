@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:52\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Bulgarian\n"
 "Language: bg_BG\n"
@@ -20,6 +20,71 @@ msgstr ""
 
 #: privateurls/apps.py
 msgid "Private URL Management"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "Private URL"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "for %(name)s"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "(%(team)s)"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Your team has an incomplete number of speakers. Please share the registration link with your partner(s): <a href=\"%(link)s\">%(link)s</a>"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "Subscribe to Push Notifications"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Revoke check-in from %(check_time)s"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "Check in"
+msgstr ""
+
+#. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "You have been checked in at %(check_time)s"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "You are not currently checked in."
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "Show barcode for check-in"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Submit Ballot for %(round)s"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+msgid "Submit Feedback"
+msgstr ""
+
+#: privateurls/templates/private_url_landing.html
+#, python-format
+msgid "Registration (%(name)s)"
 msgstr ""
 
 #: privateurls/templates/private_urls.html privateurls/views.py
@@ -83,62 +148,6 @@ msgstr ""
 msgid "All participants already have private URLs."
 msgstr ""
 
-#: privateurls/templates/public_url_landing.html
-msgid "Private URL"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "for %(name)s"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "(%(team)s)"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "Revoke check-in from %(check_time)s"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-msgid "Check in"
-msgstr ""
-
-#. Translators: Include the full-stop; English doesn't because "a.m." already has a full stop.
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "You have been checked in at %(check_time)s"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-msgid "You are not currently checked in."
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-msgid "Show barcode for check-in"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "Submit Ballot for %(round)s"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-msgid "Submit Feedback"
-msgstr ""
-
-#: privateurls/templates/public_url_landing.html
-#, python-format
-msgid "Registration (%(name)s)"
-msgstr ""
-
 #: privateurls/views.py
 msgid "no URL"
 msgstr ""
@@ -149,6 +158,10 @@ msgstr ""
 
 #: privateurls/views.py
 msgid "Speakers"
+msgstr ""
+
+#: privateurls/views.py
+msgid "Team"
 msgstr ""
 
 #: privateurls/views.py

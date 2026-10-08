@@ -32,7 +32,8 @@ def pick_unused_emoji(tournament_id=None) -> Tuple[Optional[str], Optional[str]]
     teams = Team.objects.filter(emoji__isnull=False)
     if tournament_id is not None:
         teams = teams.filter(tournament_id=tournament_id)
-    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in teams.values_list('emoji', flat=True)]
+    used_emoji = teams.values_list('emoji', flat=True)
+    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
 
     try:
         return random.choice(unused_emoji)

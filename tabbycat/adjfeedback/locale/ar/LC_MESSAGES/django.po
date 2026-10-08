@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:51\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:33\n"
 "Last-Translator: \n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -22,6 +22,10 @@ msgid "Integer scales must have a minimum and maximum"
 msgstr ""
 
 #: adjfeedback/admin.py
+msgid "Maximum value must be greater than the minimum"
+msgstr ""
+
+#: adjfeedback/admin.py
 msgid "target"
 msgstr ""
 
@@ -34,21 +38,8 @@ msgid "source team"
 msgstr ""
 
 #: adjfeedback/admin.py
-msgid "Target"
-msgstr ""
-
-#: adjfeedback/admin.py
 msgid "Source"
 msgstr "الدرجات "
-
-#: adjfeedback/admin.py
-msgid "Feedback timestamp and version"
-msgstr ""
-
-#: adjfeedback/admin.py
-#, python-format
-msgid "%(timestamp)s (version %(version)s)"
-msgstr ""
 
 #: adjfeedback/admin.py
 #, python-format
@@ -124,16 +115,6 @@ msgstr "محكم"
 #: adjfeedback/forms.py
 msgid "trainee"
 msgstr "محكم متدرب "
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py
-msgid "Yes"
-msgstr "نعم "
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py
-msgid "No"
-msgstr "لا"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py
@@ -237,114 +218,6 @@ msgid "adjudicator base score histories"
 msgstr ""
 
 #: adjfeedback/models.py
-msgid "question"
-msgstr "سؤال "
-
-#: adjfeedback/models.py
-msgid "feedback"
-msgstr "تغذية راجعة "
-
-#: adjfeedback/models.py
-msgid "answer"
-msgstr "جواب "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback boolean answer"
-msgstr "اجابة الحكم حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback boolean answers"
-msgstr "اجابة الحكم حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback integer answer"
-msgstr "اجابة الحكم حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback integer answers"
-msgstr "اجابة الحكم حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback float answer"
-msgstr "اجابة الحكم العامة حول التغذية الراجعة"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback float answers"
-msgstr "اجابة الحكم العامة حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback string answer"
-msgstr "اجابة الحكم حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback string answers"
-msgstr "اجابة الحكم حول التغذية الراجعة "
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback multiple select answer"
-msgstr ""
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback multiple select answers"
-msgstr ""
-
-#: adjfeedback/models.py
-msgid "checkbox"
-msgstr "صندوق الاختيارات "
-
-#: adjfeedback/models.py
-msgid "yes/no (dropdown)"
-msgstr "نعم/لا"
-
-#: adjfeedback/models.py
-msgid "integer (textbox)"
-msgstr ""
-
-#: adjfeedback/models.py
-msgid "integer scale"
-msgstr ""
-
-#: adjfeedback/models.py
-msgid "float"
-msgstr "عام "
-
-#: adjfeedback/models.py
-msgid "text"
-msgstr "نص"
-
-#: adjfeedback/models.py
-msgid "long text"
-msgstr "نص طويل "
-
-#: adjfeedback/models.py
-msgid "select one"
-msgstr "اختيار واحد"
-
-#: adjfeedback/models.py
-msgid "select multiple"
-msgstr "اختيار متعدد "
-
-#: adjfeedback/models.py
-msgid "tournament"
-msgstr "دوري"
-
-#: adjfeedback/models.py
-msgid "sequence number"
-msgstr "الرقم المتسلسل "
-
-#: adjfeedback/models.py
-msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
-msgstr "السؤال المعروض على المشاركين، على سبيل المثال، \"هل توافق على القرار؟\""
-
-#: adjfeedback/models.py
-msgid "name"
-msgstr "اسم "
-
-#: adjfeedback/models.py
-msgid "A short name for the question, e.g., \"Agree with decision\""
-msgstr "سؤال قصير على سبيل المثال \" موافق على القرار \" "
-
-#: adjfeedback/models.py
 msgid "reference"
 msgstr "مرجع "
 
@@ -367,42 +240,6 @@ msgstr "من الفريق "
 #: adjfeedback/models.py
 msgid "Teams should be asked this question"
 msgstr "سؤال الفريق "
-
-#: adjfeedback/models.py
-msgid "answer type"
-msgstr "نوع الجواب "
-
-#: adjfeedback/models.py
-msgid "required"
-msgstr "مطلوب "
-
-#: adjfeedback/models.py
-msgid "Whether participants are required to fill out this field"
-msgstr ""
-
-#: adjfeedback/models.py
-msgid "minimum value"
-msgstr "أقل قيمة"
-
-#: adjfeedback/models.py
-msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
-msgstr "الحد الأدنى للقيمة المسموح بها للحقول الرقمية"
-
-#: adjfeedback/models.py
-msgid "maximum value"
-msgstr "أعلى قيمة"
-
-#: adjfeedback/models.py
-msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
-msgstr "الحد الأعلى للقيمة المسموح بها للحقول الرقمية"
-
-#: adjfeedback/models.py
-msgid "choices"
-msgstr "أختيارات "
-
-#: adjfeedback/models.py
-msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
-msgstr ""
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback question"
@@ -449,6 +286,14 @@ msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr ""
 
 #: adjfeedback/tables.py
+msgid "Whether the adj tests other adjs (click to mark). Adjudication core members are always testers"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "On the adjudication core, so always a tester"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr ""
 
@@ -470,6 +315,14 @@ msgstr ""
 
 #: adjfeedback/tables.py
 msgid "Assigned base score"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "Feedback average"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "This adjudicator's feedback average"
 msgstr ""
 
 #: adjfeedback/tables.py
@@ -512,6 +365,10 @@ msgid "Unsubmitted feedback ballots"
 msgstr ""
 
 #: adjfeedback/tables.py
+msgid "% Submitted"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr ""
 
@@ -540,7 +397,11 @@ msgid "There are no feedback options because no rounds have been released to the
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
-msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
+msgid "This tournament expects you to submit feedback on the adjudicator who delivered the adjudication. You may also submit feedback on any other adjudicators available below."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament expects you to submit feedback on all voting adjudicators on the panel (excluding trainees)."
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
@@ -554,6 +415,10 @@ msgstr ""
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
 msgstr "هناك بعض المشاكل في التغذية الراجعة يرجى مراجعتهم "
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "Save Feedback"
+msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
@@ -642,7 +507,7 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
 #, python-format
-msgid "<span class=\"text-secondary small\">Received as %(as_type)s</span>"
+msgid "Received as %(as_type)s"
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
@@ -764,7 +629,7 @@ msgstr "تغذية راجعة "
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
-msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
+msgid "The proportion of an adjudicator's score determined by feedback vs the base score is set on a per-round basis. Click to edit the feedback weight for %(round)s."
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
@@ -846,7 +711,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
-msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgid "The score range for adjudicators is between <strong>%(min_score)s</strong> and <strong>%(max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
@@ -860,6 +725,24 @@ msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Change Feedback Weight"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "The feedback weight determines the proportion of an adjudicator's score that comes from feedback versus their base score. At <strong>0%%</strong>, the score is 100%% base score. At <strong>100%%</strong>, the score is 100%% feedback. This setting applies to <strong>%(round)s</strong>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "Feedback weight (%%)"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Save Feedback Weight"
 msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html
@@ -995,6 +878,11 @@ msgid "Whoops! The value isn't a valid base score."
 msgstr ""
 
 #: adjfeedback/views.py
+#, python-format
+msgid "Feedback weight for %(round)s updated to %(weight)d%%."
+msgstr ""
+
+#: adjfeedback/views.py
 msgid "Feedback Progress"
 msgstr ""
 
@@ -1036,4 +924,8 @@ msgstr[2] ""
 msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
+
+#: adjfeedback/views.py
+msgid "Custom Feedback Questions"
+msgstr ""
 

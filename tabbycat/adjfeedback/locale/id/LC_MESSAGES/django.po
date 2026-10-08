@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:55\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:34\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Language: id_ID\n"
@@ -22,6 +22,10 @@ msgid "Integer scales must have a minimum and maximum"
 msgstr "Skala bilangan bulat harus memiliki minimum dan maksimum"
 
 #: adjfeedback/admin.py
+msgid "Maximum value must be greater than the minimum"
+msgstr ""
+
+#: adjfeedback/admin.py
 msgid "target"
 msgstr "tujuan"
 
@@ -34,21 +38,8 @@ msgid "source team"
 msgstr "tim yang memberi penilaian"
 
 #: adjfeedback/admin.py
-msgid "Target"
-msgstr "Tujuan"
-
-#: adjfeedback/admin.py
 msgid "Source"
 msgstr "Sumber"
-
-#: adjfeedback/admin.py
-msgid "Feedback timestamp and version"
-msgstr "Waktu dan versi penilaian"
-
-#: adjfeedback/admin.py
-#, python-format
-msgid "%(timestamp)s (version %(version)s)"
-msgstr "%(timestamp)s (versi %(version)s)"
 
 #: adjfeedback/admin.py
 #, python-format
@@ -99,16 +90,6 @@ msgstr "panelis"
 #: adjfeedback/forms.py
 msgid "trainee"
 msgstr "trainee"
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py
-msgid "Yes"
-msgstr ""
-
-#. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py
-msgid "No"
-msgstr ""
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py
@@ -212,114 +193,6 @@ msgid "adjudicator base score histories"
 msgstr "histori nilai awal juri"
 
 #: adjfeedback/models.py
-msgid "question"
-msgstr "pertanyaan"
-
-#: adjfeedback/models.py
-msgid "feedback"
-msgstr "penilaian"
-
-#: adjfeedback/models.py
-msgid "answer"
-msgstr "jawaban"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback boolean answer"
-msgstr "penilaian juri, jawaban boolean / iya-tidak"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback boolean answers"
-msgstr "penilaian juri, jawaban boolean / iya-tidak"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback integer answer"
-msgstr "penilaian juri, jawaban numerik"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback integer answers"
-msgstr "penilaian juri, jawaban numerik"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback float answer"
-msgstr "penilaian juri, jawaban numerik"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback float answers"
-msgstr "penilaian juri, jawaban numerik"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback string answer"
-msgstr "penilaian juri, jawaban frasa / kalimat singkat"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback string answers"
-msgstr "penilaian juri, jawaban frasa / kalimat singkat"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback multiple select answer"
-msgstr "jawaban pilihan berganda umpanbalik juri"
-
-#: adjfeedback/models.py
-msgid "adjudicator feedback multiple select answers"
-msgstr "jawaban pilihan berganda umpanbalik juri"
-
-#: adjfeedback/models.py
-msgid "checkbox"
-msgstr "kotak centang"
-
-#: adjfeedback/models.py
-msgid "yes/no (dropdown)"
-msgstr "iya / tidak (dropdown)"
-
-#: adjfeedback/models.py
-msgid "integer (textbox)"
-msgstr "numerik (kotak teks)"
-
-#: adjfeedback/models.py
-msgid "integer scale"
-msgstr "skala numerik"
-
-#: adjfeedback/models.py
-msgid "float"
-msgstr "bilangan desimal"
-
-#: adjfeedback/models.py
-msgid "text"
-msgstr "teks"
-
-#: adjfeedback/models.py
-msgid "long text"
-msgstr "teks panjang"
-
-#: adjfeedback/models.py
-msgid "select one"
-msgstr "pilih satu"
-
-#: adjfeedback/models.py
-msgid "select multiple"
-msgstr "pilih beberapa"
-
-#: adjfeedback/models.py
-msgid "tournament"
-msgstr "turnamen"
-
-#: adjfeedback/models.py
-msgid "sequence number"
-msgstr "nomor urut"
-
-#: adjfeedback/models.py
-msgid "The question displayed to participants, e.g., \"Did you agree with the decision?\""
-msgstr "Pertanyaan yang ditampilkan kepada partisipan, seperti \"Apakah anda setuju dengan keputusan yang diberikan?\""
-
-#: adjfeedback/models.py
-msgid "name"
-msgstr "nama"
-
-#: adjfeedback/models.py
-msgid "A short name for the question, e.g., \"Agree with decision\""
-msgstr "Nama pendek untuk pertanyaan ini seperti \"Setuju dengan keputusan\""
-
-#: adjfeedback/models.py
 msgid "reference"
 msgstr "referensi"
 
@@ -342,42 +215,6 @@ msgstr "dari tim"
 #: adjfeedback/models.py
 msgid "Teams should be asked this question"
 msgstr "Tim harus ditanyakan pertanyaan ini"
-
-#: adjfeedback/models.py
-msgid "answer type"
-msgstr "tipe jawaban"
-
-#: adjfeedback/models.py
-msgid "required"
-msgstr "diwajibkan"
-
-#: adjfeedback/models.py
-msgid "Whether participants are required to fill out this field"
-msgstr "Apakah partisipan diwajibkan untuk mengisi kolom ini"
-
-#: adjfeedback/models.py
-msgid "minimum value"
-msgstr "nilai minimum"
-
-#: adjfeedback/models.py
-msgid "Minimum allowed value for numeric fields (ignored for text or boolean fields)"
-msgstr "Nilai minimum yang diijinkan untuk kolom numerik (abaikan untuk kolom teks dan boolean)"
-
-#: adjfeedback/models.py
-msgid "maximum value"
-msgstr "nilai maksimum"
-
-#: adjfeedback/models.py
-msgid "Maximum allowed value for numeric fields (ignored for text or boolean fields)"
-msgstr "Nilai maksimum yang diijinkan untuk kolom numerik (abaikan untuk kolom teks dan boolean)"
-
-#: adjfeedback/models.py
-msgid "choices"
-msgstr "pilihan"
-
-#: adjfeedback/models.py
-msgid "Permissible choices for select one/multiple fields (ignored for other fields)"
-msgstr "Pilihan yang diizinkan untuk memilih satu / beberapa bidang (diabaikan untuk bidang lain)"
 
 #: adjfeedback/models.py
 msgid "adjudicator feedback question"
@@ -424,6 +261,14 @@ msgid "Whether the adj is marked as breaking (click to mark)"
 msgstr "Apakah juri ditandai sebagai breaking (klik untuk mentandai)"
 
 #: adjfeedback/tables.py
+msgid "Whether the adj tests other adjs (click to mark). Adjudication core members are always testers"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "On the adjudication core, so always a tester"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "N/A"
 msgstr "N/A"
 
@@ -446,6 +291,14 @@ msgstr "Klik untuk menyunting nilai awal"
 #: adjfeedback/tables.py
 msgid "Assigned base score"
 msgstr "Nilai awal yang diberikan"
+
+#: adjfeedback/tables.py
+msgid "Feedback average"
+msgstr ""
+
+#: adjfeedback/tables.py
+msgid "This adjudicator's feedback average"
+msgstr ""
 
 #: adjfeedback/tables.py
 msgid "The current difference between an adjudicator's base score and current score"
@@ -482,6 +335,10 @@ msgid "Unsubmitted feedback ballots"
 msgstr "Penilaian juri yang belum diterima"
 
 #: adjfeedback/tables.py
+msgid "% Submitted"
+msgstr ""
+
+#: adjfeedback/tables.py
 msgid "View Missing Feedback"
 msgstr "Lihat Penilaian Juri yang Hilang"
 
@@ -510,8 +367,12 @@ msgid "There are no feedback options because no rounds have been released to the
 msgstr "Tidak ada opsi penilaian karena belum ada ronde yang dirilis ke publik. Periksa kembali saat ronde telah dirilis!"
 
 #: adjfeedback/templates/enter_feedback.html
-msgid "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators."
-msgstr "Turnamen ini mengharapkan anda untuk memberikan penilaian <strong>hanya untuk juri yang memberikan verbal </strong>. Jangan memberikan penilaian untuk juri lainnya."
+msgid "This tournament expects you to submit feedback on the adjudicator who delivered the adjudication. You may also submit feedback on any other adjudicators available below."
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "This tournament expects you to submit feedback on all voting adjudicators on the panel (excluding trainees)."
+msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)."
@@ -524,6 +385,10 @@ msgstr ""
 #: adjfeedback/templates/enter_feedback.html
 msgid "There are some problems with this feedback submission. Please review and correct them."
 msgstr "Ada sedikit masalah dengan penilaian juri ini. Tolong periksa dan perbaiki."
+
+#: adjfeedback/templates/enter_feedback.html
+msgid "Save Feedback"
+msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html
 msgid "When submitting this form your IP address will be stored for logging purposes."
@@ -612,7 +477,7 @@ msgstr "Pada %(adjudicator)s"
 
 #: adjfeedback/templates/feedback_card.html
 #, python-format
-msgid "<span class=\"text-secondary small\">Received as %(as_type)s</span>"
+msgid "Received as %(as_type)s"
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html
@@ -724,8 +589,8 @@ msgstr "Penilaian Juri"
 
 #: adjfeedback/templates/overview_breakdowns.html
 #, python-format
-msgid "The proportion of an adjudicator's score determined by feedback vs the test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for %(round)s."
-msgstr "Nilai juri ditentukan berdasarkan penilaian tiap ronde dan nilai awal dan proporsinya diatur berbeda tiap ronde. Klik tautan berikut dan ubah 'Bobot penilaian tiap ronde' untuk mengubah proporsi ini untuk %(round)s."
+msgid "The proportion of an adjudicator's score determined by feedback vs the base score is set on a per-round basis. Click to edit the feedback weight for %(round)s."
+msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html
 msgid "Score Ratio"
@@ -781,8 +646,8 @@ msgstr "Ubah Nilai Basis"
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
-msgid "The score range for adjudicators is between <strong>%(pref.adj_min_score)s</strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
-msgstr "Rentang nilai untuk juri adalah antara <strong>%(pref.adj_min_score)s</strong> dan <strong>%(pref.adj_max_score)s</strong>. Desimal diperbolehkan. Nilai ini dapat dikonfigurasi di <a href=\"%(feedback_options)s\">Pengaturan umpan balik</a>."
+msgid "The score range for adjudicators is between <strong>%(min_score)s</strong> and <strong>%(max_score)s</strong>. Decimals are permitted. This can be configured in <a href=\"%(feedback_options)s\">Feedback settings</a>."
+msgstr ""
 
 #: adjfeedback/templates/overview_modals.html
 #, python-format
@@ -796,6 +661,24 @@ msgstr "Nilai basis"
 #: adjfeedback/templates/overview_modals.html
 msgid "Save Base Score"
 msgstr "Simpan Nilai Basis"
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Change Feedback Weight"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "The feedback weight determines the proportion of an adjudicator's score that comes from feedback versus their base score. At <strong>0%%</strong>, the score is 100%% base score. At <strong>100%%</strong>, the score is 100%% feedback. This setting applies to <strong>%(round)s</strong>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+#, python-format
+msgid "Feedback weight (%%)"
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html
+msgid "Save Feedback Weight"
+msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html
 msgid "Who are you?"
@@ -925,6 +808,11 @@ msgid "Whoops! The value isn't a valid base score."
 msgstr "Ups! Nilai tersebut bukan nilai basis yang valid."
 
 #: adjfeedback/views.py
+#, python-format
+msgid "Feedback weight for %(round)s updated to %(weight)d%%."
+msgstr ""
+
+#: adjfeedback/views.py
 msgid "Feedback Progress"
 msgstr "Progres Umpan Balik"
 
@@ -956,4 +844,8 @@ msgstr "nir-terabaikan"
 msgid "Updated base score for %(count)d adjudicator."
 msgid_plural "Updated base scores for %(count)d adjudicators."
 msgstr[0] "Basis nilai terbarui untuk %(count)d juri."
+
+#: adjfeedback/views.py
+msgid "Custom Feedback Questions"
+msgstr ""
 

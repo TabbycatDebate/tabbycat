@@ -46,10 +46,6 @@ class QuestionForm(forms.ModelForm):
                 raise forms.ValidationError(_("Maximum value must be greater than the minimum"))
         return self.cleaned_data
 
-    def save_model(self, request, obj, form, change):
-        obj.for_content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
-        super().save_model(request, obj, form, change)
-
 
 @admin.register(AdjudicatorFeedbackQuestion)
 class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, ModelAdmin):
@@ -58,6 +54,10 @@ class AdjudicatorFeedbackQuestionAdmin(DynamicArrayMixin, ModelAdmin):
                     'required', 'from_adj', 'from_team')
     list_filter  = ('tournament',)
     ordering     = ('tournament', 'seq')
+
+    def save_model(self, request, obj, form, change):
+        obj.for_content_type = ContentType.objects.get(app_label="adjfeedback", model="adjudicatorfeedback")
+        super().save_model(request, obj, form, change)
 
 
 # ==============================================================================

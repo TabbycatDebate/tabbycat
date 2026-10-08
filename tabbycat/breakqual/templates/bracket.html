@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head-title %}<span class="emoji">👑</span> {{ category.name }} {% trans "Bracket" %}{% endblock %}
+{% block page-title %}👑 {{ category.name }} {% trans "Bracket" %}{% endblock %}
+
+{% block content %}
+
+  <div id="vueMount">
+    <elimination-bracket-container
+      :break-category="breakCategory"
+      :teams-in-debate="teamsInDebate"
+      :breaking-teams="breakingTeams"
+      :rounds="rounds"
+      :side-names="sideNames">
+    </elimination-bracket-container>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {{ bracket_data|safe }}
+  </script>
+  {{ block.super }}
+{% endblock js %}

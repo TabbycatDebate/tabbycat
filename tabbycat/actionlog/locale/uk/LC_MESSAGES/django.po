@@ -1,0 +1,479 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
+"Last-Translator: \n"
+"Language-Team: Ukrainian\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Project-ID: 364715\n"
+"X-Crowdin-Language: uk\n"
+"X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
+"X-Crowdin-File-ID: 920\n"
+
+#: actionlog/apps.py
+msgid "Action Log"
+msgstr "Журнал дій"
+
+#: actionlog/models.py
+msgid "Changed adjudicator breaking status"
+msgstr "Змінено статус судді для брейку"
+
+#: actionlog/models.py
+msgid "Changed adjudicator tester status"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created adjudicator"
+msgstr "Суддю створено"
+
+#: actionlog/models.py
+msgid "Edited adjudicator"
+msgstr "Суддю змінено"
+
+#: actionlog/models.py
+msgid "Set adjudicator note"
+msgstr "Створити замітку судді"
+
+#: actionlog/models.py
+msgid "Auto-allocated adjudicators"
+msgstr "Судді розташовані автоматично"
+
+#: actionlog/models.py
+msgid "Saved adjudicator allocation"
+msgstr "Розташування суддів змінено"
+
+#: actionlog/models.py
+msgid "Edited adjudicators availability"
+msgstr "Наявність суддів змінено"
+
+#: actionlog/models.py
+msgid "Edited availability"
+msgstr "Наявність змінено"
+
+#: actionlog/models.py
+msgid "Edited teams availability"
+msgstr "Наявність команд змінено"
+
+#: actionlog/models.py
+msgid "Edited room availability"
+msgstr "Наявність місця змінено"
+
+#: actionlog/models.py
+msgid "Checked in ballot set"
+msgstr "Бюлетень перевірено"
+
+#: actionlog/models.py
+msgid "Confirmed ballot set"
+msgstr "Бюлетень підтверджено"
+
+#: actionlog/models.py
+msgid "Created ballot set"
+msgstr "Бюлетень створено"
+
+#: actionlog/models.py
+msgid "Discarded ballot set"
+msgstr "Бюлетень відхилений"
+
+#: actionlog/models.py
+msgid "Edited ballot set"
+msgstr "Бюлетень змінено"
+
+#: actionlog/models.py
+msgid "Submitted ballot set from the public form"
+msgstr "Відправлено бюлетень з публічної форми"
+
+#: actionlog/models.py
+msgid "Edited break categories"
+msgstr "Категорії брейку змінено"
+
+#: actionlog/models.py
+msgid "Deleted team break for category"
+msgstr "Видалено брейк команд для категорії"
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks"
+msgstr "Відмітки команд брейку змінено"
+
+#: actionlog/models.py
+msgid "Edited break eligibility"
+msgstr "Вимоги до брейку змінено"
+
+#: actionlog/models.py
+msgid "Generated the team break for all categories"
+msgstr "Брейк команд згенерований для всіх категорій"
+
+#: actionlog/models.py
+msgid "Generated the team break for one category"
+msgstr "Брейк команд згенерований для однієї категорії"
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks and updated all team breaks"
+msgstr "Відмітки команд брейку змінено та оновлено всі брейки команд"
+
+#: actionlog/models.py
+msgid "Edited breaking team remarks and updated this team break"
+msgstr "Відмітки команд брейку змінено та оновлено цей брейк команд"
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for adjudicators"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for speakers"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Generated check in identifiers for rooms"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr "Конфлікти суддя-суддя змінено"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-institution conflicts"
+msgstr "Конфлікти суддя-інституція змінено"
+
+#: actionlog/models.py
+msgid "Edited adjudicator-team conflicts"
+msgstr "Конфлікти суддя-команда змінено"
+
+#: actionlog/models.py
+msgid "Edited team-institution conflicts"
+msgstr "Конфлікти команда-інституція змінено"
+
+#: actionlog/models.py
+msgid "Created debate"
+msgstr "Дебати створено"
+
+#: actionlog/models.py
+msgid "Edited debate"
+msgstr "Дебати змінено"
+
+#: actionlog/models.py
+msgid "Auto-prioritized debate importance"
+msgstr "Пріоритет дебатів автоматично розподілений"
+
+#: actionlog/models.py
+msgid "Edited debate importance"
+msgstr "Пріоритет дебатів змінено"
+
+#: actionlog/models.py
+msgid "Saved divisions"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed draw"
+msgstr "Сітку підтверджена"
+
+#: actionlog/models.py
+msgid "Created draw"
+msgstr "Сітку створено"
+
+#: actionlog/models.py
+msgid "Regenerated draw"
+msgstr "Сітка перероблена"
+
+#: actionlog/models.py
+msgid "Released draw"
+msgstr "Сітку опубліковано"
+
+#: actionlog/models.py
+msgid "Unreleased draw"
+msgstr "Сітку приховано"
+
+#: actionlog/models.py
+msgid "Created feedback question"
+msgstr "Питання для відгуку створено"
+
+#: actionlog/models.py
+msgid "Edited feedback question"
+msgstr "Питання відгуку змінено"
+
+#: actionlog/models.py
+msgid "Saved feedback"
+msgstr "Відгук збережено"
+
+#: actionlog/models.py
+msgid "Submitted feedback from the public form"
+msgstr "Відгук з публічної форми відправлений"
+
+#: actionlog/models.py
+msgid "Created institution"
+msgstr "Інституцію створено"
+
+#: actionlog/models.py
+msgid "Edited institution"
+msgstr "Інституцію змінено"
+
+#: actionlog/models.py
+msgid "Saved a matchup manual edit"
+msgstr "Ручне редагування сітки збережено"
+
+#: actionlog/models.py
+msgid "Added/edited motion"
+msgstr "Додано/змінено резолюцію"
+
+#: actionlog/models.py
+msgid "Released motions"
+msgstr "Опубліковані резолюції"
+
+#: actionlog/models.py
+msgid "Unreleased motions"
+msgstr "Приховані резолюції"
+
+#: actionlog/models.py
+msgid "Edited tournament options"
+msgstr "Налаштування турніру змінено"
+
+#: actionlog/models.py
+msgid "Auto-allocated adjudicators to preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited preformed panel adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-allocated preformed panels to debates"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Deleted preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Auto-prioritized preformed panels"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited preformed panel importance"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Advanced the current round to"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Marked round as completed"
+msgstr "Раунд позначено як закінчений"
+
+#: actionlog/models.py
+msgid "Created round"
+msgstr "Раунд створено"
+
+#: actionlog/models.py
+msgid "Edited round"
+msgstr "Раунд змінено"
+
+#: actionlog/models.py
+msgid "Set start time"
+msgstr "Почати відлік часу"
+
+#: actionlog/models.py
+msgid "Saved the sides status of a matchup"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported adjudicators using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported institutions using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported teams using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Imported rooms using the simple importer"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker categories"
+msgstr "Категорії спікерів змінено"
+
+#: actionlog/models.py
+msgid "Created speaker"
+msgstr "Спікера створено"
+
+#: actionlog/models.py
+msgid "Deleted speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited speaker"
+msgstr "Спікера змінено"
+
+#: actionlog/models.py
+msgid "Edited speaker category eligibility"
+msgstr "Вимоги до категорії спікерів змінено"
+
+#: actionlog/models.py
+msgid "Created team"
+msgstr "Команду створено"
+
+#: actionlog/models.py
+msgid "Edited team"
+msgstr "Команда змінена"
+
+#: actionlog/models.py
+msgid "Edited adjudicator base score"
+msgstr "Базовий бал судді змінено"
+
+#: actionlog/models.py
+msgid "Created tournament"
+msgstr "Турнір створено"
+
+#: actionlog/models.py
+msgid "Edited tournament"
+msgstr "Турнір змінено"
+
+#: actionlog/models.py
+msgid "Updated adjudicator scores in bulk"
+msgstr "Бали суддів масово оновлено"
+
+#: actionlog/models.py
+msgid "Invited user to the instance"
+msgstr "Користувача запрошено до заходу"
+
+#: actionlog/models.py
+msgid "Edited room categories"
+msgstr "Категорії приміщень змінено"
+
+#: actionlog/models.py
+msgid "Created room category"
+msgstr "Категорію приміщення створено"
+
+#: actionlog/models.py
+msgid "Edited room constraints"
+msgstr "Обмеження приміщення змінено"
+
+#: actionlog/models.py
+msgid "Created room"
+msgstr "Приміщення створено"
+
+#: actionlog/models.py
+msgid "Edited room"
+msgstr "Приміщення змінено"
+
+#: actionlog/models.py
+msgid "Auto-allocated rooms"
+msgstr "Приміщення розподілені автоматично"
+
+#: actionlog/models.py
+msgid "Saved a room manual edit"
+msgstr "Ручне редагування приміщення збережено"
+
+#: actionlog/models.py
+msgid "Created question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited question"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "API"
+msgstr "API"
+
+#: actionlog/models.py
+msgid "Web"
+msgstr "Web"
+
+#: actionlog/models.py
+msgid "type"
+msgstr "тип"
+
+#: actionlog/models.py
+msgid "timestamp"
+msgstr "відмітка часу"
+
+#: actionlog/models.py
+msgid "user"
+msgstr "користувач"
+
+#: actionlog/models.py
+msgid "IP address"
+msgstr ""
+
+#: actionlog/models.py
+msgid "tournament"
+msgstr "турнір"
+
+#: actionlog/models.py
+msgid "round"
+msgstr "раунд"
+
+#: actionlog/models.py
+msgid "content type"
+msgstr "тип вмісту"
+
+#: actionlog/models.py
+msgid "object ID"
+msgstr "ID обʼєкту"
+
+#: actionlog/models.py
+msgid "agent"
+msgstr "агент"
+
+#: actionlog/models.py
+msgid "action log"
+msgstr "журнал дій"
+
+#: actionlog/models.py
+msgid "action log entries"
+msgstr "записи в журналі дій"
+
+#: actionlog/models.py
+msgid "All log entries require at least one of a user and an IP address."
+msgstr "Всі записи журналу потребують як мінімум одного з користувачів та IP-адресу."
+
+#: actionlog/models.py
+msgid "anonymous"
+msgstr "анонімно"
+

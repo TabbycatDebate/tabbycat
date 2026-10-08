@@ -7,9 +7,11 @@ from channels.layers import get_channel_layer
 
 from actionlog.models import ActionLogEntry
 from adjallocation.serializers import SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer
+from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundWebsocketMixin
 from users.permissions import Permission
 from utils.mixins import SuperuserRequiredWebsocketMixin
+from venues.models import Venue
 from venues.serializers import SimpleDebateVenueSerializer
 
 from .models import Debate, DebateTeam
@@ -50,7 +52,8 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
     def get_debates_or_panels(self, debates_or_panels):
         """ Retrieve either the debates or panels from the JSON id keys """
         ids = [id for (id, d_or_p) in debates_or_panels.items()]
-        debates_or_panels = list(self.model.objects.filter(id__in=ids))
+        debates_or_panels = list(self.model.objects.filter(
+            id__in=ids, round__tournament=self.tournament))
         # TODO: error handling if return items fewer/more than expected
         return debates_or_panels
 
@@ -85,6 +88,9 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
             sent_allocation_ids = []
             for (position, position_ids) in sent_allocation.items():
                 sent_allocation_ids.extend(adj_id for adj_id in position_ids)
+            if Adjudicator.objects.filter(id__in=sent_allocation_ids,
+                    tournament=self.tournament).count() != len(set(sent_allocation_ids)):
+                continue
 
             # Delete adjudicators in the posted information
             self.delete_adjudicators(d_or_p, sent_allocation_ids)
@@ -104,12 +110,30 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
     def return_attributes(self, original_content, serialized_content):
         """ Return the original JSON but with the generic debatesOrPanels key """
         original_content['debatesOrPanels'] = serialized_content.data
-        async_to_sync(get_channel_layer().group_send)(
-            self.group_name(), {
-                'type': 'broadcast_debates_or_panels',
-                'content': original_content,
-            },
-        )
+
+        # Determine which round sequences are affected by this change. If round_seq
+        # is present on items, broadcast to each relevant round-specific group so
+        # that all concurrent rounds' pages receive the update.
+        round_seqs = set()
+        try:
+            for item in original_content['debatesOrPanels']:
+                rs = item.get('round_seq', None)
+                if rs is not None:
+                    round_seqs.add(str(rs))
+        except Exception:
+            pass
+
+        # Always include the current consumer's round as a fallback
+        round_seqs.add(str(self.round.seq))
+
+        for seq in round_seqs:
+            group_name = f"{self.group_prefix}_{self.tournament.slug}_{seq}"
+            async_to_sync(get_channel_layer().group_send)(
+                group_name, {
+                    'type': 'broadcast_debates_or_panels',
+                    'content': original_content,
+                },
+            )
 
     def broadcast_debates_or_panels(self, event):
         self.send_json(event['content'])
@@ -137,6 +161,11 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         return super().receive_json(content)
 
     def modify_debate_teams(self, debate, sent_teams):
+        sent_team_ids = [team_id for team_id in sent_teams if team_id is not None]
+        if Team.objects.filter(id__in=sent_team_ids,
+                tournament=self.tournament).count() != len(set(sent_team_ids)):
+            return
+
         # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
         delete_count, deleted = debate.debateteam_set.exclude(side__in=self.tournament.sides).delete()
         logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
@@ -179,6 +208,11 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         changes = {int(c['id']): c for c in content[key]}
         debates = self.get_debates_or_panels(changes)
         for debate in debates:
+            if field_name == 'venue_id':
+                venue_id = changes[debate.id][content_name]
+                if venue_id is not None and not Venue.objects.filter(
+                        id=venue_id, tournament=self.tournament).exists():
+                    continue
             setattr(debate, field_name, changes[debate.id][content_name])
             debate.save()
 
@@ -228,9 +262,38 @@ class EditDebateOrPanelWorkerMixin(SyncConsumer):
             'debatesOrPanels': serialized_debates_or_panels.data,
             'message': {'text': message_text, 'type': message_type},
         }
-        async_to_sync(get_channel_layer().group_send)(
-            group_name, {
-                'type': 'broadcast_debates_or_panels',
-                'content': content,
-            },
-        )
+
+        # Broadcast to all affected round groups. Derive base (prefix + slug)
+        # from the provided group_name, then append each round_seq seen.
+        try:
+            base_prefix = group_name.rsplit('_', 1)[0]  # debates_<slug>
+        except Exception:
+            base_prefix = group_name
+
+        round_seqs = set()
+        try:
+            for item in serialized_debates_or_panels.data:
+                rs = item.get('round_seq', None)
+                if rs is not None:
+                    round_seqs.add(str(rs))
+        except Exception:
+            pass
+
+        # Fallback to the original group only if no round_seq info is present
+        if not round_seqs:
+            async_to_sync(get_channel_layer().group_send)(
+                group_name, {
+                    'type': 'broadcast_debates_or_panels',
+                    'content': content,
+                },
+            )
+            return
+
+        for seq in round_seqs:
+            target_group = f"{base_prefix}_{seq}"
+            async_to_sync(get_channel_layer().group_send)(
+                target_group, {
+                    'type': 'broadcast_debates_or_panels',
+                    'content': content,
+                },
+            )

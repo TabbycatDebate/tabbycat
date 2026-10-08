@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 22:00\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:40\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Vietnamese\n"
 "Language: vi_VN\n"
@@ -20,17 +20,17 @@ msgstr ""
 
 #: results/admin.py
 msgid "Resave results"
-msgstr ""
+msgstr "Lưu kết quả"
 
 #: results/admin.py
 #, python-format
 msgid "Resaved results for %(count)d ballot submission."
 msgid_plural "Resaved results for %(count)d ballot submissions."
-msgstr[0] ""
+msgstr[0] "Lưu các kết quả cho %(count)d phiếu điểm."
 
 #: results/admin.py
 msgid "Speaker"
-msgstr ""
+msgstr "Người nói"
 
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
@@ -38,19 +38,19 @@ msgstr "Kết quả"
 
 #: results/forms.py
 msgid "Tournament password"
-msgstr ""
+msgstr "Mật khẩu của giải đấu"
 
 #: results/forms.py
 msgid "That password isn't correct."
-msgstr ""
+msgstr "Mật khẩu không chính xác."
 
 #: results/forms.py
 msgid "The ballot set can't be both discarded and confirmed."
-msgstr ""
+msgstr "Phiếu điểm không thể bị loại bỏ và xác nhận cùng lúc."
 
 #: results/forms.py
 msgid "The debate status can't be confirmed unless one of the ballot sets is confirmed."
-msgstr ""
+msgstr "Tình trạng trận tranh biện không thể được xác nhận trừ khi phiếu điểm được xác nhận."
 
 #: results/forms.py
 msgid "---------"
@@ -59,12 +59,12 @@ msgstr ""
 #: results/forms.py
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
-msgstr ""
+msgstr "%(aff_team)s đã ủng hộ, %(neg_team)s đã phản đối"
 
 #: results/forms.py
 #, python-format
 msgid "%(side)s's motion veto"
-msgstr ""
+msgstr "Phủ quyết kiến nghị của %(side)s"
 
 #: results/forms.py
 #, python-format
@@ -73,10 +73,18 @@ msgstr "%(team)s (%(side)s)"
 
 #: results/forms.py
 msgid "Winner"
-msgstr ""
+msgstr "Đội chiến thắng"
 
 #: results/forms.py
 msgid "Mark as a duplicate speech"
+msgstr "Đánh dấu là bài nói thay thế"
+
+#: results/forms.py
+msgid "Only one team can forfeit"
+msgstr ""
+
+#: results/forms.py
+msgid "This field is required."
 msgstr ""
 
 #: results/forms.py
@@ -96,6 +104,10 @@ msgstr ""
 
 #: results/forms.py
 msgid "The reply speaker for this team did not give a substantive speech."
+msgstr ""
+
+#: results/forms.py
+msgid "This was a 2:1 split decision (self-declared)"
 msgstr ""
 
 #: results/forms.py
@@ -151,6 +163,18 @@ msgstr[0] ""
 
 #: results/forms.py
 msgid "There must be exactly 1 team advancing."
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "All speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Substantive speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Reply speeches"
 msgstr ""
 
 #: results/models.py
@@ -230,6 +254,22 @@ msgid "Whether this submission represents only the submitting adjudicator on a p
 msgstr ""
 
 #: results/models.py
+msgid "forfeit"
+msgstr ""
+
+#: results/models.py
+msgid "Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."
+msgstr ""
+
+#: results/models.py
+msgid "self-declared split"
+msgstr ""
+
+#: results/models.py
+msgid "For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per Karl Popper rules."
+msgstr ""
+
+#: results/models.py
 msgid "ballot submission"
 msgstr "bản nộp phiếu điểm"
 
@@ -239,7 +279,7 @@ msgstr ""
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgid "Debate is in %(round)s but motion (%(motion)s) is not in round"
 msgstr ""
 
 #: results/models.py
@@ -256,11 +296,11 @@ msgstr "đội"
 
 #: results/models.py
 msgid "win"
-msgstr ""
+msgstr "thắng"
 
 #: results/models.py
 msgid "margin"
-msgstr ""
+msgstr "khoảng cách điểm"
 
 #: results/models.py
 msgid "score"
@@ -320,7 +360,7 @@ msgstr ""
 
 #: results/models.py
 msgid "rank"
-msgstr ""
+msgstr "xếp hạng"
 
 #: results/models.py
 msgid "ghost"
@@ -352,6 +392,10 @@ msgstr ""
 
 #: results/models.py
 msgid "sequence"
+msgstr ""
+
+#: results/models.py
+msgid "speech type"
 msgstr ""
 
 #: results/models.py
@@ -392,6 +436,30 @@ msgstr ""
 
 #: results/models.py
 msgid "speaker scores for criteria by adjudicator"
+msgstr ""
+
+#: results/result.py
+msgid "Inconsistent speaker order"
+msgstr ""
+
+#: results/result.py
+msgid "Inconsistent marking of duplicate (iron-person) speeches"
+msgstr ""
+
+#: results/result.py
+msgid "Winners are not identical"
+msgstr ""
+
+#: results/result.py
+msgid "Criterion scores are not identical"
+msgstr ""
+
+#: results/result.py
+msgid "Scores are not identical"
+msgstr ""
+
+#: results/result.py
+msgid "Speech ranks are not identical"
 msgstr ""
 
 #: results/tables.py
@@ -503,7 +571,6 @@ msgstr ""
 
 #: results/templates/assistant_enter_results.html
 #: results/templates/enter_results.html
-#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr ""
 
@@ -708,14 +775,6 @@ msgstr ""
 #: results/templates/ballot_entry_form.html
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
-msgstr ""
-
-#: results/templates/debate_postponement_form.html
-msgid "Postponed"
-msgstr ""
-
-#: results/templates/debate_postponement_form.html
-msgid "Postpone"
 msgstr ""
 
 #: results/templates/enter_results.html

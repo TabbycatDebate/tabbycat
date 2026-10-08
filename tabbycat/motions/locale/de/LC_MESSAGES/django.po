@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:58\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:37\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -23,19 +23,19 @@ msgstr "Themen"
 
 #: motions/models.py
 msgid "text"
-msgstr ""
+msgstr "Text"
 
 #: motions/models.py
 msgid "The full motion e.g., \"This House would straighten all bananas\""
-msgstr ""
+msgstr "Die volle Motion, z.B. \"Dieses Haus würde alle Bananen geradebiegen\""
 
 #: motions/models.py
 msgid "reference"
-msgstr ""
+msgstr "Referenz"
 
 #: motions/models.py
 msgid "Shortcode for the motion, e.g., \"Bananas\""
-msgstr ""
+msgstr "Kurzbezeichnung für die Motion, z.B. \"Bananen\""
 
 #: motions/models.py
 msgid "info slide"
@@ -43,7 +43,7 @@ msgstr "Infotext"
 
 #: motions/models.py
 msgid "The information slide for this topic; if it has one"
-msgstr ""
+msgstr "Der Infotext (Factsheet) für diese Motion, falls vorhanden"
 
 #: motions/models.py
 msgid "tournament"
@@ -63,15 +63,15 @@ msgstr "Themen"
 
 #: motions/models.py
 msgid "debate team"
-msgstr ""
+msgstr "Debattierteam"
 
 #: motions/models.py
 msgid "preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: motions/models.py
 msgid "ballot submission"
-msgstr ""
+msgstr "Ballot-eingabe"
 
 #: motions/models.py
 msgid "debate team motion preference"
@@ -91,15 +91,15 @@ msgstr ""
 
 #: motions/models.py
 msgid "The order in which motions are displayed"
-msgstr ""
+msgstr "Die Reihenfolge, in der Motions angezeigt werden"
 
 #: motions/models.py
 msgid "round motion"
-msgstr ""
+msgstr "Motion der Runde"
 
 #: motions/models.py
 msgid "round motions"
-msgstr ""
+msgstr "Motions der Runde"
 
 #: motions/statistics.py
 msgid "extremely strong evidence"
@@ -131,12 +131,12 @@ msgstr ""
 
 #: motions/statistics.py
 msgid "too few debates to get a meaningful statistic"
-msgstr ""
+msgstr "Zu wenige Debatten für statistisches Urteil"
 
 #: motions/statistics.py
 #, python-format
 msgid "imbalanced at %(level)s level"
-msgstr ""
+msgstr "Unausgeglichen auf %(level)s-Niveau"
 
 #: motions/statistics.py
 #, python-format
@@ -145,7 +145,7 @@ msgstr ""
 
 #: motions/statistics.py
 msgid "probably balanced"
-msgstr ""
+msgstr "Wahrscheinlich ausgeglichen"
 
 #: motions/statistics.py
 #, python-format
@@ -181,21 +181,21 @@ msgstr[1] ""
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "advanced"
-msgstr ""
+msgstr "Weitergekommen"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'advanced', used when not enough space"
 msgid "adv."
-msgstr ""
+msgstr "Weiter"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgid "eliminated"
-msgstr ""
+msgstr "Ausgeschieden"
 
 #: motions/templates/motion_statistics_bp_elim.html
 msgctxt "abbreviation for 'eliminated', used when not enough space"
 msgid "elim."
-msgstr ""
+msgstr "Ausg."
 
 #: motions/templates/motion_statistics_bp_elim.html
 #, python-format
@@ -209,15 +209,15 @@ msgstr ""
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Government"
-msgstr ""
+msgstr "Regierung"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opposition"
-msgstr ""
+msgstr "Opposition"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per bench"
-msgstr ""
+msgstr "Durchschnittspunkte je Seite"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Opening"
@@ -229,14 +229,14 @@ msgstr "Schließende"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 msgid "Average Points per half"
-msgstr ""
+msgstr "Durchschnittspunkte je Hälfte"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
 msgid "average points per position (%(ndebates)s debate)"
 msgid_plural "average points per position (%(ndebates)s debates)"
 msgstr[0] ""
-msgstr[1] ""
+msgstr[1] "Durchschnittspunkte nach Position (in %(ndebates)s Debatten)"
 
 #: motions/templates/motion_statistics_bp_prelim.html
 #, python-format
@@ -259,7 +259,7 @@ msgstr[1] ""
 
 #: motions/templates/motion_statistics_twoteam.html
 msgid "No teams debated this motion"
-msgstr ""
+msgstr "Diese Motion wurde von keinem Team debattiert"
 
 #: motions/templates/motion_statistics_twoteam.html
 #, python-format
@@ -280,15 +280,15 @@ msgstr[1] ""
 
 #: motions/templates/motions_edit.html
 msgid "Display Draw"
-msgstr ""
+msgstr "Zeige Draw an"
 
 #: motions/templates/motions_edit.html
 msgid "This will replace all existing motions for this round. The motions themselves will still be in the database."
-msgstr ""
+msgstr "Das wird alle Motions in dieser Runde ersetzen; die Motions werden aber weiter in der Datenbank bleiben."
 
 #: motions/templates/motions_edit.html
 msgid "Reuse Motions from Last Round"
-msgstr ""
+msgstr "Motions aus letzter Runde wiederverwenden"
 
 #: motions/templates/motions_edit.html
 msgid "Use Existing Motions"
@@ -347,6 +347,34 @@ msgstr[1] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
+#: motions/templates/show.html
+msgid "Release Motion"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Release Info Slide"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Releasing..."
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Motions are Released"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Failed to release motions"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Info-slides are released"
+msgstr ""
+
+#: motions/templates/show.html
+msgid "Failed to release info-slides"
+msgstr ""
+
 #: motions/utils.py
 msgid "Not all latest ballots have the same motion. The correct motion must be set manually."
 msgstr ""
@@ -385,6 +413,17 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: motions/views.py
+#, python-format
+msgid "%(tournament)s - %(round)s"
+msgstr ""
+
+#: motions/views.py
+msgid "The motion has been released."
+msgid_plural "The motions have been released."
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/views.py
 msgid "Released the motion."
 msgid_plural "Released the motions."
 msgstr[0] ""
@@ -393,6 +432,12 @@ msgstr[1] ""
 #: motions/views.py
 msgid "Unreleased the motion."
 msgid_plural "Unreleased the motions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/views.py
+msgid "Released the info-slide."
+msgid_plural "Released the info-slides."
 msgstr[0] ""
 msgstr[1] ""
 

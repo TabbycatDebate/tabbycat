@@ -1,17 +1,19 @@
 """Standings generator for teams."""
 
 import logging
+from builtins import round as builtins_round
+from statistics import mean
 
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Q, StdDev, Sum
-from django.db.models.functions import Cast, NullIf
+from django.db.models.functions import Cast, NullIf, Round as RoundScore
 from django.utils.translation import gettext_lazy as _
 
 from results.models import TeamScore
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
-from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
+from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator, SCORE_PRECISION
 from .ranking import BasicRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
@@ -28,6 +30,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     function = None  # must be set by subclasses
     field = None  # must be set by subclasses
     output_field = None
+    round_value = False
 
     where_value = None
 
@@ -53,7 +56,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         return annotation_filter
 
     def get_annotation(self, round=None):
-        return self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field)
+        annotation = self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field)
+        if self.round_value:
+            return RoundScore(annotation, precision=SCORE_PRECISION)
+        return annotation
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -89,6 +95,7 @@ class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Sum
     field = "score"
+    round_value = True
 
 
 class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -99,6 +106,7 @@ class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Avg
     field = "score"
+    round_value = True
 
 
 class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -110,6 +118,7 @@ class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnota
 
     function = StdDev
     field = "score"
+    round_value = True
 
 
 class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -120,6 +129,7 @@ class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Sum
     field = "margin"
+    round_value = True
 
 
 class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -130,6 +140,7 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Avg
     field = "margin"
+    round_value = True
 
 
 class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -140,6 +151,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Avg
     combinable = False
+    round_value = True
 
     def get_field(self):
         return 'debateteam__speakerscore__score'
@@ -174,6 +186,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
     opponent_annotator = None
+    round_value = False
 
     def annotate(self, queryset, standings, round=None):
         if not queryset.exists():
@@ -192,16 +205,23 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
         teams_with_opponents = queryset.model.objects.annotate(opponent_ids=opponents_annotation)
         opponents_by_team = {team.id: team.opponent_ids or [] for team in teams_with_opponents}
 
-        opp_metric_queryset = self.opponent_annotator().get_annotated_queryset(
+        opponent_annotator = self.opponent_annotator()
+        # Round the final draw strength, not the individual opponents' totals.
+        opponent_annotator.round_value = False
+        opp_metric_queryset = opponent_annotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), round)
         opp_metric_queryset_teams = {team.id: team for team in opp_metric_queryset}
 
         for team in queryset:
             draw_strength = 0
             for opponent_id in opponents_by_team[team.id]:
+                if opponent_id not in opp_metric_queryset_teams:
+                    continue
                 opp_metric = getattr(opp_metric_queryset_teams[opponent_id], self.opponent_annotator.key)
                 if opp_metric is not None: # opp_metric is None when no debates have happened
                     draw_strength += opp_metric
+            if self.round_value:
+                draw_strength = builtins_round(draw_strength, SCORE_PRECISION)
             standings.add_metric(team, self.key, draw_strength)
 
 
@@ -219,22 +239,30 @@ class DrawStrengthByRankMetricAnnotator(BaseMetricAnnotator):
 
         logger.info("Running opponents query for rank draw strength:")
 
+        team_filter = Q()
         # Make a copy of teams queryset and annotate with opponents
         opponents_filter = ~Q(debateteam__debate__debateteam__team_id=F('id'))
         opponents_filter &= Q(debateteam__debate__round__stage=Round.Stage.PRELIMINARY)
         if round is not None:
             opponents_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+            team_filter &= Q(tournament=round.tournament)
+
         opponents_annotation = ArrayAgg('debateteam__debate__debateteam__team_id',
                 filter=opponents_filter)
         logger.info("Opponents annotation: %s", str(opponents_annotation))
-        teams_with_opponents = queryset.model.objects.annotate(opponent_ids=opponents_annotation)
+        teams_with_opponents = queryset.model.objects.filter(team_filter).annotate(opponent_ids=opponents_annotation)
         opponents_by_team = {team.id: team.opponent_ids or [] for team in teams_with_opponents}
         teams_by_id = {team.id: team for team in teams_with_opponents}
 
         for team in queryset:
-            ranks = [standings.infos[teams_by_id[opponent_id]].rankings['rank'][0] for opponent_id in opponents_by_team[team.id]]
+            ranks = []
+            for opponent_id in opponents_by_team[team.id]:
+                if opponent_id not in teams_by_id:
+                    continue
+                if opponent := standings.infos.get(teams_by_id[opponent_id]):
+                    ranks.append(opponent.rankings['rank'][0])
             ranks_without_none = [rank for rank in ranks if rank is not None]
-            standings.add_metric(team, self.key, sum(ranks_without_none))
+            standings.add_metric(team, self.key, mean(ranks_without_none))
 
 
 class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
@@ -251,6 +279,7 @@ class DrawStrengthBySpeakerScoreMetricAnnotator(BaseDrawStrengthMetricAnnotator)
     name = _("draw strength by total speaker score")
     abbr = _("DSS")
     opponent_annotator = TotalSpeakerScoreMetricAnnotator
+    round_value = True
 
 
 class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):

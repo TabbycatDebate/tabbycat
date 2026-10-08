@@ -12,6 +12,10 @@ from django.db.models import Case, F, When
 
 logger = logging.getLogger(__name__)
 
+# Preserve differences from judge/round averages beyond the two displayed decimal
+# places, while removing floating-point noise before comparing standings metrics.
+SCORE_PRECISION = 6
+
 
 def metricgetter(items, negate=None):
     """Returns a callable object that fetches each item in `items` from its

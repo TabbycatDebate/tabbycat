@@ -52,8 +52,8 @@
       <h6 class="pt-2 text-secondary" data-toggle="tooltip"
           title="{% blocktrans trimmed with round=current_round.abbreviation %}
             The proportion of an adjudicator's score determined by feedback vs the
-            test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for {{ round }}.{% endblocktrans %}">
-        <a href="{% url 'admin:tournaments_round_change' current_round.id %}" target="_blank">
+            base score is set on a per-round basis. Click to edit the feedback weight for {{ round }}.{% endblocktrans %}">
+        <a href="#" class="edit-feedback-weight" data-weight="{{ current_round.feedback_weight }}">
           {{ current_round.abbreviation }} {% trans "Score Ratio" %}
         </a>
       </h6>

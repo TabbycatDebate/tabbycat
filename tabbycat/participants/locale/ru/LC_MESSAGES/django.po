@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:59\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:39\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -17,6 +17,14 @@ msgstr ""
 "X-Crowdin-File: /develop/tabbycat/participants/locale/en/LC_MESSAGES/django.po\n"
 "X-Crowdin-Project-ID: 364715\n"
 "X-Crowdin-File-ID: 942\n"
+
+#: participants/admin.py
+msgid "Create institution conflict"
+msgstr ""
+
+#: participants/admin.py
+msgid "Automatically create a conflict between the selected institution and this participant."
+msgstr ""
 
 #: participants/admin.py
 #, python-format
@@ -79,6 +87,23 @@ msgstr[3] "%(count)d URL-ключ этих судей был удален."
 msgid "Participants"
 msgstr "Участники"
 
+#: participants/forms.py
+msgid "Speaker's full name"
+msgstr ""
+
+#: participants/forms.py
+#, python-format
+msgid "You must type '%(name)s' exactly to confirm deletion."
+msgstr ""
+
+#: participants/models.py
+msgid "Unconfirmed"
+msgstr "Не потверждено"
+
+#: participants/models.py
+msgid "Confirmed"
+msgstr "Подтвержденные"
+
 #: participants/models.py
 msgid "name"
 msgstr "название"
@@ -116,6 +141,30 @@ msgstr "клубы"
 #: participants/models.py
 msgid "tournament"
 msgstr "турнир"
+
+#: participants/models.py
+msgid "Team slots requested"
+msgstr ""
+
+#: participants/models.py
+msgid "Team slots allocated"
+msgstr ""
+
+#: participants/models.py
+msgid "Adjudicator slots requested"
+msgstr ""
+
+#: participants/models.py
+msgid "Adjudicator slots allocated"
+msgstr ""
+
+#: participants/models.py
+msgid "tournament institution"
+msgstr ""
+
+#: participants/models.py
+msgid "tournament institutions"
+msgstr ""
 
 #. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
 #: participants/models.py
@@ -162,6 +211,14 @@ msgstr "категория спикера"
 #: participants/models.py
 msgid "speaker categories"
 msgstr "категории спикеров"
+
+#: participants/models.py
+msgid "last name"
+msgstr ""
+
+#: participants/models.py
+msgid "The last name may be used for team names or code names"
+msgstr ""
 
 #: participants/models.py
 msgid "email address"
@@ -228,6 +285,18 @@ msgid "persons"
 msgstr "люди"
 
 #: participants/models.py
+msgid "Redacted"
+msgstr "Редактировано"
+
+#: participants/models.py
+msgid "coach"
+msgstr ""
+
+#: participants/models.py
+msgid "coaches"
+msgstr ""
+
+#: participants/models.py
 msgid "full name/suffix"
 msgstr "полное имя"
 
@@ -280,7 +349,7 @@ msgid "seed"
 msgstr ""
 
 #: participants/models.py
-msgid "Used as initial ranking to power-pair the first round"
+msgid "Used as initial ranking to power-pair the first round, and to order teams for round-robin draws (including BP preset schedules, which require unique seeds 1 through n)."
 msgstr ""
 
 #: participants/models.py
@@ -312,6 +381,14 @@ msgid "emoji"
 msgstr "эмоджи"
 
 #: participants/models.py
+msgid "registration status"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether the team's registration has been confirmed by tournament staff"
+msgstr ""
+
+#: participants/models.py
 msgid "team"
 msgstr "команда"
 
@@ -326,10 +403,6 @@ msgstr "Если в названии команды указывается на�
 #: participants/models.py
 msgid "Teams must have a full name if they don't use the institutional prefix."
 msgstr "Если в названии команды не указывается название клуба, у команды должно быть полное название."
-
-#: participants/models.py
-msgid "Teams must have a short name if they don't use the institutional prefix."
-msgstr "Если в названии команды не указывается название клуба, у команды должно быть краткое название."
 
 #: participants/models.py
 msgid "speaker"
@@ -376,6 +449,18 @@ msgid "adjudication core"
 msgstr "судейский пул"
 
 #: participants/models.py
+msgid "tester"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether this adjudicator tests other adjudicators. Members of the adjudication core count as testers whether or not this is checked"
+msgstr ""
+
+#: participants/models.py
+msgid "Whether the adjudicator's registration has been confirmed by tournament staff"
+msgstr ""
+
+#: participants/models.py
 msgid "adjudicator"
 msgstr "судья"
 
@@ -399,11 +484,26 @@ msgstr "Спикерские баллы<br>(в порядке выступлен
 msgid "Speaks"
 msgstr "Спикерские"
 
+#: participants/templates/adjudicator_record.html participants/views.py
+#, python-format
+msgid "Record for %(name)s"
+msgstr "Запись для %(name)s"
+
 #: participants/templates/adjudicator_record.html
 #: participants/templates/team_record.html
 #, python-format
 msgid "About %(name)s"
 msgstr "О %(name)s"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Edit Database"
+msgstr "Изменить базу данных"
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Registration not confirmed by tournament staff; will not be included in the tournament until confirmed."
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "Independent adjudicator"
@@ -430,6 +530,11 @@ msgstr "Регион:"
 
 #: participants/templates/adjudicator_registration_card.html
 msgid "The institutional affiliations of adjudicators are not public at this tournament."
+msgstr ""
+
+#: participants/templates/adjudicator_registration_card.html
+#: participants/templates/team_registration_card.html
+msgid "Custom Questions:"
 msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html
@@ -466,10 +571,6 @@ msgstr "Конфликты судей:"
 msgid "Room Constraints:"
 msgstr "Ограничения аудиторий:"
 
-#: participants/templates/admin/participants/adjudicator/change_form.html
-msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "<strong>Не забудьте:</strong> Если у этого судьи должен быть конфликт с его клубом, его нужно <strong>сейчас</strong> добавить на вкладке <strong>\"Конфликты между судьями и клубами\"</strong>, поскольку эта форма <strong>не</strong> добавляет судье конфликт с его клубом автоматически."
-
 #: participants/templates/admin/participants/delete_debateteam_warning.html
 #, python-format
 msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
@@ -499,10 +600,6 @@ msgstr "Если вы очень уверены, что хотите удали�
 msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
 msgstr "Если вы точно уверены, что хотите удалить эти объекты %(objects_name)s, пожалуйста, сначала удалите объекты, расположенные выше и внимательно отнеситесь к предупреждению, которую вы увидите на странице объектов \"дебатирующие команды\" перед продолжением."
 
-#: participants/templates/admin/participants/team/change_form.html
-msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
-msgstr "<strong>Не забудьте:</strong> Если у этой команды должен быть конфликт с её клубом, его нужно <strong>сейчас</strong> добавить на вкладке <strong>\"Конфликты между командами и клубами\"</strong>, поскольку эта форма <strong>не</strong> добавляет команде конфликт с её клубом автоматически."
-
 #: participants/templates/current_round/common.html
 #, python-format
 msgid "The round begins at %(start_time)s"
@@ -511,6 +608,10 @@ msgstr "Раунд начинается в %(start_time)s"
 #: participants/templates/current_round/common.html
 msgid "Teams:"
 msgstr "Команды:"
+
+#: participants/templates/current_round/common.html
+msgid "The adjudicators for this debate have not yet been released."
+msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "Adjudicator:"
@@ -543,8 +644,8 @@ msgid "Motion:"
 msgstr "Тема:"
 
 #: participants/templates/current_round/common.html
-msgid "View Info Slide"
-msgstr "Посмотреть инфослайд"
+msgid "View Info-slide"
+msgstr ""
 
 #: participants/templates/current_round/common.html
 msgid "The motion(s) for this round haven't yet been released."
@@ -794,6 +895,15 @@ msgstr[2] "Похоже что %(team)s участвует в %(ndebates)s де�
 msgstr[3] "Похоже что %(team)s участвует в %(ndebates)s дебатах в этом раунде."
 
 #: participants/templates/in_this_round.html
+#, python-format
+msgid "It looks like you are competing in %(ndebates)s debate this round."
+msgid_plural "It looks like you are competing in %(ndebates)s debates this round."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: participants/templates/in_this_round.html
 msgid "If this is an error, please contact a tab director immediately."
 msgstr "Если это ошибка, немедленно свяжитесь с тэбмастером."
 
@@ -817,6 +927,14 @@ msgstr "Список участников"
 #: participants/templates/participants_subnav.html
 msgid "Institutions List"
 msgstr "Список клубов"
+
+#: participants/templates/participants_subnav.html
+msgid "Gender Diversity"
+msgstr ""
+
+#: participants/templates/participants_subnav.html
+msgid "Adjudicator Rule"
+msgstr ""
 
 #: participants/templates/participants_subnav.html
 msgid "Emails have already been sent."
@@ -851,6 +969,35 @@ msgstr "Если вы хотите удалить категории спике�
 #: participants/templates/speaker_categories_edit.html
 msgid "Save Speaker Categories"
 msgstr "Сохранить категории спикеров"
+
+#: participants/templates/speaker_confirm_delete.html
+msgid "Confirm Speaker Deletion"
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#: participants/templates/speaker_create.html
+msgid "Back to Team Record"
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Do you really want to delete <strong>%(name)s</strong> from %(team)s? This will permanently remove the speaker and <strong>cannot be undone</strong>. Any ballot scores attributed to this speaker will also be deleted."
+msgstr ""
+
+#: participants/templates/speaker_confirm_delete.html
+#, python-format
+msgid "Yes, delete %(name)s"
+msgstr ""
+
+#: participants/templates/speaker_create.html
+#: participants/templates/team_registration_card.html
+msgid "Add Speaker"
+msgstr ""
+
+#: participants/templates/speaker_create.html
+#, python-format
+msgid "for %(name)s"
+msgstr "для %(name)s"
 
 #: participants/templates/team_registration_card.html
 msgid "Team name:"
@@ -891,6 +1038,10 @@ msgstr "Доступны для брейковых категорий:"
 #: participants/templates/team_registration_card.html
 msgid "Speaker categories:"
 msgstr "Категории спикеров:"
+
+#: participants/templates/team_registration_card.html
+msgid "Delete"
+msgstr ""
 
 #: participants/templatetags/team_name_for_data_entry.py
 #, python-format
@@ -946,6 +1097,28 @@ msgid "Number of independent adjudicators"
 msgstr "Количество независимых судей"
 
 #: participants/views.py
+msgid "Institution Gender Diversity"
+msgstr ""
+
+#: participants/views.py
+msgid "N/A"
+msgstr "Н/Д"
+
+#: participants/views.py
+msgid "Institution"
+msgstr "Клуб"
+
+#: participants/views.py
+#, python-format
+msgid "Speakers (%(gender)s)"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "Adjudicators (%(gender)s)"
+msgstr ""
+
+#: participants/views.py
 msgid "Code name"
 msgstr "Кодовое имя"
 
@@ -958,13 +1131,32 @@ msgid "Results"
 msgstr "Результаты"
 
 #: participants/views.py
-#, python-format
-msgid "Record for %(name)s"
-msgstr "Запись для %(name)s"
-
-#: participants/views.py
 msgid "Previous Rounds"
 msgstr "Предыдущие раунды"
+
+#: participants/views.py
+#, python-format
+msgid "Add Speaker to %(team)s"
+msgstr ""
+
+#: participants/views.py
+msgid "Cancel and return to team record"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was added as a speaker."
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "Delete %(name)s"
+msgstr ""
+
+#: participants/views.py
+#, python-format
+msgid "%(name)s was deleted."
+msgstr ""
 
 #: participants/views.py
 #, python-format
@@ -982,4 +1174,12 @@ msgstr "В категории не было внесено никаких изм
 #: participants/views.py
 msgid "Speaker Category Eligibility"
 msgstr "Доступность спикера для категории"
+
+#: participants/views.py
+msgid "Adjudicator Requirement"
+msgstr ""
+
+#: participants/views.py
+msgid "Registered"
+msgstr ""
 

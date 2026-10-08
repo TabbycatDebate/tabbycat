@@ -75,11 +75,18 @@ class GraphGeneratorMixin:
                     if penalty is not None:
                         graph.add_edge(t1, t2, weight=penalty)
 
-            for pairing in nx.min_weight_matching(graph):
+            # nx.nx_pydot.write_dot(graph, sys.stdout)
+            for pairing in sorted(nx.min_weight_matching(graph), key=lambda p: self.room_rank_ordering(p)):
                 i += 1
-                pairings[points].append(Pairing(teams=pairing, bracket=points, room_rank=i))
+                pairings[points].append(Pairing(teams=pairing, bracket=self.get_bracket(pairing, points), room_rank=i))
 
         return pairings
+
+    def room_rank_ordering(self, p):
+        return 0
+
+    def get_bracket(self, pairing, points):
+        return points
 
 
 class GraphAllocatedSidesMixin(GraphGeneratorMixin):

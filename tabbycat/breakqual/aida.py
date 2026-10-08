@@ -88,7 +88,7 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
         # Now, exclude capped teams accordingly
         for tsi in self.capped_teams:
             self.eligible_teams.remove(tsi)
-            self.excluded_teams[tsi] = BreakingTeam.REMARK_CAPPED
+            self.excluded_teams[tsi] = BreakingTeam.Remark.CAPPED
 
     def reinsert_capped_teams(self):
         """Unexcludes teams that were subject to the post-cutoff cap if there

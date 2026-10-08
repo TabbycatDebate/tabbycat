@@ -7,6 +7,9 @@
 
     <form class="col-lg-8 ml-lg-auto mr-md-auto d-flex flex-column gap-3" action="." method="POST">
 
+      {% block registration_header%}
+      {% endblock %}
+
       {% csrf_token %}
       {{ wizard.form.media }}
       {{ wizard.management_form }}
@@ -14,6 +17,7 @@
         {{ wizard.form.management_form }}
         {% for form in wizard.form.forms %}
           <div class="card">
+            {% block formset_form_header %}{% endblock %}
             {% include "components/form-main.html" %}
           </div>
         {% endfor %}

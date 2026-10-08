@@ -10,6 +10,14 @@ from utils.forms import OptionalChoiceField
 logger = logging.getLogger(__name__)
 
 
+def get_answers_initial(obj):
+    initial = {}
+    for answer in obj.answers.select_related('question').all():
+        key = CustomQuestionsFormMixin.question_field_name(answer.question)
+        initial[key] = answer.deserialize_answer()
+    return initial
+
+
 class SpacedRadioWidget(forms.RadioSelect):
     template_name = 'spaced_choice_widget.html'
 
@@ -23,25 +31,25 @@ class IntegerScaleField(forms.IntegerField):
         self.widget.choices = tuple((i, str(i)) for i in range(self.min_value, self.max_value+1))
 
 
-class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
+class BlankUnknownBooleanSelect(forms.Select):
     """Uses '--------' instead of 'Unknown' for the None choice."""
 
     def __init__(self, attrs=None):
         choices = (
-            ('1', '--------'),
+            (None, '--------'),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('2', gettext_lazy('Yes')),
+            (True, gettext_lazy('Yes')),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('3', gettext_lazy('No')),
+            (False, gettext_lazy('No')),
         )
-        # skip the NullBooleanSelect constructor
-        super(forms.NullBooleanSelect, self).__init__(attrs, choices)
+        super().__init__(attrs, choices)
 
 
 class BooleanSelectField(forms.NullBooleanField):
     """Widget to do boolean select fields following our conventions.
     Specifically, if 'required', checks that an option was chosen."""
     widget = BlankUnknownBooleanSelect
+    null = True
 
     def clean(self, value):
         value = super(BooleanSelectField, self).clean(value)
@@ -84,7 +92,7 @@ class CustomQuestionsFormMixin:
                 min_value = int(question.min_value) if question.min_value is not None else None
                 max_value = int(question.max_value) if question.max_value is not None else None
                 if min_value is None or max_value is None:
-                    logger.error("Integer scale %r has no min_value or no max_value" % question.reference)
+                    logger.error("Integer scale %r has no min_value or no max_value" % question.name)
                     field = forms.IntegerField()
                 else:
                     field = IntegerScaleField(min_value=min_value, max_value=max_value)
@@ -112,8 +120,11 @@ class CustomQuestionsFormMixin:
 
         return field
 
-    def save_answers(self, obj):
-        for question in self.get_custom_question_queryset():
+    def save_answers(self, obj, replace_existing=False):
+        questions = self.get_custom_question_queryset()
+        if replace_existing:
+            obj.answers.filter(question__in=questions).delete()
+        for question in questions:
             response = self.cleaned_data[self.question_field_name(question)]
             if response is not None:
                 if question.answer_type is question.AnswerType.MULTIPLE_SELECT:

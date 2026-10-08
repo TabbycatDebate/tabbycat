@@ -28,7 +28,7 @@ class TestTrivialStandings(TestCase):
         self.team2 = Team.objects.create(tournament=self.tournament, reference="2", use_institution_prefix=False)
         adj = Adjudicator.objects.create(tournament=self.tournament, name="Adjudicator")
         for i in [1, 2]:
-            rd = Round.objects.create(tournament=self.tournament, seq=i)
+            rd = Round.objects.create(tournament=self.tournament, seq=i, schedule_group=i)
             debate = Debate.objects.create(round=rd, flags=['pullup'])
             dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF, flags=['pullup'])
             dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
@@ -52,7 +52,7 @@ class TestTrivialStandings(TestCase):
         speaker1 = Speaker.objects.create(team=self.team1, name="Speaker 1")
         speaker2 = Speaker.objects.create(team=self.team2, name="Speaker 2")
         for i in [1, 2]:
-            rd = Round.objects.get(tournament=self.tournament, seq=i)
+            rd = Round.objects.get(tournament=self.tournament, seq=i, schedule_group=i)
             dt1 = DebateTeam.objects.get(debate__round=rd, team=self.team1)
             dt2 = DebateTeam.objects.get(debate__round=rd, team=self.team2)
             ballotsub = BallotSubmission.objects.get(debate__round=rd)
@@ -111,6 +111,32 @@ class TestTrivialStandings(TestCase):
 
     def test_speaks_stddev(self):
         self._base_metric_test({'speaks_stddev': [.5, .5]})
+
+    def test_score_metrics_ignore_float_noise(self):
+        for team, score in ((self.team1, 75.1), (self.team2, 75.1 + 1e-12)):
+            TeamScore.objects.filter(debate_team__team=team).update(score=score, margin=score)
+        for metric in ('speaks_sum', 'speaks_avg', 'speaks_stddev', 'margin_sum', 'margin_avg', 'draw_strength_speaks'):
+            with self.subTest(metric=metric):
+                standings = self.get_standings(TeamStandingsGenerator((metric,), ('rank',)))
+                for team in (self.team1, self.team2):
+                    self.assertEqual(standings.get_standing(team).rankings['rank'], (1, True))
+
+    def test_individual_score_average_ignores_float_noise(self):
+        self.set_up_speaker_scores(1)
+        for team, score in ((self.team1, 75.1), (self.team2, 75.1 + 1e-12)):
+            SpeakerScore.objects.filter(debate_team__team=team).update(score=score)
+        standings = self.get_standings(TeamStandingsGenerator(('speaks_ind_avg',), ('rank',)))
+        for team in (self.team1, self.team2):
+            self.assertEqual(standings.get_standing(team).rankings['rank'], (1, True))
+
+    def test_score_average_preserves_sub_display_differences(self):
+        TeamScore.objects.filter(debate_team__team=self.team1).update(score=75)
+        TeamScore.objects.filter(debate_team__team=self.team2).update(score=75 + .1 / 30)
+        standings = self.get_standings(TeamStandingsGenerator(('speaks_avg',), ('rank',)))
+        first, second = [standings.get_standing(team) for team in (self.team1, self.team2)]
+        self.assertEqual(format(first.metrics['speaks_avg'], '.2f'), format(second.metrics['speaks_avg'], '.2f'))
+        self.assertEqual(first.rankings['rank'], (2, False))
+        self.assertEqual(second.rankings['rank'], (1, False))
 
     def test_draw_strength(self):
         # losing team has faced winning team twice, so draw strength is 2 * 2 = 4
@@ -206,12 +232,21 @@ class TestTrivialStandings(TestCase):
         self.set_up_speaker_scores(2)
         self._base_metric_test({'wins': [2, 0], 'speaks_ind_avg': [101.5, 98.5]})
 
+    def test_metric_columns_follow_settings_order(self):
+        # Non-combinable metrics (e.g. AISS) are computed in an earlier pass than
+        # combinable ones; display order must still follow precedence + extras.
+        self.set_up_speaker_scores(1)
+        self.set_up_speaker_scores(2)
+        generator = TeamStandingsGenerator(('wins', 'speaks_ind_avg', 'points'), ())
+        standings = self.get_standings(generator)
+        self.assertEqual(standings.metric_keys, ['wins', 'speaks_ind_avg', 'points'])
+
 
 class IgnorableDebateMixin:
 
     def set_up_ignorable_debate(self):
         adj = Adjudicator.objects.get()
-        rd = Round.objects.create(tournament=self.tournament, seq=3)
+        rd = Round.objects.create(tournament=self.tournament, seq=3, schedule_group=3)
         debate = Debate.objects.create(round=rd)
         dt1 = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.AFF)
         dt2 = DebateTeam.objects.create(debate=debate, team=self.team2, side=DebateSide.NEG)
@@ -227,7 +262,7 @@ class IgnorableDebateMixin:
         super().set_up_speaker_scores(position)
         speaker1 = Speaker.objects.filter(team=self.team1, name="Speaker 1").first()
         speaker2 = Speaker.objects.filter(team=self.team2, name="Speaker 2").first()
-        rd = Round.objects.get(tournament=self.tournament, seq=3)
+        rd = Round.objects.get(tournament=self.tournament, seq=3, schedule_group=3)
         dt1 = DebateTeam.objects.get(debate__round=rd, team=self.team1)
         dt2 = DebateTeam.objects.get(debate__round=rd, team=self.team2)
         ballotsub = BallotSubmission.objects.get(debate__round=rd)
@@ -324,7 +359,7 @@ class TestBasicStandings(TestCase):
         sides = [DebateSide.AFF, DebateSide.NEG]
 
         for r, debatedict in enumerate(testdata["teamscores"]):
-            rd = Round.objects.create(tournament=tournament, seq=r, abbreviation="R{:d}".format(r))
+            rd = Round.objects.create(tournament=tournament, seq=r, schedule_group=r, abbreviation="R{:d}".format(r))
             for adj, venue, (teamnames, teamscores) in zip(adjs, venues, debatedict.items()):
                 debate = Debate.objects.create(round=rd, venue=venue)
                 for team, side in zip(teamnames, sides):

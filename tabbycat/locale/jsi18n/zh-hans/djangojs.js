@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = 0;
     if (typeof v === 'boolean') {
@@ -14,12 +13,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "\u9009\u4e2d\u4e86 %(cnt)s \u4e2a\u4e2d\u7684 %(sel)s \u4e2a"
@@ -30,6 +29,9 @@
     "%1, %2": "%1\uff0c%2",
     "%1, a %2": "%1\uff0c\u4e00\u4e2a%2",
     "%1:": "%1\uff1a",
+    "%s selected option not visible": [
+      "%s\u6240\u9009\u9009\u9879\u4e0d\u53ef\u89c1"
+    ],
     "6 a.m.": "\u4e0a\u53486\u70b9",
     "6 p.m.": "\u4e0b\u53486\u70b9",
     "; ": "\uff1b",
@@ -57,6 +59,7 @@
     "December": "\u5341\u4e8c\u6708",
     "February": "\u4e8c\u6708",
     "Filter": "\u8fc7\u6ee4",
+    "Friday": "\u661f\u671f\u4e94",
     "Gender": "\u6027\u522b",
     "Hide": "\u9690\u85cf",
     "ID %1,": "ID %1\uff0c",
@@ -66,6 +69,7 @@
     "March": "\u4e09\u6708",
     "May": "\u4e94\u6708",
     "Midnight": "\u5348\u591c",
+    "Monday": "\u661f\u671f\u4e00",
     "No": "\u5426",
     "No Category": "\u6ca1\u6709\u7c7b\u522b",
     "No code name set": "\u6ca1\u6709\u4ee3\u53f7",
@@ -84,24 +88,36 @@
     "Region": "\u5730\u533a",
     "Remove": "\u5220\u9664",
     "Remove all": "\u5220\u9664\u5168\u90e8",
+    "Saturday": "\u661f\u671f\u516d",
     "September": "\u4e5d\u6708",
     "Show": "\u663e\u793a",
     "Solo Chair": "\u55ae\u4e3b\u5e2d",
+    "Sunday": "\u661f\u671f\u65e5",
     "Team": "\u961f\u4f0d",
     "The motion is <em>%1</em>": "\u8bdd\u9898\u662f<em>%1</em>",
     "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "\u8fd9\u662f\u53ef\u7528\u7684%s\u5217\u8868\u3002\u4f60\u53ef\u4ee5\u5728\u9009\u62e9\u6846\u4e0b\u9762\u8fdb\u884c\u9009\u62e9\uff0c\u7136\u540e\u70b9\u51fb\u4e24\u9009\u6846\u4e4b\u95f4\u7684\u201c\u9009\u62e9\u201d\u7bad\u5934\u3002",
     "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "\u8fd9\u662f\u9009\u4e2d\u7684 %s \u7684\u5217\u8868\u3002\u4f60\u53ef\u4ee5\u5728\u9009\u62e9\u6846\u4e0b\u9762\u8fdb\u884c\u9009\u62e9\uff0c\u7136\u540e\u70b9\u51fb\u4e24\u9009\u6846\u4e4b\u95f4\u7684\u201c\u5220\u9664\u201d\u7bad\u5934\u8fdb\u884c\u5220\u9664\u3002",
+    "Thursday": "\u661f\u671f\u56db",
     "Today": "\u4eca\u5929",
     "Tomorrow": "\u660e\u5929",
     "Trainee": "\u5b9e\u4e60\u751f",
+    "Tuesday": "\u661f\u671f\u4e8c",
     "Type into this box to filter down the list of available %s.": "\u5728\u6b64\u6846\u4e2d\u952e\u5165\u4ee5\u8fc7\u6ee4\u53ef\u7528\u7684%s\u5217\u8868",
     "Type into this box to filter down the list of selected %s.": "\u5728\u8be5\u6846\u4e2d\u952e\u5165\u4ee5\u8fc7\u6ee4\u6240\u9009%s\u7684\u5217\u8868\u3002",
     "Unknown": "\u672a\u77e5",
+    "Wednesday": "\u661f\u671f\u4e09",
     "Yes": "\u662f",
     "Yesterday": "\u6628\u5929",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "\u4f60\u5df2\u7ecf\u9009\u62e9\u4e00\u4e2a\u52a8\u4f5c\uff0c\u4f46\u662f\u6ca1\u6709\u5355\u72ec\u4fee\u6539\u4efb\u4f55\u4e00\u5904\u3002\u4f60\u53ef\u4ee5\u9009\u62e9'Go'\u6309\u952e\u800c\u4e0d\u662f'Save'\u6309\u952e\u3002",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "\u4f60\u5df2\u7ecf\u9009\u62e9\u4e00\u4e2a\u52a8\u4f5c\uff0c\u4f46\u662f\u4f60\u6ca1\u6709\u4fdd\u5b58\u4f60\u5355\u72ec\u4fee\u6539\u7684\u5730\u65b9\u3002\u8bf7\u70b9\u51fbOK\u4fdd\u5b58\u3002\u4f60\u9700\u8981\u518d\u91cd\u65b0\u8dd1\u8fd9\u4e2a\u52a8\u4f5c\u3002",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "\u4f60\u5c1a\u672a\u4fdd\u5b58\u4e00\u4e2a\u53ef\u7f16\u8f91\u680f\u4f4d\u7684\u53d8\u66f4. \u5982\u679c\u4f60\u8fdb\u884c\u522b\u7684\u52a8\u4f5c, \u672a\u4fdd\u5b58\u7684\u53d8\u66f4\u5c06\u4f1a\u4e22\u5931.",
+    "abbrev. day Friday\u0004Fri": "\u661f\u671f\u4e94",
+    "abbrev. day Monday\u0004Mon": "\u661f\u671f\u4e00",
+    "abbrev. day Saturday\u0004Sat": "\u661f\u671f\u516d",
+    "abbrev. day Sunday\u0004Sun": "\u661f\u671f\u65e5",
+    "abbrev. day Thursday\u0004Thur": "\u661f\u671f\u56db",
+    "abbrev. day Tuesday\u0004Tue": "\u661f\u671f\u4e8c",
+    "abbrev. day Wednesday\u0004Wed": "\u661f\u671f\u4e09",
     "abbrev. month April\u0004Apr": "\u56db\u6708",
     "abbrev. month August\u0004Aug": "\u516b\u6708",
     "abbrev. month December\u0004Dec": "\u5341\u4e8c\u6708",
@@ -126,7 +142,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 22:00\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:40\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -33,11 +33,11 @@ msgstr[3] ""
 
 #: results/admin.py
 msgid "Speaker"
-msgstr ""
+msgstr "Mluvčí"
 
 #: results/apps.py results/templates/public_results_index.html results/views.py
 msgid "Results"
-msgstr ""
+msgstr "Výsledky"
 
 #: results/forms.py
 msgid "Tournament password"
@@ -62,7 +62,7 @@ msgstr ""
 #: results/forms.py
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
-msgstr ""
+msgstr "%(aff_team)s afirmoval, %(neg_team)s negoval"
 
 #: results/forms.py
 #, python-format
@@ -72,20 +72,28 @@ msgstr ""
 #: results/forms.py
 #, python-format
 msgid "%(team)s (%(side)s)"
-msgstr ""
+msgstr "%(team)s (%(side)s)"
 
 #: results/forms.py
 msgid "Winner"
-msgstr ""
+msgstr "Vítěz"
 
 #: results/forms.py
 msgid "Mark as a duplicate speech"
 msgstr ""
 
 #: results/forms.py
+msgid "Only one team can forfeit"
+msgstr ""
+
+#: results/forms.py
+msgid "This field is required."
+msgstr ""
+
+#: results/forms.py
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
-msgstr ""
+msgstr "Mluvčí %(speaker)s nevypadá, že je v týmu %(team)s."
 
 #: results/forms.py
 #, python-format
@@ -102,6 +110,10 @@ msgstr ""
 
 #: results/forms.py
 msgid "The reply speaker for this team did not give a substantive speech."
+msgstr ""
+
+#: results/forms.py
+msgid "This was a 2:1 split decision (self-declared)"
 msgstr ""
 
 #: results/forms.py
@@ -160,6 +172,18 @@ msgstr[3] ""
 
 #: results/forms.py
 msgid "There must be exactly 1 team advancing."
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "All speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Substantive speeches"
+msgstr ""
+
+#: results/migrations/0019_scorecriterion_speech_type.py results/models.py
+msgid "Reply speeches"
 msgstr ""
 
 #: results/models.py
@@ -239,6 +263,22 @@ msgid "Whether this submission represents only the submitting adjudicator on a p
 msgstr ""
 
 #: results/models.py
+msgid "forfeit"
+msgstr ""
+
+#: results/models.py
+msgid "Whether a team had forfeited the debate and so speaker scores were exceptionally not attributed."
+msgstr ""
+
+#: results/models.py
+msgid "self-declared split"
+msgstr ""
+
+#: results/models.py
+msgid "For solo-adjudicated debates: whether the adjudicator has declared their decision as a 2:1 split (rather than unanimous), per Karl Popper rules."
+msgstr ""
+
+#: results/models.py
 msgid "ballot submission"
 msgstr ""
 
@@ -248,7 +288,7 @@ msgstr ""
 
 #: results/models.py
 #, python-format
-msgid "Debate is in round %(round)d but motion (%(motion)s) is not in round"
+msgid "Debate is in %(round)s but motion (%(motion)s) is not in round"
 msgstr ""
 
 #: results/models.py
@@ -273,7 +313,7 @@ msgstr ""
 
 #: results/models.py
 msgid "score"
-msgstr ""
+msgstr "skóre"
 
 #: results/models.py
 msgid "team score by adjudicator"
@@ -364,6 +404,10 @@ msgid "sequence"
 msgstr ""
 
 #: results/models.py
+msgid "speech type"
+msgstr ""
+
+#: results/models.py
 msgid "weight"
 msgstr ""
 
@@ -401,6 +445,30 @@ msgstr ""
 
 #: results/models.py
 msgid "speaker scores for criteria by adjudicator"
+msgstr ""
+
+#: results/result.py
+msgid "Inconsistent speaker order"
+msgstr ""
+
+#: results/result.py
+msgid "Inconsistent marking of duplicate (iron-person) speeches"
+msgstr ""
+
+#: results/result.py
+msgid "Winners are not identical"
+msgstr ""
+
+#: results/result.py
+msgid "Criterion scores are not identical"
+msgstr ""
+
+#: results/result.py
+msgid "Scores are not identical"
+msgstr ""
+
+#: results/result.py
+msgid "Speech ranks are not identical"
 msgstr ""
 
 #: results/tables.py
@@ -515,7 +583,6 @@ msgstr ""
 
 #: results/templates/assistant_enter_results.html
 #: results/templates/enter_results.html
-#: results/templates/public_enter_results.html
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr ""
 
@@ -734,14 +801,6 @@ msgstr ""
 msgid "Error with %(pos)s's score field: %(error)s"
 msgstr ""
 
-#: results/templates/debate_postponement_form.html
-msgid "Postponed"
-msgstr ""
-
-#: results/templates/debate_postponement_form.html
-msgid "Postpone"
-msgstr ""
-
 #: results/templates/enter_results.html
 msgid "Ballot Status"
 msgstr ""
@@ -769,7 +828,7 @@ msgstr ""
 #: results/templates/includes/public_enter_results_info.html
 #, python-format
 msgid "The URL of this page is personalised to you, %(name)s. <strong>Do not share it with anyone;</strong> anyone who knows this URL can submit results and/or feedback for your debates. You may bookmark this page and return here after each debate for the available actions."
-msgstr ""
+msgstr "URL této stránky je přizpůsobeno právě vám, %(name)s. <strong>S nikým ji nesdílejte;</strong> kdokoli zná tuto URL může posílat výsledky a/nebo zpětnou vazbu pro vaše debaty. Můžete si tuto stránku uložit do oblíbených a vrátit se sem po každé debatě pro dostupné funkce."
 
 #: results/templates/privateurl_ballot_set.html
 #: results/templates/privateurl_ballot_set_error.html

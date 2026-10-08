@@ -17,7 +17,7 @@ class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
         if round.draw_status == Round.Status.RELEASED:
             self.return_error(group, _("Draw is already released, unrelease draw to assign rooms."))
             return
-        if round.draw_status != Round.Status.CONFIRMED:
+        if round.draw_status not in [round.Status.CONFIRMED, round.Status.TEAMS_RELEASED]:
             self.return_error(group, _("Draw is not confirmed, confirm draw to assign rooms."))
             return
 

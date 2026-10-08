@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% load debate_tags i18n static %}
 
+{% block noindex %}
+  {% if pref.search_engine_indexing == "none" %}
+    <meta name="robots" content="noindex">
+  {% endif %}
+{% endblock %}
+
 {% block head-title %}<span class="emoji">👋</span>
+
 {% blocktrans trimmed with tournament=tournament.name %}
     Welcome to {{ tournament }}
 {% endblocktrans %}{% endblock %}
@@ -160,6 +167,13 @@
             {% endblocktrans %}
             {% tournamenturl 'breakqual-public-teams' category.slug as url %}
             {% include "components/item-action.html" with icon="pie-chart" %}
+            {% if pref.public_results %}
+              {% blocktrans trimmed asvar text with category=category.name %}
+                {{ category }} Bracket
+              {% endblocktrans %}
+              {% tournamenturl 'breakqual-public-bracket' category.slug as url %}
+              {% include "components/item-action.html" with icon="git-branch" %}
+            {% endif %}
           {% endfor %}
         {% endif %}
 
@@ -209,7 +223,7 @@
 
         {% if pref.public_draw == 'all-released' %}
           {% for r in tournament.round_set.all %}
-            {% if r.draw_status == r.Status.RELEASED %}
+            {% if r.draw_released_for_public %}
               {% blocktrans trimmed asvar text with round=r.name %}
                 Draw for {{ round }}
               {% endblocktrans %}

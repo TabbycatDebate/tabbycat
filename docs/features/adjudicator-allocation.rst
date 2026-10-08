@@ -41,6 +41,8 @@ To begin this process, click the *Allocate* button in the top-left. If you have 
 
 Once you click *Auto-Allocate Adjudicators* the modal should disappear and your panels should appear. At large tournaments, and in the later rounds, it is not unheard of for this process to take a minute or longer.
 
+.. note:: If you are running a local installation and the allocator modal appears to hang on "Loading...", ensure that you have configured a :ref:`local Redis instance and are running a background worker <install-local>`.
+
 .. note:: You can re-run the automatic allocation process on top of an existing allocation. Thus it is worth tweaking your priorities or allocation settings if the allocation does not seem optimal to you. Also note that the allocation process is not deterministic — if you rerun it the panels will be different.
 
 Once your adjudicators have been allocated you can drag and drop them on to different panels. You can also drag and drop them to the 'unused area' (the gray bar at the bottom of the page) if you wish to store them temporarily or remove them from the draw. Dropping an adjudicator into the chair position will 'swap' that adjudicator into the previous position of the new chair.

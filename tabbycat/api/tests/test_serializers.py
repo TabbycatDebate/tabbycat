@@ -13,15 +13,87 @@ from draw.types import DebateSide
 from motions.models import Motion, RoundMotion
 from options.presets import CanadianParliamentaryPreferences
 from participants.models import Adjudicator, Speaker, Team
+from results.models import ScoreCriterion
 from tournaments.models import Round, Tournament
 from utils.misc import reverse_round, reverse_tournament
-from utils.tests import CompletedTournamentTestMixin
+from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
 User = get_user_model()
 tz = zoneinfo.ZoneInfo('Australia/Melbourne')
 
 
+class TournamentSerializerTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_base(self):
+        tournament_url = V1_ROOT_URL + "/tournaments/" + self.tournament.slug
+
+        expected = {
+            "id": self.tournament.id,
+            "url": tournament_url,
+            "current_rounds": [
+                tournament_url + "/rounds/4",
+            ],
+            "_links": {
+                "rounds": tournament_url + "/rounds",
+                "break_categories": tournament_url + "/break-categories",
+                "speaker_categories": tournament_url + "/speaker-categories",
+                "institutions": tournament_url + "/institutions",
+                "teams": tournament_url + "/teams",
+                "adjudicators": tournament_url + "/adjudicators",
+                "speakers": tournament_url + "/speakers",
+                "venues": tournament_url + "/venues",
+                "venue_categories": tournament_url + "/venue-categories",
+                "motions": tournament_url + "/motions",
+                "feedback": tournament_url + "/feedback",
+                "feedback_questions": tournament_url + "/feedback-questions",
+                "preferences": tournament_url + "/preferences",
+                "schedule_events": tournament_url + "/schedule-events",
+            },
+            "name": self.tournament.name,
+            "short_name": self.tournament.short_name,
+            "seq": self.tournament.seq,
+            "slug": self.tournament.slug,
+            "active": self.tournament.active,
+        }
+
+        response = self.client.get(self.reverse_url('api-tournament-detail'))
+        self.assertEqual(response.data, expected)
+
+
 class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_base(self):
+        round = self.tournament.round_set.first()
+        round_url = V1_ROOT_URL + "/tournaments/" + self.tournament.slug + "/rounds/1"
+
+        expected = {
+            "id": round.id,
+            "url": round_url,
+            "break_category": None,
+            "starts_at": None,
+            "_links": {
+                "pairing": round_url + "/pairings",
+                "availabilities": round_url + "/availabilities",
+                "preformed_panels": round_url + "/preformed-panels",
+            },
+            "seq": 1,
+            "completed": True,
+            "name": "Round 1",
+            "abbreviation": "R1",
+            "stage": "P",
+            "draw_type": "R",
+            "draw_status": "R",
+            "silent": False,
+            "motions_released": False,
+            "motions_status": "N",
+            "weight": 1,
+            "schedule_group": 1,
+        }
+
+        self.round_seq = 1
+        response = self.client.get(self.reverse_url('api-round-detail'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, expected)
 
     def test_exclude_motions_if_list(self):
         response = self.client.get(reverse_tournament('api-round-list', self.tournament))
@@ -29,7 +101,7 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
 
     def test_include_motions_if_released(self):
         round = self.tournament.round_set.first()
-        round.motions_released = True
+        round.motions_status = Round.MotionsStatus.MOTIONS_RELEASED
         round.save()
 
         response = self.client.get(reverse_round('api-round-detail', self.tournament.round_set.first()))
@@ -186,7 +258,7 @@ class BallotSerializerTests(APITestCase):
         logging.disable(logging.CRITICAL)
         self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
         self.tournament = Tournament.objects.create(slug='apitest')
-        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+        self.round = Round.objects.create(seq=1, schedule_group=1, tournament=self.tournament)
         self.debate = Debate.objects.create(round=self.round)
 
         CanadianParliamentaryPreferences.save(self.tournament)
@@ -224,7 +296,7 @@ class BallotSerializerTests(APITestCase):
         self.user.delete()
         logging.disable(logging.NOTSET)
 
-    def test_can_create_consensus_ballot_scores(self):
+    def test_can_create_consensus_ballot_scores_with_ghost(self):
         client = APIClient()
         client.force_authenticate(user=self.user)
         response = client.post(reverse_round('api-ballot-list', self.round, kwargs={'debate_pk': self.debate.pk}), {
@@ -236,7 +308,7 @@ class BallotSerializerTests(APITestCase):
                             'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
                             'speeches': [
                                 {
-                                    'ghost': False,
+                                    'ghost': True,
                                     'score': 80,
                                     'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s1.pk}),
                                 },
@@ -268,6 +340,83 @@ class BallotSerializerTests(APITestCase):
             },
         })
         self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.data['result']['sheets'][0]['teams'][0]['speeches'][0]['ghost'])
+
+    def test_rejects_reply_criterion_on_substantive_speech(self):
+        self.tournament.preferences['debate_rules__reply_scores_enabled'] = True
+        criterion = ScoreCriterion.objects.create(
+            tournament=self.tournament,
+            seq=1,
+            name='Reply',
+            speech_type=ScoreCriterion.SpeechType.REPLY,
+            weight=1,
+            min_score=0,
+            max_score=50,
+            step=0.5,
+        )
+
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-ballot-list', self.round, kwargs={'debate_pk': self.debate.pk}), {
+            'result': {
+                'sheets': [{
+                    'teams': [
+                        {
+                            'side': 'aff',
+                            'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                            'speeches': [
+                                {
+                                    'ghost': False,
+                                    'score': 80,
+                                    'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s1.pk}),
+                                    'criteria': [{
+                                        'criterion': reverse_tournament('api-score-criteria-detail', self.tournament, kwargs={'pk': criterion.pk}),
+                                        'score': 40,
+                                    }],
+                                },
+                                {
+                                    'ghost': False,
+                                    'score': 80,
+                                    'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s2.pk}),
+                                },
+                                {
+                                    'ghost': False,
+                                    'score': 40,
+                                    'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s1.pk}),
+                                },
+                            ],
+                        },
+                        {
+                            'side': 'neg',
+                            'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                            'speeches': [
+                                {
+                                    'ghost': False,
+                                    'score': 79,
+                                    'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s3.pk}),
+                                },
+                                {
+                                    'ghost': False,
+                                    'score': 79,
+                                    'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s4.pk}),
+                                },
+                                {
+                                    'ghost': False,
+                                    'score': 39,
+                                    'speaker': reverse_tournament('api-speaker-detail', self.tournament, kwargs={'pk': self.s3.pk}),
+                                },
+                            ],
+                        },
+                    ],
+                }],
+            },
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            str(response.data['result']['sheets'][0]['teams'][0]['speeches'][0]),
+            'Score criterion Reply does not apply to speech position 1.',
+        )
 
     def test_can_create_voting_ballot_scores(self):
         self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-adj'
@@ -943,7 +1092,7 @@ class PairingSerializerTests(APITestCase):
         logging.disable(logging.CRITICAL)
         self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
         self.tournament = Tournament.objects.create(slug='apitest')
-        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+        self.round = Round.objects.create(seq=1, schedule_group=1, tournament=self.tournament)
 
         CanadianParliamentaryPreferences.save(self.tournament)
 
@@ -1026,7 +1175,7 @@ class FeedbackSerializerTests(APITestCase):
         logging.disable(logging.CRITICAL)
         self.user = User.objects.create_superuser(username='admin1', password='admin', is_active=True)
         self.tournament = Tournament.objects.create(slug='apitest')
-        self.round = Round.objects.create(seq=1, tournament=self.tournament)
+        self.round = Round.objects.create(seq=1, schedule_group=1, tournament=self.tournament)
 
         CanadianParliamentaryPreferences.save(self.tournament)
 
@@ -1063,14 +1212,15 @@ class FeedbackSerializerTests(APITestCase):
             required=True,
         )
 
-        self.client.login(username="admin1", password="admin")
+        self.tournament.preferences['data_entry__participant_feedback'] = 'private-urls'
+        speaker = Speaker.objects.create(name='Test Speaker', team=self.t1, url_key='test-key')
         response = self.client.post(reverse_tournament('api-feedback-list', self.tournament), {
             'adjudicator': reverse_tournament('api-adjudicator-detail', self.tournament, kwargs={'pk': self.a1.pk}),
             'source': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
             'debate': reverse_round('api-pairing-detail', self.round, kwargs={'debate_pk': self.debate.pk}),
             'answers': [],
             'score': 10,
-        })
+        }, HTTP_AUTHORIZATION=f'Key {speaker.url_key}')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data['non_field_errors'][0], 'Answer to required question is missing')
 

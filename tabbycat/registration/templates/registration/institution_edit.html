@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load add_field_css i18n debate_tags %}
+
+{% block content %}
+
+<div class="row">
+  <form class="col-lg-8 ml-lg-auto mr-md-auto d-flex flex-column gap-3" action="." method="POST">
+    {% csrf_token %}
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{% trans "Institution" %}</h5>
+        {% include "components/form-main.html" with form=form.institution_form %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{% trans "Primary contact" %}</h5>
+        {% include "components/form-main.html" with form=form.coach_form %}
+      </div>
+    </div>
+
+    <div class="card">
+      {% trans "Save changes" context "button" as title %}
+      {% trans "Back to institution list" as subtitle %}
+      {% tournamenturl 'reg-institution-list' as suburl %}
+      {% include "components/form-submit.html" %}
+    </div>
+  </form>
+</div>
+
+{% endblock %}

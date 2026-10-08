@@ -20,3 +20,6 @@ class TestTeam(object):
 
     def seen(self, other):
         return self.hist.count(other.id)
+
+    def same_institution(self, other):
+        return self.institution is not None and self.institution == other.institution

@@ -1,18 +1,24 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
-  
+
+  django.pluralidx = function(n) {
+    const v = (n != 1);
+    if (typeof v === 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s von %(cnt)s ausgew\u00e4hlt",
@@ -42,6 +48,7 @@
     "December": "Dezember",
     "February": "Februar",
     "Filter": "Filter",
+    "Friday": "Freitag",
     "Gender": "Geschlecht",
     "General": "Allgemein",
     "Hide": "Ausblenden",
@@ -51,6 +58,7 @@
     "March": "M\u00e4rz",
     "May": "Mai",
     "Midnight": "Mitternacht",
+    "Monday": "Montag",
     "Noon": "Mittag",
     "Note: You are %s hour ahead of server time.": [
       "Achtung: Sie sind %s Stunde der Serverzeit vorraus.",
@@ -67,22 +75,35 @@
     "Region": "Region",
     "Remove": "Entfernen",
     "Remove all": "Alle entfernen",
+    "Saturday": "Samstag",
     "September": "September",
     "Show": "Einblenden",
+    "Sunday": "Sonntag",
     "Team": "Team",
     "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Dies ist die Liste der verf\u00fcgbaren %s. Einfach im unten stehenden Feld markieren und mithilfe des \u201eAusw\u00e4hlen\u201c-Pfeils ausw\u00e4hlen.",
     "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Dies ist die Liste der ausgew\u00e4hlten %s. Einfach im unten stehenden Feld markieren und mithilfe des \u201eEntfernen\u201c-Pfeils wieder entfernen.",
+    "Thursday": "Donnerstag",
     "Today": "Heute",
     "Tomorrow": "Morgen",
     "Total:": "Gesamt:",
     "Trainee": "Trainee",
+    "Tuesday": "Dienstag",
     "Type into this box to filter down the list of available %s.": "Durch Eingabe in diesem Feld l\u00e4sst sich die Liste der verf\u00fcgbaren %s eingrenzen.",
     "Type into this box to filter down the list of selected %s.": "In diesem Feld tippen, um die Liste der ausgew\u00e4hlten %s einzuschr\u00e4nken.",
+    "Unaffiliated": "Unabh\u00e4ngig",
     "Warning: you have unsaved changes": "Warnung: es gibt ungesicherte \u00c4nderungen",
+    "Wednesday": "Mittwoch",
     "Yesterday": "Gestern",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Sie haben eine Aktion ausgew\u00e4hlt, aber keine \u00c4nderungen an bearbeitbaren Feldern vorgenommen. Sie wollten wahrscheinlich auf \u201eAusf\u00fchren\u201c und nicht auf \u201eSpeichern\u201c klicken.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Sie haben eine Aktion ausgew\u00e4hlt, aber Ihre vorgenommenen \u00c4nderungen nicht gespeichert. Klicken Sie OK, um dennoch zu speichern. Danach m\u00fcssen Sie die Aktion erneut ausf\u00fchren.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Sie haben \u00c4nderungen an bearbeitbaren Feldern vorgenommen und nicht gespeichert. Wollen Sie die Aktion trotzdem ausf\u00fchren und Ihre \u00c4nderungen verwerfen?",
+    "abbrev. day Friday\u0004Fri": "Fr",
+    "abbrev. day Monday\u0004Mon": "Mo",
+    "abbrev. day Saturday\u0004Sat": "Sa",
+    "abbrev. day Sunday\u0004Sun": "So",
+    "abbrev. day Thursday\u0004Thur": "Do",
+    "abbrev. day Tuesday\u0004Tue": "Di",
+    "abbrev. day Wednesday\u0004Wed": "Mi",
     "abbrev. month April\u0004Apr": "Apr",
     "abbrev. month August\u0004Aug": "Aug",
     "abbrev. month December\u0004Dec": "Dez",
@@ -108,7 +129,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

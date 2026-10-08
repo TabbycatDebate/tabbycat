@@ -1,5 +1,11 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
+{% load add_field_css debate_tags i18n static %}
+
+{% block extra-head %}
+  <script src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'admin/js/jquery.init.js' %}"></script>
+  <script src="{% static 'js/django_better_admin_arrayfield.min.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 

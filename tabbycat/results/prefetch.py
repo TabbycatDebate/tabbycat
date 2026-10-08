@@ -103,7 +103,8 @@ def populate_results(ballotsubs, tournament=None):
 
     # Create the DebateResults
     for ballotsub in ballotsubs:
-        result = DebateResult(ballotsub, load=False, sides=range(nsides_per_debate.get(ballotsub.debate_id, tournament.pref('teams_in_debate'))), criteria=criteria)
+        sides = [-1] if ballotsub.debate.is_bye else range(nsides_per_debate.get(ballotsub.debate_id, tournament.pref('teams_in_debate')))
+        result = DebateResult(ballotsub, load=False, sides=sides, criteria=criteria)
         result.init_blank_buffer()
 
         ballotsub._result = result
@@ -149,7 +150,12 @@ def populate_results(ballotsubs, tournament=None):
         for result in results_by_debate_id[da.debate_id]:
             if result.is_voting:
                 result.debateadjs[da.adjudicator] = da
-                result.scoresheets[da.adjudicator] = result.scoresheet_class(positions, sides=range(nsides_per_debate[da.debate_id]), criteria=criteria)
+                result.scoresheets[da.adjudicator] = result.scoresheet_class(
+                    positions,
+                    sides=range(nsides_per_debate[da.debate_id]),
+                    criteria=criteria,
+                    reply_position=tournament.reply_position,
+                )
 
     ssbas = SpeakerScoreByAdj.objects.filter(
         ballot_submission__in=ballotsubs,

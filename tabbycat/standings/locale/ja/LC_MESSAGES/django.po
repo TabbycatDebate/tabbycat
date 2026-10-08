@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:48\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:50\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Japanese\n"
 "Language: ja_JP\n"
@@ -20,16 +20,16 @@ msgstr ""
 
 #: standings/base.py
 msgid "The same metric would be added twice:"
-msgstr ""
+msgstr "同じ指標を複数回追加しています："
 
 #: standings/base.py
 msgid "The same ranking would be added twice:"
-msgstr ""
+msgstr "同じ順位を複数回追加しています："
 
 #: standings/base.py
 #, python-format
 msgid "Unrecognized metric code: \"%(code)s\""
-msgstr ""
+msgstr "不明な指標コード：「%(code)s」"
 
 #: standings/diversity.py
 msgid "All"
@@ -37,20 +37,20 @@ msgstr "すべて"
 
 #: standings/diversity.py
 msgid "Breaking"
-msgstr ""
+msgstr "ブレイク"
 
 #: standings/diversity.py
 #, python-format
 msgid "Not %(category)s"
-msgstr ""
+msgstr "%(category)sでない"
 
 #: standings/diversity.py
 msgid "All Speakers"
-msgstr ""
+msgstr "すべてのスピーカー"
 
 #: standings/diversity.py
 msgid "IAs"
-msgstr ""
+msgstr "IA"
 
 #: standings/diversity.py
 msgid "Chairs"
@@ -66,64 +66,64 @@ msgstr "トレイニー"
 
 #: standings/diversity.py
 msgid "Average Rating"
-msgstr "平均評価"
+msgstr "評価の平均値"
 
 #: standings/diversity.py
 msgid "Median Rating"
-msgstr ""
+msgstr "評価の中央値"
 
 #: standings/diversity.py
 msgid "Upper Quartile Rating"
-msgstr ""
+msgstr "上位四分位値"
 
 #: standings/diversity.py
 msgid "Lower Quartile Rating"
-msgstr ""
+msgstr "下位四分位値"
 
 #: standings/diversity.py
 msgid "Average Rating From Teams"
-msgstr ""
+msgstr "チームからの平均評価"
 
 #: standings/diversity.py
 msgid "Average Rating From Chairs"
-msgstr ""
+msgstr "チェアからの平均評価"
 
 #: standings/diversity.py
 msgid "Average Rating From Panellists"
-msgstr ""
+msgstr "パネルからの平均評価"
 
 #: standings/diversity.py
 msgid "Average Rating From Trainees"
-msgstr ""
+msgstr "トレイニーからの平均評価"
 
 #: standings/diversity.py
 msgid "Average Score"
-msgstr ""
+msgstr "スコアの平均値"
 
 #: standings/diversity.py
 msgid "Median Score"
-msgstr ""
+msgstr "スコアの中央値"
 
 #: standings/diversity.py
 msgid "Upper Quartile Score"
-msgstr ""
+msgstr "スコアの上位四分位値"
 
 #: standings/diversity.py
 msgid "Lower Quartile Score"
-msgstr ""
+msgstr "スコアの下位四分位値"
 
 #: standings/diversity.py
 msgid "Reply Speaker Average"
-msgstr ""
+msgstr "リプライ平均"
 
 #: standings/diversity.py
 #, python-format
 msgid "Speaker %(num)d Average"
-msgstr ""
+msgstr "スピーカー%(num)d平均"
 
 #: standings/diversity.py
 msgid "Average Finals Score"
-msgstr ""
+msgstr "平均ファイナルスコア"
 
 #: standings/speakers.py
 msgid "total"
@@ -139,67 +139,103 @@ msgstr "平均"
 
 #: standings/speakers.py
 msgid "Avg"
-msgstr ""
+msgstr "Avg"
 
 #: standings/speakers.py
 msgid "team points"
-msgstr ""
+msgstr "チームの点数"
 
 #: standings/speakers.py
 msgid "Team"
 msgstr "チーム"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr "勝"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr "1位の回数"
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr "1位"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr "2位の回数"
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr "2位"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr "3位の回数"
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr "3位"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr "票数"
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr "Ballots"
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr "獲得した票数"
+
 #: standings/speakers.py
 msgid "standard deviation"
-msgstr ""
+msgstr "標準偏差"
 
 #: standings/speakers.py
 msgid "Stdev"
-msgstr ""
+msgstr "Stdev"
 
 #: standings/speakers.py
 msgid "number of speeches given"
-msgstr ""
+msgstr "スピーチ数"
 
 #: standings/speakers.py
 msgid "Num"
-msgstr ""
+msgstr "Num"
 
 #: standings/speakers.py
 msgid "replies given"
-msgstr ""
+msgstr "リプライ数"
 
 #: standings/speakers.py
 msgid "trimmed mean (high-low drop)"
-msgstr ""
+msgstr "トリム平均（最大値・最小値切り捨て）"
 
 #: standings/speakers.py
 msgid "Trim"
-msgstr ""
+msgstr "Trim"
 
 #: standings/speakers.py
 msgid "speech ranks"
-msgstr ""
+msgstr "スピーチランク"
 
 #: standings/speakers.py
 msgid "SRank"
-msgstr ""
+msgstr "SRank"
 
 #: standings/teams.py
 msgid "points"
-msgstr "ポイント"
+msgstr "点数"
 
 #: standings/teams.py
 msgid "Pts"
-msgstr ""
+msgstr "Pts"
 
 #: standings/teams.py
 msgid "wins"
-msgstr "勝"
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
-msgstr "勝"
+msgstr "勝ち数"
 
 #: standings/teams.py
 msgid "total speaker score"
@@ -207,219 +243,191 @@ msgstr "合計スピーカースコア"
 
 #: standings/teams.py
 msgid "Spk"
-msgstr ""
+msgstr "Spk"
 
 #: standings/teams.py
 msgid "average total speaker score"
-msgstr ""
+msgstr "平均スピーカースコア"
 
 #: standings/teams.py
 msgid "ATSS"
-msgstr ""
+msgstr "ATSS"
 
 #: standings/teams.py
 msgid "speaker score standard deviation"
-msgstr ""
+msgstr "スピーカースコアの標準偏差"
 
 #: standings/teams.py
 msgid "SSD"
-msgstr ""
+msgstr "SSD"
 
 #: standings/teams.py
 msgid "sum of margins"
-msgstr ""
+msgstr "マージンの和"
 
 #: standings/teams.py
 msgid "Marg"
-msgstr ""
+msgstr "Marg"
 
 #: standings/teams.py
 msgid "average margin"
-msgstr ""
+msgstr "マージンの平均"
 
 #: standings/teams.py
 msgid "AWM"
-msgstr ""
+msgstr "AWM"
 
 #: standings/teams.py
 msgid "average individual speaker score"
-msgstr ""
+msgstr "個人のスコアの平均"
 
 #: standings/teams.py
 msgid "AISS"
+msgstr "AISS"
+
+#: standings/teams.py
+msgid "draw strength by rank"
+msgstr ""
+
+#: standings/teams.py
+msgid "DSR"
 msgstr ""
 
 #: standings/teams.py
 msgid "draw strength by wins"
-msgstr ""
+msgstr "対戦相手の勝ち点"
 
 #: standings/teams.py
 msgid "DS"
-msgstr ""
+msgstr "DS"
 
 #: standings/teams.py
 msgid "draw strength by total speaker score"
-msgstr ""
+msgstr "対戦相手のスピーカースコアの合計"
 
 #: standings/teams.py
 msgid "DSS"
-msgstr ""
+msgstr "DSS"
 
 #: standings/teams.py
 msgid "number of pullups"
-msgstr ""
+msgstr "プルアップ回数"
 
 #: standings/teams.py
 msgid "PU"
-msgstr ""
+msgstr "PU"
 
 #: standings/teams.py
 msgid "number of times in pullup debates"
-msgstr ""
+msgstr "プルアップ部屋の回数"
 
 #: standings/teams.py
 msgid "SPu"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr ""
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr ""
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr ""
-
-#: standings/teams.py
-msgid "1sts"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr ""
-
-#: standings/teams.py
-msgid "2nds"
-msgstr ""
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr ""
-
-#: standings/teams.py
-msgid "3rds"
-msgstr ""
+msgstr "SPu"
 
 #: standings/teams.py
 msgid "number of times ironed"
-msgstr ""
+msgstr "アイアンした回数"
 
 #: standings/teams.py
 msgid "Irons"
-msgstr ""
+msgstr "アイアン"
 
 #: standings/teams.py
 msgid "Who-beat-whom"
-msgstr ""
+msgstr "勝敗関係"
 
 #: standings/teams.py
 msgid "WBW"
-msgstr ""
+msgstr "WBW"
 
 #: standings/teams.py
 msgid "who-beat-whom"
-msgstr ""
+msgstr "勝敗関係"
 
 #: standings/templates/current_standings.html
 msgid "It also excludes results from silent rounds (if any) and from the current round."
-msgstr ""
+msgstr "サイレントラウンドと現在のラウンドの結果は除外されます。"
 
 #: standings/templates/current_standings.html
 #, python-format
 msgid "This list is sorted by team points, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
-msgstr ""
+msgstr "点数、名前のアルファベット順で整理されます。同じブラケット（点数）内でのチーム同士の順位は反映されません。%(silent_round_sentence)s"
 
 #: standings/templates/current_standings.html
 #, python-format
 msgid "This list is sorted by number of wins, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
-msgstr ""
+msgstr "勝ち数、名前のアルファベット順で整理されます。同じブラケット（勝ち数）内でのチーム同士の順位は反映されません。%(silent_round_sentence)s"
 
 #: standings/templates/current_standings_no_round.html
 msgid "There aren't any rounds for which results are available."
-msgstr ""
+msgstr "結果を表示できるラウンドがありません。"
 
 #: standings/templates/reply_standings.html
 msgid "Reply speakers are ranked by their <strong>average reply score</strong>."
-msgstr ""
+msgstr "リプライスピーカーは<strong>リプライの平均スコア</strong>で順位付けされます。"
 
 #: standings/templates/reply_standings.html
 #, python-format
 msgid "Speakers can miss up to %(count)s reply speeches before they are omitted from the replies tab."
-msgstr ""
+msgstr "最大%(count)sスピーチ欠席してもリプライタブに表示されます。"
 
 #: standings/templates/reply_standings.html
 msgid "All reply speakers appear in these standings, no matter how many replies they've missed."
-msgstr ""
+msgstr "欠席した回数に関わらずすべてのリプライスピーカーが表示されます。"
 
 #: standings/templates/reply_standings.html
 #: standings/templates/speaker_standings.html
 #, python-format
 msgid "These settings can be changed in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
-msgstr ""
+msgstr "<a href=\"%(standings_config_url)s\" class=\"alert-link\">大会の順位設定欄</a>からこれらの設定は変更できます。"
 
 #: standings/templates/speaker_standings.html
 #, python-format
 msgid "The speaker standings precedence is empty. This means that speakers aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the speaker standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be total or average."
-msgstr ""
+msgstr "スピーカーの順位付けの指標がありません。すなわち、スピーカーは何の指標でも順位付けできず、すべてのスピーカーは同率1位です。これを意図していない場合、スピーカーの順位付けの指標を<a href=\"%(standings_config_url)s\" class=\"alert-link\">大会設定の順位セクション</a>から変更してください。多くの大会では、最初の指標は合計または平均スコアになるはずです。"
 
 #: standings/templates/speaker_standings.html
 msgid "Speakers are ranked by their <strong>average score</strong>."
-msgstr ""
+msgstr "<strong>スコアの平均値</strong>により順位付けが行われます。"
 
 #: standings/templates/speaker_standings.html
 msgid "Speakers are ranked by their <strong>total score</strong>. Any speaker who misses a single debate will be severely punished in these rankings."
-msgstr ""
+msgstr "<strong>スコアの合計値</strong>により順位付けが行われます。1試合でも欠席すると大きく不利になります。"
 
 #: standings/templates/speaker_standings.html
 #, python-format
 msgid "Speakers can miss up to %(count)s debates before they are omitted from the speaker tab."
-msgstr ""
+msgstr "最大%(count)s試合欠席してもスピーカータブに表示されます。"
 
 #: standings/templates/speaker_standings.html
 msgid "All speakers appear in these standings, no matter how many debates they've missed."
-msgstr ""
+msgstr "欠席した回数に関わらずすべてのスピーカーが表示されます。"
 
 #: standings/templates/speaker_standings.html
 #, python-format
 msgid "Enforcing the limit on the number of missed debates requires the \"number of speeches given\" metric to be included in the speaker standings calculations, so it's been automatically added. To remove this warning message, add <strong>Number of speeches given</strong> to the <strong>Speaker standings extra metrics</strong> in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
-msgstr ""
+msgstr "スピーチの欠席数の制限を設けるにはスピーカー順位の計算に「スピーチ数」の指標が使用される必要があるので、自動的に追加されました。この警告を消すには、<strong>スピーチ回数</strong>を<a href=\"%(standings_config_url)s\" class=\"alert-link\">大会の順位設定欄</a>の<strong>追加のスピーカーの指標</strong>に追加してください。"
 
 #: standings/templates/standings_diversity.html
 msgid "Diversity Overview"
-msgstr ""
+msgstr "ダイバーシティー概要"
 
 #: standings/templates/standings_diversity.html
 msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments. A 'region' is a customisable category assigned to a set of institutions, and counted using the number of participants assigned to those institutions."
-msgstr ""
+msgstr "これらの結果データは、統計的有意性の検定をせずに表示しています。特に小さい大会において、相関性は必ずしも有意とは言えません。「地域」とは、複数のインステに指定されるカスタマイズ可能な分類で、その地域のインステの参加者から計算されます。"
 
 #: standings/templates/standings_diversity.html
 msgid "Non-cis male identifying"
-msgstr ""
+msgstr "非シス男性自認"
 
 #: standings/templates/standings_diversity.html
 msgid "Cis-male identifying"
-msgstr ""
+msgstr "シス男性自認"
 
 #: standings/templates/standings_diversity.html
 msgid "Unspecified/unrecorded"
-msgstr ""
+msgstr "指定・記録なし"
 
 #: standings/templates/standings_index.html
 msgid "Standings"
@@ -427,54 +435,54 @@ msgstr "順位"
 
 #: standings/templates/standings_index.html
 msgid "Top Speaks"
-msgstr ""
+msgstr "上位のスピーカースコア"
 
 #: standings/templates/standings_index.html
 #, python-format
 msgid "%(speaker)s in %(round)s"
-msgstr ""
+msgstr "%(round)sの%(speaker)s"
 
 #: standings/templates/standings_index.html
 msgid "No data yet"
-msgstr ""
+msgstr "データなし"
 
 #: standings/templates/standings_index.html
 msgid "Bottom Speaks"
-msgstr ""
+msgstr "下位のスピーカースコア"
 
 #: standings/templates/standings_index.html
 msgid "Largest Margins"
-msgstr ""
+msgstr "最大マージン"
 
 #: standings/templates/standings_index.html
 #, python-format
 msgid "%(team)s vs %(opp)s in %(round)s"
-msgstr ""
+msgstr "%(round)sの%(team)s対%(opp)s"
 
 #: standings/templates/standings_index.html
 msgid "Closest Margins"
-msgstr ""
+msgstr "最小マージン"
 
 #: standings/templates/standings_index.html
 msgid "Top Team Scores"
-msgstr ""
+msgstr "上位のチームスコア"
 
 #: standings/templates/standings_index.html
 #, python-format
 msgid "%(team)s in %(round)s"
-msgstr ""
+msgstr "%(round)sの%(team)s"
 
 #: standings/templates/standings_index.html
 msgid "Bottom Team Scores"
-msgstr ""
+msgstr "下位のチームスコア"
 
 #: standings/templates/standings_index.html
 msgid "Most/Least Popular Motions"
-msgstr ""
+msgstr "最も人気のある/ない論題"
 
 #: standings/templates/standings_index.html
 msgid "Average Speaks"
-msgstr ""
+msgstr "スピーカースコアの平均"
 
 #: standings/templates/standings_menu.html
 msgid "Overview"
@@ -487,7 +495,7 @@ msgstr "チーム"
 #: standings/templates/standings_menu.html
 msgctxt "All [Teams]"
 msgid "All"
-msgstr "すべて"
+msgstr "すべて[チーム]"
 
 #: standings/templates/standings_menu.html
 msgid "Speakers"
@@ -496,7 +504,7 @@ msgstr "スピーカー"
 #: standings/templates/standings_menu.html
 msgctxt "Substantive speeches"
 msgid "Substantives"
-msgstr ""
+msgstr "立論"
 
 #: standings/templates/standings_menu.html
 msgctxt "All [Speakers]"
@@ -505,7 +513,7 @@ msgstr "すべて"
 
 #: standings/templates/standings_menu.html
 msgid "Speakers "
-msgstr ""
+msgstr "スピーカー "
 
 #: standings/templates/standings_menu.html
 #, python-format
@@ -514,61 +522,61 @@ msgstr ""
 
 #: standings/templates/standings_menu.html
 msgid "Replies"
-msgstr ""
+msgstr "リプライ"
 
 #: standings/templates/standings_menu.html
 msgid "Motions"
-msgstr "モーション"
+msgstr "論題"
 
 #: standings/templates/standings_menu.html
 msgid "By Round"
-msgstr ""
+msgstr "ラウンドごと"
 
 #: standings/templates/standings_menu.html
 msgid "Diversity"
-msgstr "ダイバーシティ"
+msgstr "ダイバーシティー"
 
 #: standings/templates/team_standings.html
 #, python-format
 msgid "The team standings precedence is empty. This means that teams aren't ranked according to any metrics, so everyone is first equal. If this isn't what you intended, set the team standings precedence in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>. In most tournaments, the first metric should be points or wins."
-msgstr ""
+msgstr "チームの順位付けの指標がありません。すなわち、チームは何の指標でも順位付けできず、すべてのチームは同率1位です。これを意図していない場合、スピーカーの順位付けの指標を<a href=\"%(standings_config_url)s\" class=\"alert-link\">大会設定の順位セクション</a>から変更してください。多くの大会では、最初の指標は勝ち数または点数になるはずです。"
 
 #: standings/views.py
 #, python-format
 msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
-msgstr ""
+msgstr "<p>順位を計算中にエラーが発生しました：<em>%(message)s</em></p>"
 
 #: standings/views.py
 #, python-format
 msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
-msgstr ""
+msgstr "<p><a href=\"%(standings_options_url)s\" class=\"alert-link\">順位設定</a>を見直してください。もし解決方法がわからない場合、開発者に連絡してください。</p>"
 
 #: standings/views.py
 msgid "<p>The tab director will need to resolve this issue.</p>"
-msgstr ""
+msgstr "<p>この問題はタブディレクターが解決する必要があります。</p>"
 
 #: standings/views.py
 #, python-format
 msgid "as of %(round)s"
-msgstr "ラウンド%(round)s現在"
+msgstr "%(round)s時点"
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
 #: standings/views.py
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
-msgstr ""
+msgstr "%(title)s（上位%(limit)dのみ）"
 
 #: standings/views.py
 msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
-msgstr ""
+msgstr "すべてのラウンドがサイレントなので表示できません。"
 
 #: standings/views.py
 msgid "Speaker Standings"
-msgstr ""
+msgstr "スピーカー順位"
 
 #: standings/views.py
 msgid "Speaker Tab"
-msgstr "スピーカーのタブ"
+msgstr "スピーカータブ"
 
 #: standings/views.py
 #, python-format
@@ -578,7 +586,7 @@ msgstr "%(category)sのスピーカー順位"
 #: standings/views.py
 #, python-format
 msgid "%(category)s Speaker Tab"
-msgstr "%(category)sのスピーカーのタブ"
+msgstr "%(category)sのスピーカータブ"
 
 #: standings/views.py
 msgid "Reply Speaker Standings"
@@ -586,11 +594,11 @@ msgstr "リプライ順位"
 
 #: standings/views.py
 msgid "Reply speeches aren't enabled in this tournament."
-msgstr "リプライスピーチは本大会ではありません。"
+msgstr "この大会にはリプライスピーチはありません。"
 
 #: standings/views.py
 msgid "Reply Speaker Tab"
-msgstr "リプライのタブ"
+msgstr "リプライタブ"
 
 #: standings/views.py
 msgid "Team Standings"
@@ -598,17 +606,17 @@ msgstr "チーム順位"
 
 #: standings/views.py
 msgid "Team Tab"
-msgstr "チームのタブ"
+msgstr "チームタブ"
 
 #: standings/views.py
 #, python-format
 msgid "%(category)s Team Standings"
-msgstr ""
+msgstr "%(category)sのチーム順位"
 
 #: standings/views.py
 #, python-format
 msgid "%(category)s Team Tab"
-msgstr ""
+msgstr "%(category)sのチームタブ"
 
 #: standings/views.py
 msgid "Current Team Standings"
@@ -616,7 +624,7 @@ msgstr "現在のチーム順位"
 
 #: standings/views.py
 msgid "Points"
-msgstr ""
+msgstr "点"
 
 #: standings/views.py
 msgid "Feedback Overview"
@@ -624,5 +632,5 @@ msgstr "フィードバック概要"
 
 #: standings/views.py
 msgid "An adjudicator's score is determined by a customisable mix of their base score and their feedback ratings. The current mix is specified below as the 'Score Components.' Feedback ratings are determined by averaging the results of all individual pieces of feedback across all rounds. <a href='https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."
-msgstr ""
+msgstr "ジャッジのスコアは、ベーススコアとフィードバック評価の組み合わせ（比重は変更可能）から計算されます。現在の比率は下の「スコア比率」で指定されています。フィードバック評価はすべてのラウンドを通して提出されたそれぞれのフィードバックの点数の平均点です。<a href='https://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>もっと詳しく</a>。"
 

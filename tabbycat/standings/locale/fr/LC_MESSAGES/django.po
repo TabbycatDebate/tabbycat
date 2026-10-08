@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-08-05 13:02\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: French\n"
 "Language: fr_FR\n"
@@ -149,6 +149,46 @@ msgstr "points d’équipe"
 msgid "Team"
 msgstr "Équipe"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr "Victoires"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr "nombre de premières"
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr "1ères"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr "nombre de deuxièmes"
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr "2èmes"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr "nombre de troisièmes"
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr "3èmes"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr "nombre de juges qui ont voté pour cette équipe"
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr "Feuilles"
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr "nombre de votes"
+
 #: standings/speakers.py
 msgid "standard deviation"
 msgstr "écart-type"
@@ -196,10 +236,6 @@ msgstr "Pts"
 #: standings/teams.py
 msgid "wins"
 msgstr "victoires"
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
-msgstr "Victoires"
 
 #: standings/teams.py
 msgid "total speaker score"
@@ -250,6 +286,14 @@ msgid "AISS"
 msgstr "NMIO"
 
 #: standings/teams.py
+msgid "draw strength by rank"
+msgstr ""
+
+#: standings/teams.py
+msgid "DSR"
+msgstr ""
+
+#: standings/teams.py
 msgid "draw strength by wins"
 msgstr "puissance des paires par victoires"
 
@@ -280,42 +324,6 @@ msgstr "nombre de fois dans un débat avec promotion"
 #: standings/teams.py
 msgid "SPu"
 msgstr "ORg"
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr "nombre de juges qui ont voté pour cette équipe"
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr "Feuilles"
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr "nombre de votes"
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr "nombre de premières"
-
-#: standings/teams.py
-msgid "1sts"
-msgstr "1ères"
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr "nombre de deuxièmes"
-
-#: standings/teams.py
-msgid "2nds"
-msgstr "2èmes"
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr "nombre de troisièmes"
-
-#: standings/teams.py
-msgid "3rds"
-msgstr "3èmes"
 
 #: standings/teams.py
 msgid "number of times ironed"

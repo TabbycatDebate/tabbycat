@@ -1,71 +1,71 @@
-<template>
+<script setup>
+import { ref } from 'vue'
+import { useDragAndDropStore } from './DragAndDropStore.js'
 
-  <div @dragover.prevent @drop.prevent.stop="drop"
-       :class="{ 'vue-droppable-locked': locked, 'vue-droppable-enter': aboutToDrop }"
-       @dragenter="dragEnter" @dragleave="dragLeave" @dragend="dragEnd"
-       class="vue-droppable">
 
-    <slot></slot>
-
-  </div>
-
-</template>
-
-<script>
-import { mapMutations } from 'vuex'
-
-export default {
-  props: {
-    locked: {
-      type: Boolean,
-      default: false,
-    },
-    handleDrop: Function,
-    dropContext: Object, // Passed to the handler of the item
+const props = defineProps({
+  locked: {
+    type: Boolean,
+    default: false,
   },
-  data: function () {
-    return {
-      dragCounter: 0,
-      aboutToDrop: false,
-    }
-  },
-  methods: {
-    hideHovers: function () {
-      this.unsetHoverPanel()
-      this.unsetHoverConflicts()
-    },
-    dragEnter: function (event) {
-      if (this.locked) {
-        return // Don't allow
-      }
-      this.dragCounter += 1
-      this.aboutToDrop = true
-    },
-    dragLeave: function (event) {
-      if (this.locked) {
-        return // Don't allow
-      }
-      this.dragCounter -= 1
-      if (this.dragCounter === 0) {
-        this.aboutToDrop = false
-      }
-    },
-    dragEnd: function () {
-      // When dropped there is no event fired that would normally dismiss hover panels or conflicts
-      this.hideHovers()
-    },
-    drop: function (event) {
-      this.dragCounter = 0
-      if (this.locked) {
-        return // Don't allow
-      }
-      this.aboutToDrop = false
-      // Send data to parent's handler method (after de-serialising it)
-      const dragPayload = JSON.parse(event.dataTransfer.getData('text'))
-      this.handleDrop(dragPayload, this.dropContext) // Call page-specific method handler passed down
-      this.hideHovers()
-    },
-    ...mapMutations(['unsetHoverPanel', 'unsetHoverConflicts']),
-  },
+  handleDrop: Function,
+  dropContext: Object, // Passed to the handler of the item
+})
+
+const store = useDragAndDropStore()
+const dragCounter = ref(0)
+const aboutToDrop = ref(false)
+
+const hideHovers = () => {
+  store.unsetHoverPanel()
+  store.unsetHoverConflicts()
 }
+
+const dragEnter = () => {
+  if (props.locked) {
+    return
+  }
+  dragCounter.value += 1
+  aboutToDrop.value = true
+}
+
+const dragLeave = () => {
+  if (props.locked) {
+    return
+  }
+  dragCounter.value -= 1
+  if (dragCounter.value === 0) {
+    aboutToDrop.value = false
+  }
+}
+
+const dragEnd = () => {
+  hideHovers()
+}
+
+const drop = (event) => {
+  dragCounter.value = 0
+  if (props.locked) {
+    return
+  }
+  aboutToDrop.value = false
+  const dragPayload = JSON.parse(event.dataTransfer.getData('text'))
+  props.handleDrop(dragPayload, props.dropContext)
+  hideHovers()
+}
+
 </script>
+
+<template>
+  <div
+    :class="{ 'vue-droppable-locked': locked, 'vue-droppable-enter': aboutToDrop }"
+    class="vue-droppable"
+    @dragover.prevent
+    @drop.prevent.stop="drop"
+    @dragenter="dragEnter"
+    @dragleave="dragLeave"
+    @dragend="dragEnd"
+  >
+    <slot />
+  </div>
+</template>

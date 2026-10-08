@@ -117,6 +117,9 @@ urlpatterns = [
                                         views.BallotViewSet.as_view(detail_methods),
                                         name='api-ballot-detail'),
                                 ])),
+                                path('/checkin',
+                                    views.DebateCheckinsView.as_view(),
+                                    name='api-debate-checkin'),
                             ])),
                         ])),
 
@@ -185,12 +188,18 @@ urlpatterns = [
                         path('/rounds',
                             views.TeamRoundStandingsRoundsView.as_view({'get': 'list'}),
                             name='api-team-round-standings'),
+                        path('/current-rounds',
+                            views.TeamCurrentStandingsView.as_view({'get': 'list'}),
+                            name='api-team-current-standings'),
                     ])),
                 ])),
                 path('/adjudicators', include([
                     path('',
                         views.AdjudicatorViewSet.as_view(list_methods),
                         name='api-adjudicator-list'),
+                    path('/standings',
+                        views.AdjudicatorStandingsView.as_view(),
+                        name='api-adjudicator-standings'),
                     path('/<int:pk>', include([
                         path('',
                             views.AdjudicatorViewSet.as_view(detail_methods),
@@ -246,6 +255,15 @@ urlpatterns = [
                         name='api-venuecategory-detail'),
                 ])),
 
+                path('/schedule-events', include([
+                    path('',
+                        views.ScheduleEventViewSet.as_view(list_methods),
+                        name='api-scheduleevent-list'),
+                    path('/<int:pk>',
+                        views.ScheduleEventViewSet.as_view(detail_methods),
+                        name='api-scheduleevent-detail'),
+                ])),
+
                 path('/user-groups', include([
                     path('',
                         views.GroupViewSet.as_view(list_methods),
@@ -257,7 +275,11 @@ urlpatterns = [
 
                 path('/me',
                     views.ParticipantIdentificationView.as_view({'get': 'retrieve'}),
-                    name='api-tournament-detail'),
+                    name='api-participant-me'),
+
+                path('/webpush/register',
+                    views.ParticipantWebPushDeviceViewSet.as_view({'post': 'create'}),
+                    name='api-webpush-register'),
 
                 path('/', include(pref_router.urls)),  # Preferences
             ])),
@@ -275,6 +297,9 @@ urlpatterns = [
             path('',
                 views.UserViewSet.as_view(list_methods),
                 name='api-user-list'),
+            path('/me',
+                views.OwnUserViewSet.as_view({'get': 'retrieve'}),
+                name='api-user-me'),
             path('/<int:pk>',
                 views.UserViewSet.as_view(detail_methods),
                 name='api-user-detail'),

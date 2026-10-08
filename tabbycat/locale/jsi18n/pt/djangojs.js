@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = (n != 1);
     if (typeof v === 'boolean') {
@@ -14,16 +13,20 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s de %(cnt)s selecionado",
       "%(sel)s de %(cnt)s selecionados"
+    ],
+    "%s selected option not visible": [
+      "%s op\u00e7\u00e3o selecionada n\u00e3o vis\u00edvel",
+      "%s op\u00e7\u00f5es selecionadas n\u00e3o vis\u00edveis"
     ],
     "6 a.m.": "6 a.m.",
     "6 p.m.": "6 p.m.",
@@ -32,25 +35,22 @@
     "August": "Agosto",
     "Available %s": "Dispon\u00edvel %s",
     "Cancel": "Cancelar",
-    "Choose": "Escolher",
     "Choose a Date": "Escolha a Data",
     "Choose a Time": "Escolha a Hora",
     "Choose a time": "Escolha a hora",
-    "Choose all": "Escolher todos",
     "Chosen %s": "Escolhido %s",
-    "Click to choose all %s at once.": "Clique para escolher todos os %s de uma vez.",
-    "Click to remove all chosen %s at once.": "Clique para remover todos os %s escolhidos de uma vez.",
     "Confirmed": "Confirmado",
     "December": "Dezembro",
     "February": "Fevereiro",
     "Filter": "Filtrar",
-    "Hide": "Ocultar",
+    "Friday": "Sexta-feira",
     "January": "Janeiro",
     "July": "Julho",
     "June": "Junho",
     "March": "Mar\u00e7o",
     "May": "Maio",
     "Midnight": "Meia-noite",
+    "Monday": "Segunda-feira",
     "No": "N\u00e3o",
     "Noon": "Meio-dia",
     "Note: You are %s hour ahead of server time.": [
@@ -64,22 +64,40 @@
     "November": "Novembro",
     "Now": "Agora",
     "October": "Outubro",
-    "Remove": "Remover",
-    "Remove all": "Remover todos",
     "Return to Draw": "Retornar \u00e0s Posi\u00e7\u00f5es",
+    "Saturday": "S\u00e1bado",
     "September": "Setembro",
-    "Show": "Mostrar",
+    "Sunday": "Domingo",
     "Team": "Dupla",
-    "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Esta \u00e9 a lista de %s dispon\u00edveis. Poder\u00e1 escolher alguns, selecionando-os na caixa abaixo e clicando na seta \"Escolher\" entre as duas caixas.",
-    "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Esta \u00e9 a lista de %s escolhidos. Poder\u00e1 remover alguns, selecionando-os na caixa abaixo e clicando na seta \"Remover\" entre as duas caixas.",
+    "Thursday": "Quinta-feira",
     "Today": "Hoje",
     "Tomorrow": "Amanh\u00e3",
+    "Tuesday": "Ter\u00e7a-feira",
     "Type into this box to filter down the list of available %s.": "Digite nesta caixa para filtrar a lista de %s dispon\u00edveis.",
+    "Type into this box to filter down the list of selected %s.": "Digite nesta caixa para filtrar a lista de selecionados %s.",
+    "Wednesday": "Quarta-feira",
     "Yes": "Sim",
     "Yesterday": "Ontem",
-    "You have selected an action, and you haven't made any changes on individual fields. You're probably looking for the Go button rather than the Save button.": "Selecionou uma a\u00e7\u00e3o mas ainda n\u00e3o guardou as mudan\u00e7as dos campos individuais. Provavelmente querer\u00e1 o bot\u00e3o Ir ao inv\u00e9s do bot\u00e3o Guardar.",
-    "You have selected an action, but you haven't saved your changes to individual fields yet. Please click OK to save. You'll need to re-run the action.": "Selecionou uma a\u00e7\u00e3o mas ainda n\u00e3o guardou as mudan\u00e7as dos campos individuais. Carregue em OK para gravar. Precisar\u00e1 de correr de novo a a\u00e7\u00e3o.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Tem mudan\u00e7as por guardar nos campos individuais. Se usar uma a\u00e7\u00e3o, as suas mudan\u00e7as por guardar ser\u00e3o perdidas.",
+    "abbrev. day Friday\u0004Fri": "Sex",
+    "abbrev. day Monday\u0004Mon": "Seg",
+    "abbrev. day Saturday\u0004Sat": "S\u00e1b",
+    "abbrev. day Sunday\u0004Sun": "Dom",
+    "abbrev. day Thursday\u0004Thur": "Qui",
+    "abbrev. day Tuesday\u0004Tue": "Ter",
+    "abbrev. day Wednesday\u0004Wed": "Qua",
+    "abbrev. month April\u0004Apr": "Abr",
+    "abbrev. month August\u0004Aug": "Ago",
+    "abbrev. month December\u0004Dec": "Dez",
+    "abbrev. month February\u0004Feb": "Fev",
+    "abbrev. month January\u0004Jan": "Jan",
+    "abbrev. month July\u0004Jul": "Jul",
+    "abbrev. month June\u0004Jun": "Jun",
+    "abbrev. month March\u0004Mar": "Mar",
+    "abbrev. month May\u0004May": "Mai",
+    "abbrev. month November\u0004Nov": "Nov",
+    "abbrev. month October\u0004Oct": "Out",
+    "abbrev. month September\u0004Sep": "Set",
     "one letter Friday\u0004F": "S",
     "one letter Monday\u0004M": "S",
     "one letter Saturday\u0004S": "S",
@@ -91,7 +109,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

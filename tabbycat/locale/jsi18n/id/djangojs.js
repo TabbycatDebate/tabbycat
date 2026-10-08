@@ -1,11 +1,10 @@
 
-
 'use strict';
 {
   const globals = this;
   const django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     const v = 0;
     if (typeof v === 'boolean') {
@@ -14,16 +13,20 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   const newcatalog = {
     "%(sel)s of %(cnt)s selected": [
       "%(sel)s dari %(cnt)s terpilih"
     ],
+    "%s selected option not visible": [
+      "%s pilihan terpilih tidak muncul"
+    ],
+    "(click to clear)": "(klik untuk membersihkan)",
     "6 a.m.": "6 pagi",
     "6 p.m.": "18.00",
     "April": "April",
@@ -33,24 +36,24 @@
     "Cancel": "Batal",
     "Category": "Kategori",
     "Checked-In": "Sudah Cek-In",
-    "Choose": "Pilih",
+    "Choose %s by selecting them and then select the \"Choose\" arrow button.": "Pilih %s dengan memilih mereka dan kemudian memilih tombol panah \"Choose\".",
     "Choose a Date": "Pilih Tanggal",
     "Choose a Time": "Pilih Waktu",
     "Choose a time": "Pilih waktu",
-    "Choose all": "Pilih semua",
+    "Choose all %s": "Pilih semua %s",
+    "Choose selected %s": "Pilih terpilih %s",
     "Chosen %s": "%s terpilih",
-    "Click to choose all %s at once.": "Pilih untuk memilih seluruh %s sekaligus.",
-    "Click to remove all chosen %s at once.": "Klik untuk menghapus semua pilihan %s sekaligus.",
     "December": "Desember",
     "February": "Februari",
     "Filter": "Filter",
-    "Hide": "Ciutkan",
+    "Friday": "Jum'at",
     "January": "Januari",
     "July": "Juli",
     "June": "Juni",
     "March": "Maret",
     "May": "Mei",
     "Midnight": "Tengah malam",
+    "Monday": "Senin",
     "Noon": "Siang",
     "Note: You are %s hour ahead of server time.": [
       "Catatan: Waktu Anda lebih cepat %s jam dibandingkan waktu server."
@@ -61,23 +64,33 @@
     "November": "November",
     "Now": "Sekarang",
     "October": "Oktober",
-    "Remove": "Hapus",
-    "Remove all": "Hapus semua",
+    "Remove %s by selecting them and then select the \"Remove\" arrow button.": "Pindahkan%s dengan memilih mereka dan kemudian memilih tombol panah \"Remove\".",
+    "Remove all %s": "Pindahkan semua %s",
+    "Remove selected %s": "Pindahkan terpilih %s",
     "Room:": "Ruangan:",
+    "Saturday": "Sabtu",
     "September": "September",
-    "Show": "Bentangkan",
+    "Sunday": "Ahad",
     "Team": "Tim",
-    "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Berikut adalah daftar %s yang tersedia. Anda dapat memilih satu atau lebih dengan memilihnya pada kotak di bawah, lalu mengeklik tanda panah \"Pilih\" di antara kedua kotak.",
-    "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Berikut adalah daftar %s yang terpilih. Anda dapat menghapus satu atau lebih dengan memilihnya pada kotak di bawah, lalu mengeklik tanda panah \"Hapus\" di antara kedua kotak.",
+    "Thursday": "Kamis",
     "Today": "Hari ini",
     "Tomorrow": "Besok",
+    "Tuesday": "Selasa",
     "Type into this box to filter down the list of available %s.": "Ketik pada kotak ini untuk menyaring daftar %s yang tersedia.",
+    "Type into this box to filter down the list of selected %s.": "Ketik di dalam kotak utnuk menyaring daftar dar %s terpilih.",
     "Unknown": "Tak diketahui",
+    "Wednesday": "Rabu",
     "Yesterday": "Kemarin",
-    "You have already submitted this form. Are you sure you want to submit it again?": "Anda telah mengajukan formulir ini. Apakah anda yakin ingin mengajukannya kembali?",
     "You have selected an action, and you haven\u2019t made any changes on individual fields. You\u2019re probably looking for the Go button rather than the Save button.": "Anda telah memilih tindakan, dan Anda belum membuat perubahan apa pun di setiap bidang. Anda mungkin mencari tombol Buka daripada tombol Simpan.",
     "You have selected an action, but you haven\u2019t saved your changes to individual fields yet. Please click OK to save. You\u2019ll need to re-run the action.": "Anda telah memilih tindakan, tetapi Anda belum menyimpan perubahan ke masing-masing bidang. Silakan klik OK untuk menyimpan. Anda harus menjalankan kembali tindakan tersebut.",
     "You have unsaved changes on individual editable fields. If you run an action, your unsaved changes will be lost.": "Beberapa perubahan bidang yang Anda lakukan belum tersimpan. Perubahan yang telah dilakukan akan hilang.",
+    "abbrev. day Friday\u0004Fri": "Jum",
+    "abbrev. day Monday\u0004Mon": "Sen",
+    "abbrev. day Saturday\u0004Sat": "Sab",
+    "abbrev. day Sunday\u0004Sun": "Ahd",
+    "abbrev. day Thursday\u0004Thur": "Kam",
+    "abbrev. day Tuesday\u0004Tue": "Sel",
+    "abbrev. day Wednesday\u0004Wed": "Rab",
     "abbrev. month April\u0004Apr": "Apr",
     "abbrev. month August\u0004Aug": "Agu",
     "abbrev. month December\u0004Dec": "Des",
@@ -101,7 +114,7 @@
   for (const key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {

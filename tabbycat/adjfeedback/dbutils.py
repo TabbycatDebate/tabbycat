@@ -5,16 +5,21 @@ These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
 import itertools
+import json
 import logging
 import random
 
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
+from registration.models import Answer
 
 from . import models as fm
+from .utils import team_feedback_allowed_targets
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -98,9 +103,12 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
     if debate.adjudicators.chair is None:
         raise ValueError("This debate ({}) doesn't have a chair.".format(debate.matchup))
 
-    if debate.round.tournament.pref('feedback_from_teams') == 'all-adjs':
+    allowed_targets = team_feedback_allowed_targets(debate.round.tournament.pref('feedback_from_teams'))
+    if allowed_targets == 'all-adjs':
         sources_and_subjects = [(team, adj) for team in debate.teams for adj in debate.adjudicators.all()]
-    elif debate.round.tournament.pref('feedback_from_teams') == 'orallist':
+    elif allowed_targets == 'all-voting-adjs':
+        sources_and_subjects = [(team, adj) for team in debate.teams for adj in debate.adjudicators.voting()]
+    elif allowed_targets == 'orallist':
         sources_and_subjects = [(team, debate.adjudicators.chair) for team in debate.teams]
     else:
         sources_and_subjects = []
@@ -167,7 +175,16 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
             else:
                 raise TypeError("Answer type class not recognized: " + question.ANSWER_TYPE_TYPES[question.answer_type].__name__)
 
-            question.answer_type_class(question=question, content_object=fb, answer=answer).save()
+            if isinstance(answer, list):
+                answer = json.dumps(answer) # Convert list to JSON string to preserve the list structure
+            else:
+                answer = str(answer) # Convert other types to string
+            Answer(
+                question=question,
+                content_type=ContentType.objects.get_for_model(fb),
+                object_id=fb.pk,
+                answer=answer,
+            ).save() # Use the new Answer model
 
         name = source.name if isinstance(source, Adjudicator) else source.short_name
         logger.info("[%s] %s on %s: %s", debate.round.tournament.slug, name, adj, score)

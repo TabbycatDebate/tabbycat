@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:50\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -149,6 +149,46 @@ msgstr "takım puanları"
 msgid "Team"
 msgstr "Takım"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr "Galibiyetler"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr "ilkler sayısı"
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr "1.ler"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr "ikinciler sayısı"
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr "2.ler"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr "üçüncüler sayısı"
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr "3.ler"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr "Bu takıma oy veren jüri sayısı"
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr "Ballotlar"
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr "taşınan oylar/ballotlar"
+
 #: standings/speakers.py
 msgid "standard deviation"
 msgstr "standart sapma"
@@ -196,10 +236,6 @@ msgstr "Puan"
 #: standings/teams.py
 msgid "wins"
 msgstr "galibiyetler"
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
-msgstr "Galibiyetler"
 
 #: standings/teams.py
 msgid "total speaker score"
@@ -250,6 +286,14 @@ msgid "AISS"
 msgstr "OBKP"
 
 #: standings/teams.py
+msgid "draw strength by rank"
+msgstr ""
+
+#: standings/teams.py
+msgid "DSR"
+msgstr ""
+
+#: standings/teams.py
 msgid "draw strength by wins"
 msgstr "galibiyete göre kura gücü"
 
@@ -280,42 +324,6 @@ msgstr ""
 #: standings/teams.py
 msgid "SPu"
 msgstr ""
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr "Bu takıma oy veren jüri sayısı"
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr "Ballotlar"
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr "taşınan oylar/ballotlar"
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr "ilkler sayısı"
-
-#: standings/teams.py
-msgid "1sts"
-msgstr "1.ler"
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr "ikinciler sayısı"
-
-#: standings/teams.py
-msgid "2nds"
-msgstr "2.ler"
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr "üçüncüler sayısı"
-
-#: standings/teams.py
-msgid "3rds"
-msgstr "3.ler"
 
 #: standings/teams.py
 msgid "number of times ironed"

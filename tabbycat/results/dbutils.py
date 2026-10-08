@@ -21,6 +21,8 @@ User = get_user_model()
 def add_results_to_round(round, **kwargs):
     """Calls add_result() for every debate in the given round."""
     for debate in round.debate_set.all():
+        if debate.is_bye:
+            continue
         add_result(debate, **kwargs)
 
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 07:37+1000\n"
-"PO-Revision-Date: 2023-07-04 21:55\n"
+"POT-Creation-Date: 2025-07-06 09:38+1000\n"
+"PO-Revision-Date: 2025-07-05 23:53\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Talossan\n"
 "Language: tzl_TZL\n"
@@ -149,6 +149,46 @@ msgstr "crwdns34536:0crwdne34536:0"
 msgid "Team"
 msgstr "crwdns34538:0crwdne34538:0"
 
+#: standings/speakers.py standings/teams.py standings/views.py
+msgid "Wins"
+msgstr "crwdns32902:0crwdne32902:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of firsts"
+msgstr "crwdns32938:0crwdne32938:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "1sts"
+msgstr "crwdns32940:0crwdne32940:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of seconds"
+msgstr "crwdns32942:0crwdne32942:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "2nds"
+msgstr "crwdns32944:0crwdne32944:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of thirds"
+msgstr "crwdns51782:0crwdne51782:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "3rds"
+msgstr "crwdns51784:0crwdne51784:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "number of adjudicators who voted for this team"
+msgstr "crwdns32932:0crwdne32932:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "Ballots"
+msgstr "crwdns32934:0crwdne32934:0"
+
+#: standings/speakers.py standings/teams.py
+msgid "votes/ballots carried"
+msgstr "crwdns32936:0crwdne32936:0"
+
 #: standings/speakers.py
 msgid "standard deviation"
 msgstr "crwdns32884:0crwdne32884:0"
@@ -196,10 +236,6 @@ msgstr "crwdns32896:0crwdne32896:0"
 #: standings/teams.py
 msgid "wins"
 msgstr "crwdns32900:0crwdne32900:0"
-
-#: standings/teams.py standings/views.py
-msgid "Wins"
-msgstr "crwdns32902:0crwdne32902:0"
 
 #: standings/teams.py
 msgid "total speaker score"
@@ -250,6 +286,14 @@ msgid "AISS"
 msgstr "crwdns32926:0crwdne32926:0"
 
 #: standings/teams.py
+msgid "draw strength by rank"
+msgstr "crwdns53584:0crwdne53584:0"
+
+#: standings/teams.py
+msgid "DSR"
+msgstr "crwdns53586:0crwdne53586:0"
+
+#: standings/teams.py
 msgid "draw strength by wins"
 msgstr "crwdns35302:0crwdne35302:0"
 
@@ -280,42 +324,6 @@ msgstr "crwdns52387:0crwdne52387:0"
 #: standings/teams.py
 msgid "SPu"
 msgstr "crwdns52389:0crwdne52389:0"
-
-#: standings/teams.py
-msgid "number of adjudicators who voted for this team"
-msgstr "crwdns32932:0crwdne32932:0"
-
-#: standings/teams.py
-msgid "Ballots"
-msgstr "crwdns32934:0crwdne32934:0"
-
-#: standings/teams.py
-msgid "votes/ballots carried"
-msgstr "crwdns32936:0crwdne32936:0"
-
-#: standings/teams.py
-msgid "number of firsts"
-msgstr "crwdns32938:0crwdne32938:0"
-
-#: standings/teams.py
-msgid "1sts"
-msgstr "crwdns32940:0crwdne32940:0"
-
-#: standings/teams.py
-msgid "number of seconds"
-msgstr "crwdns32942:0crwdne32942:0"
-
-#: standings/teams.py
-msgid "2nds"
-msgstr "crwdns32944:0crwdne32944:0"
-
-#: standings/teams.py
-msgid "number of thirds"
-msgstr "crwdns51782:0crwdne51782:0"
-
-#: standings/teams.py
-msgid "3rds"
-msgstr "crwdns51784:0crwdne51784:0"
 
 #: standings/teams.py
 msgid "number of times ironed"

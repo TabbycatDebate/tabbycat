@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 07:48+1000\n"
-"PO-Revision-Date: 2024-06-23 21:51\n"
+"POT-Creation-Date: 2026-09-21 10:27+1000\n"
+"PO-Revision-Date: 2026-09-21 00:32\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -26,12 +26,16 @@ msgid "Changed adjudicator breaking status"
 msgstr "Ha cambiado el estatus de break del juez"
 
 #: actionlog/models.py
-msgid "Created adjudicator"
+msgid "Changed adjudicator tester status"
 msgstr ""
 
 #: actionlog/models.py
+msgid "Created adjudicator"
+msgstr "Crear Juez"
+
+#: actionlog/models.py
 msgid "Edited adjudicator"
-msgstr ""
+msgstr "Editar Juez"
 
 #: actionlog/models.py
 msgid "Set adjudicator note"
@@ -51,7 +55,7 @@ msgstr "Ha editado la disponibilidad de los jueces"
 
 #: actionlog/models.py
 msgid "Edited availability"
-msgstr ""
+msgstr "Editar disponibilidad"
 
 #: actionlog/models.py
 msgid "Edited teams availability"
@@ -91,7 +95,7 @@ msgstr "Ha editados las categorías del break"
 
 #: actionlog/models.py
 msgid "Deleted team break for category"
-msgstr ""
+msgstr "Eliminar el break del equipo para la categoría"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks"
@@ -107,7 +111,7 @@ msgstr "Ha generado el break de equipos para todas las categorías"
 
 #: actionlog/models.py
 msgid "Generated the team break for one category"
-msgstr ""
+msgstr "Se generó el break del equipo para una categoría"
 
 #: actionlog/models.py
 msgid "Edited breaking team remarks and updated all team breaks"
@@ -143,15 +147,15 @@ msgstr "Editar los conflictos juez-equipo"
 
 #: actionlog/models.py
 msgid "Edited team-institution conflicts"
-msgstr ""
+msgstr "Conflictos entre equipos e instituciones editados"
 
 #: actionlog/models.py
 msgid "Created debate"
-msgstr ""
+msgstr "Debate creado"
 
 #: actionlog/models.py
 msgid "Edited debate"
-msgstr ""
+msgstr "Debate editado"
 
 #: actionlog/models.py
 msgid "Auto-prioritized debate importance"
@@ -187,11 +191,11 @@ msgstr "Ha despublicado el cuadro"
 
 #: actionlog/models.py
 msgid "Created feedback question"
-msgstr ""
+msgstr "Pregunta de retroalimentación creada"
 
 #: actionlog/models.py
 msgid "Edited feedback question"
-msgstr ""
+msgstr "Pregunta de retroalimentación editada"
 
 #: actionlog/models.py
 msgid "Saved feedback"
@@ -203,11 +207,11 @@ msgstr "Ha entregado feedback desde el formulario publico"
 
 #: actionlog/models.py
 msgid "Created institution"
-msgstr ""
+msgstr "Crear una institución"
 
 #: actionlog/models.py
 msgid "Edited institution"
-msgstr ""
+msgstr "Institución editada"
 
 #: actionlog/models.py
 msgid "Saved a matchup manual edit"
@@ -231,31 +235,31 @@ msgstr "Ha editado las opciones del torneo"
 
 #: actionlog/models.py
 msgid "Auto-allocated adjudicators to preformed panels"
-msgstr ""
+msgstr "Asignación automática de jueces a paneles preformados"
 
 #: actionlog/models.py
 msgid "Edited preformed panel adjudicator"
-msgstr ""
+msgstr "Juez de panel preformado editado"
 
 #: actionlog/models.py
 msgid "Created preformed panels"
-msgstr ""
+msgstr "Paneles preformados creados"
 
 #: actionlog/models.py
 msgid "Auto-allocated preformed panels to debates"
-msgstr ""
+msgstr "Paneles preformados asignados automáticamente a los debates"
 
 #: actionlog/models.py
 msgid "Deleted preformed panels"
-msgstr ""
+msgstr "Paneles preformados borrados"
 
 #: actionlog/models.py
 msgid "Auto-prioritized preformed panels"
-msgstr ""
+msgstr "Paneles preformados autopriorizados"
 
 #: actionlog/models.py
 msgid "Edited preformed panel importance"
-msgstr ""
+msgstr "Importancia del panel preformado editado"
 
 #: actionlog/models.py
 msgid "Advanced the current round to"
@@ -263,15 +267,15 @@ msgstr "Ha avanzado la ronda presente a"
 
 #: actionlog/models.py
 msgid "Marked round as completed"
-msgstr ""
+msgstr "Ronda marcada como completada"
 
 #: actionlog/models.py
 msgid "Created round"
-msgstr ""
+msgstr "Ronda creada"
 
 #: actionlog/models.py
 msgid "Edited round"
-msgstr ""
+msgstr "Ronda editada"
 
 #: actionlog/models.py
 msgid "Set start time"
@@ -280,6 +284,10 @@ msgstr "Ha configurado el tiempo de inicio"
 #: actionlog/models.py
 msgid "Saved the sides status of a matchup"
 msgstr "Ha guardado el estatus de los lados de un enfrentamiento"
+
+#: actionlog/models.py
+msgid "Edited side pre-allocations"
+msgstr ""
 
 #: actionlog/models.py
 msgid "Imported adjudicators using the simple importer"
@@ -303,11 +311,15 @@ msgstr "Ha editado las categorías de orador"
 
 #: actionlog/models.py
 msgid "Created speaker"
+msgstr "Debatiente creado"
+
+#: actionlog/models.py
+msgid "Deleted speaker"
 msgstr ""
 
 #: actionlog/models.py
 msgid "Edited speaker"
-msgstr ""
+msgstr "Debatiente editado"
 
 #: actionlog/models.py
 msgid "Edited speaker category eligibility"
@@ -315,23 +327,23 @@ msgstr "Ha editado la elegibilidad para las categorías de orador"
 
 #: actionlog/models.py
 msgid "Created team"
-msgstr ""
+msgstr "Equipo creado"
 
 #: actionlog/models.py
 msgid "Edited team"
-msgstr ""
+msgstr "Equipo editado"
 
 #: actionlog/models.py
 msgid "Edited adjudicator base score"
-msgstr ""
+msgstr "Puntuación base del juez editado"
 
 #: actionlog/models.py
 msgid "Created tournament"
-msgstr ""
+msgstr "Torneo creado"
 
 #: actionlog/models.py
 msgid "Edited tournament"
-msgstr ""
+msgstr "Torneo editado"
 
 #: actionlog/models.py
 msgid "Updated adjudicator scores in bulk"
@@ -339,7 +351,7 @@ msgstr "Actualizar la calificación de jueces en masa"
 
 #: actionlog/models.py
 msgid "Invited user to the instance"
-msgstr ""
+msgstr "Usuario invitado a la instancia"
 
 #: actionlog/models.py
 msgid "Edited room categories"
@@ -347,7 +359,7 @@ msgstr "Ha editado las categorías de sala"
 
 #: actionlog/models.py
 msgid "Created room category"
-msgstr ""
+msgstr "Categoría de sala creada"
 
 #: actionlog/models.py
 msgid "Edited room constraints"
@@ -355,11 +367,11 @@ msgstr "Editar las restricciones de sala"
 
 #: actionlog/models.py
 msgid "Created room"
-msgstr ""
+msgstr "Sala creada"
 
 #: actionlog/models.py
 msgid "Edited room"
-msgstr ""
+msgstr "Sala editada"
 
 #: actionlog/models.py
 msgid "Auto-allocated rooms"
@@ -370,12 +382,48 @@ msgid "Saved a room manual edit"
 msgstr "Ha guardado la edición manual de una sala"
 
 #: actionlog/models.py
-msgid "API"
+msgid "Created question"
 msgstr ""
 
 #: actionlog/models.py
-msgid "Web"
+msgid "Edited question"
 msgstr ""
+
+#: actionlog/models.py
+msgid "Registered institution"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered team"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered adjudicator"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Registered speaker"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Confirmed registration"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Created schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "Edited schedule event"
+msgstr ""
+
+#: actionlog/models.py
+msgid "API"
+msgstr "API"
+
+#: actionlog/models.py
+msgid "Web"
+msgstr "Web"
 
 #: actionlog/models.py
 msgid "type"
@@ -411,7 +459,7 @@ msgstr "ID del objeto"
 
 #: actionlog/models.py
 msgid "agent"
-msgstr ""
+msgstr "agent"
 
 #: actionlog/models.py
 msgid "action log"
