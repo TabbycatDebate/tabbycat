@@ -9,8 +9,18 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
 from adjfeedback.testers import get_tested_rounds
 from options.preferences import FeedbackPaths
+from tournaments.models import Round
 
 logger = logging.getLogger(__name__)
+
+
+def feedback_stages(tournament, pref_name):
+    """Returns the round stages in which feedback is expected, according to the
+    given round-scope preference (one of 'feedback_paths_rounds' or
+    'feedback_from_teams_rounds')."""
+    if tournament.pref(pref_name) == 'all':
+        return [Round.Stage.PRELIMINARY, Round.Stage.ELIMINATION]
+    return [Round.Stage.PRELIMINARY]
 
 
 def team_feedback_allowed_targets(feedback_from_teams):
