@@ -41,7 +41,7 @@
 
   {% if not hmr %}
   <link rel="stylesheet" type="text/css" href="{% static 'vue/assets/app.css' %}" />
-  <link href="{% static 'vue/js/app.js' %}" rel=preload as=script>
+  <link href="{% static 'vue/js/app.js' %}" rel="modulepreload">
   {% endif %}
 
   {% if not debug %}<!-- Analytics -->
