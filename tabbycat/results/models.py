@@ -124,6 +124,9 @@ class BallotSubmission(Submission):
         verbose_name=_("self-declared split"),
         help_text=_("For solo-adjudicated debates: whether the adjudicator has declared their decision "
                     "as a 2:1 split (rather than unanimous), per Karl Popper rules."))
+    flagged = models.BooleanField(default=False,
+        verbose_name=_("flagged"),
+        help_text=_("Whether the submitter has flagged that there is an error with this ballot."))
 
     class Meta:
         constraints = [UniqueConstraint(fields=['debate', 'version'])]
