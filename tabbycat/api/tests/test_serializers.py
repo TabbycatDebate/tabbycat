@@ -4,6 +4,7 @@ from datetime import date, datetime, time
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
 
 from adjallocation.models import DebateAdjudicator
@@ -12,7 +13,7 @@ from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from motions.models import Motion, RoundMotion
 from options.presets import CanadianParliamentaryPreferences
-from participants.models import Adjudicator, Speaker, Team
+from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import ScoreCriterion
 from tournaments.models import Round, Tournament
 from utils.misc import reverse_round, reverse_tournament
@@ -250,6 +251,46 @@ class AdjudicatorSerializerTests(CompletedTournamentTestMixin, APITestCase):
             "url_key": "laZzBPo6FsGEr12VtB8LSHM8",
         })
         self.assertEqual(response.status_code, 201)
+
+
+class InstitutionConflictUpdateTests(APITestCase):
+
+    def test_institution_corrections(self):
+        self.client.force_authenticate(User.objects.create_superuser(username='admin', password='admin'))
+        tournament = Tournament.objects.create(slug='conflicts')
+        old, new, unrelated, supplied = [Institution.objects.create(name=name, code=name) for name in ['Old', 'New', 'Other', 'Supplied']]
+        for model, endpoint, fields in [(Adjudicator, 'api-adjudicator-detail', {'name': 'Judge'}), (Team, 'api-team-detail', {'reference': 'Team'})]:
+            participant = model.objects.create(tournament=tournament, **fields)
+            url = reverse_tournament(endpoint, tournament, kwargs={'pk': participant.pk})
+            for method in ['patch', 'post']:
+                for institution in [old, new, None, 'omitted']:
+                    for conflicts in ['omitted', [], [old, supplied]]:
+                        with self.subTest(model=model.__name__, method=method, institution=institution, conflicts=conflicts):
+                            participant.institution = old
+                            participant.save()
+                            participant.institution_conflicts.set([old, unrelated])
+                            data = dict(fields)
+                            if model is Adjudicator and method == 'post':
+                                data.update(team_conflicts=[], adjudicator_conflicts=[])
+                            if institution != 'omitted':
+                                data['institution'] = reverse('api-global-institution-detail', kwargs={'pk': institution.pk}) if institution else None
+                            if conflicts != 'omitted':
+                                data['institution_conflicts'] = [reverse('api-global-institution-detail', kwargs={'pk': i.pk}) for i in conflicts]
+                            expected = {old, unrelated} if method == 'patch' or conflicts == 'omitted' else set(conflicts)
+                            if method == 'patch' and conflicts != 'omitted':
+                                expected.update(conflicts)
+                            if institution not in [old, 'omitted']:
+                                expected.discard(old)
+                                if institution is not None:
+                                    expected.add(institution)
+                            response = getattr(self.client, method)(url, data)
+                            if model is Adjudicator and method == 'post' and (institution == 'omitted' or conflicts == 'omitted'):
+                                self.assertEqual(response.status_code, 400, response.data)
+                                continue
+                            self.assertEqual(response.status_code, 200, response.data)
+                            participant.refresh_from_db()
+                            self.assertEqual(participant.institution, old if institution == 'omitted' else institution)
+                            self.assertEqual(set(participant.institution_conflicts.all()), expected)
 
 
 class BallotSerializerTests(APITestCase):
