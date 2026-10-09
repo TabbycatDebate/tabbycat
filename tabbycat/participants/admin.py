@@ -165,6 +165,8 @@ class InstitutionConflictAdminMixin:
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         instance = form.instance
+        if 'institution' in form.changed_data:
+            self.institution_conflict_model.objects.filter(**{self.institution_conflict_object_field: instance}, institution_id=form.initial.get('institution')).delete()
         if ('institution' in form.changed_data and
                 form.cleaned_data.get('create_institution_conflict') and instance.institution_id):
             self.institution_conflict_model.objects.bulk_create([
