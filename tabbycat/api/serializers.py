@@ -782,6 +782,11 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             for field in ['institution_conflicts', 'adjudicator_conflicts', 'team_conflicts']:
                 validated_data[field] = list(getattr(instance, field).all()) + validated_data.get(field, [])
 
+        if 'institution' in validated_data and validated_data['institution'] != instance.institution:
+            validated_data['institution_conflicts'] = [i for i in validated_data.get('institution_conflicts', instance.institution_conflicts.all()) if i != instance.institution]
+            if validated_data['institution'] is not None:
+                validated_data['institution_conflicts'].append(validated_data['institution'])
+
         return super().update(instance, validated_data)
 
 
@@ -926,6 +931,11 @@ class TeamSerializer(serializers.ModelSerializer):
         if self.partial:
             # Avoid removing conflicts if merely PATCHing
             validated_data['institution_conflicts'] = list(instance.institution_conflicts.all()) + validated_data.get('institution_conflicts', [])
+
+        if 'institution' in validated_data and validated_data['institution'] != instance.institution:
+            validated_data['institution_conflicts'] = [i for i in validated_data.get('institution_conflicts', instance.institution_conflicts.all()) if i != instance.institution]
+            if validated_data['institution'] is not None:
+                validated_data['institution_conflicts'].append(validated_data['institution'])
 
         return super().update(instance, validated_data)
 
