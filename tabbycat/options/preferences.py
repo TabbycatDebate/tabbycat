@@ -326,17 +326,30 @@ class DrawAvoidConflicts(ChoicePreference):
 @tournament_preferences_registry.register
 class DrawPullupRestriction(ChoicePreference):
     help_text = _("If using pull-ups, restrict which teams can be pulled up. "
-        "Two-team formats only. Has no effect on BP or intermediate brackets.")
+        "Two-team formats only. Has no effect on BP.")
     verbose_name = _("Pullup restriction")
     section = draw_rules
     name = 'draw_pullup_restriction'
     choices = (
         ('none', _("No restriction")),
         ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
+        ('subset_pct', _("Choose from teams who have been pulled up the fewest times so far from a subset pool")),
         ('lowest_ds_wins', _("Choose from teams with the lowest draw strength by wins so far")),
         ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
+
+
+@tournament_preferences_registry.register
+class DrawPullupSubsetPct(IntegerPreference):
+    help_text = _("Only used when pullup restriction is set to 'subset pool'. The subset pool "
+        "for a pullup is the larger of the top 2 teams, or this percentage of the bracket "
+        "below, rounded down. Used in Australs.")
+    verbose_name = _("Subset pool percentage")
+    section = draw_rules
+    name = 'draw_pullup_subset_pct'
+    default = 25
+    field_kwargs = {'validators': [MinValueValidator(0)]}
 
 
 @tournament_preferences_registry.register
