@@ -361,8 +361,8 @@ class RoundRobinDrawManager(BaseDrawManager):
         return teams, byes
 
     def create(self, options: dict | None = None) -> list[Debate]:
-        competing, _ = super().get_teams()
-        if self.teams_in_debate == 2 and any(t.seed is None for t in competing):
+        competing, byes = super().get_teams()
+        if any(t.seed is None for t in competing):
             raise DrawUserError(_("Every team must have a seed set for round-robin draws. "
                 "Assign seeds before generating the draw."))
         return super().create(options)
