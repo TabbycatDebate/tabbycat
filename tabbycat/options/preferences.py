@@ -619,6 +619,7 @@ class TeamsInDebate(IntegerPreference):
     section = debate_rules
     name = 'teams_in_debate'
     default = 2
+    field_kwargs = {'validators': [MinValueValidator(1)]}
 
 
 @tournament_preferences_registry.register
@@ -683,6 +684,7 @@ class SubstantiveSpeakers(IntegerPreference):
     section = debate_rules
     name = 'substantive_speakers'
     default = 3
+    field_kwargs = {'validators': [MinValueValidator(1)]}
 
 
 @tournament_preferences_registry.register
