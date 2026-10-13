@@ -40,8 +40,8 @@ speakers and separate speakers, declared by the registered type handlers.
 Mapping and preview use a vertical, scrollable file list showing filename, type,
 row count, attention status and skipped count. Selecting a file shows its own
 panel; Previous/Next file controls also work. All edits remain in the same Django
-form submission, including files hidden by the JavaScript enhancement. Without
-JavaScript every file remains visible. Type handlers supply summaries, object
+form submission, including files hidden by Vue. The interactive file previews
+and results require JavaScript, as with other Vue screens. Type handlers supply summaries, object
 counts and dependency metadata, so additional import types can reuse the layout.
 
 Preview rows are compact summaries with expandable editors. Invalid rows open
@@ -81,7 +81,7 @@ It will create new records and flag possible matches. It will not update existin
 
 ## User flow
 
-Implement the importer with the same Django `SessionWizardView`, forms, and formset conventions as the existing simple importers. Use small JavaScript enhancements for drag-and-drop file selection and incremental import progress; do not build a separate Vue application for the first release.
+Implement the importer with the same Django `SessionWizardView`, forms, and formset conventions as the existing simple importers. Use Vue components mounted through Tabbycat’s shared Vue entry point for file selection, file navigation, preview filters/skip state and incremental import progress. Django retains the wizard and editable field forms.
 
 The wizard has five stages:
 

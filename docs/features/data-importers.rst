@@ -48,6 +48,13 @@ Missing teams are proposed for creation in preview; speakers sharing a team name
 and institution reuse that team. New team creation and its first speaker are
 saved atomically, including team defaults and participant identifiers.
 
+The Vue components in ``importer/templates/components/`` use the shared
+``vueMount``/``window.vueData`` entry point, Django translation composable and
+Feather icons. Django passes file/row metadata through ``json_script`` and renders
+editable fields into Vue slots. These fields use ``v-pre`` so untrusted CSV text
+cannot be interpreted as Vue template expressions. Skipped rows use ``inert``
+instead of disabling form controls, preserving their values in the Django POST.
+
 The management-command importer described below retains its existing interface.
 
 Why write your own?
