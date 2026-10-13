@@ -303,7 +303,8 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
                     additional_objects.update(kind.additional_objects(row_form))
             for key, identity in additional_objects:
                 object_counts[key] = object_counts.get(key, 0) + 1
-            context['object_counts'] = [{'label': CSV_TYPES[key].label, 'count': count} for key, count in object_counts.items() if count]
+            context['object_counts'] = [{'label': CSV_TYPES[key].review_label(count), 'count': count}
+                for key, count in object_counts.items() if count]
             context['skip_count'] = sum(group['skip_count'] for group in groups)
             context['attention_count'] = sum(group['attention_count'] for group in groups)
             context['import_count'] = context['row_count'] - context['skip_count']
