@@ -9,7 +9,8 @@ import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
-from participants.emoji import set_emoji
+from importer.participant_services import initialize_teams
+from importer.references import ImportReferences
 
 from .base import BaseTournamentDataImporter, convert_bool, make_interpreter, make_lookup
 
@@ -155,9 +156,10 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
     def import_teams(self, f):
         speaker_fields = ['name', 'email', 'category', 'gender']
 
+        references = ImportReferences(self.tournament)
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
-            institution=pm.Institution.objects.lookup,
+            institution=references.lookup_institution,
             DELETE=['speaker%d_%s' % (i, field) for i in [1, 2] for field in speaker_fields] + ['break_category'],
         )
 
@@ -167,16 +169,9 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                 line['short_reference'] = line['reference'][:34]
             return line
         teams = self._import(f, pm.Team, team_interpreter)
-        set_emoji(teams.values(), self.tournament)
-
-        def own_team_institution_conflict_interpreter(lineno, line):
-            team = teams[lineno]
-            if team.institution is not None:
-                return {
-                    'team': team,
-                    'institution': team.institution,
-                }
-        self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
+        conflicts = initialize_teams(teams.values(), self.tournament)
+        self.counts[am.TeamInstitutionConflict] += len(conflicts)
+        self.logger.info("Imported %d team institution conflicts", len(conflicts))
 
         def break_category_interpreter(lineno, line):
             if line.get('break_category'):

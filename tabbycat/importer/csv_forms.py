@@ -8,11 +8,9 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from participants.models import Institution, Speaker, Team
-
+from .csv_row_forms import CSVTeamForm
 from .csv_types import CSV_TYPES, guess_file_type
-from .forms import BaseTournamentObjectDetailsForm
-from .importers.base import convert_bool
+from .references import ImportReferences
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -149,75 +147,6 @@ def mapped_rows(files, mapping, types=None):
     return rows
 
 
-def configure_institution_field(field, initial):
-    field.label_from_instance = lambda inst: f'{inst.name} ({inst.code})'
-    field.empty_label = _('Unaffiliated')
-    if isinstance(initial, str) and initial.startswith('unresolved:'):
-        field.choices = [*field.choices, (initial, _('Unmatched: %(value)s') % {'value': initial.split(':', 1)[1]})]
-        field.error_messages['invalid_choice'] = _('Choose an existing institution, select Unaffiliated, or skip this row.')
-
-
-class CSVSpeakerForm(forms.Form):
-    name = forms.CharField(max_length=Speaker._meta.get_field('name').max_length, label=_('Speaker name'))
-    email = forms.EmailField(required=False, max_length=Speaker._meta.get_field('email').max_length, label=_('Email'))
-    team = forms.ChoiceField(label=_('Team'))
-    institution = forms.ModelChoiceField(queryset=Institution.objects.all(), required=False, label=_('Institution for new team'))
-    team_name = forms.CharField(required=False, max_length=150, label=_('New team name / suffix'))
-    use_institution_prefix = forms.TypedChoiceField(required=False, empty_value=False,
-        coerce=lambda value: convert_bool(str(value)), choices=[('False', _('No')), ('True', _('Yes'))],
-        initial='False', label=_('Prefix new team name with institution'))
-
-    def __init__(self, tournament, *args, slots=0, team_choices=(), **kwargs):
-        super().__init__(*args, **kwargs)
-        self.tournament = tournament
-        self.fields['team'].choices = [('', _('Choose a team')), ('new', _('Create or use team from the name and institution below'))] + list(team_choices)
-        configure_institution_field(self.fields['institution'], self.initial.get('institution'))
-
-    def clean(self):
-        data = super().clean()
-        token = data.get('team', '')
-        if token == 'new':
-            if not data.get('team_name'):
-                self.add_error('team_name', _('Enter the name of the team to create.'))
-            if data.get('use_institution_prefix') and not data.get('institution'):
-                self.add_error('institution', _('Select an institution to use an institutional prefix.'))
-        if token.startswith('existing:') and data.get('name'):
-            if Speaker.objects.filter(team_id=token.split(':')[1], team__tournament=self.tournament, name=data['name']).exists():
-                self.add_error('name', _('A speaker with this name already belongs to this team. Skip or correct this row.'))
-        return data
-
-
-class CSVTeamForm(BaseTournamentObjectDetailsForm):
-    use_institution_prefix = forms.TypedChoiceField(coerce=lambda value: convert_bool(str(value)), choices=[('False', _('No')), ('True', _('Yes'))],
-        initial='False', label=_('Prefix team name with institution'))
-
-    class Meta:
-        model = Team
-        fields = ('reference', 'institution', 'use_institution_prefix', 'seed')
-
-    def __init__(self, tournament, *args, slots=0, team_choices=(), **kwargs):
-        super().__init__(tournament, *args, **kwargs)
-        self.slots = slots
-        configure_institution_field(self.fields['institution'], self.initial.get('institution'))
-        for n in range(1, slots + 1):
-            self.fields[f'speaker_{n}_name'] = forms.CharField(required=False,
-                max_length=Speaker._meta.get_field('name').max_length, label=_('Speaker %(number)d name') % {'number': n})
-            self.fields[f'speaker_{n}_email'] = forms.EmailField(required=False,
-                max_length=Speaker._meta.get_field('email').max_length, label=_('Speaker %(number)d email') % {'number': n})
-
-    def clean(self):
-        data = super().clean()
-        self.instance.short_reference = data.get('reference', '')[:35]
-        for n in range(1, self.slots + 1):
-            name, email = data.get(f'speaker_{n}_name'), data.get(f'speaker_{n}_email')
-            if email and not name:
-                self.add_error(f'speaker_{n}_name', _('Enter a name for this speaker or clear the email.'))
-        if 'reference' in data and 'institution' in data and Team.objects.all_with_unconfirmed.filter(
-                tournament=self.tournament, reference=data['reference'], institution=data['institution']).exists():
-            self.add_error('reference', _('A team with this name and institution already exists. Skip this row or change its name.'))
-        return data
-
-
 class CSVPreviewFormSet(forms.BaseFormSet):
     deletion_widget = forms.CheckboxInput
 
@@ -239,6 +168,7 @@ class CSVPreviewFormSet(forms.BaseFormSet):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.form_kwargs.setdefault('references', ImportReferences(self.form_kwargs['tournament']))
         for form in self.forms:
             form.fields['DELETE'].label = _('Skip')
             form.fields['DELETE'].widget.attrs['aria-label'] = _('Skip this row')

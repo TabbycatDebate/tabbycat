@@ -13,13 +13,14 @@ from django.utils.translation import gettext_lazy as _
 
 from actionlog.models import ActionLogEntry
 from checkins.models import PersonIdentifier
-from participants.emoji import set_emoji
 from participants.models import Team
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from tournaments.models import Tournament
 
+from .csv_row_forms import CSVSpeakerForm, CSVTeamForm
 from .importers.base import convert_bool
+from .participant_services import initialize_teams
 
 
 class DependencyPendingError(Exception):
@@ -86,7 +87,7 @@ class CSVObjectType:
     def additional_objects(self, form):
         return ()
 
-    def dependencies(self, tournament, data, rows):
+    def dependencies(self, tournament, data, rows, references=None):
         return {}
 
     def save(self, form, user, **dependencies):
@@ -110,10 +111,7 @@ class TeamCSVType(CSVObjectType):
     identity_fields = ('institution', 'reference')
     name_field = 'reference'
 
-    @property
-    def form_class(self):
-        from .csv_forms import CSVTeamForm
-        return CSVTeamForm
+    form_class = CSVTeamForm
 
     def guess_column(self, header):
         name = super().guess_column(header)
@@ -172,12 +170,10 @@ class TeamCSVType(CSVObjectType):
                 speaker = team.speaker_set.create(name=name, email=form.cleaned_data.get(f'speaker_{number}_email') or None)
                 PersonIdentifier.objects.create(person=speaker)
                 speakers.append(speaker)
-        populate_url_keys(speakers)
-        populate_code_names(speakers)
-        team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
-        if team.institution:
-            team.teaminstitutionconflict_set.create(institution=team.institution)
-        set_emoji([team], team.tournament)
+        if speakers:
+            populate_url_keys(speakers)
+            populate_code_names(speakers)
+        initialize_teams([team], team.tournament, general_break_categories=True)
         ActionLogEntry.objects.log(type=ActionLogEntry.ActionType.TEAM_CREATE,
             tournament=team.tournament, content_object=team, user=user)
         return team
@@ -198,10 +194,7 @@ class SpeakerCSVType(CSVObjectType):
     priority = 1
     identity_fields = ('team', 'name')
 
-    @property
-    def form_class(self):
-        from .csv_forms import CSVSpeakerForm
-        return CSVSpeakerForm
+    form_class = CSVSpeakerForm
 
     def initial(self, row, context):
         values = CSV_TYPES['team'].initial(row, context)
@@ -228,7 +221,6 @@ class SpeakerCSVType(CSVObjectType):
         return self.key, team, data['name']
 
     def resolve_preview(self, form, forms):
-        from .csv_forms import CSVTeamForm
         data = form.cleaned_data
         if data['team'] != 'new':
             return
@@ -257,8 +249,8 @@ class SpeakerCSVType(CSVObjectType):
 
     def additional_objects(self, form):
         data = form.cleaned_data
-        if data.get('team') == 'new' and not Team.objects.all_with_unconfirmed.filter(tournament=form.tournament,
-                institution=data['institution'], reference=data['team_name']).exists():
+        if data.get('team') == 'new' and not form.references.team_identities.get(
+                (data['institution'].pk if data['institution'] else None, data['team_name'])):
             return (('team', (data['institution'].pk if data['institution'] else None, data['team_name'])),)
         return ()
 
@@ -266,7 +258,7 @@ class SpeakerCSVType(CSVObjectType):
         token = data.get('team', '')
         return (int(token.split(':')[1]),) if token.startswith('row:') else ()
 
-    def dependencies(self, tournament, data, rows):
+    def dependencies(self, tournament, data, rows, references=None):
         token = data['team']
         if token == 'new':
             return {'team': None}
@@ -277,7 +269,9 @@ class SpeakerCSVType(CSVObjectType):
             team_id = dependency.get('object_id', dependency.get('team_id')) if dependency['status'] == 'imported' else None
         else:
             team_id = token.split(':')[1]
-        team = Team.objects.all_with_unconfirmed.filter(pk=team_id, tournament=tournament).first()
+        team = references.teams_by_id.get(int(team_id)) if references is not None and team_id is not None else None
+        if references is None:
+            team = Team.objects.all_with_unconfirmed.filter(pk=team_id, tournament=tournament).first()
         if team is None:
             raise DependencyBlockedError(_('The linked team was skipped, failed, or no longer exists.'))
         return {'team': team}
@@ -299,7 +293,7 @@ class SpeakerCSVType(CSVObjectType):
                 kind = CSV_TYPES['team']
                 team_form = kind.form_class(form.tournament, data={'reference': data['team_name'],
                     'institution': data['institution'].pk if data['institution'] else '',
-                    'use_institution_prefix': str(data['use_institution_prefix']), 'seed': ''})
+                    'use_institution_prefix': str(data['use_institution_prefix']), 'seed': ''}, references=form.references)
                 if not team_form.is_valid():
                     raise ValidationError(_('The new team could not be validated.'))
                 team = kind.save(team_form, user)
