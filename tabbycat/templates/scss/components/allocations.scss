@@ -278,3 +278,15 @@
     border-left: 0;
   }
 }
+
+// Keep selection visible without changing the allocation layout or conflict colours.
+.allocation-selected {
+  outline: 3px solid $primary;
+  outline-offset: -3px;
+}
+
+.vue-draggable:focus-visible,
+.vue-droppable:focus-visible {
+  outline: 3px dashed $primary;
+  outline-offset: -3px;
+}
