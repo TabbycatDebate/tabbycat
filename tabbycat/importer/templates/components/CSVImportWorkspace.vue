@@ -15,8 +15,9 @@ const rows = reactive(Object.fromEntries(
 const filters = reactive(Object.fromEntries(props.files.map(file => [file.index, 'all'])))
 
 const firstInvalid = props.files.findIndex(file => file.attention_count || file.rows.some(row => row.invalid && !row.skipped))
-const saved = Number(sessionStorage.getItem(storageKey))
-const active = ref(firstInvalid >= 0 ? firstInvalid : saved >= 0 && saved < props.files.length ? saved : 0)
+const saved = sessionStorage.getItem(storageKey)
+const savedIndex = props.files.findIndex(file => String(file.id) === saved)
+const active = ref(firstInvalid >= 0 ? firstInvalid : savedIndex >= 0 ? savedIndex : 0)
 
 const rowCount = computed(() => props.files.reduce((sum, file) => sum + file.row_count, 0))
 const rowStatus = row => row.skipped ? 'skipped' : row.invalid ? 'attention' : 'ready'
@@ -33,7 +34,7 @@ const mappedLabel = count => interpolate(ngettext('%s column mapped', '%s column
 const countLabel = count => interpolate(ngettext('%s row', '%s rows', count), [count])
 
 provide('csvPreviewState', { rows, filters, rowStatus })
-watch(active, value => sessionStorage.setItem(storageKey, String(value)), { immediate: true })
+watch(active, value => sessionStorage.setItem(storageKey, String(props.files[value].id)), { immediate: true })
 
 function skipInvalid (file) {
   fileRows(file).filter(row => row.invalid).forEach(row => { row.skipped = true })
@@ -55,7 +56,7 @@ function skipInvalid (file) {
       <div class="list-group list-group-flush">
         <button
           v-for="(file, index) in files"
-          :key="file.index"
+          :key="file.id"
           type="button"
           class="list-group-item list-group-item-action csv-file-button"
           :aria-controls="`csv-file-${file.index}`"
@@ -100,7 +101,7 @@ function skipInvalid (file) {
         v-for="(file, index) in files"
         v-show="active === index"
         :id="`csv-file-${file.index}`"
-        :key="file.index"
+        :key="file.id"
         class="card mb-3"
       >
         <div class="card-header d-flex justify-content-between align-items-center">

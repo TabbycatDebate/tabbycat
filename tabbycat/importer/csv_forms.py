@@ -2,6 +2,7 @@
 
 import csv
 import io
+import uuid
 
 from django import forms
 from django.conf import settings
@@ -60,13 +61,28 @@ class CSVUploadForm(forms.Form):
         (';', _('Semicolon')), ('\t', _('Tab'))])
     header_row = forms.IntegerField(min_value=1, max_value=CSV_MAX_HEADER_ROW, initial=1, label=_("Header row"))
 
+    def __init__(self, *args, retained_files=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.retained_files = {source['id']: source for source in retained_files}
+        if retained_files:
+            self.fields['files'].required = False
+            self.fields['retained_files'] = forms.MultipleChoiceField(required=False,
+                choices=[(source['id'], source['name']) for source in retained_files], widget=forms.MultipleHiddenInput,
+                initial=list(self.retained_files))
+
     def clean(self):
         data = super().clean()
         if self.errors:
             return data
-        files = data['files']
-        parsed = []
-        total = 0
+        files = data.get('files') or []
+        parsed = [self.retained_files[key] for key in dict.fromkeys(data.get('retained_files', []))]
+        if not files and not parsed:
+            self.add_error('files', _('Upload at least one CSV file.'))
+            return data
+        if len(files) + len(parsed) > CSV_MAX_FILES:
+            self.add_error('files', _('Upload at most %(limit)d CSV files at a time.') % {'limit': CSV_MAX_FILES})
+            return data
+        total = sum(len(source['rows']) for source in parsed)
         for upload in files:
             try:
                 text = upload.read().decode(data['encoding'])
@@ -95,7 +111,7 @@ class CSVUploadForm(forms.Form):
                         raise ValidationError(_("Upload at most %(limit)s rows in total.") % {'limit': f'{CSV_MAX_ROWS:,}'})
                 if not rows:
                     raise ValidationError(_("%(file)s contains no data rows.") % {'file': upload.name})
-                parsed.append({'name': upload.name, 'headers': headers, 'rows': rows})
+                parsed.append({'id': str(uuid.uuid4()), 'name': upload.name, 'size': upload.size, 'headers': headers, 'rows': rows})
             except UnicodeDecodeError:
                 raise ValidationError(_("Unable to decode %(file)s. Try another encoding.") % {'file': upload.name})
             except (csv.Error, StopIteration):

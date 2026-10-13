@@ -9,6 +9,7 @@ urlpatterns = [
         path('templates/<slug:template_key>/', csv_views.CSVTemplateView.as_view(), name='importer-csv-template'),
         path('<uuid:import_id>/', include([
             path('', csv_views.CSVWizardView.as_view(), name='importer-csv-wizard'),
+            path('uploads/', csv_views.CSVUploadView.as_view(), name='importer-csv-edit-upload'),
             path('results/', csv_views.CSVResultsView.as_view(), name='importer-csv-results'),
             path('errors/', csv_views.CSVErrorsView.as_view(), name='importer-csv-errors'),
         ])),

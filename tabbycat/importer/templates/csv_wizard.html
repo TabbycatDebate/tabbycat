@@ -6,10 +6,10 @@
   {% csrf_token %}
   {{ wizard.management_form }}
 
-  {% if wizard.steps.prev %}
+  {% if wizard.steps.prev or wizard.steps.current == 'types' %}
     <div class="mb-3">
       <button class="btn btn-outline-primary" type="submit" name="wizard_goto_step"
-              value="{{ wizard.steps.prev }}" formnovalidate>
+              value="{{ wizard.steps.prev|default:'upload' }}" formnovalidate>
         <i data-feather="chevron-left"></i>{% trans "Previous Step" %}
       </button>
     </div>

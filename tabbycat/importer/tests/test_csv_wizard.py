@@ -519,3 +519,158 @@ class CSVWizardTests(TestCase):
         self.assertEqual(response.status_code, 409)
         self.assertEqual(response.json()['error'], 'Import the linked team first.')
         self.assertNotContains(response, 'private exception detail', status_code=409)
+
+    def edit_files(self, step, values, keep_indices=None, additions=()):
+        response = self.step(step, {**values, 'wizard_goto_step': 'upload'})
+        self.assertEqual(response.status_code, 302)
+        upload_url = response.url
+        response = self.client.get(upload_url)
+        retained = response.context['csv_vue_data']['retained_files']
+        keep_indices = range(len(retained)) if keep_indices is None else keep_indices
+        response = self.client.post(upload_url, {
+            'retained_files': [retained[index]['id'] for index in keep_indices],
+            'files': list(additions), 'encoding': 'utf-8-sig', 'delimiter': '', 'header_row': 1})
+        self.assertRedirects(response, self.url)
+        return self.client.get(self.url)
+
+    def test_return_to_upload_keeps_files_mapping_and_unsaved_preview_edits(self):
+        self.preview()
+        response = self.edit_files('preview', self.preview_data([self.row(reference='Edited', DELETE='on')]))
+        self.assertEqual(response.context['files'][0]['name'], 'teams.csv')
+        self.step('types', {'types-file_0': 'team'})
+        response = self.client.get(self.url)
+        self.assertEqual(response.context['wizard']['form']['column_0_2'].value(), 'speaker_1_name')
+        response = self.step('mapping', {'mapping-column_0_0': 'reference', 'mapping-column_0_1': 'institution',
+            'mapping-column_0_2': 'speaker_1_name', 'mapping-column_0_3': 'speaker_1_email'})
+        form = response.context['wizard']['form'].forms[0]
+        self.assertEqual(form['reference'].value(), 'Edited')
+        self.assertTrue(form['DELETE'].value())
+
+    def test_adding_files_preserves_existing_edits_and_suggests_new_mappings(self):
+        self.preview()
+        self.edit_files('preview', self.preview_data([self.row(reference='Edited')]), additions=[
+            SimpleUploadedFile('speakers.csv', b'Name,Team,Institution\nBob,B,EU\n')])
+        response = self.step('types', {'types-file_0': 'team', 'types-file_1': 'speaker'})
+        form = response.context['wizard']['form']
+        self.assertEqual(form['column_0_2'].value(), 'speaker_1_name')
+        self.assertEqual(form['column_1_0'].value(), 'name')
+        response = self.step('mapping', {field.html_name: field.value() for field in form})
+        forms = response.context['wizard']['form'].forms
+        self.assertEqual(forms[0]['reference'].value(), 'Edited')
+        self.assertEqual(forms[1]['name'].value(), 'Bob')
+        self.assertTrue(response.context['wizard']['form'].is_valid())
+
+    def test_removing_file_reindexes_rows_and_team_references(self):
+        response = self.client.post(reverse_tournament('importer-csv-upload', self.tournament), {
+            'files': [SimpleUploadedFile('unused-teams.csv', b'Team\nUnused\n'),
+                SimpleUploadedFile('speakers.csv', b'Name,Team,Institution\nBob,A,EU\n'),
+                SimpleUploadedFile('teams.csv', b'Team,Institution\nA,EU\n')],
+            'encoding': 'utf-8-sig', 'delimiter': '', 'header_row': 1})
+        self.url = response.url
+        self.prefix = self.client.get(self.url).context['wizard']['management_form'].prefix
+        self.step('types', {'types-file_0': 'team', 'types-file_1': 'speaker', 'types-file_2': 'team'})
+        response = self.step('mapping', {'mapping-column_0_0': 'reference', 'mapping-column_1_0': 'name',
+            'mapping-column_1_1': 'team', 'mapping-column_1_2': 'institution',
+            'mapping-column_2_0': 'reference', 'mapping-column_2_1': 'institution'})
+        self.assertEqual(response.context['wizard']['form'].forms[1]['team'].value(), 'row:2')
+        self.edit_files('preview', self.preview_data([self.row(reference='Unused'),
+            {'name': 'Edited Bob', 'team': 'row:2'}, self.row(reference='Edited A')]), keep_indices=[1, 2])
+        response = self.step('types', {'types-file_0': 'speaker', 'types-file_1': 'team'})
+        form = response.context['wizard']['form']
+        response = self.step('mapping', {field.html_name: field.value() for field in form})
+        forms = response.context['wizard']['form'].forms
+        self.assertEqual(forms[0]['name'].value(), 'Edited Bob')
+        self.assertEqual(forms[0]['team'].value(), 'row:1')
+        self.assertEqual(forms[1]['reference'].value(), 'Edited A')
+        self.assertTrue(response.context['wizard']['form'].is_valid(), response.context['wizard']['form'].errors)
+        rows = [CSV_TYPES[kind].serialize(form.cleaned_data) for kind, form in zip(('speaker', 'team'), forms)]
+        url = self.finish([{key: '' if value is None else value for key, value in row.items()} for row in rows])
+        self.assertEqual(self.client.post(url, {'row': 1}).json()['status'], 'imported')
+        self.assertEqual(self.client.post(url, {'row': 0}).json()['status'], 'imported')
+        self.assertEqual(Speaker.objects.get().team.reference, 'Edited A')
+
+    def test_removed_team_file_requires_speaker_reference_correction(self):
+        self.separate_speaker_preview()
+        self.edit_files('preview', self.preview_data([{'name': 'Bob', 'team': self.speaker_token}, self.row()]), keep_indices=[0])
+        response = self.step('types', {'types-file_0': 'speaker'})
+        form = response.context['wizard']['form']
+        response = self.step('mapping', {field.html_name: field.value() for field in form})
+        form = response.context['wizard']['form'].forms[0]
+        self.assertEqual(form['team'].value(), 'removed')
+        self.assertIn('team', form.errors)
+        self.assertIn('team file was removed', str(form.errors))
+        self.assertFalse(Team.objects.exists())
+
+    def test_changing_one_mapping_keeps_other_file_edits(self):
+        self.separate_speaker_preview()
+        self.step('preview', {**self.preview_data([{'name': 'Edited Bob', 'team': self.speaker_token}, self.row(reference='Edited A')]),
+            'wizard_goto_step': 'mapping'})
+        response = self.step('mapping', {'mapping-column_0_0': 'name', 'mapping-column_0_1': '', 'mapping-column_0_2': 'team',
+            'mapping-column_0_3': 'institution', 'mapping-column_1_0': 'reference', 'mapping-column_1_1': 'institution'})
+        forms = response.context['wizard']['form'].forms
+        self.assertEqual(forms[0]['name'].value(), 'Bob')
+        self.assertEqual(forms[1]['reference'].value(), 'Edited A')
+
+    def test_upload_edit_rejects_unknown_ids_and_empty_selection(self):
+        self.upload()
+        response = self.step('types', {'wizard_goto_step': 'upload'})
+        url = response.url
+        self.assertEqual(self.client.get(url).status_code, 200)
+        for identifiers in ([], ['not-a-file-in-this-draft']):
+            response = self.client.post(url, {'retained_files': identifiers,
+                'encoding': 'utf-8-sig', 'delimiter': '', 'header_row': 1})
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(response.context['form'].errors)
+        self.assertEqual(len(self.client.get(self.url).context['files']), 1)
+
+    def test_upload_edit_is_unavailable_after_confirmation(self):
+        self.preview()
+        url = self.finish([self.row()])
+        edit_url = self.url + 'uploads/'
+        self.assertRedirects(self.client.get(edit_url), url)
+        self.assertRedirects(self.client.post(edit_url, {}), url)
+
+    def test_same_filename_files_are_retained_by_identity(self):
+        response = self.client.post(reverse_tournament('importer-csv-upload', self.tournament), {
+            'files': [SimpleUploadedFile('teams.csv', b'Team\nFirst\n'), SimpleUploadedFile('teams.csv', b'Team\nSecond\n')],
+            'encoding': 'utf-8-sig', 'delimiter': '', 'header_row': 1})
+        self.url = response.url
+        self.prefix = self.client.get(self.url).context['wizard']['management_form'].prefix
+        self.step('types', {'types-file_0': 'team', 'types-file_1': 'team'})
+        self.step('mapping', {'mapping-column_0_0': 'reference', 'mapping-column_1_0': 'reference'})
+        self.edit_files('preview', self.preview_data([self.row(reference='First'), self.row(reference='Second edited', DELETE='on')]),
+            keep_indices=[1])
+        response = self.step('types', {'types-file_0': 'team'})
+        form = response.context['wizard']['form']
+        response = self.step('mapping', {field.html_name: field.value() for field in form})
+        row = response.context['wizard']['form'].forms[0]
+        self.assertEqual(row['reference'].value(), 'Second edited')
+        self.assertTrue(row['DELETE'].value())
+
+    def test_return_to_upload_keeps_format_options(self):
+        self.upload('Team,Institution\nA,EU\n')
+        response = self.step('types', {'wizard_goto_step': 'upload'})
+        url = response.url
+        response = self.client.get(url)
+        retained = response.context['csv_vue_data']['retained_files'][0]['id']
+        self.client.post(url, {'retained_files': [retained], 'encoding': 'cp1252', 'delimiter': ';', 'header_row': 2})
+        response = self.step('types', {'wizard_goto_step': 'upload'})
+        form = self.client.get(response.url).context['form']
+        self.assertEqual(form['encoding'].value(), 'cp1252')
+        self.assertEqual(form['delimiter'].value(), ';')
+        self.assertEqual(form['header_row'].value(), 2)
+
+    def test_legacy_draft_files_receive_ids_without_losing_edits(self):
+        self.preview()
+        session = self.client.session
+        draft_key = self.prefix.replace('csv_', 'csv_import_', 1)
+        for source in session[draft_key]['files']:
+            source.pop('id')
+        session['wizard_' + self.prefix]['extra_data'].pop('validated_steps')
+        session.save()
+        response = self.edit_files('preview', self.preview_data([self.row(reference='Legacy edit')]))
+        self.assertTrue(response.context['files'][0]['id'])
+        response = self.step('types', {'types-file_0': 'team'})
+        form = response.context['wizard']['form']
+        response = self.step('mapping', {field.html_name: field.value() for field in form})
+        self.assertEqual(response.context['wizard']['form'].forms[0]['reference'].value(), 'Legacy edit')

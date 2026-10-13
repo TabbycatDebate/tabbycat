@@ -4,11 +4,12 @@ import csv
 import uuid
 
 from django.core.cache import cache
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import redirect
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import FormView, TemplateView, View
+from formtools.wizard.storage.session import SessionStorage
 from formtools.wizard.views import SessionWizardView
 
 from tournaments.mixins import TournamentMixin
@@ -20,6 +21,7 @@ from .csv_forms import (CSV_MAX_FILE_SIZE_MIB, CSV_MAX_FILES, CSV_MAX_ROWS,
                         CSVConfirmForm, CSVMappingForm, CSVPreviewFormSet,
                         CSVTypesForm, CSVUploadForm, mapped_rows)
 from .csv_pipeline import CSVImportContext, process_csv_row
+from .csv_state import invalidate_file_previews, update_wizard_files
 from .csv_types import CSV_TYPES, DependencyPendingError
 
 
@@ -56,6 +58,27 @@ class CSVUploadView(CSVAccessMixin, FormView):
     template_name = 'csv_upload.html'
     form_class = CSVUploadForm
 
+    def get(self, request, *args, **kwargs):
+        if 'import_id' in kwargs and self.draft['started']:
+            return redirect(self.draft_url('importer-csv-results'))
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if 'import_id' in kwargs and self.draft['started']:
+            return redirect(self.draft_url('importer-csv-results'))
+        return super().post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if 'import_id' in self.kwargs:
+            draft = self.draft
+            for source in draft['files']:
+                source.setdefault('id', str(uuid.uuid4()))
+            self.request.session[self.draft_key] = draft
+            kwargs['retained_files'] = draft['files']
+            kwargs['initial'].update(draft.get('format_options', {}))
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['csv_limits'] = {'files': CSV_MAX_FILES, 'size': CSV_MAX_FILE_SIZE_MIB, 'rows': CSV_MAX_ROWS}
@@ -63,13 +86,26 @@ class CSVUploadView(CSVAccessMixin, FormView):
             for kind in CSV_TYPES.values() for key, label, columns in kind.templates]
         context['csv_vue_data'] = {'steps': [{'key': key, 'label': label,
             'state': 'current' if key == 'upload' else 'upcoming'} for key, label in CSV_STEP_TITLES.items()]}
+        form = context['form']
+        selected = form.data.getlist('retained_files') if form.is_bound else list(form.retained_files)
+        context['csv_vue_data']['retained_files'] = [{'id': source['id'], 'name': source['name'],
+            'row_count': len(source['rows'])} for key, source in form.retained_files.items() if key in selected]
         return context
 
     def form_valid(self, form):
+        if 'import_id' in self.kwargs:
+            draft = self.draft
+            storage = SessionStorage('csv_' + str(self.kwargs['import_id']), self.request)
+            update_wizard_files(storage, draft['files'], form.cleaned_data['parsed'])
+            draft['files'] = form.cleaned_data['parsed']
+            draft['format_options'] = {key: form.cleaned_data[key] for key in ('encoding', 'delimiter', 'header_row')}
+            self.request.session[self.draft_key] = draft
+            return redirect(self.draft_url('importer-csv-wizard'))
         import_id = uuid.uuid4()
         self.request.session['csv_import_' + str(import_id)] = {
             'tournament': self.tournament.pk, 'user': self.request.user.pk,
             'files': form.cleaned_data['parsed'], 'started': False,
+            'format_options': {key: form.cleaned_data[key] for key in ('encoding', 'delimiter', 'header_row')},
         }
         return redirect(reverse_tournament('importer-csv-wizard', self.tournament, kwargs={'import_id': import_id}))
 
@@ -110,6 +146,8 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
     def post(self, *args, **kwargs):
         if self.draft['started']:
             return redirect(self.draft_url('importer-csv-results'))
+        if self.request.POST.get('wizard_goto_step') == 'upload':
+            return self.render_goto_step('upload')
         return super().post(*args, **kwargs)
 
     def get_form_kwargs(self, step=None):
@@ -124,6 +162,28 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
 
     def get_form(self, step=None, data=None, files=None):
         step = step or self.steps.current
+        if step in ('types', 'mapping', 'preview') and data is not None:
+            # Partial stored data can follow a file addition or a changed type.
+            # Fill only missing file/row groups, preserving unchecked Skip values.
+            defaults = super().get_form(step=step, data=None, files=files)
+            merged = QueryDict(mutable=True)
+            if step == 'preview':
+                merged['preview-TOTAL_FORMS'] = len(defaults.forms)
+                merged['preview-INITIAL_FORMS'] = len(defaults.forms)
+                for row in defaults.forms:
+                    if not any(name.startswith(row.prefix + '-') for name in data):
+                        for name in row.fields:
+                            value = row[name].value()
+                            if name != 'DELETE' and value is not None:
+                                merged[row.add_prefix(name)] = str(value)
+            else:
+                for field in defaults:
+                    value = field.value()
+                    if value is not None:
+                        merged[field.html_name] = str(value)
+            for name, values in data.lists():
+                merged.setlist(name, values)
+            data = merged
         if step == 'preview' and data is not None:
             # Preserve edits in drafts opened before team creation fields existed,
             # while filling the newly introduced fields from their CSV values.
@@ -162,6 +222,15 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         return super().get_form_initial(step)
 
     def render_goto_step(self, goto_step, **kwargs):
+        # Bootstrap validation snapshots for drafts created before this feature.
+        validated = self.storage.extra_data.get('validated_steps', {})
+        for step in ('types', 'mapping'):
+            if step not in validated and (stored := self.storage.get_step_data(step)) is not None:
+                validated[step] = dict(stored.lists())
+        self.storage.extra_data = {**self.storage.extra_data, 'validated_steps': validated}
+        if goto_step == 'upload':
+            self.storage.set_step_data(self.steps.current, self.request.POST)
+            return redirect(self.draft_url('importer-csv-edit-upload'))
         steps = list(self.get_form_list())
         if goto_step not in steps or steps.index(goto_step) >= self.steps.step0:
             return self.render(self.get_form(data=self.storage.get_step_data(self.steps.current)))
@@ -172,15 +241,24 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
 
     def process_step(self, form):
         data = super().process_step(form)
-        old = self.storage.get_step_data(self.steps.current)
+        validated = self.storage.extra_data.get('validated_steps', {})
+        old = validated.get(self.steps.current)
+        if old is not None and self.steps.current in ('types', 'mapping'):
+            changed = set()
+            for index in range(len(self.draft['files'])):
+                prefix = f'types-file_{index}' if self.steps.current == 'types' else f'mapping-column_{index}_'
 
-        def comparable(values):
-            return {key: values.getlist(key) for key in values if key.startswith(self.steps.current + '-')}
-
-        if old is not None and comparable(old) != comparable(data):
-            steps = list(self.get_form_list())
-            for step in steps[steps.index(self.steps.current) + 1:]:
-                self.storage.set_step_data(step, None)
+                def belongs(key):
+                    return key == prefix if self.steps.current == 'types' else key.startswith(prefix)
+                before = {key: values for key, values in old.items() if belongs(key)}
+                after = {key: values for key, values in data.lists() if belongs(key)}
+                if before != after:
+                    changed.add(index)
+            if changed:
+                invalidate_file_previews(self.storage, self.draft['files'], changed, reset_mapping=self.steps.current == 'types')
+        if self.steps.current in ('types', 'mapping'):
+            validated[self.steps.current] = dict(data.lists())
+            self.storage.extra_data = {**self.storage.extra_data, 'validated_steps': validated}
         return data
 
     def get_context_data(self, form, **kwargs):
@@ -189,7 +267,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         context['files'] = files
         context['row_count'] = sum(len(source['rows']) for source in files)
         types = self.get_cleaned_data_for_step('types') or {}
-        groups = [{'index': index, 'name': source['name'], 'row_count': len(source['rows']),
+        groups = [{'id': source.get('id', index), 'index': index, 'name': source['name'], 'row_count': len(source['rows']),
             'type_label': CSV_TYPES[types[f'file_{index}']].label if f'file_{index}' in types else '',
             'attention_count': 0, 'skip_count': 0, 'rows': []} for index, source in enumerate(files)]
         if self.steps.current == 'types':
@@ -228,8 +306,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             context['import_count'] = context['row_count'] - context['skip_count']
         context['csv_vue_data'] = {'files': [self.vue_file_data(group) for group in groups]}
         context['file_groups'] = groups
-        context['step_list'] = [{'key': 'upload', 'label': _('Upload files'), 'state': 'complete',
-            'href': reverse_tournament('importer-csv-upload', self.tournament)}] + [
+        context['step_list'] = [{'key': 'upload', 'label': _('Upload files'), 'state': 'complete', 'value': 'upload'}] + [
             {'key': key, 'label': label, 'value': key if index < self.steps.step0 else None, 'state': 'current' if key == self.steps.current else
                 'complete' if index < self.steps.step0 else 'upcoming'}
             for index, (key, label) in enumerate(self.step_titles.items())]
@@ -238,7 +315,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
 
     @staticmethod
     def vue_file_data(group):
-        data = {key: group[key] for key in ('index', 'name', 'row_count', 'type_label', 'attention_count')}
+        data = {key: group[key] for key in ('id', 'index', 'name', 'row_count', 'type_label', 'attention_count')}
         data['mapped_count'] = group.get('mapped_count', 0)
         data['rows'] = []
         for row in group['rows']:

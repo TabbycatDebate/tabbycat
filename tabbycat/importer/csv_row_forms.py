@@ -48,6 +48,9 @@ class CSVSpeakerForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.tournament = tournament
         self.references = references or ImportReferences(tournament)
+        if self.data.get(self.add_prefix('team')) == 'removed':
+            self.fields['team'].error_messages['invalid_choice'] = _(
+                'The referenced team file was removed. Choose another team or create a team from its name and institution.')
         self.fields['team'].choices = [('', _('Choose a team')), ('new', _('Create or use team from the name and institution below'))] + list(team_choices)
         configure_institution_field(self.fields['institution'], self.initial.get('institution'), self.references)
 

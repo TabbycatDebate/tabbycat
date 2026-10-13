@@ -1,17 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import FeatherIcon from '../../../templates/components/FeatherIcon.vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
-const props = defineProps({ inputName: String })
-const { gettext, interpolate } = useDjangoI18n()
+const props = defineProps({
+  inputName: String,
+  retainedFiles: { type: Array, default: () => [] },
+})
+const { gettext, ngettext, interpolate } = useDjangoI18n()
 
 const input = ref(null)
 const files = ref([])
+const retained = ref([...props.retainedFiles])
+const allFiles = computed(() => [...retained.value, ...files.value])
 const dragging = ref(false)
 const formatNumber = new Intl.NumberFormat(document.documentElement.lang || undefined)
 
 function fileLabel (file) {
+  if (file.id) {
+    return interpolate(ngettext('%(filename)s · %(rows)s row', '%(filename)s · %(rows)s rows', file.row_count), {
+      filename: file.name, rows: formatNumber.format(file.row_count),
+    }, true)
+  }
   const size = formatNumber.format(Math.ceil(file.size / 1024))
   return interpolate(gettext('%(filename)s · %(size)s KB'), { filename: file.name, size }, true)
 }
@@ -32,7 +42,8 @@ function addFiles (selection) {
 }
 
 function removeFile (index) {
-  files.value.splice(index, 1)
+  if (index < retained.value.length) retained.value.splice(index, 1)
+  else files.value.splice(index - retained.value.length, 1)
   syncFiles()
 }
 
@@ -44,6 +55,13 @@ function dropFiles (event) {
 
 <template>
   <div>
+    <input
+      v-for="file in retained"
+      :key="file.id"
+      type="hidden"
+      name="retained_files"
+      :value="file.id"
+    >
     <input
       ref="input"
       type="file"
@@ -72,7 +90,7 @@ function dropFiles (event) {
       </span>
     </button>
     <section
-      v-if="files.length"
+      v-if="allFiles.length"
       class="card mb-3"
     >
       <div class="card-header d-flex justify-content-between align-items-center">
@@ -92,8 +110,8 @@ function dropFiles (event) {
         aria-live="polite"
       >
         <li
-          v-for="(file, index) in files"
-          :key="index"
+          v-for="(file, index) in allFiles"
+          :key="file.id || file"
           class="list-group-item d-flex align-items-center justify-content-between"
         >
           <span>{{ fileLabel(file) }}</span>

@@ -29,17 +29,20 @@
 <form method="post" enctype="multipart/form-data" id="csv-upload">
   {% csrf_token %}
   <div v-pre>{{ form.non_field_errors }}</div>
-  <csv-file-upload input-name="{{ form.files.html_name }}"></csv-file-upload>
-  <noscript v-if="false">{{ form.files.label_tag }} {{ form.files }}</noscript>
+  <csv-file-upload input-name="{{ form.files.html_name }}" :retained-files="csvImportData.retained_files"></csv-file-upload>
+  <noscript v-if="false">{{ form.files.label_tag }} {{ form.files }}{{ form.retained_files }}</noscript>
   <div v-pre>{{ form.files.errors }}</div>
   <p class="text-muted small">
     {% blocktrans with files=csv_limits.files size=csv_limits.size rows=csv_limits.rows %}Up to {{ files }} files, {{ size }} MiB per file and {{ rows }} rows in total. For Google Sheets, download each tab as a CSV.{% endblocktrans %}
   </p>
   <details v-pre class="card mb-3" {% if form.errors %}open{% endif %}>
     <summary class="card-header">{% trans "CSV format options" %}</summary>
+    {% if csv_vue_data.retained_files %}
+      <p class="text-muted small px-3 pt-3 mb-0">{% trans "These options apply to newly added files. Existing files keep their parsed data." %}</p>
+    {% endif %}
     <div class="card-body row">
       {% for field in form %}
-        {% if field.name != 'files' %}
+        {% if field.name != 'files' and field.name != 'retained_files' %}
           <div class="col-md-4">
             {% include "csv_mapping_field.html" %}
           </div>
