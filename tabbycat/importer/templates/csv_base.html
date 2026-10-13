@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block extra-css %}{{ block.super }}<link rel="stylesheet" href="{% static 'importer/csv-importer.css' %}">{% endblock %}
+{% block content %}
+<div class="csv-importer">
+  <ol class="csv-steps mb-4" aria-label="{% trans 'Import steps' %}">
+    {% if step_list %}{% for step in step_list %}
+      <li class="csv-step csv-step-{{ step.state }}" {% if step.state == 'current' %}aria-current="step"{% endif %}><span class="csv-step-number">{% if step.state == 'complete' %}✓{% else %}{{ forloop.counter }}{% endif %}</span><span>{{ step.label }}</span></li>
+    {% endfor %}{% else %}
+      <li class="csv-step csv-step-current" aria-current="step"><span class="csv-step-number">1</span>{% trans "Upload files" %}</li>
+      <li class="csv-step"><span class="csv-step-number">2</span>{% trans "Choose file types" %}</li>
+      <li class="csv-step"><span class="csv-step-number">3</span>{% trans "Map CSV columns" %}</li>
+      <li class="csv-step"><span class="csv-step-number">4</span>{% trans "Preview and edit rows" %}</li>
+      <li class="csv-step"><span class="csv-step-number">5</span>{% trans "Review and import" %}</li>
+    {% endif %}
+  </ol>
+  {% block csv_content %}{% endblock %}
+</div>
+{% endblock %}
+{% block js %}{{ block.super }}<script src="{% static 'importer/csv-importer.js' %}"></script>{% endblock %}

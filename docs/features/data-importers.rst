@@ -10,6 +10,46 @@ The **tournament data importer** is the class that imports data from one or more
 
 .. todo:: This page is incomplete. If you're finding this information insufficient, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
 
+Adding a type to the CSV wizard
+==============================
+
+The web CSV wizard uses the ``CSV_TYPES`` registry in ``importer/csv_types.py``.
+Its built-in ``TeamCSVType`` and ``SpeakerCSVType`` implementations provide
+examples. A registered type owns:
+
+- its stable key, display label, and filename words used for type suggestions;
+- mapping targets, required targets, header aliases, and mapping suggestions;
+- its preview form, inferred form options, and preview field count;
+- normalization and serialization of session data;
+- compact preview summaries, object counts and proposed additional objects;
+- the fields identifying possible duplicate rows; and
+- dependency resolution, execution priority, and an atomic save operation.
+
+Subclass ``CSVObjectType`` and register an instance with
+``register_csv_type(MyCSVType())`` when its module is loaded. Built-in types are
+registered at the end of ``csv_types.py``. The type selector, mapping cards,
+preview formset, and row executor use the registry automatically; they do not
+need additional branches in the views for each type.
+
+Reference matching provides institution and team resolvers through
+``CSVImportContext`` in ``importer/csv_pipeline.py``. Resolved values and unresolved
+choices appear directly in the editable preview. Types can reconcile edited
+relationships through ``resolve_preview()`` and declare uploaded-row dependencies
+through ``preview_dependencies()``. The preview flags skipped or invalid parent
+rows before confirmation. ``preview_summary()``, ``object_counts()`` and
+``additional_objects()`` supply display information without per-type view branches. Keep participant writes in the type's
+transactional ``save()`` hook and use ``DependencyPendingError`` or ``DependencyBlockedError``
+to report dependencies that cannot yet be used. Preview must not save records.
+
+Team speaker groups are inferred from mapped ``speaker_N_name`` and
+``speaker_N_email`` targets. Separate speaker files recognize Anorak's
+``name``, ``team_name``, ``institution`` and ``use_institution_prefix`` columns.
+Missing teams are proposed for creation in preview; speakers sharing a team name
+and institution reuse that team. New team creation and its first speaker are
+saved atomically, including team defaults and participant identifiers.
+
+The management-command importer described below retains its existing interface.
+
 Why write your own?
 ===================
 

@@ -1,0 +1,34 @@
+{% extends "csv_base.html" %}
+{% load i18n static debate_tags %}
+{% block csv_content %}
+<h2 class="h3">{% trans "Import progress" %}</h2>
+<div class="card mb-3"><div class="card-body row">
+  <div class="col"><strong class="h3 d-block" data-result-count="imported">{{ result_counts.imported }}</strong>{% trans "Imported" %}</div>
+  <div class="col"><strong class="h3 d-block" data-result-count="pending">{{ result_counts.pending }}</strong>{% trans "Pending" %}</div>
+  <div class="col"><strong class="h3 d-block" data-result-count="skipped">{{ result_counts.skipped }}</strong>{% trans "Skipped" %}</div>
+  <div class="col"><strong class="h3 d-block" data-result-count="failed">{{ result_counts.failed }}</strong>{% trans "Failed" %}</div>
+  <div class="col"><strong class="h3 d-block" data-result-count="blocked">{{ result_counts.blocked }}</strong>{% trans "Blocked" %}</div>
+</div></div>
+<form id="csv-results" method="post">
+  {% csrf_token %}
+  <p>{% trans "Keep this page open while importing. If a request is interrupted, check the affected row in Participants before starting another import. Requests are not retried automatically." %}</p>
+  <button type="button" class="btn btn-primary mb-3" id="csv-start">{% trans "Import pending rows" %}</button>
+  <p id="csv-progress" role="status" aria-live="polite"></p>
+  <progress id="csv-progress-bar" class="w-100 mb-3" max="{{ rows|length }}" value="0" aria-label="{% trans 'Completed import rows' %}"></progress>
+  <div class="d-flex justify-content-end mb-3"><label class="mr-2 col-form-label" for="csv-result-file">{% trans "Show file" %}</label><select id="csv-result-file" class="form-control w-auto"><option value="">{% trans "All files" %}</option>{% for name in result_files %}<option value="{{ name }}">{{ name }}</option>{% endfor %}</select></div>
+  <div class="table-responsive card">
+  <p id="csv-interrupted" class="alert alert-warning" hidden>{% trans "Import interrupted. The last row may have been saved. Check Participants before starting another import; do not retry this request." %}</p>
+  <table class="table table-striped">
+    <thead><tr><th>{% trans "File" %}</th><th>{% trans "Row" %}</th><th>{% trans "Object" %}</th><th>{% trans "Status" %}</th><th>{% trans "Errors" %}</th></tr></thead>
+    <tbody>{% for row in rows %}
+      <tr data-result-row="{{ forloop.counter0 }}" data-file="{{ row.file }}" data-status="{{ row.status }}" data-priority="{{ row.priority }}">
+        <td>{{ row.file }}</td><td>{{ row.line }}</td><td>{{ row.display_name }}</td>
+        <td data-result-status>{% if row.status == 'pending' %}{% trans "Pending" %}{% elif row.status == 'imported' %}{% trans "Imported" %}{% elif row.status == 'skipped' %}{% trans "Skipped" %}{% elif row.status == 'blocked' %}{% trans "Blocked" %}{% else %}{% trans "Failed" %}{% endif %}</td><td data-result-errors>{{ row.errors }}</td>
+      </tr>
+    {% endfor %}</tbody>
+  </table></div>
+</form>
+<a class="btn btn-outline-secondary" href="{% tournamenturl 'importer-csv-errors' import_id=view.kwargs.import_id %}">{% trans "Download results CSV" %}</a>
+<a class="btn btn-outline-secondary" href="{% tournamenturl 'participants-list' %}">{% trans "View participants" %}</a>
+<a class="btn btn-outline-secondary" href="{% tournamenturl 'importer-csv-upload' %}">{% trans "New CSV import" %}</a>
+{% endblock %}
