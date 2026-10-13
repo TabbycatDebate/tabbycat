@@ -204,6 +204,8 @@ vueComponents.BallotEntryContainer = BallotEntryContainer
 // Check-Ins (thus delays loading quagga)
 vueComponents.CheckInScanContainer = defineAsyncComponent(() => import('../../checkins/templates/CheckInScanContainer.vue'))
 
+vueComponents.WizardSteps = defineAsyncComponent(() => import('../components/WizardSteps.vue'))
+
 // CSV importer enhancements use the shared mount and translation setup.
 vueComponents.CsvFileUpload = defineAsyncComponent(() => import('../../importer/templates/components/CSVFileUpload.vue'))
 vueComponents.CsvImportWorkspace = defineAsyncComponent(() => import('../../importer/templates/components/CSVImportWorkspace.vue'))

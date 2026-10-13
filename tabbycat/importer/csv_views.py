@@ -16,10 +16,20 @@ from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, TabbycatPageTitlesMixin
 
-from .csv_forms import (CSVConfirmForm, CSVMappingForm, CSVPreviewFormSet,
+from .csv_forms import (CSV_MAX_FILE_SIZE_MIB, CSV_MAX_FILES, CSV_MAX_ROWS,
+                        CSVConfirmForm, CSVMappingForm, CSVPreviewFormSet,
                         CSVTypesForm, CSVUploadForm, mapped_rows)
 from .csv_pipeline import CSVImportContext, process_csv_row
 from .csv_types import CSV_TYPES, DependencyPendingError
+
+
+CSV_STEP_TITLES = {
+    'upload': gettext_lazy('Upload files'),
+    'types': gettext_lazy('Choose file types'),
+    'mapping': gettext_lazy('Map CSV columns'),
+    'preview': gettext_lazy('Preview and edit rows'),
+    'confirm': gettext_lazy('Review and import'),
+}
 
 
 class CSVAccessMixin(AdministratorMixin, TournamentMixin, TabbycatPageTitlesMixin):
@@ -48,9 +58,11 @@ class CSVUploadView(CSVAccessMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['csv_limits'] = {'files': CSV_MAX_FILES, 'size': CSV_MAX_FILE_SIZE_MIB, 'rows': CSV_MAX_ROWS}
         context['csv_templates'] = [{'key': key, 'label': label}
             for kind in CSV_TYPES.values() for key, label, columns in kind.templates]
-        context['csv_vue_data'] = {}
+        context['csv_vue_data'] = {'steps': [{'key': key, 'label': label,
+            'state': 'current' if key == 'upload' else 'upcoming'} for key, label in CSV_STEP_TITLES.items()]}
         return context
 
     def form_valid(self, form):
@@ -80,10 +92,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
     template_name = 'csv_wizard.html'
     form_list = [('types', CSVTypesForm), ('mapping', CSVMappingForm),
         ('preview', CSVPreviewFormSet), ('confirm', CSVConfirmForm)]
-    step_titles = {
-        'types': gettext_lazy('Choose file types'), 'mapping': gettext_lazy('Map CSV columns'),
-        'preview': gettext_lazy('Preview and edit rows'), 'confirm': gettext_lazy('Review and import'),
-    }
+    step_titles = {key: label for key, label in CSV_STEP_TITLES.items() if key != 'upload'}
 
     def get_page_title(self):
         return _('%(title)s — %(step)s') % {'title': self.page_title, 'step': self.step_titles[self.steps.current]}
@@ -153,6 +162,9 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         return super().get_form_initial(step)
 
     def render_goto_step(self, goto_step, **kwargs):
+        steps = list(self.get_form_list())
+        if goto_step not in steps or steps.index(goto_step) >= self.steps.step0:
+            return self.render(self.get_form(data=self.storage.get_step_data(self.steps.current)))
         # Preserve edits even when navigating back through a currently invalid form.
         if self.steps.current:
             self.storage.set_step_data(self.steps.current, self.request.POST)
@@ -216,10 +228,12 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             context['import_count'] = context['row_count'] - context['skip_count']
         context['csv_vue_data'] = {'files': [self.vue_file_data(group) for group in groups]}
         context['file_groups'] = groups
-        context['step_list'] = [{'key': 'upload', 'label': _('Upload files'), 'state': 'complete'}] + [
-            {'key': key, 'label': label, 'state': 'current' if key == self.steps.current else
+        context['step_list'] = [{'key': 'upload', 'label': _('Upload files'), 'state': 'complete',
+            'href': reverse_tournament('importer-csv-upload', self.tournament)}] + [
+            {'key': key, 'label': label, 'value': key if index < self.steps.step0 else None, 'state': 'current' if key == self.steps.current else
                 'complete' if index < self.steps.step0 else 'upcoming'}
             for index, (key, label) in enumerate(self.step_titles.items())]
+        context['csv_vue_data']['steps'] = context['step_list']
         return context
 
     @staticmethod
@@ -270,7 +284,7 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
         context['step_list'] = [{'label': label, 'state': 'complete'} for label in
             (_('Upload files'), _('Choose file types'), _('Map CSV columns'), _('Preview and edit rows'))] + [
             {'label': _('Import results'), 'state': 'current'}]
-        context['csv_vue_data'] = {'rows': context['rows']}
+        context['csv_vue_data'] = {'rows': context['rows'], 'steps': context['step_list']}
         return context
 
     def post(self, request, *args, **kwargs):
@@ -293,8 +307,8 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
             if row['status'] == 'pending':
                 try:
                     process_csv_row(self.tournament, request.user, draft, row)
-                except DependencyPendingError as error:
-                    return JsonResponse({'error': str(error)}, status=409)
+                except DependencyPendingError:
+                    return JsonResponse({'error': _('Import the linked team first.')}, status=409)
                 draft['rows'][index] = row
                 request.session[self.draft_key] = draft
                 request.session.save()

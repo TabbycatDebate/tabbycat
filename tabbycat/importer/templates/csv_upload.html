@@ -33,7 +33,7 @@
   <noscript v-if="false">{{ form.files.label_tag }} {{ form.files }}</noscript>
   <div v-pre>{{ form.files.errors }}</div>
   <p class="text-muted small">
-    {% trans "Up to 20 files, 2 MiB per file and 1,000 rows in total. For Google Sheets, download each tab as a CSV." %}
+    {% blocktrans with files=csv_limits.files size=csv_limits.size rows=csv_limits.rows %}Up to {{ files }} files, {{ size }} MiB per file and {{ rows }} rows in total. For Google Sheets, download each tab as a CSV.{% endblocktrans %}
   </p>
   <details v-pre class="card mb-3" {% if form.errors %}open{% endif %}>
     <summary class="card-header">{% trans "CSV format options" %}</summary>

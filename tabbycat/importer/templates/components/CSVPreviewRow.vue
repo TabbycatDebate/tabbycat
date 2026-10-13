@@ -2,13 +2,22 @@
 import { computed, inject } from 'vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
-const props = defineProps({ rowIndex: Number, fileIndex: Number })
-const { gettext } = useDjangoI18n()
+const props = defineProps({
+  rowIndex: Number,
+  fileIndex: Number,
+})
+const { gettext, interpolate } = useDjangoI18n()
 const { rows, filters, rowStatus } = inject('csvPreviewState')
+
 const row = computed(() => rows[props.rowIndex])
 const status = computed(() => rowStatus(row.value))
 const visible = computed(() => filters[props.fileIndex] === 'all' || filters[props.fileIndex] === status.value)
-const badgeClass = computed(() => ({ skipped: 'badge-secondary', attention: 'badge-warning', ready: 'badge-success' }[status.value]))
+
+const badgeClass = computed(() => ({
+  skipped: 'badge-secondary',
+  attention: 'badge-warning',
+  ready: 'badge-success',
+}[status.value]))
 const label = computed(() => {
   if (row.value.skipped) return gettext('Skipped')
   if (row.value.invalid) return gettext('Needs attention')
@@ -37,7 +46,7 @@ const label = computed(() => {
       </div>
       <div class="csv-row-name">
         <strong>{{ row.name || '—' }}</strong>
-        <small class="d-block text-muted">{{ row.file }} · {{ gettext('Line') }} {{ row.line }}</small>
+        <small class="d-block text-muted">{{ interpolate(gettext('%(filename)s · Line %(line)s'), { filename: row.file, line: row.line }, true) }}</small>
       </div>
       <div class="csv-row-related small text-muted">
         {{ row.related }}

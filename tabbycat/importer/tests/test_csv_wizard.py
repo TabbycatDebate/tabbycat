@@ -1,3 +1,5 @@
+import csv
+import io
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -5,23 +7,20 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import connection
-from django.test import override_settings, TestCase
+from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 
 from participants.models import Institution, Speaker, Team
 from tournaments.models import Round, Tournament
 from utils.misc import reverse_tournament
 
-from ..csv_forms import CSVMappingForm, CSVPreviewFormSet, CSVTeamForm, CSVTypesForm, CSVUploadForm
-from ..csv_pipeline import CSVImportContext
+from ..csv_forms import CSV_MAX_FILE_SIZE, CSV_MAX_FILES, CSV_MAX_ROWS, CSVMappingForm, CSVPreviewFormSet, CSVTeamForm, CSVTypesForm, CSVUploadForm
+from ..csv_pipeline import CSVImportContext, process_csv_row
 from ..csv_row_forms import CSVSpeakerForm
-from ..csv_types import CSV_TYPES, guess_file_type, register_csv_type, SpeakerCSVType
+from ..csv_types import CSV_TYPES, DependencyPendingError, guess_file_type, register_csv_type, SpeakerCSVType
 from ..references import ImportReferences
 
 
-@override_settings(SESSION_ENGINE='django.contrib.sessions.backends.cache',
-    STORAGES={'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
-        'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'}})
 class CSVWizardTests(TestCase):
     def setUp(self):
         cache.clear()
@@ -216,7 +215,6 @@ class CSVWizardTests(TestCase):
         self.assertFalse(Speaker.objects.exists())
 
     def test_failed_team_still_blocks_speaker_during_execution(self):
-        from ..csv_pipeline import process_csv_row
         row = {'kind': 'speaker', 'status': 'pending', 'data': {'name': 'Bob', 'team': 'row:1'}}
         process_csv_row(self.tournament, self.user,
             {'rows': [row, {'status': 'failed'}], 'team_choices': [('row:1', 'Uploaded team')]}, row)
@@ -376,7 +374,6 @@ class CSVWizardTests(TestCase):
         self.assertEqual(Speaker.objects.get().team.reference, 'Edited')
 
     def test_speaker_team_identity_includes_institution(self):
-        from ..csv_pipeline import process_csv_row
         rows = [{'kind': 'speaker', 'status': 'pending', 'data': {'name': name, 'team': 'new',
             'team_name': 'A', 'institution': institution, 'use_institution_prefix': 'False'}}
             for name, institution in [('Alice', ''), ('Bob', ''), ('Alice', self.institution.pk)]]
@@ -415,8 +412,6 @@ class CSVWizardTests(TestCase):
         self.assertEqual(len(form.cleaned_data['parsed']), 14)
 
     def test_download_templates_have_mappable_headers(self):
-        import csv
-        import io
         for template, kind in [('teams', 'team'), ('teams-with-speakers', 'team'), ('speakers', 'speaker')]:
             with self.subTest(template=template):
                 response = self.client.get(reverse_tournament('importer-csv-template', self.tournament,
@@ -479,3 +474,48 @@ class CSVWizardTests(TestCase):
         Institution.objects.create(name='EU', code='OTHER')
         with self.assertRaises(Institution.MultipleObjectsReturned):
             ImportReferences(self.tournament).lookup_institution('EU')
+
+    def test_file_limits_are_field_errors(self):
+        data = {'encoding': 'utf-8-sig', 'delimiter': ',', 'header_row': 1}
+        oversized = SimpleUploadedFile('teams.csv', b'Team\nA\n')
+        oversized.size = CSV_MAX_FILE_SIZE + 1
+        for files in ([oversized], [SimpleUploadedFile(f'teams-{i}.csv', b'Team\nA\n') for i in range(CSV_MAX_FILES + 1)]):
+            with self.subTest(files=len(files)):
+                form = CSVUploadForm(data=data, files={'files': files})
+                self.assertFalse(form.is_valid())
+                self.assertIn('files', form.errors)
+                self.assertNotIn('__all__', form.errors)
+
+    def test_total_row_limit_spans_files(self):
+        form = CSVUploadForm(data={'encoding': 'utf-8-sig', 'delimiter': ',', 'header_row': 1}, files={'files': [
+            SimpleUploadedFile('teams.csv', ('Team\n' + 'A\n' * CSV_MAX_ROWS).encode()),
+            SimpleUploadedFile('speakers.csv', b'Name\nAlice\n')]})
+        self.assertFalse(form.is_valid())
+        self.assertIn('rows in total', str(form.errors))
+
+    def test_step_links_only_navigate_back_and_preserve_edits(self):
+        response = self.preview()
+        steps = response.context['csv_vue_data']['steps']
+        self.assertEqual([step['value'] for step in steps[1:]], ['types', 'mapping', None, None])
+        self.assertContains(response, '<wizard-steps')
+        response = self.step('preview', {**self.preview_data([self.row(reference='Edited')]), 'wizard_goto_step': 'types'})
+        self.assertEqual(response.context['wizard']['steps'].current, 'types')
+        self.step('types', {'types-file_0': 'team'})
+        response = self.step('mapping', {'mapping-column_0_0': 'reference', 'mapping-column_0_1': 'institution',
+            'mapping-column_0_2': 'speaker_1_name', 'mapping-column_0_3': 'speaker_1_email'})
+        self.assertEqual(response.context['wizard']['form'].forms[0]['reference'].value(), 'Edited')
+
+    def test_step_navigation_cannot_jump_ahead(self):
+        self.upload()
+        response = self.step('types', {'wizard_goto_step': 'confirm'})
+        self.assertEqual(response.context['wizard']['steps'].current, 'types')
+        self.assertFalse(Team.objects.exists())
+
+    def test_pending_dependency_response_does_not_expose_exception(self):
+        self.preview()
+        url = self.finish([self.row()])
+        with patch('importer.csv_views.process_csv_row', side_effect=DependencyPendingError('private exception detail')):
+            response = self.client.post(url, {'row': 0})
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.json()['error'], 'Import the linked team first.')
+        self.assertNotContains(response, 'private exception detail', status_code=409)

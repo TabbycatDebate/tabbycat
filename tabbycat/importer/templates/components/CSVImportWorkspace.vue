@@ -3,22 +3,34 @@ import { computed, provide, reactive, ref, watch } from 'vue'
 import FeatherIcon from '../../../templates/components/FeatherIcon.vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
-const props = defineProps({ files: Array, preview: Boolean })
-const { gettext, ngettext } = useDjangoI18n()
+const props = defineProps({
+  files: Array,
+  preview: Boolean,
+})
+const { gettext, ngettext, interpolate } = useDjangoI18n()
 const storageKey = 'csv-active-file:' + window.location.pathname
-const rows = reactive(Object.fromEntries(props.files.flatMap(file => file.rows.map(row => [row.index, { ...row, edited: false }]))))
+const rows = reactive(Object.fromEntries(
+  props.files.flatMap(file => file.rows.map(row => [row.index, { ...row, edited: false }])),
+))
 const filters = reactive(Object.fromEntries(props.files.map(file => [file.index, 'all'])))
+
 const firstInvalid = props.files.findIndex(file => file.attention_count || file.rows.some(row => row.invalid && !row.skipped))
 const saved = Number(sessionStorage.getItem(storageKey))
 const active = ref(firstInvalid >= 0 ? firstInvalid : saved >= 0 && saved < props.files.length ? saved : 0)
+
 const rowCount = computed(() => props.files.reduce((sum, file) => sum + file.row_count, 0))
 const rowStatus = row => row.skipped ? 'skipped' : row.invalid ? 'attention' : 'ready'
 const fileRows = file => file.rows.map(row => rows[row.index])
 const attentionCount = file => fileRows(file).filter(row => rowStatus(row) === 'attention').length
 const skippedCount = file => fileRows(file).filter(row => row.skipped).length
-const visibleRows = file => fileRows(file).filter(row => filters[file.index] === 'all' || rowStatus(row) === filters[file.index])
-const fileCountLabel = computed(() => window.interpolate(ngettext('%s file', '%s files', props.files.length), [props.files.length]))
-const countLabel = count => window.interpolate(ngettext('%s row', '%s rows', count), [count])
+const visibleRows = file => fileRows(file).filter(row =>
+  filters[file.index] === 'all' || rowStatus(row) === filters[file.index])
+
+const fileCountLabel = computed(() => interpolate(ngettext('%s file', '%s files', props.files.length), [props.files.length]))
+const attentionLabel = count => interpolate(ngettext('%s row needs attention', '%s rows need attention', count), [count])
+const skippedLabel = count => interpolate(ngettext('%s row skipped', '%s rows skipped', count), [count])
+const mappedLabel = count => interpolate(ngettext('%s column mapped', '%s columns mapped', count), [count])
+const countLabel = count => interpolate(ngettext('%s row', '%s rows', count), [count])
 
 provide('csvPreviewState', { rows, filters, rowStatus })
 watch(active, value => sessionStorage.setItem(storageKey, String(value)), { immediate: true })
@@ -65,7 +77,7 @@ function skipInvalid (file) {
               <span
                 v-if="attentionCount(file)"
                 class="badge badge-warning"
-              >{{ attentionCount(file) }} {{ gettext('need attention') }}</span>
+              >{{ attentionLabel(attentionCount(file)) }}</span>
               <span
                 v-else
                 class="badge badge-success"
@@ -73,12 +85,12 @@ function skipInvalid (file) {
               <span
                 v-if="skippedCount(file)"
                 class="badge badge-secondary ml-1"
-              >{{ skippedCount(file) }} {{ gettext('skipped') }}</span>
+              >{{ skippedLabel(skippedCount(file)) }}</span>
             </template>
             <span
               v-else
               class="badge badge-light"
-            >{{ file.mapped_count }} {{ gettext('columns mapped') }}</span>
+            >{{ mappedLabel(file.mapped_count) }}</span>
           </span>
         </button>
       </div>
@@ -95,7 +107,8 @@ function skipInvalid (file) {
           <div>
             <h2 class="h5 mb-1">
               {{ file.type_label }}
-            </h2><span class="text-muted">{{ file.name }}</span>
+            </h2>
+            <span class="text-muted">{{ file.name }}</span>
           </div>
           <span class="badge badge-light">{{ countLabel(file.row_count) }}</span>
         </div>
@@ -103,7 +116,7 @@ function skipInvalid (file) {
           v-if="preview"
           class="card-body py-3 d-flex flex-wrap align-items-center justify-content-between"
         >
-          <span class="small text-muted">{{ attentionCount(file) }} {{ gettext('need attention') }} · {{ skippedCount(file) }} {{ gettext('skipped') }}</span>
+          <span class="small text-muted">{{ attentionLabel(attentionCount(file)) }} · {{ skippedLabel(skippedCount(file)) }}</span>
           <div class="d-flex align-items-center mt-2 mt-md-0">
             <button
               type="button"
@@ -116,7 +129,7 @@ function skipInvalid (file) {
             <label
               class="sr-only"
               :for="`csv-filter-${file.index}`"
-            >{{ gettext('Filter rows') }} — {{ file.name }}</label>
+            >{{ interpolate(gettext('Filter rows in %(filename)s'), { filename: file.name }, true) }}</label>
             <select
               :id="`csv-filter-${file.index}`"
               v-model="filters[file.index]"
