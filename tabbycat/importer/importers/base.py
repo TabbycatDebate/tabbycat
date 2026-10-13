@@ -8,21 +8,11 @@ from types import GeneratorType
 
 from django.core.exceptions import FieldError, MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
 
+from ..csv_values import convert_bool
+
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19  # Logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
-
-TRUE_VALUES = ('true', 'yes', 't', 'y', '1')
-FALSE_VALUES = ('false', 'no', 'f', 'n', '0')
-
-
-def convert_bool(value):
-    if value.lower() in TRUE_VALUES:
-        return True
-    elif value.lower() in FALSE_VALUES:
-        return False
-    else:
-        raise ValueError('Invalid boolean value: %s' % (value,))
 
 
 def make_interpreter(DELETE=[], **kwargs):  # noqa: N803

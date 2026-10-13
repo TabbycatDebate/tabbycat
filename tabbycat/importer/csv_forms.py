@@ -177,11 +177,11 @@ class CSVMappingForm(forms.Form):
 def mapped_rows(files, mapping, types=None):
     rows = []
     for index, source in enumerate(files):
-        for row in source['rows']:
+        for row_index, row in enumerate(source['rows']):
             values = {mapping[f'column_{index}_{column}']: value for column, value in enumerate(row['values'])
                 if mapping.get(f'column_{index}_{column}')}
             kind = (types or {}).get(f'file_{index}', 'team')
-            rows.append({'file': source['name'], 'file_index': index, 'line': row['line'], 'values': values, 'kind': kind})
+            rows.append({'file': source['name'], 'file_index': index, 'line': row['line'], 'row_index': row_index, 'values': values, 'kind': kind})
     return rows
 
 
@@ -229,10 +229,10 @@ class CSVPreviewFormSet(forms.BaseFormSet):
                     form.add_error(None, _('The linked row is skipped or has errors. Select another reference, correct the linked row, or skip this row.'))
             if form.errors:
                 continue
-            key = kind.duplicate_key(form.cleaned_data)
-            if key in seen:
-                form.add_error(kind.name_field, _('This participant appears more than once in the uploaded files. Skip or correct this row.'))
-            seen.add(key)
+            keys = kind.duplicate_keys(form.cleaned_data)
+            if any(key in seen for key in keys):
+                form.add_error(kind.name_field, _('This record appears more than once in the uploaded files. Skip or correct this row.'))
+            seen.update(keys)
 
 
 CSVPreviewFormSet = forms.formset_factory(CSVTeamForm, formset=CSVPreviewFormSet, extra=0, can_delete=True)
