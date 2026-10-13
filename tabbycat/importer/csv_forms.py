@@ -6,11 +6,28 @@ import io
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 from django.utils.translation import gettext_lazy as _
 
 from .csv_row_forms import CSVTeamForm
 from .csv_types import CSV_TYPES, guess_file_type
 from .references import ImportReferences
+
+
+# Bound session storage and the number of controls rendered in a preview.
+CSV_MAX_FILES = 20
+CSV_MAX_FILE_SIZE_MIB = 2
+CSV_MAX_FILE_SIZE = CSV_MAX_FILE_SIZE_MIB * 1024 * 1024
+CSV_MAX_ROWS = 1000
+CSV_MAX_COLUMNS = 100
+CSV_MAX_HEADER_ROW = 100
+CSV_SNIFFER_SAMPLE_SIZE = 8192
+
+
+def validate_csv_file_size(upload):
+    if upload.size > CSV_MAX_FILE_SIZE:
+        raise ValidationError(_('Each CSV must be at most %(size)d MiB.'),
+            code='file_too_large', params={'size': CSV_MAX_FILE_SIZE_MIB})
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -20,46 +37,51 @@ class MultipleFileInput(forms.ClearableFileInput):
 class MultipleFileField(forms.FileField):
     widget = MultipleFileInput
 
+    def __init__(self, *args, list_validators=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.list_validators = list_validators
+
     def clean(self, data, initial=None):
         clean = super().clean
         if not data:
             return clean(None, initial)
-        return [clean(item, initial) for item in (data if isinstance(data, (list, tuple)) else [data])]
+        selection = data if isinstance(data, (list, tuple)) else [data]
+        for validator in self.list_validators:
+            validator(selection)
+        return [clean(item, initial) for item in selection]
 
 
 class CSVUploadForm(forms.Form):
-    files = MultipleFileField(label=_("CSV files"), widget=MultipleFileInput(attrs={'accept': '.csv,text/csv'}))
+    files = MultipleFileField(label=_("CSV files"), widget=MultipleFileInput(attrs={'accept': '.csv,text/csv'}),
+        validators=[validate_csv_file_size], list_validators=[MaxLengthValidator(CSV_MAX_FILES,
+            message=_("Upload at most %(limit_value)d CSV files at a time."))])
     encoding = forms.ChoiceField(choices=[('utf-8-sig', 'UTF-8'), ('cp1252', 'Windows-1252')])
     delimiter = forms.ChoiceField(required=False, choices=[('', _('Detect automatically')), (',', _('Comma')),
         (';', _('Semicolon')), ('\t', _('Tab'))])
-    header_row = forms.IntegerField(min_value=1, max_value=100, initial=1, label=_("Header row"))
+    header_row = forms.IntegerField(min_value=1, max_value=CSV_MAX_HEADER_ROW, initial=1, label=_("Header row"))
 
     def clean(self):
         data = super().clean()
         if self.errors:
             return data
         files = data['files']
-        if len(files) > 20:
-            raise ValidationError(_("Upload at most 20 CSV files at a time."))
         parsed = []
         total = 0
         for upload in files:
-            if upload.size > 2 * 1024 * 1024:
-                raise ValidationError(_("Each CSV must be smaller than 2 MiB."))
             try:
                 text = upload.read().decode(data['encoding'])
                 delimiter = data['delimiter']
                 if not delimiter:
                     try:
-                        delimiter = csv.Sniffer().sniff(text[:8192], delimiters=',;\t').delimiter
+                        delimiter = csv.Sniffer().sniff(text[:CSV_SNIFFER_SAMPLE_SIZE], delimiters=',;\t').delimiter
                     except csv.Error:
                         delimiter = ','
                 reader = csv.reader(io.StringIO(text, newline=''), delimiter=delimiter, strict=True)
                 for unused in range(data['header_row'] - 1):
                     next(reader)
                 headers = next(reader)
-                if not headers or len(headers) > 100:
-                    raise ValidationError(_("Choose a header row containing between 1 and 100 columns."))
+                if not headers or len(headers) > CSV_MAX_COLUMNS:
+                    raise ValidationError(_("Choose a header row containing between 1 and %(limit)d columns.") % {'limit': CSV_MAX_COLUMNS})
                 rows = []
                 for values in reader:
                     if not any(value.strip() for value in values):
@@ -69,8 +91,8 @@ class CSVUploadForm(forms.Form):
                             'file': upload.name, 'line': reader.line_num})
                     rows.append({'line': reader.line_num, 'values': [value.strip() for value in values]})
                     total += 1
-                    if total > 1000:
-                        raise ValidationError(_("Upload at most 1,000 rows in total."))
+                    if total > CSV_MAX_ROWS:
+                        raise ValidationError(_("Upload at most %(limit)s rows in total.") % {'limit': f'{CSV_MAX_ROWS:,}'})
                 if not rows:
                     raise ValidationError(_("%(file)s contains no data rows.") % {'file': upload.name})
                 parsed.append({'name': upload.name, 'headers': headers, 'rows': rows})

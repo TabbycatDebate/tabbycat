@@ -4,10 +4,17 @@ import FeatherIcon from '../../../templates/components/FeatherIcon.vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
 const props = defineProps({ inputName: String })
-const { gettext } = useDjangoI18n()
+const { gettext, interpolate } = useDjangoI18n()
+
 const input = ref(null)
 const files = ref([])
 const dragging = ref(false)
+const formatNumber = new Intl.NumberFormat(document.documentElement.lang || undefined)
+
+function fileLabel (file) {
+  const size = formatNumber.format(Math.ceil(file.size / 1024))
+  return interpolate(gettext('%(filename)s · %(size)s KB'), { filename: file.name, size }, true)
+}
 
 function syncFiles () {
   const transfer = new DataTransfer()
@@ -89,11 +96,11 @@ function dropFiles (event) {
           :key="index"
           class="list-group-item d-flex align-items-center justify-content-between"
         >
-          <span>{{ file.name }} · {{ Math.ceil(file.size / 1024) }} KB</span>
+          <span>{{ fileLabel(file) }}</span>
           <button
             type="button"
             class="btn btn-outline-secondary btn-sm ml-3"
-            :aria-label="`${gettext('Remove')} ${file.name}`"
+            :aria-label="interpolate(gettext('Remove %(filename)s'), { filename: file.name }, true)"
             @click="removeFile(index)"
           >
             {{ gettext('Remove') }}

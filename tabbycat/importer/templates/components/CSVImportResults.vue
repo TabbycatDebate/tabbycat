@@ -2,21 +2,36 @@
 import { computed, ref } from 'vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
-const props = defineProps({ initialRows: Array, csrfToken: String })
-const { gettext } = useDjangoI18n()
+const props = defineProps({
+  initialRows: Array,
+  csrfToken: String,
+})
+const { gettext, interpolate } = useDjangoI18n()
+
 const rows = ref(props.initialRows.map((row, index) => ({ ...row, index })))
 const selectedFile = ref('')
 const processing = ref(false)
+
 const storageKey = 'csv-in-flight:' + window.location.pathname
 const interrupted = ref(!!sessionStorage.getItem(storageKey))
+
 const files = computed(() => [...new Set(rows.value.map(row => row.file))])
-const visibleRows = computed(() => rows.value.filter(row => !selectedFile.value || row.file === selectedFile.value))
+const visibleRows = computed(() => rows.value.filter(row =>
+  !selectedFile.value || row.file === selectedFile.value))
 const completed = computed(() => rows.value.filter(row => row.status !== 'pending').length)
-const counts = computed(() => Object.fromEntries(['imported', 'pending', 'skipped', 'failed', 'blocked']
-  .map(status => [status, rows.value.filter(row => row.status === status).length])))
+const counts = computed(() => Object.fromEntries(
+  ['imported', 'pending', 'skipped', 'failed', 'blocked'].map(status => [
+    status,
+    rows.value.filter(row => row.status === status).length,
+  ]),
+))
+
 const statusLabel = status => ({
-  pending: gettext('Pending'), imported: gettext('Imported'), skipped: gettext('Skipped'),
-  failed: gettext('Failed'), blocked: gettext('Blocked'),
+  pending: gettext('Pending'),
+  imported: gettext('Imported'),
+  skipped: gettext('Skipped'),
+  failed: gettext('Failed'),
+  blocked: gettext('Blocked'),
 }[status])
 
 async function startImport () {
@@ -28,7 +43,8 @@ async function startImport () {
       // the session. An uncertain request must never be retried automatically.
       sessionStorage.setItem(storageKey, String(row.index))
       const response = await fetch(window.location.href, {
-        method: 'POST', credentials: 'same-origin',
+        method: 'POST',
+        credentials: 'same-origin',
         body: new URLSearchParams({ row: row.index, csrfmiddlewaretoken: props.csrfToken }),
       })
       if (!response.ok) throw new Error('Import request failed')
@@ -57,11 +73,14 @@ async function startImport () {
           :key="status"
           class="col"
         >
-          <strong class="h3 d-block">{{ count }}</strong>{{ statusLabel(status) }}
+          <strong class="h3 d-block">{{ count }}</strong>
+          {{ statusLabel(status) }}
         </div>
       </div>
     </div>
-    <p>{{ gettext('Keep this page open while importing. If a request is interrupted, check the affected row in Participants before starting another import. Requests are not retried automatically.') }}</p>
+    <p>
+      {{ gettext('Keep this page open while importing. If a request is interrupted, check the affected row in Participants before starting another import. Requests are not retried automatically.') }}
+    </p>
     <button
       type="button"
       class="btn btn-primary mb-3"
@@ -74,7 +93,7 @@ async function startImport () {
       role="status"
       aria-live="polite"
     >
-      {{ completed }} / {{ rows.length }}
+      {{ interpolate(gettext('%(completed)s / %(total)s rows completed'), { completed, total: rows.length }, true) }}
     </p>
     <progress
       class="w-100 mb-3"
@@ -112,14 +131,25 @@ async function startImport () {
     </div>
     <div class="table-responsive card mb-3">
       <table class="table table-striped mb-0">
-        <thead><tr><th>{{ gettext('File') }}</th><th>{{ gettext('Row') }}</th><th>{{ gettext('Object') }}</th><th>{{ gettext('Status') }}</th><th>{{ gettext('Errors') }}</th></tr></thead>
+        <thead>
+          <tr>
+            <th>{{ gettext('File') }}</th>
+            <th>{{ gettext('Row') }}</th>
+            <th>{{ gettext('Object') }}</th>
+            <th>{{ gettext('Status') }}</th>
+            <th>{{ gettext('Errors') }}</th>
+          </tr>
+        </thead>
         <tbody>
           <tr
             v-for="row in visibleRows"
             :key="row.index"
           >
-            <td>{{ row.file }}</td><td>{{ row.line }}</td><td>{{ row.display_name }}</td>
-            <td>{{ statusLabel(row.status) }}</td><td>{{ row.errors }}</td>
+            <td>{{ row.file }}</td>
+            <td>{{ row.line }}</td>
+            <td>{{ row.display_name }}</td>
+            <td>{{ statusLabel(row.status) }}</td>
+            <td>{{ row.errors }}</td>
           </tr>
         </tbody>
       </table>

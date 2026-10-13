@@ -2,44 +2,6 @@
 .csv-importer {
   width: 100%;
 }
-.csv-steps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .75rem 1.5rem;
-  padding: 1rem 0;
-  list-style: none;
-  border-bottom: 1px solid #dee2e6;
-}
-.csv-step {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  font-size: .875rem;
-  color: #6c757d;
-}
-.csv-step-current {
-  font-weight: 600;
-  color: #663da0;
-}
-.csv-step-number {
-  display: inline-flex;
-  width: 1.75rem;
-  height: 1.75rem;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.csv-step-current .csv-step-number {
-  background: #663da0;
-  color: white;
-}
-.csv-step-complete .csv-step-number {
-  background: #f0ebf6;
-  color: #663da0;
-  border-color: transparent;
-}
 .csv-drop-zone {
   border: 2px dashed #adb5bd;
   background: #faf9fc;
@@ -139,8 +101,5 @@
   }
   .csv-row-editor summary {
     margin-left: 67px;
-  }
-  .csv-step {
-    font-size: .75rem;
   }
 }
