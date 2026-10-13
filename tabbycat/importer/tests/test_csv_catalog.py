@@ -2,6 +2,7 @@
 
 import csv
 import io
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -99,6 +100,15 @@ class CSVCatalogTests(TestCase):
             with self.subTest(name=name):
                 self.assertTrue(guess_file_type(name.upper() + '.CSV'))
                 self.assertTrue(guess_file_type('Export_' + name + '_2026.csv'))
+
+    def test_review_labels_use_plural_translation_with_the_object_count(self):
+        for kind in CSV_TYPES.values():
+            with self.subTest(kind=kind.key):
+                self.assertNotEqual(kind.review_label(1), kind.review_label(2))
+                self.assertEqual(kind.review_label(2), str(kind.label))
+        with patch('django.utils.translation._trans.ngettext', return_value='Translated teams') as translate:
+            self.assertEqual(CSV_TYPES['team'].review_label(3), 'Translated teams')
+            translate.assert_called_once_with('Team', 'Teams', 3)
 
     def test_all_command_types_in_one_import(self):
         # Deliberately reverse dependency order, including two mutually conflicted adjudicators.

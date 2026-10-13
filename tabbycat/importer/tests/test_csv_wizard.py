@@ -402,7 +402,7 @@ class CSVWizardTests(TestCase):
         response = self.step('preview', self.preview_data([self.row()]))
         self.assertEqual(response.context['import_count'], 1)
         self.assertEqual({str(item['label']): item['count'] for item in response.context['object_counts']},
-            {'Teams': 1, 'Speakers': 1})
+            {'Team': 1, 'Speaker': 1})
         self.assertFalse(Team.objects.exists())
 
     def test_multiple_files_of_the_same_type_are_supported(self):
