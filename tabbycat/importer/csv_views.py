@@ -175,7 +175,10 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
                         for name in row.fields:
                             value = row[name].value()
                             if name != 'DELETE' and value is not None:
-                                merged[row.add_prefix(name)] = str(value)
+                                if isinstance(value, (list, tuple)):
+                                    merged.setlist(row.add_prefix(name), [str(item) for item in value])
+                                else:
+                                    merged[row.add_prefix(name)] = str(value)
             else:
                 for field in defaults:
                     value = field.value()
@@ -200,7 +203,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
                 for name in row.fields:
                     value = row[name].value()
                     if name != 'DELETE' and value is not None:
-                        values[row.add_prefix(name)] = str(value)
+                        values[row.add_prefix(name)] = [str(item) for item in value] if isinstance(value, (list, tuple)) else str(value)
             form = super().get_form(step=step, data=values, files=files)
             form.is_valid()
         return form
@@ -341,6 +344,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             if not skipped:
                 data = kind.serialize(data)
             results.append({'file': source['file'], 'line': source['line'],
+                'display_name': kind.preview_summary(form)['name'],
                 'kind': source['kind'], 'status': 'skipped' if skipped else 'pending', 'data': {} if skipped else data, 'errors': ''})
         draft.update(started=True, rows=results, team_choices=self.import_context().team_options[0])
         draft.pop('files', None)
@@ -356,8 +360,13 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         if not self.draft['started']:
             raise Http404
-        context['rows'] = [{**row, 'priority': CSV_TYPES[row['kind']].priority,
-            'display_name': row['data'].get(CSV_TYPES[row['kind']].name_field, '')} for row in self.draft['rows']]
+        context['rows'] = []
+        for row in self.draft['rows']:
+            kind = CSV_TYPES[row['kind']]
+            primary = {name: value for name, value in row['data'].items() if name not in kind.deferred_fields}
+            context['rows'].append({**row, 'priority': kind.priority,
+                'dependencies': kind.preview_dependencies(primary), 'link_dependencies': kind.preview_dependencies(row['data']),
+                'display_name': row.get('display_name', row['data'].get(kind.name_field, ''))})
         context['step_list'] = [{'label': label, 'state': 'complete'} for label in
             (_('Upload files'), _('Choose file types'), _('Map CSV columns'), _('Preview and edit rows'))] + [
             {'label': _('Import results'), 'state': 'current'}]
@@ -381,15 +390,15 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
                 row = draft['rows'][index]
             except (KeyError, ValueError, IndexError):
                 return JsonResponse({'error': _('Invalid import row.')}, status=400)
-            if row['status'] == 'pending':
+            if row['status'] in ('pending', 'created'):
                 try:
                     process_csv_row(self.tournament, request.user, draft, row)
                 except DependencyPendingError:
-                    return JsonResponse({'error': _('Import the linked team first.')}, status=409)
+                    return JsonResponse({'error': _('Import the referenced rows first.')}, status=409)
                 draft['rows'][index] = row
                 request.session[self.draft_key] = draft
                 request.session.save()
-            labels = {'pending': _('Pending'), 'imported': _('Imported'), 'skipped': _('Skipped'),
+            labels = {'pending': _('Pending'), 'imported': _('Imported'), 'skipped': _('Skipped'), 'created': _('Created — linking references'),
                 'failed': _('Failed'), 'blocked': _('Blocked')}
             return JsonResponse({'status': row['status'], 'label': labels[row['status']], 'errors': row['errors']})
         finally:

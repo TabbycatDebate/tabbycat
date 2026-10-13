@@ -4,7 +4,7 @@
 {% block csv_content %}
 <div class="mb-4">
   <div class="d-flex flex-wrap align-items-center justify-content-between">
-    <h2 class="h3 mr-3">{% trans "Import teams and speakers from CSVs" %}</h2>
+    <h2 class="h3 mr-3">{% trans "Import tournament data from CSVs" %}</h2>
     <div class="dropdown mb-2">
       <button type="button" class="btn btn-outline-primary dropdown-toggle" id="csv-template-menu"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -51,7 +51,7 @@
     </div>
   </details>
 
-  {% trans "Speaker files can refer to existing teams or teams in another uploaded file. Missing teams can be created from speaker rows. Institutions must already exist." as text %}
+  {% trans "Upload institutions, teams, speakers, adjudicators, rooms, rounds, categories, motions, and related files together. References can link to existing records or other uploaded files." as text %}
   {% include "components/explainer-card.html" with type="info" icon="info" %}
   <div class="card mt-3">
     {% trans "Next Step" context "button" as title %}

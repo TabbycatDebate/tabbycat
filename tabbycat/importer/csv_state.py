@@ -4,6 +4,8 @@ import re
 
 from django.http import QueryDict
 
+from .csv_types import CSV_TYPES
+
 
 PREVIEW_FIELD = re.compile(r'^preview-(\d+)-(.+)$')
 
@@ -12,7 +14,7 @@ def row_positions(files):
     return [(source['id'], row['line']) for source in files for row in source['rows']]
 
 
-def remap_step_data(step, data, old_files, new_files):
+def remap_step_data(step, data, old_files, new_files, row_kinds=None):
     if data is None:
         return None
     result = QueryDict(mutable=True)
@@ -41,12 +43,18 @@ def remap_step_data(step, data, old_files, new_files):
             index = new_rows.get(old_rows[old_index])
             if index is None:
                 continue
-            if field == 'team' and values and values[0].startswith('row:'):
-                parent = values[0].split(':')[1]
-                target = new_rows.get(old_rows[int(parent)]) if parent.isdigit() and int(parent) < len(old_rows) else None
-                # Keep an invalid choice when a referenced file was removed.
-                # A blank value would be filled from CSV defaults as a new team.
-                values = [f'row:{target}' if target is not None else 'removed']
+            kind = (row_kinds or {}).get(old_index)
+            reference = kind is not None and (field in kind.reference_fields or field.startswith('round_for_') or
+                kind.key == 'team' and field.endswith('_category'))
+            remapped = []
+            for value in values:
+                if reference and value.startswith('row:'):
+                    parent = value.split(':')[1]
+                    target = new_rows.get(old_rows[int(parent)]) if parent.isdigit() and int(parent) < len(old_rows) else None
+                    # An invalid choice requires an explicit correction after removal.
+                    value = f'row:{target}' if target is not None else 'removed'
+                remapped.append(value)
+            values = remapped
             result.setlist(f'preview-{index}-{field}', values)
     if step == 'preview':
         result['preview-TOTAL_FORMS'] = len(new_rows)
@@ -55,8 +63,16 @@ def remap_step_data(step, data, old_files, new_files):
 
 
 def update_wizard_files(storage, old_files, new_files):
+    types = storage.get_step_data('types') or {}
+    row_kinds = {}
+    offset = 0
+    for index, source in enumerate(old_files):
+        kind = CSV_TYPES.get(types.get(f'types-file_{index}'))
+        for row in source['rows']:
+            row_kinds[offset] = kind
+            offset += 1
     for step in ('types', 'mapping', 'preview'):
-        storage.set_step_data(step, remap_step_data(step, storage.get_step_data(step), old_files, new_files))
+        storage.set_step_data(step, remap_step_data(step, storage.get_step_data(step), old_files, new_files, row_kinds))
     validated = storage.extra_data.get('validated_steps', {})
     for step in ('types', 'mapping'):
         if step in validated:

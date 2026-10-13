@@ -18,16 +18,17 @@ const interrupted = ref(!!sessionStorage.getItem(storageKey))
 const files = computed(() => [...new Set(rows.value.map(row => row.file))])
 const visibleRows = computed(() => rows.value.filter(row =>
   !selectedFile.value || row.file === selectedFile.value))
-const completed = computed(() => rows.value.filter(row => row.status !== 'pending').length)
+const completed = computed(() => rows.value.filter(row => !['pending', 'created'].includes(row.status)).length)
 const counts = computed(() => Object.fromEntries(
   ['imported', 'pending', 'skipped', 'failed', 'blocked'].map(status => [
     status,
-    rows.value.filter(row => row.status === status).length,
+    rows.value.filter(row => status === 'pending' ? ['pending', 'created'].includes(row.status) : row.status === status).length,
   ]),
 ))
 
 const statusLabel = status => ({
   pending: gettext('Pending'),
+  created: gettext('Created — linking references'),
   imported: gettext('Imported'),
   skipped: gettext('Skipped'),
   failed: gettext('Failed'),
@@ -36,8 +37,14 @@ const statusLabel = status => ({
 
 async function startImport () {
   processing.value = true
-  const pending = rows.value.filter(row => row.status === 'pending').sort((a, b) => a.priority - b.priority)
-  for (const row of pending) {
+  while (true) {
+    const ready = row => {
+      const dependencies = row.status === 'created' ? row.link_dependencies : row.dependencies
+      return (dependencies || []).every(index => rows.value[index].status !== 'pending')
+    }
+    const pending = rows.value.filter(row => row.status === 'pending' && ready(row)).sort((a, b) => a.priority - b.priority)
+    const row = pending[0] || rows.value.find(row => row.status === 'created' && ready(row))
+    if (!row) break
     try {
       // Preserve the marker until the response is known to have been saved to
       // the session. An uncertain request must never be retried automatically.
@@ -79,7 +86,7 @@ async function startImport () {
       </div>
     </div>
     <p>
-      {{ gettext('Keep this page open while importing. If a request is interrupted, check the affected row in Participants before starting another import. Requests are not retried automatically.') }}
+      {{ gettext('Keep this page open while importing. If a request is interrupted, check the affected records before starting another import. Requests are not retried automatically.') }}
     </p>
     <button
       type="button"
@@ -105,7 +112,7 @@ async function startImport () {
       v-if="interrupted"
       class="alert alert-warning"
     >
-      {{ gettext('Import interrupted. The last row may have been saved. Check Participants before starting another import; do not retry this request.') }}
+      {{ gettext('Import interrupted. The last row may have been saved. Check the affected records before starting another import; do not retry this request.') }}
     </p>
     <div class="d-flex justify-content-end mb-3">
       <label

@@ -464,8 +464,8 @@ class CSVWizardTests(TestCase):
     def test_context_resolves_repeated_names_across_files_without_extra_queries(self):
         Team.objects.create(tournament=self.tournament, institution=self.institution, reference='Existing', use_institution_prefix=True)
         rows = [{'kind': 'speaker', 'file_index': index, 'values': {'institution': 'EU', 'team': 'Existing'}} for index in range(20)]
-        context = CSVImportContext(self.tournament, rows)
         with CaptureQueriesContext(connection) as queries:
+            context = CSVImportContext(self.tournament, rows)
             self.assertEqual(set(context.institutions.values()), {self.institution.pk})
             self.assertTrue(all(context.match_team(row).startswith('existing:') for row in rows))
         self.assertEqual(sum(query['sql'].startswith('SELECT') for query in queries), 2)
@@ -517,7 +517,7 @@ class CSVWizardTests(TestCase):
         with patch('importer.csv_views.process_csv_row', side_effect=DependencyPendingError('private exception detail')):
             response = self.client.post(url, {'row': 0})
         self.assertEqual(response.status_code, 409)
-        self.assertEqual(response.json()['error'], 'Import the linked team first.')
+        self.assertEqual(response.json()['error'], 'Import the referenced rows first.')
         self.assertNotContains(response, 'private exception detail', status_code=409)
 
     def edit_files(self, step, values, keep_indices=None, additions=()):
