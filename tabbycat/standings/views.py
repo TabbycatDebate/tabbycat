@@ -1,5 +1,6 @@
 import json
 import logging
+from itertools import groupby
 
 from django.conf import settings
 from django.contrib import messages
@@ -29,7 +30,7 @@ from .diversity import get_diversity_data_sets
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
 from .speakers import SpeakerStandingsGenerator
 from .teams import TeamStandingsGenerator
-from .templatetags.standingsformat import metricformat
+from .templatetags.standingsformat import metricformat, rankingformat
 
 logger = logging.getLogger(__name__)
 
@@ -122,6 +123,9 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         """Returns all the rounds that should be included in the tab."""
         return self.tournament.prelim_rounds(until=self.round).order_by('seq')
 
+    def add_ranking_columns(self, table, standings):
+        table.add_ranking_columns(standings)
+
     def get_standings_error_message(self, e):
         if self.request.user.is_superuser:
             instructions = self.admin_standings_error_instructions
@@ -132,6 +136,54 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         standings_options_url = reverse_tournament('options-tournament-section', self.tournament, kwargs={'section': 'standings'})
         instructions %= {'standings_options_url': standings_options_url}
         return mark_safe(message + instructions)
+
+
+class CategoryRankColumnsMixin:
+    """Adds one rank column for every category to otherwise overall standings."""
+
+    category_relation_attr = None
+
+    def get_rank_categories(self):
+        raise NotImplementedError
+
+    def add_ranking_columns(self, table, standings):
+        super().add_ranking_columns(table, standings)
+        standing_infos = list(standings)
+        category_ids_by_instance = {}
+        for info in standing_infos:
+            categories = getattr(info.instance, self.category_relation_attr)
+            if hasattr(categories, 'all'):
+                categories = categories.all()
+            category_ids_by_instance[info.instance_id] = {category.id for category in categories}
+
+        for category in self.get_rank_categories():
+            members = [
+                info for info in standing_infos
+                if category.id in category_ids_by_instance[info.instance_id] and 'rank' in info.rankings
+            ]
+
+            category_rankings = {}
+            rank = 1
+            for _global_rank, tied_members in groupby(members, key=lambda info: info.rankings['rank'][0]):
+                tied_members = list(tied_members)
+                ranking = (rank, len(tied_members) > 1)
+                category_rankings.update((info.instance_id, ranking) for info in tied_members)
+                rank += len(tied_members)
+
+            table.add_column(
+                {
+                    'key': 'category-' + category.slug,
+                    'title': category.name,
+                    'tooltip': _("%(category)s rank") % {'category': category.name},
+                },
+                [
+                    {
+                        'text': rankingformat(category_rankings[info.instance_id]),
+                        'sort': category_rankings[info.instance_id][0],
+                    } if info.instance_id in category_rankings else ''
+                    for info in standing_infos
+                ],
+            )
 
 
 class PublicTabMixin(PublicTournamentPageMixin):
@@ -246,7 +298,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
                     info.speaker.anonymise = True
                     info.speaker.team.anonymise = True
 
-        table.add_ranking_columns(standings)
+        self.add_ranking_columns(table, standings)
         table.add_speaker_columns([info.speaker for info in standings])
         table.add_team_columns([info.speaker.team for info in standings])
 
@@ -324,6 +376,17 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add info alerts
     view_permission = Permission.VIEW_SPEAKERSSTANDINGS
+
+
+class SpeakerCategoryRankStandingsView(AdministratorMixin, CategoryRankColumnsMixin,
+        BaseSubstantiveSpeakerStandingsView):
+    template_name = 'speaker_standings.html'
+    page_title = gettext_lazy("Speaker Standings by Category")
+    category_relation_attr = 'categories'
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
+
+    def get_rank_categories(self):
+        return self.tournament.speakercategory_set.all()
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -428,6 +491,9 @@ class BaseTeamStandingsView(BaseStandingsView):
     def get_teams(self):
         return self.tournament.team_set.exclude(type=Team.TYPE_BYE)
 
+    def get_category_prefetches(self):
+        return ()
+
     def get_standings(self):
         if self.round is None:
             raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
@@ -436,7 +502,8 @@ class BaseTeamStandingsView(BaseStandingsView):
         teams = teams.select_related('institution').prefetch_related('speaker_set',
             Prefetch('break_categories',
                 queryset=BreakCategory.objects.filter(is_general=False),
-                to_attr='break_categories_nongeneral'))
+                to_attr='break_categories_nongeneral'),
+            *self.get_category_prefetches())
         metrics = self.tournament.pref('team_standings_precedence')
         extra_metrics = self.tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
@@ -464,7 +531,7 @@ class BaseTeamStandingsView(BaseStandingsView):
             logger.exception("Error generating standings: " + str(e))
             return table
 
-        table.add_ranking_columns(standings)
+        self.add_ranking_columns(table, standings)
         table.add_team_columns([info.team for info in standings], show_break_categories=True)
 
         table.add_standings_results_columns(standings, rounds, self.show_ballots())
@@ -491,6 +558,25 @@ class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
     view_permission = Permission.VIEW_TEAMSTANDINGS
+
+    def show_ballots(self):
+        return True
+
+
+class TeamCategoryRankStandingsView(AdministratorMixin, CategoryRankColumnsMixin,
+        BaseTeamStandingsView):
+    template_name = 'team_standings.html'
+    page_title = gettext_lazy("Team Standings")
+    page_subtitle = gettext_lazy("for all categories")
+    rankings = ('rank',)
+    category_relation_attr = 'standings_categories'
+    view_permission = Permission.VIEW_TEAMSTANDINGS
+
+    def get_rank_categories(self):
+        return self.tournament.breakcategory_set.all()
+
+    def get_category_prefetches(self):
+        return (Prefetch('break_categories', to_attr=self.category_relation_attr),)
 
     def show_ballots(self):
         return True
