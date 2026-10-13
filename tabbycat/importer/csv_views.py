@@ -49,6 +49,7 @@ class CSVUploadView(CSVAccessMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['csv_templates'] = [{'key': key, 'label': label}
             for kind in CSV_TYPES.values() for key, label, columns in kind.templates]
+        context['csv_vue_data'] = {}
         return context
 
     def form_valid(self, form):
@@ -208,12 +209,31 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             context['skip_count'] = sum(group['skip_count'] for group in groups)
             context['attention_count'] = sum(group['attention_count'] for group in groups)
             context['import_count'] = context['row_count'] - context['skip_count']
+        context['csv_vue_data'] = {'files': [self.vue_file_data(group) for group in groups]}
         context['file_groups'] = groups
         context['step_list'] = [{'key': 'upload', 'label': _('Upload files'), 'state': 'complete'}] + [
             {'key': key, 'label': label, 'state': 'current' if key == self.steps.current else
                 'complete' if index < self.steps.step0 else 'upcoming'}
             for index, (key, label) in enumerate(self.step_titles.items())]
         return context
+
+    @staticmethod
+    def vue_file_data(group):
+        data = {key: group[key] for key in ('index', 'name', 'row_count', 'type_label', 'attention_count')}
+        data['mapped_count'] = group.get('mapped_count', 0)
+        data['rows'] = []
+        for row in group['rows']:
+            data['rows'].append({
+                'index': row['index'],
+                'name': row['name'],
+                'related': row['related'],
+                'file': row['source']['file'],
+                'line': row['source']['line'],
+                'skip_name': row['form']['DELETE'].html_name,
+                'skipped': bool(row['form']['DELETE'].value()),
+                'invalid': bool(row['form'].errors),
+            })
+        return data
 
     def done(self, form_list, form_dict, **kwargs):
         draft = self.draft
@@ -245,9 +265,7 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
         context['step_list'] = [{'label': label, 'state': 'complete'} for label in
             (_('Upload files'), _('Choose file types'), _('Map CSV columns'), _('Preview and edit rows'))] + [
             {'label': _('Import results'), 'state': 'current'}]
-        context['result_files'] = list(dict.fromkeys(row['file'] for row in context['rows']))
-        context['result_counts'] = {status: sum(row['status'] == status for row in context['rows'])
-            for status in ('pending', 'imported', 'skipped', 'failed', 'blocked')}
+        context['csv_vue_data'] = {'rows': context['rows']}
         return context
 
     def post(self, request, *args, **kwargs):

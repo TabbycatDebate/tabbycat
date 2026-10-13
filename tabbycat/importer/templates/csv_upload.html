@@ -1,34 +1,53 @@
 {% extends "csv_base.html" %}
 {% load i18n debate_tags %}
+
 {% block csv_content %}
 <div class="mb-4">
   <div class="d-flex flex-wrap align-items-center justify-content-between">
     <h2 class="h3 mr-3">{% trans "Import teams and speakers from CSVs" %}</h2>
     <div class="dropdown mb-2">
-      <button type="button" class="btn btn-outline-primary dropdown-toggle" id="csv-template-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="download" class="mr-1"></i>{% trans "CSV templates" %}</button>
+      <button type="button" class="btn btn-outline-primary dropdown-toggle" id="csv-template-menu"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i data-feather="download" class="mr-1"></i>{% trans "CSV templates" %}
+      </button>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="csv-template-menu">
-        {% for template in csv_templates %}<a class="dropdown-item" href="{% tournamenturl 'importer-csv-template' template_key=template.key %}">{{ template.label }}</a>{% endfor %}
+        {% for template in csv_templates %}
+          <a class="dropdown-item" href="{% tournamenturl 'importer-csv-template' template_key=template.key %}">
+            {{ template.label }}
+          </a>
+        {% endfor %}
         <div class="dropdown-divider"></div>
         <span class="dropdown-item-text small text-muted">{% trans "Fill in your data below the headers." %}</span>
       </div>
     </div>
   </div>
-  <p class="text-muted">{% trans "Upload related files together, map their columns, and review the rows before importing anything." %}</p>
+  <p class="text-muted">
+    {% trans "Upload related files together, map their columns, and review the rows before importing anything." %}
+  </p>
 </div>
+
 <form method="post" enctype="multipart/form-data" id="csv-upload">
-  {% csrf_token %}{{ form.non_field_errors }}
-  <button type="button" class="csv-drop-zone btn btn-block text-left p-4 mb-3" id="csv-drop-zone" aria-controls="id_files">
-    <span class="d-flex align-items-center flex-wrap"><span class="csv-upload-icon text-primary mr-3"><i data-feather="upload"></i></span><span class="mr-auto"><strong class="d-block">{% trans "Drop your CSV files here" %}</strong><span class="text-muted">{% trans "or click to choose files from your computer" %}</span></span><span class="btn btn-outline-primary mt-2">{% trans "Choose files" %}</span></span>
-  </button>
-  <p class="text-muted small">{% trans "Up to 20 files, 2 MiB per file and 1,000 rows in total. For Google Sheets, download each tab as a CSV." %}</p>
-  <section class="card mb-3" id="csv-selection-card" hidden>
-    <div class="card-header d-flex justify-content-between align-items-center"><h3 class="h5 mb-0">{% trans "Files to import" %}</h3><button type="button" class="btn btn-link btn-sm" id="csv-add-files">{% trans "Add more files" %}</button></div>
-    <ul class="list-group list-group-flush" id="csv-selected-files" aria-live="polite"></ul>
-  </section>
-  <div id="csv-file-input">{{ form.files.label_tag }} {{ form.files }}</div>{{ form.files.errors }}
-  <details class="card mb-3" {% if form.errors %}open{% endif %}><summary class="card-header">{% trans "CSV format options" %}</summary><div class="card-body row">
-    {% for field in form %}{% if field.name != 'files' %}<div class="col-md-4">{% include "csv_mapping_field.html" %}</div>{% endif %}{% endfor %}
-  </div></details>
+  {% csrf_token %}
+  <div v-pre>{{ form.non_field_errors }}</div>
+  <csv-file-upload input-name="{{ form.files.html_name }}"></csv-file-upload>
+  <noscript v-if="false">{{ form.files.label_tag }} {{ form.files }}</noscript>
+  <div v-pre>{{ form.files.errors }}</div>
+  <p class="text-muted small">
+    {% trans "Up to 20 files, 2 MiB per file and 1,000 rows in total. For Google Sheets, download each tab as a CSV." %}
+  </p>
+  <details v-pre class="card mb-3" {% if form.errors %}open{% endif %}>
+    <summary class="card-header">{% trans "CSV format options" %}</summary>
+    <div class="card-body row">
+      {% for field in form %}
+        {% if field.name != 'files' %}
+          <div class="col-md-4">
+            {% include "csv_mapping_field.html" %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </details>
+
   {% trans "Speaker files can refer to existing teams or teams in another uploaded file. Missing teams can be created from speaker rows. Institutions must already exist." as text %}
   {% include "components/explainer-card.html" with type="info" icon="info" %}
   <div class="card mt-3">

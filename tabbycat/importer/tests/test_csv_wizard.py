@@ -265,7 +265,7 @@ class CSVWizardTests(TestCase):
         self.assertEqual([(group['name'], str(group['type_label'])) for group in groups],
             [('speakers.csv', 'Speakers'), ('teams.csv', 'Teams')])
         self.assertContains(response, 'data-csv-mapping-file', count=2)
-        self.assertContains(response, '<h2 class="h5 mb-1">Speakers</h2>')
+        self.assertEqual(str(response.context['csv_vue_data']['files'][0]['type_label']), 'Speakers')
         self.assertEqual(response.context['page_emoji'], '📄')
         self.assertIn('Map CSV columns', str(response.context['page_title']))
 
