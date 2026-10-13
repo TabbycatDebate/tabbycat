@@ -2,19 +2,20 @@
 
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.db.models import Q
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
-from participants.models import Institution, Team
+from participants.models import Institution
 
 from .csv_types import CSV_TYPES, DependencyBlockedError
+from .references import ImportReferences
 
 
 class CSVImportContext:
     def __init__(self, tournament, rows):
         self.tournament = tournament
         self.rows = rows
+        self.references = ImportReferences(tournament)
 
     @cached_property
     def institutions(self):
@@ -24,8 +25,10 @@ class CSVImportContext:
             key = (row['file_index'], value)
             if key in resolved:
                 continue
-            matches = list(Institution.objects.filter(Q(name=value) | Q(code=value))) if value else []
-            resolved[key] = matches[0].pk if len(matches) == 1 else ('unresolved:' + value if value else None)
+            try:
+                resolved[key] = self.references.lookup_institution(value).pk if value else None
+            except (Institution.DoesNotExist, Institution.MultipleObjectsReturned):
+                resolved[key] = 'unresolved:' + value
         return resolved
 
     def match_team(self, row):
@@ -43,7 +46,7 @@ class CSVImportContext:
     @cached_property
     def team_options(self):
         choices, candidates = [], []
-        for team in Team.objects.all_with_unconfirmed.filter(tournament=self.tournament):
+        for team in self.references.teams:
             token = f'existing:{team.pk}'
             choices.append((token, _('Existing: %(name)s') % {'name': team.long_name}))
             candidates.append((token, [team.reference, team.short_name, team.long_name], team.institution_id))
@@ -72,7 +75,7 @@ def process_csv_row(tournament, user, draft, row):
             for field, errors in form.errors.items() for message in errors))
         return
     try:
-        dependencies = kind.dependencies(tournament, row['data'], draft['rows'])
+        dependencies = kind.dependencies(tournament, row['data'], draft['rows'], references=form.references)
     except DependencyBlockedError as error:
         row.update(status='blocked', errors=str(error))
         return

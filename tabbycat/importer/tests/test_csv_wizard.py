@@ -4,14 +4,19 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import connection
 from django.test import override_settings, TestCase
+from django.test.utils import CaptureQueriesContext
 
 from participants.models import Institution, Speaker, Team
 from tournaments.models import Round, Tournament
 from utils.misc import reverse_tournament
 
 from ..csv_forms import CSVMappingForm, CSVPreviewFormSet, CSVTeamForm, CSVTypesForm, CSVUploadForm
+from ..csv_pipeline import CSVImportContext
+from ..csv_row_forms import CSVSpeakerForm
 from ..csv_types import CSV_TYPES, guess_file_type, register_csv_type, SpeakerCSVType
+from ..references import ImportReferences
 
 
 @override_settings(SESSION_ENGINE='django.contrib.sessions.backends.cache',
@@ -337,7 +342,7 @@ class CSVWizardTests(TestCase):
         self.separate_speaker_preview(existing=True)
         url = self.finish([{'name': 'Bob', 'team': 'new', 'team_name': 'A',
             'institution': self.institution.pk, 'use_institution_prefix': 'False'}])
-        with patch('importer.csv_types.populate_url_keys', side_effect=[None, ValidationError('failure')]):
+        with patch('importer.csv_types.populate_url_keys', side_effect=ValidationError('failure')):
             self.assertEqual(self.client.post(url, {'row': 0}).json()['status'], 'failed')
         self.assertFalse(Team.objects.exists())
         self.assertFalse(Speaker.objects.exists())
@@ -435,3 +440,42 @@ class CSVWizardTests(TestCase):
         response = self.client.get(reverse_tournament('importer-csv-template', self.tournament,
             kwargs={'template_key': 'teams'}))
         self.assertEqual(response.status_code, 403)
+
+    def test_preview_reference_queries_do_not_grow_with_rows(self):
+        references = ImportReferences(self.tournament)
+        with CaptureQueriesContext(connection) as queries:
+            for index in range(20):
+                form = CSVTeamForm(self.tournament, references=references, data={
+                    'reference': f'Team {index}', 'institution': self.institution.pk,
+                    'use_institution_prefix': 'False', 'seed': ''})
+                self.assertTrue(form.is_valid(), form.errors)
+                str(form['institution'])
+        self.assertEqual(sum(query['sql'].startswith('SELECT') for query in queries), 2)
+
+    def test_speaker_reference_queries_do_not_grow_with_rows(self):
+        team = Team.objects.create(tournament=self.tournament, institution=self.institution, reference='Existing')
+        Speaker.objects.create(team=team, name='Duplicate')
+        references = ImportReferences(self.tournament)
+        with CaptureQueriesContext(connection) as queries:
+            for index in range(20):
+                form = CSVSpeakerForm(self.tournament, references=references,
+                    team_choices=[(f'existing:{team.pk}', 'Existing')], data={
+                        'name': 'Duplicate', 'team': f'existing:{team.pk}', 'institution': self.institution.pk})
+                self.assertFalse(form.is_valid())
+                self.assertIn('name', form.errors)
+                str(form['institution'])
+        self.assertEqual(sum(query['sql'].startswith('SELECT') for query in queries), 2)
+
+    def test_context_resolves_repeated_names_across_files_without_extra_queries(self):
+        Team.objects.create(tournament=self.tournament, institution=self.institution, reference='Existing', use_institution_prefix=True)
+        rows = [{'kind': 'speaker', 'file_index': index, 'values': {'institution': 'EU', 'team': 'Existing'}} for index in range(20)]
+        context = CSVImportContext(self.tournament, rows)
+        with CaptureQueriesContext(connection) as queries:
+            self.assertEqual(set(context.institutions.values()), {self.institution.pk})
+            self.assertTrue(all(context.match_team(row).startswith('existing:') for row in rows))
+        self.assertEqual(sum(query['sql'].startswith('SELECT') for query in queries), 2)
+
+    def test_cached_institution_lookup_preserves_ambiguity(self):
+        Institution.objects.create(name='EU', code='OTHER')
+        with self.assertRaises(Institution.MultipleObjectsReturned):
+            ImportReferences(self.tournament).lookup_institution('EU')

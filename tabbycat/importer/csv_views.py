@@ -6,6 +6,7 @@ import uuid
 from django.core.cache import cache
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect
+from django.utils.functional import cached_property
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import FormView, TemplateView, View
 from formtools.wizard.views import SessionWizardView
@@ -109,7 +110,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         if step == 'mapping':
             return {'sources': files, 'types': self.get_cleaned_data_for_step('types') or {f'file_{i}': 'team' for i in range(len(files))}}
         if step == 'preview':
-            return {'form_kwargs': {'tournament': self.tournament, 'team_choices': self.import_context().team_options[0]}}
+            return {'form_kwargs': {'tournament': self.tournament, 'team_choices': self.import_context().team_options[0], 'references': self.import_context().references}}
         return {}
 
     def get_form(self, step=None, data=None, files=None):
@@ -139,8 +140,12 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         return mapped_rows(self.draft['files'], self.get_cleaned_data_for_step('mapping') or {},
             self.get_cleaned_data_for_step('types') or {})
 
-    def import_context(self):
+    @cached_property
+    def csv_context(self):
         return CSVImportContext(self.tournament, self.source_rows())
+
+    def import_context(self):
+        return self.csv_context
 
     def get_form_initial(self, step):
         if step == 'preview':
