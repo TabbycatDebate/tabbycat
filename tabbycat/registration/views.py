@@ -1003,7 +1003,6 @@ class AdjudicatorRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
 
 class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateView):
     question_model = None
-    success_url = None
     template_name = 'questions_edit.html'
     view_permission = True
     edit_permission = Permission.EDIT_QUESTIONS
@@ -1058,17 +1057,17 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
         return context
 
     def post(self, request, *args, **kwargs):
-        sections = self.get_sections(request.POST)
-        valid = all([section['formset'].is_valid() and section['system_form'].is_valid() for section in sections])
-        if not valid:
-            return self.render_to_response(self.get_context_data(sections=sections))
         with transaction.atomic():
-            # Serialize saves and temporarily move existing sequences out of the way
-            # so swapping two rows never violates the unique sequence constraint.
+            # Bind after locking so a waiting editor sees earlier saves and deletions.
             type(self.tournament).objects.select_for_update().get(pk=self.tournament.pk)
+            sections = self.get_sections(request.POST)
+            valid = all([section['formset'].is_valid() and section['system_form'].is_valid() for section in sections])
+            if not valid:
+                return self.render_to_response(self.get_context_data(sections=sections))
             for section in sections:
                 formset = section['formset']
                 queryset = formset.get_queryset()
+                # Move sequences above their maximum so swaps stay unique.
                 maximum = queryset.aggregate(value=Max('seq'))['value'] or 0
                 for index, question in enumerate(queryset, start=max(maximum, len(formset.forms)) + 1):
                     Question.objects.filter(pk=question.pk).update(seq=index)

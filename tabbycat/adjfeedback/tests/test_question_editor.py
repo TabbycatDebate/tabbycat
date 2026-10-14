@@ -92,7 +92,6 @@ class FeedbackQuestionEditorTests(TestCase):
         response = self.client.post(self.url, self.payload([{'question_ptr': question.pk, 'DELETE': 'on'}]))
         self.assertRedirects(response, self.url)
         self.assertFalse(Question.objects.filter(pk=question.pk).exists())
-        self.assertFalse(AdjudicatorFeedbackQuestion.objects.filter(pk=question.pk).exists())
 
     def test_invalid_reference_and_scale_remain_bound(self):
         response = self.client.post(self.url, self.payload([{

@@ -19,8 +19,7 @@ const visible = field => {
   return true
 }
 const width = field => ({ text: 'col-md-8', answer_type: 'col-md-4', min_value: 'col-md-6', max_value: 'col-md-6', help_text: 'col-md-8', name: 'col-md-4' })[field] || 'col-12'
-const commonFields = ['text', 'answer_type', 'choices', 'min_value', 'max_value', 'help_text', 'name', 'required']
-const fieldOrder = computed(() => [...commonFields, ...Object.keys(props.section.fields).filter(field => !commonFields.includes(field))])
+const fieldOrder = computed(() => Object.keys(props.section.fields))
 const dropPosition = ref(null)
 const { isDragging, dragStart, dragEnd } = useDraggable({
   locked: !props.canEdit,

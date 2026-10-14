@@ -877,7 +877,6 @@ class AdjFeedbackQuestionsFormset(CustomQuestionFormsetView):
     formset_model = AdjudicatorFeedbackQuestion
     question_form_class = FeedbackQuestionEditorForm
     question_model = AdjudicatorFeedback
-    success_url = 'adjfeedback-overview'
 
     page_emoji = '❓'
     page_title = gettext_lazy("Custom Feedback Questions")

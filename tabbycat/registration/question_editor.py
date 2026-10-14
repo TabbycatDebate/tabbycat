@@ -23,7 +23,7 @@ class QuestionEditorForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'answer_type', 'name', 'help_text', 'required', 'choices', 'min_value', 'max_value')
+        fields = ('text', 'answer_type', 'choices', 'min_value', 'max_value', 'help_text', 'name', 'required')
         widgets = {'help_text': forms.Textarea(attrs={'rows': 2})}
 
     def __init__(self, *args, **kwargs):
