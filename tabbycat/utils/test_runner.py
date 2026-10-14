@@ -7,14 +7,17 @@ from django.test.runner import DiscoverRunner
 
 class TabbycatTestRunner(DiscoverRunner):
     def setup_test_environment(self, **kwargs):
-        # Rendering pages should not require a production collectstatic manifest.
-        self.storage_settings = override_settings(STORAGES={**settings.STORAGES,
-            'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'}})
-        self.storage_settings.enable()
+        # Cache-clearing tests must retain sessions; pages need no production manifest.
+        self.test_settings = override_settings(
+            SESSION_ENGINE='django.contrib.sessions.backends.db',
+            STORAGES={**settings.STORAGES,
+                'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'}},
+        )
+        self.test_settings.enable()
         super().setup_test_environment(**kwargs)
 
     def teardown_test_environment(self, **kwargs):
         try:
             super().teardown_test_environment(**kwargs)
         finally:
-            self.storage_settings.disable()
+            self.test_settings.disable()
