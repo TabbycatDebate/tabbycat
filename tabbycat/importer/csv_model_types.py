@@ -1,13 +1,18 @@
 """Model-backed CSV types shared across Anorak and Boots formats."""
 
+from __future__ import annotations
+
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from datetime import date, datetime
 from functools import partial
+from typing import TYPE_CHECKING
 
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import FieldDoesNotExist, ValidationError
 from django.db import transaction
+from django.db.models import Model
 from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from actionlog.models import ActionLogEntry
@@ -23,9 +28,18 @@ from privateurls.utils import populate_url_keys
 from .csv_base_types import CSVObjectType, reference_dependencies
 from .csv_model_forms import boolean_field, CSVModelForm
 from .csv_models import CSV_MODELS, IMPLICIT_REFERENCE_TYPES
+from .csv_typing import CSVRow, CSVSource, DisplayLabel, DuplicateKey, FormOptions, PreviewSummary, RowData, SerializedRowData
 from .csv_values import convert_bool
 from .importers.anorak import AnorakTournamentDataImporter
 from .references import reference_value
+
+
+if TYPE_CHECKING:
+    from django.contrib.auth.base_user import AbstractBaseUser
+
+    from tournaments.models import Round
+
+    from .csv_pipeline import CSVImportContext
 
 
 @dataclass(frozen=True)
@@ -37,16 +51,16 @@ class CSVReference:
     separator: str = ','
 
 
-def convert_boolean(value):
+def convert_boolean(value: object) -> bool:
     return convert_bool(str(value)) if value != '' else False
 
 
-def reference_objects(data, name, reference):
+def reference_objects(data: RowData, name: str, reference: CSVReference) -> list[Model | None]:
     value = data.get(name)
     return (value or []) if reference.multiple else [value]
 
 
-def validate_existing_identity(form, data):
+def validate_existing_identity(form: CSVModelForm, data: RowData) -> None:
     kind = form.csv_type
     for existing in form.references.objects(kind.key).values():
         if existing.pk == form.instance.pk:
@@ -59,34 +73,34 @@ def validate_existing_identity(form, data):
             break
 
 
-def validate_distinct_adjudicators(form, first, second, field):
+def validate_distinct_adjudicators(form: CSVModelForm, first: Model | None, second: Model | None, field: str) -> None:
     if reference_value(first) == reference_value(second):
         form.add_error(field, _('An adjudicator cannot conflict with themselves.'))
 
 
-def save_availability(form, obj):
+def save_availability(form: CSVModelForm, obj: Model) -> None:
     for name, value in form.cleaned_data.items():
         if name.startswith('available:') and value:
             RoundAvailability.objects.get_or_create(content_type=ContentType.objects.get_for_model(obj),
                 object_id=obj.pk, round=form.cleaned_data['round_for_' + name])
 
 
-class ModelCSVType(CSVObjectType):
+class ModelCSVType(CSVObjectType[CSVModelForm, Model]):
     filename = None
     fields = None
-    references = {}
-    extra_fields = {}
-    extra_labels = {}
-    defaults = {}
-    converters = {}
-    dynamic_converters = {}
-    dynamic_fields = {}
+    references: dict[str, CSVReference] = {}
+    extra_fields: dict[str, Callable[..., forms.Field]] = {}
+    extra_labels: dict[str, DisplayLabel] = {}
+    defaults: RowData = {}
+    converters: dict[str, Callable[[str], object]] = {}
+    dynamic_converters: dict[str, Callable[[str], object]] = {}
+    dynamic_fields: dict[str, Callable[..., forms.Field]] = {}
     action = None
     name_field = None
     required_targets = None
     validation_exclusions = ()
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.model = CSV_MODELS[self.key]
         self.reference_fields = tuple(self.references)
 
@@ -111,7 +125,7 @@ class ModelCSVType(CSVObjectType):
         self.targets = [(name, self.field_label(name)) for name in self.field_names]
         self.form_class = type(f'{type(self).__name__}Form', (CSVModelForm,), {'csv_type': self})
 
-    def field_label(self, name):
+    def field_label(self, name: str) -> DisplayLabel:
         if name in self.extra_labels:
             return self.extra_labels[name]
         try:
@@ -119,24 +133,24 @@ class ModelCSVType(CSVObjectType):
         except FieldDoesNotExist:
             return name.replace('_', ' ')
 
-    def guess_column(self, header):
+    def guess_column(self, header: str) -> str:
         prefix, separator, suffix = header.partition(':')
         if separator and prefix.casefold() in self.dynamic_converters:
             return prefix.casefold() + ':' + suffix
         return super().guess_column(header)
 
-    def mapping_choices(self, source):
+    def mapping_choices(self, source: CSVSource) -> list[tuple[str, DisplayLabel]]:
         dynamic = [self.guess_column(header) for header in source['headers']]
         return [*self.targets, *((name, self.field_label(name)) for name in dynamic
             if ':' in name and name.partition(':')[0] in self.dynamic_converters)]
 
-    def form_options(self, values):
+    def form_options(self, values: Iterable[str]) -> FormOptions:
         return {'extra_columns': tuple(name for name in values if ':' in name and name.partition(':')[0] in self.dynamic_converters)}
 
-    def preview_field_count(self, targets):
+    def preview_field_count(self, targets: Iterable[str]) -> int:
         return len(self.field_names) + 2 * len(self.form_options(targets)['extra_columns']) + 1
 
-    def initial(self, row, context):
+    def initial(self, row: CSVRow, context: CSVImportContext) -> RowData:
         values = {**self.defaults, **row['values']}
         for name, convert in self.converters.items():
             if name in values and values[name] != '':
@@ -168,20 +182,20 @@ class ModelCSVType(CSVObjectType):
                 pass
         return values
 
-    def prepare_instance(self, instance, data):
+    def prepare_instance(self, instance: Model, data: RowData) -> None:
         pass
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         pass
 
-    def create_object(self, form):
+    def create_object(self, form: CSVModelForm) -> Model:
         form.instance.save()
         return form.instance
 
-    def after_save(self, form, obj):
+    def after_save(self, form: CSVModelForm, obj: Model) -> None:
         pass
 
-    def serialize(self, data):
+    def serialize(self, data: RowData) -> SerializedRowData:
         result = {}
         for name, value in data.items():
             if isinstance(value, (list, tuple)):
@@ -193,7 +207,7 @@ class ModelCSVType(CSVObjectType):
             result[name] = value
         return result
 
-    def additional_objects(self, form):
+    def additional_objects(self, form: CSVModelForm) -> set[tuple[str, str]]:
         objects = set()
         for name, reference in self.references.items():
             values = reference_objects(form.cleaned_data, name, reference)
@@ -203,11 +217,11 @@ class ModelCSVType(CSVObjectType):
                     objects.add((reference.kind, token))
         return objects
 
-    def preview_dependencies(self, data):
+    def preview_dependencies(self, data: Mapping[str, object]) -> tuple[int, ...]:
         fields = (*self.reference_fields, *(name for name in data if name.startswith('round_for_')))
         return reference_dependencies(data, fields)
 
-    def preview_summary(self, form):
+    def preview_summary(self, form: CSVModelForm) -> PreviewSummary:
         value = form[self.name_field].value()
         field = form.fields[self.name_field]
         if self.name_field in self.references:
@@ -223,12 +237,12 @@ class ModelCSVType(CSVObjectType):
             related.extend(str(choices.get(str(item), item)) for item in values)
         return {'name': value or '', 'related': ' · '.join(related) or str(self.label)}
 
-    def duplicate_key(self, data):
+    def duplicate_key(self, data: RowData) -> DuplicateKey:
         return (self.key, *(reference_value(data[name]) if hasattr(data.get(name), '_meta') else data.get(name)
             for name in self.identity_fields))
 
     @transaction.atomic
-    def save(self, form, user, **dependencies):
+    def save(self, form: CSVModelForm, user: AbstractBaseUser, **dependencies: Model | None) -> Model:
         data = form.cleaned_data
         for name, reference in self.references.items():
             for obj in reference_objects(data, name, reference):
@@ -256,17 +270,17 @@ class AvailabilityCSVType(ModelCSVType):
     dynamic_converters = {'available': convert_boolean}
     dynamic_fields = {'available': partial(boolean_field, empty_value=False)}
 
-    def field_label(self, name):
+    def field_label(self, name: str) -> DisplayLabel:
         if name.startswith('available:'):
             return _('Available in %(round)s') % {'round': name.split(':', 1)[1]}
         return super().field_label(name)
 
-    def after_save(self, form, obj):
+    def after_save(self, form: CSVModelForm, obj: Model) -> None:
         save_availability(form, obj)
 
 
 class ConflictCSVType(ModelCSVType):
-    def create_object(self, form):
+    def create_object(self, form: CSVModelForm) -> Model:
         obj, unused = self.model.objects.get_or_create(**{name: form.cleaned_data[name] for name in self.model_field_names})
         return obj
 
@@ -275,13 +289,13 @@ class VenueConstraintCSVType(ModelCSVType):
     fields = ('category', 'priority')
     subject_field = None
 
-    def prepare_instance(self, instance, data):
+    def prepare_instance(self, instance: Model, data: RowData) -> None:
         subject = data.get(self.subject_field)
         if subject:
             instance.subject_content_type = ContentType.objects.get_for_model(subject)
             instance.subject_id = subject.pk or 1
 
-    def create_object(self, form):
+    def create_object(self, form: CSVModelForm) -> Model:
         form.instance.subject_id = form.cleaned_data[self.subject_field].pk
         return super().create_object(form)
 
@@ -318,7 +332,7 @@ class VenueCategoryCSVType(ModelCSVType):
     }
     action = ActionLogEntry.ActionType.VENUE_CATEGORY_CREATE
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         validate_existing_identity(form, data)
 
 
@@ -361,7 +375,7 @@ class RoundCSVType(ModelCSVType):
     }
     action = ActionLogEntry.ActionType.ROUND_CREATE
 
-    def initial(self, row, context):
+    def initial(self, row: CSVRow, context: CSVImportContext) -> RowData:
         values = row['values'].copy()
         values['seq'] = values.get('seq') or row.get('row_index', row['line'] - 2) + 1
         values['schedule_group'] = values.get('schedule_group') or values['seq']
@@ -380,10 +394,10 @@ class VenueCSVType(AvailabilityCSVType):
     action = ActionLogEntry.ActionType.VENUE_CREATE
     extra_labels = {'category': _('Room category')}
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         validate_existing_identity(form, data)
 
-    def after_save(self, form, obj):
+    def after_save(self, form: CSVModelForm, obj: Model) -> None:
         super().after_save(form, obj)
         VenueIdentifier.objects.create(venue=obj)
         if form.cleaned_data.get('category'):
@@ -425,13 +439,13 @@ class AdjudicatorCSVType(AvailabilityCSVType):
         'adj_conflicts': _('Adjudicator conflicts'),
     }
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         validate_existing_identity(form, data)
         if form.instance._csv_token:
             for other in data.get('adj_conflicts', []):
                 validate_distinct_adjudicators(form, form.instance, other, 'adj_conflicts')
 
-    def after_save(self, form, obj):
+    def after_save(self, form: CSVModelForm, obj: Model) -> None:
         super().after_save(form, obj)
         data = form.cleaned_data
         PersonIdentifier.objects.create(person=obj)
@@ -446,7 +460,7 @@ class AdjudicatorCSVType(AvailabilityCSVType):
             AdjudicatorTeamConflict.objects.get_or_create(adjudicator=obj, team=team)
 
     @transaction.atomic
-    def finish_references(self, form, obj):
+    def finish_references(self, form: CSVModelForm, obj: Model) -> None:
         for other in form.cleaned_data.get('adj_conflicts', []):
             if obj.pk == other.pk:
                 raise ValidationError(_('An adjudicator cannot conflict with themselves.'))
@@ -466,7 +480,7 @@ class MotionCSVType(ModelCSVType):
     action = ActionLogEntry.ActionType.MOTION_EDIT
     extra_labels = {'rounds': _('Rounds'), 'seq': _('Motion sequences')}
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         validate_existing_identity(form, data)
         sequences = str(data.get('seq') or '').split(';') if data.get('seq') else []
         if sequences and len(sequences) != len(data.get('rounds', [])):
@@ -474,7 +488,7 @@ class MotionCSVType(ModelCSVType):
         if any(not value.isdigit() or int(value) < 1 for value in sequences):
             raise ValidationError(_('Motion sequences must be positive integers.'))
 
-    def after_save(self, form, obj):
+    def after_save(self, form: CSVModelForm, obj: Model) -> None:
         data = form.cleaned_data
         sequences = str(data.get('seq') or '').split(';')
         for index, round in enumerate(data.get('rounds', [])):
@@ -494,7 +508,7 @@ class ScoreCSVType(ModelCSVType):
     identity_fields = ('adjudicator', 'round')
     action = ActionLogEntry.ActionType.TEST_SCORE_EDIT
 
-    def after_save(self, form, obj):
+    def after_save(self, form: CSVModelForm, obj: Model) -> None:
         adjudicator = form.cleaned_data['adjudicator']
         adjudicator.base_score = obj.score
         adjudicator.save(update_fields=['base_score'])
@@ -541,7 +555,7 @@ class AdjudicatorConflictCSVType(ConflictCSVType):
     identity_fields = ('adjudicator1', 'adjudicator2')
     action = ActionLogEntry.ActionType.CONFLICTS_ADJ_ADJ_EDIT
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         validate_distinct_adjudicators(form, data.get('adjudicator1'), data.get('adjudicator2'), 'adjudicator2')
 
 
@@ -581,33 +595,33 @@ class SideCSVType(ModelCSVType):
     extra_fields = {'side': partial(forms.TypedChoiceField, choices=side_choices, coerce=int, empty_value=None)}
     dynamic_fields = {'side': extra_fields['side']}
 
-    def field_label(self, name):
+    def field_label(self, name: str) -> DisplayLabel:
         if name.startswith('side:'):
             return _('Side in %(round)s') % {'round': name.split(':', 1)[1]}
         return super().field_label(name)
 
-    def guess_column(self, header):
+    def guess_column(self, header: str) -> str:
         name = super().guess_column(header)
         return name if name in dict(self.targets) or name.startswith('side:') else 'side:' + header
 
     @staticmethod
-    def allocations(data):
+    def allocations(data: RowData) -> list[tuple[Round, int]]:
         allocations = [(data['round'], data['side'])] if data.get('round') and data.get('side') is not None else []
         allocations.extend((data['round_for_' + name], value) for name, value in data.items()
             if name.startswith('side:') and value is not None)
         return allocations
 
-    def duplicate_keys(self, data):
+    def duplicate_keys(self, data: RowData) -> tuple[DuplicateKey, ...]:
         return tuple((self.key, reference_value(data['team']), reference_value(round)) for round, side in self.allocations(data))
 
-    def object_counts(self, form):
+    def object_counts(self, form: CSVModelForm) -> dict[str, int]:
         return {self.key: len(self.allocations(form.cleaned_data))}
 
-    def validate_row(self, form, data):
+    def validate_row(self, form: CSVModelForm, data: RowData) -> None:
         if not self.allocations(data):
             raise ValidationError(_('Choose a round and side, or map at least one round column.'))
 
-    def create_object(self, form):
+    def create_object(self, form: CSVModelForm) -> Model:
         data = form.cleaned_data
         objects = [self.model.objects.create(team=data['team'], round=round, side=side) for round, side in self.allocations(data)]
         return objects[0]
@@ -627,7 +641,7 @@ class AdjFeedbackQuestionCSVType(ModelCSVType):
     }
     action = ActionLogEntry.ActionType.FEEDBACK_QUESTION_CREATE
 
-    def prepare_instance(self, instance, data):
+    def prepare_instance(self, instance: Model, data: RowData) -> None:
         instance.for_content_type = ContentType.objects.get_for_model(AdjudicatorFeedback)
 
 
@@ -669,7 +683,7 @@ class TeamVenueConstraintCSVType(VenueConstraintCSVType):
     extra_labels = {'team': _('Team')}
 
 
-def model_csv_types():
+def model_csv_types() -> list[ModelCSVType]:
     return [
         RegionCSVType(),
         InstitutionCSVType(),
