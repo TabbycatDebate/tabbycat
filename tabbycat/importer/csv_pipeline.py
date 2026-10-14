@@ -10,7 +10,8 @@ from django.db import DataError, IntegrityError
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
-from .csv_types import CSV_TYPES, DependencyBlockedError, DependencyPendingError
+from .csv_base_types import DependencyBlockedError, DependencyPendingError
+from .csv_types import CSV_TYPES
 from .csv_typing import CSVChoice, CSVExecutionDraft, CSVResultRow, CSVRow, ReferenceToken, RowData, RowStatus, TeamCandidate
 from .references import ImportReferences
 
@@ -48,8 +49,7 @@ class CSVImportContext:
         matches = [token for token, names, inst_id in candidates if value in names and inst_id == institution]
         if len(matches) == 1:
             return matches[0]
-        # Anorak matches by institution and reference; ambiguous existing/staged
-        # matches need a choice, while a missing match proposes a new team.
+        # Team identity includes institution; ambiguous names need an explicit choice.
         return '' if matches else 'new'
 
     @cached_property

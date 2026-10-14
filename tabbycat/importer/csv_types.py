@@ -1,8 +1,4 @@
-"""Registered CSV object types.
-
-Each type owns its column vocabulary, preview form, normalization, duplicate key,
-dependencies and save operation. The wizard only orchestrates these hooks.
-"""
+"""CSV type registry and team/speaker mapping, preview and save hooks."""
 
 from __future__ import annotations
 
@@ -23,12 +19,12 @@ from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from tournaments.models import Tournament
 
-from .csv_base_types import CSVObjectType, DependencyBlockedError, DependencyPendingError, reference_dependencies
+from .csv_base_types import CSVObjectType, DependencyBlockedError, reference_dependencies
 from .csv_model_types import model_csv_types
 from .csv_row_forms import CSVSpeakerForm, CSVTeamForm
 from .csv_typing import AdditionalObject, CSVResultRow, CSVRow, CSVSource, DisplayLabel, DuplicateKey, ExecutionDependencies, FormOptions, PreviewSummary, RowData, SerializedRowData
-from .importers.anorak import AnorakTournamentDataImporter
 from .importers.base import convert_bool
+from .importers.lookups import TournamentDataLookups
 from .participant_services import initialize_teams
 from .references import reference_value
 
@@ -74,8 +70,7 @@ class TeamCSVType(CSVObjectType[CSVTeamForm, Team]):
             if field == 'break_categories' or field.endswith(('_gender', '_category')))}
 
     def mapping_choices(self, source: CSVSource) -> list[tuple[str, DisplayLabel]]:
-        # Offer slots for arbitrarily named columns too; actual preview fields are
-        # determined only by the columns the administrator maps.
+        # Arbitrary headers can map to speaker slots; only mapped slots reach preview.
         detected = self.form_options({self.guess_column(header): '' for header in source['headers']})['slots']
         slots = min(100, max(len(source['headers']) - 1, detected))
         return list(self.targets) + [
@@ -94,7 +89,7 @@ class TeamCSVType(CSVObjectType[CSVTeamForm, Team]):
                 values[name] = [context.references.match(target, item.strip()) for item in values[name].split('/') if item.strip()]
             elif name == 'gender' or name.endswith('_gender'):
                 try:
-                    values[name] = AnorakTournamentDataImporter.lookup_gender(values[name]) if values[name] else ''
+                    values[name] = TournamentDataLookups.lookup_gender(values[name]) if values[name] else ''
                 except ValueError:
                     pass
         prefix = values.get('use_institution_prefix', '')
@@ -159,7 +154,6 @@ class SpeakerCSVType(CSVObjectType[CSVSpeakerForm, Speaker]):
         ('team', _('Team name / suffix')), ('institution', _('Institution name or code')),
         ('use_institution_prefix', _('Prefix team name with institution')), ('gender', _('Gender')),
         ('phone', _('Phone')), ('pronoun', _('Pronoun')), ('categories', _('Speaker categories'))]
-    # Anorak speakers.csv identifies teams by team_name and institution.
     aliases = {'speaker_name': 'name', 'speaker': 'name', 'speaker_email': 'email', 'team_name': 'team',
         'institution_name': 'institution', 'institution_code': 'institution', 'university': 'institution', 'prefix': 'use_institution_prefix', 'category': 'categories'}
     required_targets = ('name', 'team')
@@ -233,20 +227,16 @@ class SpeakerCSVType(CSVObjectType[CSVSpeakerForm, Speaker]):
     def preview_dependencies(self, data: Mapping[str, object]) -> tuple[int, ...]:
         return reference_dependencies(data, self.reference_fields)
 
-    def dependencies(self, tournament: Tournament, data: SerializedRowData, rows: Sequence[CSVResultRow], references: ImportReferences | None = None) -> ExecutionDependencies:
+    def dependencies(self, tournament: Tournament, data: SerializedRowData, rows: Sequence[CSVResultRow], references: ImportReferences) -> ExecutionDependencies:
         token = data['team']
         if token == 'new':
             return {'team': None}
         if token.startswith('row:'):
             dependency = rows[int(token.split(':')[1])]
-            if dependency['status'] == 'pending':
-                raise DependencyPendingError(_('Import the linked team first.'))
             team_id = dependency.get('object_id', dependency.get('team_id')) if dependency['status'] == 'imported' else None
         else:
             team_id = token.split(':')[1]
-        team = references.teams_by_id.get(int(team_id)) if references is not None and team_id is not None else None
-        if references is None:
-            team = Team.objects.all_with_unconfirmed.filter(pk=team_id, tournament=tournament).first()
+        team = references.teams_by_id.get(int(team_id)) if team_id is not None else None
         if team is None:
             raise DependencyBlockedError(_('The linked team was skipped, failed, or no longer exists.'))
         return {'team': team}

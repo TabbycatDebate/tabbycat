@@ -12,11 +12,7 @@ def team_reference(reference):
 
 
 def initialize_teams(teams, tournament, *, general_break_categories=False):
-    """Initialize newly saved teams in a batch, returning their own conflicts.
-
-    Command importers keep their own category mappings; web imports opt into
-    the general categories. Existing teams must not be passed to this function.
-    """
+    """Only pass newly saved teams; existing teams' defaults must remain unchanged."""
     teams = list(teams)
     if not teams:
         return []

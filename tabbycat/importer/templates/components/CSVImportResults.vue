@@ -46,8 +46,7 @@ async function startImport () {
     const row = pending[0] || rows.value.find(row => row.status === 'created' && ready(row))
     if (!row) break
     try {
-      // Preserve the marker until the response is known to have been saved to
-      // the session. An uncertain request must never be retried automatically.
+      // Keep the marker until the session confirms this row; uncertain requests cannot be retried.
       sessionStorage.setItem(storageKey, String(row.index))
       const response = await fetch(window.location.href, {
         method: 'POST',

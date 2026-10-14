@@ -11,20 +11,20 @@ from django.http import QueryDict
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 
-from adjallocation.models import AdjudicatorAdjudicatorConflict
+from adjallocation.models import AdjudicatorAdjudicatorConflict, TeamInstitutionConflict
 from availability.models import RoundAvailability
 from draw.models import TeamSideAllocation
+from draw.types import DebateSide
+from importer.csv_forms import CSVMappingForm, CSVPreviewFormSet
+from importer.csv_pipeline import CSVImportContext
+from importer.csv_state import remap_step_data
+from importer.csv_types import CSV_TYPES, guess_file_type
+from importer.importers import importer_registry
 from motions.models import RoundMotion
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.models import Round, Tournament
 from utils.misc import reverse_tournament
 from venues.models import Venue, VenueConstraint
-
-from ..csv_forms import CSVPreviewFormSet
-from ..csv_pipeline import CSVImportContext
-from ..csv_state import remap_step_data
-from ..csv_types import CSV_TYPES, guess_file_type
-from ..importers import importer_registry
 
 
 class CSVCatalogTests(TestCase):
@@ -157,6 +157,36 @@ class CSVCatalogTests(TestCase):
         self.assertEqual(Adjudicator.objects.count(), 2)
         self.assertEqual(AdjudicatorAdjudicatorConflict.objects.count(), 2)
 
+    def test_command_team_setup_preserves_format_specific_short_names(self):
+        institution = Institution.objects.create(name='Command School', code='CMD')
+        reference = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        truncated = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567'
+        teams_header = ['reference', 'institution', 'short_reference', 'speaker1_name', 'speaker2_name']
+        cases = [
+            ('anorak-teams', 'anorak', 'import_teams', teams_header, [reference, 'CMD', 'Custom', '', ''], truncated, 0),
+            ('anorak-speakers', 'anorak', 'import_speakers', ['name', 'team_name', 'institution'],
+                ['Alice', reference, 'CMD'], truncated, 1),
+            ('boots-custom', 'boots', 'import_teams', teams_header, [reference, 'CMD', 'Custom', 'Alice', 'Bob'], 'Custom', 2),
+            ('boots-default', 'boots', 'import_teams', teams_header, [reference, 'CMD', '', 'Alice', 'Bob'], truncated, 2),
+        ]
+        for name, importer_key, method, headers, values, short_reference, speaker_count in cases:
+            with self.subTest(format=name):
+                tournament = Tournament.objects.create(slug=name)
+                importer = importer_registry[importer_key](tournament)
+                stream = io.StringIO()
+                writer = csv.writer(stream)
+                writer.writerow(headers)
+                writer.writerow(values)
+                stream.seek(0)
+                getattr(importer, method)(stream)
+
+                self.assertFalse(importer.errors, str(importer.errors))
+                team = Team.objects.get(tournament=tournament)
+                self.assertEqual(team.short_reference, short_reference)
+                self.assertEqual(team.speaker_set.count(), speaker_count)
+                self.assertTrue(team.teaminstitutionconflict_set.filter(institution=institution).exists())
+                self.assertEqual(importer.counts[TeamInstitutionConflict], 1)
+
     def test_implicit_regions_and_room_categories(self):
         form = self.prepare([
             ('venues', ['name', 'priority', 'category'], [['Blue Room', 1, 'Blue']]),
@@ -190,15 +220,15 @@ class CSVCatalogTests(TestCase):
         self.assertEqual(response.context['wizard']['steps'].current, 'preview')
         self.assertIn('linked row is skipped', str(response.context['wizard']['form'].forms[0].errors))
 
-    def test_missing_and_other_tournament_references_are_not_accepted(self):
+    def test_other_tournament_round_cannot_be_selected_by_id(self):
         other = Tournament.objects.create(slug='unrelated')
-        Round.objects.create(tournament=other, seq=1, name='Other round', abbreviation='OTHER')
+        other_round = Round.objects.create(tournament=other, seq=1, name='Other round', abbreviation='OTHER')
         rows = [{'kind': 'motion', 'file': 'motions.csv', 'file_index': 0, 'line': 2,
             'values': {'reference': 'M', 'text': 'Motion', 'rounds': 'OTHER'}}]
         context = CSVImportContext(self.tournament, rows)
         initial = context.initial_rows()
         form = CSV_TYPES['motion'].form_class(self.tournament, references=context.references, initial=initial[0],
-            data={'reference': 'M', 'text': 'Motion', 'rounds': ['unresolved:OTHER']})
+            data={'reference': 'M', 'text': 'Motion', 'rounds': [str(other_round.pk)]})
         self.assertFalse(form.is_valid())
         self.assertIn('rounds', form.errors)
 
@@ -208,7 +238,6 @@ class CSVCatalogTests(TestCase):
         rows = [{'kind': 'adjudicator', 'file': 'adjudicators.csv', 'file_index': 0, 'line': index + 2,
             'values': {'name': f'Judge {index}', 'institution': 'SCI', 'available:R1': 'yes'}} for index in range(20)]
         context = CSVImportContext(self.tournament, rows)
-        # Build and validate through the same formset used by the wizard.
         initial = context.initial_rows()
         with CaptureQueriesContext(connection) as queries:
             data = {'preview-TOTAL_FORMS': 20, 'preview-INITIAL_FORMS': 20}
@@ -228,14 +257,28 @@ class CSVCatalogTests(TestCase):
             ('"participants_institution"' in query['sql'] or '"tournaments_round"' in query['sql'])]
         self.assertEqual(len(reference_queries), 2, reference_queries)
 
-    def test_all_templates_download_and_map_required_columns(self):
+    def test_download_templates_have_mappable_headers(self):
         for kind in CSV_TYPES.values():
             for template, label, columns in kind.templates:
                 with self.subTest(template=template):
                     response = self.client.get(reverse_tournament('importer-csv-template', self.tournament,
                         kwargs={'template_key': template}))
                     self.assertEqual(response.status_code, 200)
-                    self.assertTrue(set(kind.required_targets).issubset({kind.guess_column(column) for column in columns}))
+                    self.assertEqual(response['Content-Type'], 'text/csv; charset=utf-8')
+                    self.assertEqual(guess_file_type(template + '.csv'), kind.key)
+
+                    headers = next(csv.reader(io.StringIO(response.content.decode('utf-8-sig'))))
+                    source = {'name': template + '.csv', 'headers': headers, 'rows': [{'values': [''] * len(headers)}]}
+                    form = CSVMappingForm(sources=[source], types={'file_0': kind.key})
+                    targets = [field.value() for field in form]
+                    self.assertTrue(all(targets))
+                    self.assertTrue(set(kind.required_targets).issubset(targets))
+                    if template == 'teams-with-speakers':
+                        self.assertIn('speaker_2_email', targets)
+
+        response = self.client.get(reverse_tournament('importer-csv-template', self.tournament,
+            kwargs={'template_key': 'unknown'}))
+        self.assertEqual(response.status_code, 404)
 
     def test_adjudicator_cannot_conflict_with_their_own_uploaded_row(self):
         rows = [{'kind': 'adjudicator', 'file': 'adjudicators.csv', 'file_index': 0, 'line': 2,
@@ -265,6 +308,16 @@ class CSVCatalogTests(TestCase):
             'team': team.pk, 'round': self.tournament.current_round.pk, 'side': 99})
         self.assertFalse(form.is_valid())
         self.assertIn('side', form.errors)
+
+    def test_side_row_rejects_repeated_round(self):
+        team = Team.objects.create(tournament=self.tournament, reference='A')
+        round = self.tournament.current_round
+        form = CSV_TYPES['side'].form_class(self.tournament, extra_columns=('side:Setup',), data={
+            'team': team.pk, 'round': round.pk, 'side': DebateSide.AFF,
+            'side:Setup': DebateSide.NEG, 'round_for_side:Setup': round.pk})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.non_field_errors())
+        self.assertFalse(TeamSideAllocation.objects.exists())
 
     def test_scalar_side_file_imports_with_uploaded_team_and_round(self):
         form = self.prepare([

@@ -1,8 +1,4 @@
-"""Contracts for CSV data at parsing, preview and execution boundaries.
-
-Field names depend on registered types and user mappings, so cleaned form values
-remain dynamic. Session values are separately restricted to JSON-compatible data.
-"""
+"""CSV row and draft contracts: mapped fields stay dynamic, session values must be JSON-compatible."""
 
 from __future__ import annotations
 
