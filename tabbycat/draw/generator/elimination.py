@@ -62,6 +62,11 @@ class SubsequentEliminationDrawGenerator(BaseEliminationDrawGenerator):
     requires_prev_results = True
 
     def make_pairings(self):
+        if not self.results:
+            raise DrawUserError(
+                _("There are no results from the previous round."),
+            )
+
         self.results.sort(key=lambda x: x.room_rank)
         winners = [pairing.winner for pairing in self.results]
         if winners.count(None) > 0:

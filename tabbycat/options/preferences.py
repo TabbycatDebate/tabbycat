@@ -162,7 +162,7 @@ class AdjHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class PreformedPanelMismatchPenalty(IntegerPreference):
-    help_text = _("Penality applied by preformed panel auto-allocator for priority mismatch")
+    help_text = _("Penalty applied by preformed panel auto-allocator for priority mismatch")
     verbose_name = _("Importance mismatch penalty")
     section = draw_rules
     name = 'preformed_panel_mismatch_penalty'
@@ -549,6 +549,35 @@ class FeedbackFromTeams(ChoicePreference):
     default = 'orallist'
 
 
+FEEDBACK_ROUNDS_CHOICES = (
+    ('prelims', _("Preliminary rounds only")),
+    ('all', _("Preliminary and elimination rounds")),
+)
+
+
+@tournament_preferences_registry.register
+class FeedbackPathsRounds(ChoicePreference):
+    verbose_name = _("Expect feedback from adjudicators in")
+    help_text = _("Which rounds adjudicators are asked for feedback in. Feedback given in elimination rounds is "
+                  "marked as ignored by default, so it doesn't count towards adjudicators' scores unless un-ignored.")
+    section = feedback
+    name = 'feedback_paths_rounds'
+    choices = FEEDBACK_ROUNDS_CHOICES
+    default = 'prelims'
+
+
+@tournament_preferences_registry.register
+class FeedbackFromTeamsRounds(ChoicePreference):
+    verbose_name = _("Expect feedback from teams in")
+    help_text = _("Which rounds teams are asked for feedback in. Teams are never asked for feedback in silent "
+                  "rounds. Feedback given in elimination rounds is marked as ignored by default, so it doesn't "
+                  "count towards adjudicators' scores unless un-ignored.")
+    section = feedback
+    name = 'feedback_from_teams_rounds'
+    choices = FEEDBACK_ROUNDS_CHOICES
+    default = 'prelims'
+
+
 @tournament_preferences_registry.register
 class ShowUnexpectedFeedback(BooleanPreference):
     verbose_name = _("Show unexpected feedback submissions in participants pages")
@@ -590,6 +619,7 @@ class TeamsInDebate(IntegerPreference):
     section = debate_rules
     name = 'teams_in_debate'
     default = 2
+    field_kwargs = {'validators': [MinValueValidator(1)]}
 
 
 @tournament_preferences_registry.register
@@ -654,6 +684,7 @@ class SubstantiveSpeakers(IntegerPreference):
     section = debate_rules
     name = 'substantive_speakers'
     default = 3
+    field_kwargs = {'validators': [MinValueValidator(1)]}
 
 
 @tournament_preferences_registry.register

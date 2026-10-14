@@ -14,7 +14,7 @@ from utils.tests import suppress_logs
 from venues.models import Venue
 
 from ..progress import FeedbackExpectedSubmissionFromAdjudicatorTracker, FeedbackExpectedSubmissionFromTeamTracker
-from ..progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
+from ..progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam, get_feedback_progress
 
 
 class TestFeedbackProgress(TestCase):
@@ -61,7 +61,11 @@ class TestFeedbackProgress(TestCase):
     def _da(self, debate, a):
         return DebateAdjudicator.objects.get(debate=debate, adjudicator=self._adj(a))
 
-    def _create_debate(self, teams, adjs, votes, trainees=[], venue=None):
+    def _create_elim_round(self):
+        return Round.objects.create(tournament=self.tournament, seq=2, schedule_group=1,
+                abbreviation="EF", stage=Round.Stage.ELIMINATION)
+
+    def _create_debate(self, teams, adjs, votes, trainees=[], venue=None, rd=None):
         """Enters a debate into the database, using the teams and adjudicators specified.
         `votes` should be a string (or iterable of characters) indicating "a" for affirmative or
             "n" for negative, e.g. "ann" if the chair was rolled in a decision for the negative.
@@ -70,7 +74,7 @@ class TestFeedbackProgress(TestCase):
 
         if venue is None:
             venue = Venue.objects.first()
-        debate = Debate.objects.create(round=self.rd, venue=venue)
+        debate = Debate.objects.create(round=rd or self.rd, venue=venue)
 
         aff, neg = teams
         aff_team = self._team(aff)
@@ -484,3 +488,188 @@ class TestFeedbackProgress(TestCase):
         self.tournament.preferences['feedback__show_unexpected_feedback'] = False
         progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
+
+    # ==========================================================================
+    # Round scope (preliminary vs elimination rounds)
+    # ==========================================================================
+
+    def _create_elim_scope_dataset(self):
+        """One prelim debate and one elimination debate, each with feedback from
+        team 0 and from adjudicator 0 on the whole panel."""
+        elim = self._create_elim_round()
+        prelim_debate = self._create_debate((0, 1), (0, 1, 2), "nnn")
+        elim_debate = self._create_debate((0, 2), (0, 3, 4), "nnn", rd=elim)
+        for debate, adjs in ((prelim_debate, (0, 1, 2)), (elim_debate, (0, 3, 4))):
+            self._create_feedback(self._dt(debate, 0), adjs[0])
+            for adj in adjs[1:]:
+                self._create_feedback(self._da(debate, 0), adj)
+        return prelim_debate, elim_debate
+
+    def test_team_progress_scope_prelims_only(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'prelims'
+        self.assertTeamProgress('orallist', True, 0, 1, 1, 1, 0, 1.0)
+
+    def test_team_progress_scope_all_rounds(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        self.assertTeamProgress('orallist', True, 0, 2, 2, 2, 0, 1.0)
+
+    def test_team_progress_scope_all_rounds_missing_elim_submission(self):
+        elim = self._create_elim_round()
+        prelim_debate = self._create_debate((0, 1), (0, 1, 2), "nnn")
+        self._create_debate((0, 2), (3, 4, 5), "nnn", rd=elim)
+        self._create_feedback(self._dt(prelim_debate, 0), 0)
+
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'prelims'
+        self.assertTeamProgress('orallist', True, 0, 1, 1, 1, 0, 1.0)
+
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        self.assertTeamProgress('orallist', True, 0, 1, 2, 1, 1, 1/2)
+
+    def test_team_progress_scope_excludes_silent_elim_rounds(self):
+        elim = self._create_elim_round()
+        elim.silent = True
+        elim.save()
+        self._create_debate((0, 1), (0, 1, 2), "nnn")
+        self._create_debate((0, 2), (3, 4, 5), "nnn", rd=elim)
+
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        # The silent elimination round is not expected, in the same way that a
+        # silent preliminary round is not.
+        self.assertTeamProgress('orallist', True, 0, 0, 1, 0, 1, 0.0)
+
+    def test_adjudicator_progress_scope_prelims_only(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'prelims'
+        self.assertAdjudicatorProgress('minimal', 0, 2, 2, 2, 0, 1.0)
+
+    def test_adjudicator_progress_scope_all_rounds(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        self.assertAdjudicatorProgress('minimal', 0, 4, 4, 4, 0, 1.0)
+
+    def test_adjudicator_progress_scope_all_rounds_missing_elim_submission(self):
+        elim = self._create_elim_round()
+        prelim_debate = self._create_debate((0, 1), (0, 1, 2), "nnn")
+        self._create_debate((2, 3), (0, 3, 4), "nnn", rd=elim)
+        for adj in (1, 2):
+            self._create_feedback(self._da(prelim_debate, 0), adj)
+
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'prelims'
+        self.assertAdjudicatorProgress('minimal', 0, 2, 2, 2, 0, 1.0)
+
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        self.assertAdjudicatorProgress('minimal', 0, 2, 4, 2, 2, 1/2)
+
+    def test_adjudicator_progress_scope_includes_silent_elim_rounds(self):
+        elim = self._create_elim_round()
+        elim.silent = True
+        elim.save()
+        self._create_debate((0, 1), (0, 1, 2), "nnn")
+        self._create_debate((2, 3), (0, 3, 4), "nnn", rd=elim)
+
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        # Silent rounds only suppress feedback from teams, not from adjudicators.
+        self.assertAdjudicatorProgress('minimal', 0, 0, 4, 0, 4, 0.0)
+
+    def test_scopes_are_independent(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'prelims'
+        self.assertAdjudicatorProgress('minimal', 0, 4, 4, 4, 0, 1.0)
+        self.assertTeamProgress('orallist', True, 0, 1, 1, 1, 0, 1.0)
+
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'prelims'
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        self.assertAdjudicatorProgress('minimal', 0, 2, 2, 2, 0, 1.0)
+        self.assertTeamProgress('orallist', True, 0, 2, 2, 2, 0, 1.0)
+
+    # ==========================================================================
+    # get_feedback_progress (bulk/prefetched variant)
+    # ==========================================================================
+
+    def _bulk_progress(self):
+        """Returns (team progress, adjudicator progress) by team/adjudicator,
+        computed through the bulk-prefetching code path."""
+        tournament = Tournament.objects.get(pk=self.tournament.pk)
+        teams_progress, adjs_progress = get_feedback_progress(tournament)
+        return ({p.team.reference: p for p in teams_progress},
+                {p.adjudicator.name: p for p in adjs_progress})
+
+    def test_bulk_progress_matches_individual_prelims_only(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'prelims'
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'prelims'
+        self.tournament.preferences['feedback__feedback_from_teams'] = 'orallist'
+        self.tournament.preferences['feedback__feedback_paths'] = 'minimal'
+
+        teams, adjs = self._bulk_progress()
+        self.assertEqual(teams['0'].num_expected(), 1)
+        self.assertEqual(teams['0'].num_submitted(), 1)
+        self.assertEqual(adjs['0'].num_expected(), 2)
+        self.assertEqual(adjs['0'].num_submitted(), 2)
+
+    def test_bulk_progress_matches_individual_all_rounds(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        self.tournament.preferences['feedback__feedback_from_teams'] = 'orallist'
+        self.tournament.preferences['feedback__feedback_paths'] = 'minimal'
+
+        teams, adjs = self._bulk_progress()
+        self.assertEqual(teams['0'].num_expected(), 2)
+        self.assertEqual(teams['0'].num_submitted(), 2)
+        self.assertEqual(adjs['0'].num_expected(), 4)
+        self.assertEqual(adjs['0'].num_submitted(), 4)
+
+    def test_bulk_progress_respects_independent_scopes(self):
+        self._create_elim_scope_dataset()
+        self.tournament.preferences['feedback__feedback_paths_rounds'] = 'all'
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'prelims'
+        self.tournament.preferences['feedback__feedback_from_teams'] = 'orallist'
+        self.tournament.preferences['feedback__feedback_paths'] = 'minimal'
+
+        teams, adjs = self._bulk_progress()
+        self.assertEqual(teams['0'].num_expected(), 1)
+        self.assertEqual(adjs['0'].num_expected(), 4)
+
+    # ==========================================================================
+    # Orallist enforcement follows the round's stage
+    # ==========================================================================
+
+    def _create_rolled_chair_elim_debate(self):
+        """An elimination debate in which the chair (adj 0) was rolled, so the
+        orallist is a panellist, and the team gave feedback on the chair."""
+        elim = self._create_elim_round()
+        debate = self._create_debate((0, 1), (0, 1, 2), "ann", rd=elim)
+        self._create_feedback(self._dt(debate, 0), 0)
+        return debate
+
+    def test_enforce_orallist_uses_elim_ballots_pref(self):
+        self._create_rolled_chair_elim_debate()
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        self.tournament.preferences['debate_rules__ballots_per_debate_elim'] = 'per-adj'
+        # The chair was rolled, so feedback on the chair does not fulfil the
+        # expectation when the orallist is enforced.
+        progress = self.assertTeamProgress('orallist', True, 0, 1, 1, 0, 1, 0.0)
+        self.assertEqual(len(progress.unexpected_trackers()), 1)
+
+    def test_enforce_orallist_not_applied_for_consensus_elim_ballots(self):
+        self._create_rolled_chair_elim_debate()
+        self.tournament.preferences['feedback__feedback_from_teams_rounds'] = 'all'
+        self.tournament.preferences['debate_rules__ballots_per_debate_elim'] = 'per-debate'
+        # With a consensus ballot there is no orallist to enforce, so feedback
+        # on the chair is accepted.
+        progress = self.assertTeamProgress('orallist', True, 0, 1, 1, 1, 0, 1.0)
+        self.assertEqual(len(progress.unexpected_trackers()), 0)
+
+    def test_elim_ballots_pref_does_not_affect_prelim_rounds(self):
+        # Chair rolled in a preliminary round; only the prelim ballots
+        # preference should govern whether the orallist is enforced there.
+        debate = self._create_debate((0, 1), (0, 1, 2), "ann")
+        self._create_feedback(self._dt(debate, 0), 0)
+        self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-adj'
+        self.tournament.preferences['debate_rules__ballots_per_debate_elim'] = 'per-debate'
+        progress = self.assertTeamProgress('orallist', True, 0, 1, 1, 0, 1, 0.0)
+        self.assertEqual(len(progress.unexpected_trackers()), 1)
