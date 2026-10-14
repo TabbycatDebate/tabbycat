@@ -2,32 +2,6 @@
 
 import re
 
-from django.utils.translation import ngettext_lazy
-
-
-REVIEW_LABELS = {
-    'team': ngettext_lazy('Team', 'Teams', 'count'),
-    'speaker': ngettext_lazy('Speaker', 'Speakers', 'count'),
-    'region': ngettext_lazy('Region', 'Regions', 'count'),
-    'institution': ngettext_lazy('Institution', 'Institutions', 'count'),
-    'venue_category': ngettext_lazy('Room category', 'Room categories', 'count'),
-    'break_category': ngettext_lazy('Break category', 'Break categories', 'count'),
-    'speaker_category': ngettext_lazy('Speaker category', 'Speaker categories', 'count'),
-    'round': ngettext_lazy('Round', 'Rounds', 'count'),
-    'venue': ngettext_lazy('Room', 'Rooms', 'count'),
-    'adjudicator': ngettext_lazy('Adjudicator', 'Adjudicators', 'count'),
-    'motion': ngettext_lazy('Motion', 'Motions', 'count'),
-    'score': ngettext_lazy('Adjudicator score', 'Adjudicator scores', 'count'),
-    'team_conflict': ngettext_lazy('Adjudicator–team conflict', 'Adjudicator–team conflicts', 'count'),
-    'institution_conflict': ngettext_lazy('Adjudicator–institution conflict', 'Adjudicator–institution conflicts', 'count'),
-    'adjudicator_conflict': ngettext_lazy('Adjudicator conflict', 'Adjudicator conflicts', 'count'),
-    'team_institution_conflict': ngettext_lazy('Team–institution conflict', 'Team–institution conflicts', 'count'),
-    'side': ngettext_lazy('Side allocation', 'Side allocations', 'count'),
-    'adj_feedback_question': ngettext_lazy('Adjudicator feedback question', 'Adjudicator feedback questions', 'count'),
-    'adj_venue_constraint': ngettext_lazy('Adjudicator room constraint', 'Adjudicator room constraints', 'count'),
-    'team_venue_constraint': ngettext_lazy('Team room constraint', 'Team room constraints', 'count'),
-}
-
 
 class DependencyPendingError(Exception):
     pass
@@ -54,10 +28,10 @@ class CSVObjectType:
     name_field = 'name'
     reference_fields = ()
     deferred_fields = ()
+    count_label = None
 
     def review_label(self, count):
-        label = REVIEW_LABELS.get(self.key)
-        return label % {'count': count} if label is not None else self.label
+        return self.count_label % {'count': count} if self.count_label is not None else self.label
 
     def mapping_choices(self, source):
         return list(self.targets)

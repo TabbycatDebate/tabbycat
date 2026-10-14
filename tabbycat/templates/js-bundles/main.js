@@ -207,6 +207,7 @@ vueComponents.CheckInScanContainer = defineAsyncComponent(() => import('../../ch
 vueComponents.WizardSteps = defineAsyncComponent(() => import('../components/WizardSteps.vue'))
 
 // CSV importer enhancements use the shared mount and translation setup.
+vueComponents.CsvImporter = defineAsyncComponent(() => import('../../importer/templates/components/CSVImporter.vue'))
 vueComponents.CsvFileUpload = defineAsyncComponent(() => import('../../importer/templates/components/CSVFileUpload.vue'))
 vueComponents.CsvImportWorkspace = defineAsyncComponent(() => import('../../importer/templates/components/CSVImportWorkspace.vue'))
 vueComponents.CsvPreviewRow = defineAsyncComponent(() => import('../../importer/templates/components/CSVPreviewRow.vue'))

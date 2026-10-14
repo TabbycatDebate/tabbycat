@@ -128,3 +128,21 @@ function dropFiles (event) {
     </section>
   </div>
 </template>
+
+<style scoped>
+.csv-drop-zone {
+  border: 2px dashed #adb5bd;
+  background: #faf9fc;
+  border-radius: .35rem;
+}
+.csv-drop-zone:hover, .csv-drop-zone:focus, .csv-drop-zone.is-dragging {
+  border-color: #663da0;
+  background: #f0ebf6;
+}
+.csv-upload-icon {
+  display: inline-flex;
+  padding: .9rem;
+  border-radius: 50%;
+  background: #f0ebf6;
+}
+</style>

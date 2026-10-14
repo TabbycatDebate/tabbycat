@@ -1,13 +1,11 @@
 {% extends "base.html" %}
-{% load i18n static %}
-{% block extra-css %}
-  {{ block.super }}
-  <link rel="stylesheet" href="{% static 'importer/csv-importer.css' %}">
-{% endblock %}
+{% load i18n %}
 {% block content %}
-<div id="vueMount" class="csv-importer">
-  <wizard-steps :steps="csvImportData.steps" form-id="csv-wizard"></wizard-steps>
-  {% block csv_content %}{% endblock %}
+<div id="vueMount">
+  <csv-importer>
+    <wizard-steps :steps="csvImportData.steps" form-id="csv-wizard"></wizard-steps>
+    {% block csv_content %}{% endblock %}
+  </csv-importer>
 </div>
 {% endblock %}
 {% block js %}

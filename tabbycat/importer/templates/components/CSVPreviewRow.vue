@@ -76,3 +76,36 @@ const label = computed(() => {
     </details>
   </div>
 </template>
+
+<style scoped>
+.csv-row-summary {
+  display: grid;
+  grid-template-columns: 65px minmax(140px, 1fr) minmax(100px, 1fr) auto;
+  gap: .75rem;
+  align-items: center;
+}
+.csv-row-name, .csv-row-related {
+  overflow-wrap: anywhere;
+}
+.csv-preview-row[data-status=attention] {
+  background: #fffcf2;
+}
+.csv-preview-row[data-status=skipped] {
+  background: #f8f9fa;
+}
+.csv-row-editor summary {
+  cursor: pointer;
+  margin-left: 77px;
+}
+@media (max-width: 575px) {
+  .csv-row-summary {
+    grid-template-columns: 55px minmax(0, 1fr);
+  }
+  .csv-row-related, .csv-row-summary > div:last-child {
+    grid-column: 2;
+  }
+  .csv-row-editor summary {
+    margin-left: 67px;
+  }
+}
+</style>

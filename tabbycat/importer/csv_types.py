@@ -9,7 +9,7 @@ from pathlib import PurePath
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from actionlog.models import ActionLogEntry
 from checkins.models import PersonIdentifier
@@ -28,6 +28,7 @@ from .references import reference_value
 
 
 class TeamCSVType(CSVObjectType):
+    count_label = ngettext_lazy('Team', 'Teams', 'count')
     key = 'team'
     label = _('Teams')
     filename_words = ('team', 'teams')
@@ -135,6 +136,7 @@ class TeamCSVType(CSVObjectType):
 
 
 class SpeakerCSVType(CSVObjectType):
+    count_label = ngettext_lazy('Speaker', 'Speakers', 'count')
     key = 'speaker'
     label = _('Speakers')
     filename_words = ('speaker', 'speakers')

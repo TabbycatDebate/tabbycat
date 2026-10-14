@@ -13,49 +13,21 @@ The **tournament data importer** is the class that imports data from one or more
 Adding a type to the CSV wizard
 ==============================
 
-The web CSV wizard uses the ``CSV_TYPES`` registry in ``importer/csv_types.py``.
-Its built-in ``TeamCSVType`` and ``SpeakerCSVType`` implementations provide
-examples. A registered type owns:
+Subclass ``CSVObjectType`` (or ``ModelCSVType`` for model-backed rows) and
+register an instance with ``register_csv_type()`` in ``importer/csv_types.py``.
+Each type defines its translated labels, mapping fields, preview validation,
+references and transactional save hooks. See ``TeamCSVType``, ``SpeakerCSVType``
+and the subclasses in ``csv_model_types.py`` for examples.
 
-- its stable key, display label, and filename words used for type suggestions;
-- mapping targets, required targets, header aliases, and mapping suggestions;
-- its preview form, inferred form options, and preview field count;
-- normalization and serialization of session data;
-- compact preview summaries, object counts and proposed additional objects;
-- the fields identifying possible duplicate rows; and
-- dependency resolution, execution priority, and an atomic save operation.
+Use ``CSVReference('team')`` for one reference or
+``CSVReference('adjudicator', multiple=True)`` for a list. Shared reference caches
+resolve existing and uploaded records without querying once per preview row.
+Declare dependencies so the executor imports referenced rows first. Preview
+must not save records.
 
-Subclass ``CSVObjectType`` and register an instance with
-``register_csv_type(MyCSVType())`` when its module is loaded. Built-in types are
-registered at the end of ``csv_types.py``. The type selector, mapping cards,
-preview formset, and row executor use the registry automatically; they do not
-need additional branches in the views for each type.
-
-Reference matching provides institution and team resolvers through
-``CSVImportContext`` in ``importer/csv_pipeline.py``. Resolved values and unresolved
-choices appear directly in the editable preview. Types can reconcile edited
-relationships through ``resolve_preview()`` and declare uploaded-row dependencies
-through ``preview_dependencies()``. The preview flags skipped or invalid parent
-rows before confirmation. ``preview_summary()``, ``object_counts()`` and
-``additional_objects()`` supply display information without per-type view branches. Keep participant writes in the type's
-transactional ``save()`` hook and use ``DependencyPendingError`` or ``DependencyBlockedError``
-to report dependencies that cannot yet be used. Preview must not save records.
-
-Team speaker groups are inferred from mapped ``speaker_N_name`` and
-``speaker_N_email`` targets. Separate speaker files recognize Anorak's
-``name``, ``team_name``, ``institution`` and ``use_institution_prefix`` columns.
-Missing teams are proposed for creation in preview; speakers sharing a team name
-and institution reuse that team. New team creation and its first speaker are
-saved atomically, including team defaults and participant identifiers.
-
-The Vue components in ``importer/templates/components/`` use the shared
-``vueMount``/``window.vueData`` entry point, Django translation composable and
-Feather icons. Django passes file/row metadata through ``json_script`` and renders
-editable fields into Vue slots. These fields use ``v-pre`` so untrusted CSV text
-cannot be interpreted as Vue template expressions. Skipped rows use ``inert``
-instead of disabling form controls, preserving their values in the Django POST.
-
-The management-command importer described below retains its existing interface.
+Django renders editable formset fields into Vue slots with ``v-pre``; preserve
+this to prevent uploaded text being interpreted as Vue expressions. The
+management-command importer below keeps its existing interface.
 
 Why write your own?
 ===================

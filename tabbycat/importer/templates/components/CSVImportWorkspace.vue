@@ -180,3 +180,53 @@ function skipInvalid (file) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.csv-workspace {
+  display: grid;
+  grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+.csv-file-list {
+  position: sticky;
+  top: 1rem;
+}
+.csv-file-list .list-group {
+  max-height: 65vh;
+  overflow-y: auto;
+}
+.csv-file-button[aria-pressed=true] {
+  border-left: 3px solid #663da0;
+  background: #f0ebf6;
+}
+.csv-file-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.csv-file-panels {
+  min-width: 0;
+}
+:deep(.csv-mapping-table th), :deep(.csv-mapping-table td) {
+  vertical-align: middle;
+}
+:deep(.csv-mapping-table label) {
+  margin-bottom: 0;
+}
+:deep(.csv-example) {
+  max-width: 220px;
+  overflow-wrap: anywhere;
+  font-size: .875rem;
+}
+@media (max-width: 991px) {
+  .csv-workspace {
+    grid-template-columns: 1fr;
+  }
+  .csv-file-list {
+    position: static;
+  }
+  .csv-file-list .list-group {
+    max-height: 240px;
+  }
+}
+</style>
