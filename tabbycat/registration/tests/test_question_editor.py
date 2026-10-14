@@ -54,6 +54,10 @@ class QuestionEditorTests(TestCase):
         self.assertTrue(Question.objects.filter(tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Speaker)).exists())
         self.assertEqual(self.tournament.preferences['registration__reg_speaker_fields'], ['phone'])
 
+    def test_save_redirect_ignores_untrusted_request_path(self):
+        response = self.client.post(self.url, self.payload(), SCRIPT_NAME='//evil.example')
+        self.assertRedirects(response, self.url, fetch_redirect_response=False)
+
     def test_reordering_preserves_answers(self):
         first, second = self.question(), self.question(seq=1)
         team = Team.objects.filter(tournament=self.tournament).first()
