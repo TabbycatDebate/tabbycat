@@ -15,7 +15,6 @@ from .csv_types import CSV_TYPES
 from .csv_typing import CSVChoice, CSVExecutionDraft, CSVResultRow, CSVRow, ReferenceToken, RowData, RowStatus, TeamCandidate
 from .references import ImportReferences
 
-
 if TYPE_CHECKING:
     from django.contrib.auth.base_user import AbstractBaseUser
 

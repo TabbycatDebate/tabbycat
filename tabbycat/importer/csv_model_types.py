@@ -33,7 +33,6 @@ from .csv_values import convert_bool
 from .importers.lookups import TournamentDataLookups
 from .references import reference_value
 
-
 if TYPE_CHECKING:
     from django.contrib.auth.base_user import AbstractBaseUser
 

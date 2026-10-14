@@ -12,7 +12,6 @@ from django.utils.translation import gettext_lazy as _
 from .csv_values import convert_bool
 from .references import ImportReferences, reference_value
 
-
 if TYPE_CHECKING:
     from .csv_model_types import ModelCSVType
 
