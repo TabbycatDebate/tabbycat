@@ -28,7 +28,6 @@ from .importers.lookups import TournamentDataLookups
 from .participant_services import initialize_teams
 from .references import reference_value
 
-
 if TYPE_CHECKING:
     from django.contrib.auth.base_user import AbstractBaseUser
     from django.http import QueryDict

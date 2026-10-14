@@ -16,7 +16,6 @@ from .csv_models import CSV_MODELS, csv_queryset, IMPLICIT_REFERENCE_TYPES, NAME
 from .csv_typing import CSVChoice, CSVResultRow, CSVRow, DisplayLabel, ReferenceToken
 from .csv_values import convert_bool
 
-
 if TYPE_CHECKING:
     from tournaments.models import Tournament
 

@@ -11,7 +11,6 @@ from django.forms import BaseForm
 
 from .csv_typing import AdditionalObject, CSVResultRow, CSVRow, CSVSource, DisplayLabel, DuplicateKey, ExecutionDependencies, FormOptions, PreviewSummary, RowData, SerializedRowData
 
-
 if TYPE_CHECKING:
     from django.contrib.auth.base_user import AbstractBaseUser
     from django.http import QueryDict
