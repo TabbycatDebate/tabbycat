@@ -1,4 +1,4 @@
-"""Forms for the session-backed team CSV importer."""
+"""Forms for uploading, mapping and reviewing CSV files."""
 
 from __future__ import annotations
 

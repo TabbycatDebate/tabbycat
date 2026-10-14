@@ -9,13 +9,13 @@ import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
-from importer.participant_services import initialize_teams
 from importer.references import ImportReferences
 
-from .base import BaseTournamentDataImporter, convert_bool, make_interpreter, make_lookup
+from .base import BaseTournamentDataImporter, convert_bool, make_interpreter
+from .lookups import TournamentDataLookups
 
 
-class BootsTournamentDataImporter(BaseTournamentDataImporter):
+class BootsTournamentDataImporter(TournamentDataLookups, BaseTournamentDataImporter):
     """Boots: Added for British Parliamentary convenience."""
 
     order = [
@@ -34,37 +34,6 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'adj_feedback_questions',
         'motions',
     ]
-
-    lookup_round_stage = make_lookup("round stage", {
-        ("preliminary", "p"): tm.Round.Stage.PRELIMINARY,
-        ("elimination", "break", "e", "b"): tm.Round.Stage.ELIMINATION,
-    })
-
-    lookup_draw_type = make_lookup("draw type", {
-        ("random", "r"): tm.Round.DrawType.RANDOM,
-        ("manual", "m"): tm.Round.DrawType.MANUAL,
-        ("round robin", "d"): tm.Round.DrawType.ROUNDROBIN,
-        ("power paired", "p"): tm.Round.DrawType.POWERPAIRED,
-        ("elimination", "break", "e", "b"): tm.Round.DrawType.ELIMINATION,
-    })
-
-    lookup_gender = make_lookup("gender", {
-        ("male", "m"): pm.Person.GENDER_MALE,
-        ("female", "f"): pm.Person.GENDER_FEMALE,
-        ("other", "o"): pm.Person.GENDER_OTHER,
-    })
-
-    lookup_feedback_answer_type = make_lookup("feedback answer type", {
-        "checkbox": fm.AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_CHECKBOX,
-        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_SELECT,
-        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.AnswerType.INTEGER_TEXTBOX,
-        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.AnswerType.INTEGER_SCALE,
-        "float": fm.AdjudicatorFeedbackQuestion.AnswerType.FLOAT,
-        "text": fm.AdjudicatorFeedbackQuestion.AnswerType.TEXT,
-        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT,
-        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.AnswerType.SINGLE_SELECT,
-        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.AnswerType.MULTIPLE_SELECT,
-    })
 
     def _adj_lookup(self, x):
         return pm.Adjudicator.objects.get(
@@ -169,9 +138,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                 line['short_reference'] = line['reference'][:34]
             return line
         teams = self._import(f, pm.Team, team_interpreter)
-        conflicts = initialize_teams(teams.values(), self.tournament)
-        self.counts[am.TeamInstitutionConflict] += len(conflicts)
-        self.logger.info("Imported %d team institution conflicts", len(conflicts))
+        self._initialize_teams(teams.values())
 
         def break_category_interpreter(lineno, line):
             if line.get('break_category'):

@@ -1,4 +1,4 @@
-"""Small, session-backed team CSV wizard. No uploaded files are retained."""
+"""Session-backed CSV wizard and per-row import execution."""
 
 import csv
 import uuid
@@ -17,12 +17,13 @@ from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, TabbycatPageTitlesMixin
 
+from .csv_base_types import DependencyPendingError
 from .csv_forms import (CSV_MAX_FILE_SIZE_MIB, CSV_MAX_FILES, CSV_MAX_ROWS,
                         CSVConfirmForm, CSVMappingForm, CSVPreviewFormSet,
                         CSVTypesForm, CSVUploadForm, mapped_rows)
 from .csv_pipeline import CSVImportContext, process_csv_row
 from .csv_state import invalidate_file_previews, update_wizard_files
-from .csv_types import CSV_TYPES, DependencyPendingError
+from .csv_types import CSV_TYPES
 
 
 CSV_STEP_TITLES = {
@@ -157,14 +158,13 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         if step == 'mapping':
             return {'sources': files, 'types': self.get_cleaned_data_for_step('types') or {f'file_{i}': 'team' for i in range(len(files))}}
         if step == 'preview':
-            return {'form_kwargs': {'tournament': self.tournament, 'team_choices': self.import_context().team_options[0], 'references': self.import_context().references}}
+            return {'form_kwargs': {'tournament': self.tournament, 'team_choices': self.csv_context.team_options[0], 'references': self.csv_context.references}}
         return {}
 
     def get_form(self, step=None, data=None, files=None):
         step = step or self.steps.current
         if step in ('types', 'mapping', 'preview') and data is not None:
-            # Partial stored data can follow a file addition or a changed type.
-            # Fill only missing file/row groups, preserving unchecked Skip values.
+            # Fill missing row groups without restoring unchecked Skip values.
             defaults = super().get_form(step=step, data=None, files=files)
             merged = QueryDict(mutable=True)
             if step == 'preview':
@@ -188,15 +188,12 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
                 merged.setlist(name, values)
             data = merged
         if step == 'preview' and data is not None:
-            # Preserve edits in drafts opened before team creation fields existed,
-            # while filling the newly introduced fields from their CSV values.
             data = data.copy()
             for index, initial in enumerate(self.get_form_initial(step)):
                 prefix = f'preview-{index}-'
                 CSV_TYPES[initial['_kind']].restore_preview(data, prefix, initial)
         form = super().get_form(step=step, data=data, files=files)
         if step == 'preview' and data is None:
-            # Validate the mapped values on arrival, without waiting for a POST.
             values = {f'{form.prefix}-TOTAL_FORMS': len(form.forms),
                 f'{form.prefix}-INITIAL_FORMS': len(form.forms)}
             for row in form.forms:
@@ -216,16 +213,12 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
     def csv_context(self):
         return CSVImportContext(self.tournament, self.source_rows())
 
-    def import_context(self):
-        return self.csv_context
-
     def get_form_initial(self, step):
         if step == 'preview':
-            return self.import_context().initial_rows()
+            return self.csv_context.initial_rows()
         return super().get_form_initial(step)
 
     def render_goto_step(self, goto_step, **kwargs):
-        # Bootstrap validation snapshots for drafts created before this feature.
         validated = self.storage.extra_data.get('validated_steps', {})
         for step in ('types', 'mapping'):
             if step not in validated and (stored := self.storage.get_step_data(step)) is not None:
@@ -253,12 +246,16 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
 
                 def belongs(key):
                     return key == prefix if self.steps.current == 'types' else key.startswith(prefix)
+
                 before = {key: values for key, values in old.items() if belongs(key)}
                 after = {key: values for key, values in data.lists() if belongs(key)}
+
                 if before != after:
                     changed.add(index)
+
             if changed:
                 invalidate_file_previews(self.storage, self.draft['files'], changed, reset_mapping=self.steps.current == 'types')
+
         if self.steps.current in ('types', 'mapping'):
             validated[self.steps.current] = dict(data.lists())
             self.storage.extra_data = {**self.storage.extra_data, 'validated_steps': validated}
@@ -270,17 +267,27 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         context['files'] = files
         context['row_count'] = sum(len(source['rows']) for source in files)
         types = self.get_cleaned_data_for_step('types') or {}
-        groups = [{'id': source.get('id', index), 'index': index, 'name': source['name'], 'row_count': len(source['rows']),
+        groups = [{
+            'id': source.get('id', index),
+            'index': index,
+            'name': source['name'],
+            'row_count': len(source['rows']),
             'type_label': CSV_TYPES[types[f'file_{index}']].label if f'file_{index}' in types else '',
-            'attention_count': 0, 'skip_count': 0, 'rows': []} for index, source in enumerate(files)]
+            'attention_count': 0,
+            'skip_count': 0,
+            'rows': [],
+        } for index, source in enumerate(files)]
+
         if self.steps.current == 'types':
             for group in groups:
                 group['type_field'] = form[f"file_{group['index']}"]
+
         if self.steps.current == 'mapping':
             for group, mapping in zip(groups, form.file_groups):
                 group['fields'] = mapping['fields']
                 group['attention_count'] = sum(bool(field.errors) for field in group['fields'])
                 group['mapped_count'] = sum(bool(field.value()) for field in group['fields'])
+
         if self.steps.current in ('preview', 'confirm'):
             preview = form if self.steps.current == 'preview' else self.get_form(
                 step='preview', data=self.storage.get_step_data('preview'))
@@ -288,32 +295,53 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             context['preview_rows'] = list(zip(self.source_rows(), preview.forms))
             object_counts = {}
             additional_objects = set()
+
             for index, (source, row_form) in enumerate(context['preview_rows']):
                 kind = CSV_TYPES[source['kind']]
                 skipped = bool(row_form['DELETE'].value())
                 invalid = bool(row_form.errors) and not skipped
                 summary = kind.preview_summary(row_form)
-                groups[source['file_index']]['rows'].append({'index': index, 'source': source, 'form': row_form,
-                    **summary, 'status': 'skipped' if skipped else 'attention' if invalid else 'ready'})
+
+                groups[source['file_index']]['rows'].append({
+                    'index': index,
+                    'source': source,
+                    'form': row_form,
+                    **summary,
+                    'status': 'skipped' if skipped else 'attention' if invalid else 'ready',
+                })
                 groups[source['file_index']]['attention_count'] += int(invalid)
                 groups[source['file_index']]['skip_count'] += int(skipped)
+
                 if not skipped and not invalid:
                     for key, count in kind.object_counts(row_form).items():
                         object_counts[key] = object_counts.get(key, 0) + count
                     additional_objects.update(kind.additional_objects(row_form))
+
             for key, identity in additional_objects:
                 object_counts[key] = object_counts.get(key, 0) + 1
-            context['object_counts'] = [{'label': CSV_TYPES[key].review_label(count), 'count': count}
-                for key, count in object_counts.items() if count]
+
+            context['object_counts'] = [{
+                'label': CSV_TYPES[key].review_label(count),
+                'count': count,
+            } for key, count in object_counts.items() if count]
             context['skip_count'] = sum(group['skip_count'] for group in groups)
             context['attention_count'] = sum(group['attention_count'] for group in groups)
             context['import_count'] = context['row_count'] - context['skip_count']
+
         context['csv_vue_data'] = {'files': [self.vue_file_data(group) for group in groups]}
         context['file_groups'] = groups
-        context['step_list'] = [{'key': 'upload', 'label': _('Upload files'), 'state': 'complete', 'value': 'upload'}] + [
-            {'key': key, 'label': label, 'value': key if index < self.steps.step0 else None, 'state': 'current' if key == self.steps.current else
-                'complete' if index < self.steps.step0 else 'upcoming'}
-            for index, (key, label) in enumerate(self.step_titles.items())]
+        context['step_list'] = [{
+            'key': 'upload',
+            'label': _('Upload files'),
+            'state': 'complete',
+            'value': 'upload',
+        }] + [{
+            'key': key,
+            'label': label,
+            'value': key if index < self.steps.step0 else None,
+            'state': ('current' if key == self.steps.current else
+                'complete' if index < self.steps.step0 else 'upcoming'),
+        } for index, (key, label) in enumerate(self.step_titles.items())]
         context['csv_vue_data']['steps'] = context['step_list']
         return context
 
@@ -347,7 +375,7 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             results.append({'file': source['file'], 'line': source['line'],
                 'display_name': kind.preview_summary(form)['name'],
                 'kind': source['kind'], 'status': 'skipped' if skipped else 'pending', 'data': {} if skipped else data, 'errors': ''})
-        draft.update(started=True, rows=results, team_choices=self.import_context().team_options[0])
+        draft.update(started=True, rows=results, team_choices=self.csv_context.team_options[0])
         draft.pop('files', None)
         self.request.session[self.draft_key] = draft
         return redirect(self.draft_url('importer-csv-results'))

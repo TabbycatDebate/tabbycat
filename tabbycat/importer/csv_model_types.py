@@ -1,4 +1,4 @@
-"""Model-backed CSV types shared across Anorak and Boots formats."""
+"""Model-backed CSV types and their validation and save hooks."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from .csv_model_forms import boolean_field, CSVModelForm
 from .csv_models import CSV_MODELS, IMPLICIT_REFERENCE_TYPES
 from .csv_typing import CSVRow, CSVSource, DisplayLabel, DuplicateKey, FormOptions, PreviewSummary, RowData, SerializedRowData
 from .csv_values import convert_bool
-from .importers.anorak import AnorakTournamentDataImporter
+from .importers.lookups import TournamentDataLookups
 from .references import reference_value
 
 
@@ -44,8 +44,6 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class CSVReference:
-    """A named reference, optionally accepting a delimited list of objects."""
-
     kind: str
     multiple: bool = False
     separator: str = ','
@@ -328,7 +326,7 @@ class VenueCategoryCSVType(ModelCSVType):
     filename = 'venue_categories'
     priority = -30
     converters = {
-        'display_in_venue_name': AnorakTournamentDataImporter.lookup_venue_category_display,
+        'display_in_venue_name': TournamentDataLookups.lookup_venue_category_display,
     }
     action = ActionLogEntry.ActionType.VENUE_CATEGORY_CREATE
 
@@ -368,8 +366,8 @@ class RoundCSVType(ModelCSVType):
     defaults = {'seq': None, 'schedule_group': None}
     identity_fields = ('seq',)
     converters = {
-        'stage': AnorakTournamentDataImporter.lookup_round_stage,
-        'draw_type': AnorakTournamentDataImporter.lookup_draw_type,
+        'stage': TournamentDataLookups.lookup_round_stage,
+        'draw_type': TournamentDataLookups.lookup_draw_type,
         'silent': convert_boolean,
         'completed': convert_boolean,
     }
@@ -418,7 +416,7 @@ class AdjudicatorCSVType(AvailabilityCSVType):
     }
     deferred_fields = ('adj_conflicts',)
     converters = {
-        'gender': AnorakTournamentDataImporter.lookup_gender,
+        'gender': TournamentDataLookups.lookup_gender,
         'anonymous': convert_boolean,
         'trainee': convert_boolean,
         'breaking': convert_boolean,
@@ -584,13 +582,13 @@ class SideCSVType(ModelCSVType):
         'round': CSVReference('round'),
     }
     aliases = {'team_name': 'team', 'position': 'side'}
-    converters = {'side': AnorakTournamentDataImporter.lookup_team_position}
+    converters = {'side': TournamentDataLookups.lookup_team_position}
     identity_fields = ('team', 'round')
     action = ActionLogEntry.ActionType.SIDE_PREALLOCATIONS_SAVE
     name_field = 'team'
     required_targets = ('team',)
     validation_exclusions = ('round', 'side')
-    dynamic_converters = {'side': AnorakTournamentDataImporter.lookup_team_position}
+    dynamic_converters = {'side': TournamentDataLookups.lookup_team_position}
     side_choices = [(DebateSide.AFF, _('Affirmative')), (DebateSide.NEG, _('Negative'))]
     extra_fields = {'side': partial(forms.TypedChoiceField, choices=side_choices, coerce=int, empty_value=None)}
     dynamic_fields = {'side': extra_fields['side']}
@@ -618,8 +616,12 @@ class SideCSVType(ModelCSVType):
         return {self.key: len(self.allocations(form.cleaned_data))}
 
     def validate_row(self, form: CSVModelForm, data: RowData) -> None:
-        if not self.allocations(data):
+        allocations = self.allocations(data)
+        if not allocations:
             raise ValidationError(_('Choose a round and side, or map at least one round column.'))
+        rounds = [reference_value(round) for round, side in allocations]
+        if len(rounds) != len(set(rounds)):
+            raise ValidationError(_('Map each round only once for this team.'))
 
     def create_object(self, form: CSVModelForm) -> Model:
         data = form.cleaned_data
@@ -634,7 +636,7 @@ class AdjFeedbackQuestionCSVType(ModelCSVType):
     filename = 'adj_feedback_questions'
     priority = 20
     converters = {
-        'answer_type': AnorakTournamentDataImporter.lookup_feedback_answer_type,
+        'answer_type': TournamentDataLookups.lookup_feedback_answer_type,
         'required': convert_boolean,
         'from_adj': convert_boolean,
         'from_team': convert_boolean,

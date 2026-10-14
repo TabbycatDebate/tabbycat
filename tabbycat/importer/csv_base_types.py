@@ -100,11 +100,10 @@ class CSVObjectType(Generic[FormT, SavedT]):
     def preview_dependencies(self, data: Mapping[str, object]) -> tuple[int, ...]:
         return reference_dependencies(data, self.reference_fields)
 
-    def dependencies(self, tournament: Tournament, data: SerializedRowData, rows: Sequence[CSVResultRow], references: ImportReferences | None = None) -> ExecutionDependencies:
+    def dependencies(self, tournament: Tournament, data: SerializedRowData, rows: Sequence[CSVResultRow], references: ImportReferences) -> ExecutionDependencies:
         return {}
 
     def finish_references(self, form: FormT, obj: SavedT) -> None:
-        """Complete references deferred by a type after primary object creation."""
         raise NotImplementedError
 
     def save(self, form: FormT, user: AbstractBaseUser, **dependencies: Model | None) -> SavedT:

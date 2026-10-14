@@ -1,4 +1,4 @@
-"""Request/file-scoped participant references, never persisted in wizard sessions."""
+"""Cached existing and uploaded references shared by command and wizard importers."""
 
 from __future__ import annotations
 
