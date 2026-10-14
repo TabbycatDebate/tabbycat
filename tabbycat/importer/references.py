@@ -1,35 +1,45 @@
 """Request/file-scoped participant references, never persisted in wizard sessions."""
 
-from collections import defaultdict
+from __future__ import annotations
 
+from collections import defaultdict
+from collections.abc import Sequence
+from typing import TYPE_CHECKING
+
+from django.db.models import Model
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from participants.models import Institution, Speaker, Team
 
 from .csv_models import CSV_MODELS, csv_queryset, IMPLICIT_REFERENCE_TYPES, NAME_FIELDS
+from .csv_typing import CSVChoice, CSVResultRow, CSVRow, DisplayLabel, ReferenceToken
 from .csv_values import convert_bool
 
 
+if TYPE_CHECKING:
+    from tournaments.models import Tournament
+
+
 class ImportReferences:
-    def __init__(self, tournament):
+    def __init__(self, tournament: Tournament) -> None:
         self.tournament = tournament
-        self.staged = {}
-        self.object_cache = {}
+        self.staged: dict[str, Model] = {}
+        self.object_cache: dict[str, dict[int, Model]] = {}
         self.name_cache = {}
-        self.implicit_cache = {}
+        self.implicit_cache: dict[tuple[str, str], Model] = {}
 
     @cached_property
-    def institutions(self):
+    def institutions(self) -> list[Institution]:
         return list(Institution.objects.all())
 
     @cached_property
-    def institution_choices(self):
+    def institution_choices(self) -> list[CSVChoice]:
         return [(institution.pk, f'{institution.name} ({institution.code})') for institution in self.institutions] + [
             (token, f'{obj.name} ({obj.code})') for token, obj in self.staged.items() if obj._csv_kind == 'institution']
 
     @cached_property
-    def institutions_by_id(self):
+    def institutions_by_id(self) -> dict[int, Institution]:
         return {institution.pk: institution for institution in self.institutions}
 
     @cached_property
@@ -40,7 +50,7 @@ class ImportReferences:
                 names[value][institution.pk] = institution
         return names
 
-    def lookup_institution(self, value):
+    def lookup_institution(self, value: str) -> Institution:
         matches = list(self.institution_names.get(value, {}).values())
         if not matches:
             raise Institution.DoesNotExist(f'Institution matching {value!r} does not exist.')
@@ -49,11 +59,11 @@ class ImportReferences:
         return matches[0]
 
     @cached_property
-    def teams(self):
+    def teams(self) -> list[Team]:
         return list(Team.objects.all_with_unconfirmed.filter(tournament=self.tournament).select_related('institution'))
 
     @cached_property
-    def teams_by_id(self):
+    def teams_by_id(self) -> dict[int, Team]:
         return {team.pk: team for team in self.teams}
 
     @cached_property
@@ -64,10 +74,10 @@ class ImportReferences:
         return identities
 
     @cached_property
-    def speaker_names(self):
+    def speaker_names(self) -> set[tuple[int, str]]:
         return set(Speaker.objects.filter(team__tournament=self.tournament).values_list('team_id', 'name'))
 
-    def lookup_team(self, institution, reference):
+    def lookup_team(self, institution: Institution | None, reference: str) -> Team:
         matches = self.team_identities.get((institution.pk if institution else None, reference), [])
         if not matches:
             raise Team.DoesNotExist(f'Team matching {reference!r} does not exist.')
@@ -75,7 +85,7 @@ class ImportReferences:
             raise Team.MultipleObjectsReturned(f'Multiple teams match {reference!r}.')
         return matches[0]
 
-    def configure(self, rows, *, results=False):
+    def configure(self, rows: Sequence[CSVRow] | Sequence[CSVResultRow], *, results: bool = False) -> None:
         for index, row in enumerate(rows):
             kind = row.get('kind')
             if results and kind == 'speaker' and row.get('data', {}).get('team') == 'new':
@@ -99,7 +109,7 @@ class ImportReferences:
             obj._csv_line = row.get('line', index + 2)
             self.staged[obj._csv_token] = obj
 
-    def add_speaker_teams(self, rows):
+    def add_speaker_teams(self, rows: Sequence[CSVRow]) -> None:
         identities = set()
         for obj in self.staged.values():
             if obj._csv_kind == 'team':
@@ -126,7 +136,7 @@ class ImportReferences:
             self.staged[obj._csv_token] = obj
             identities.add(identity)
 
-    def objects(self, kind):
+    def objects(self, kind: str) -> dict[int, Model]:
         if kind not in self.object_cache:
             if kind == 'institution':
                 objects = self.institutions
@@ -137,7 +147,7 @@ class ImportReferences:
             self.object_cache[kind] = {obj.pk: obj for obj in objects}
         return self.object_cache[kind]
 
-    def get_object(self, kind, value):
+    def get_object(self, kind: str, value: ReferenceToken | Model | None) -> Model | None:
         if value in (None, ''):
             return None
         model = CSV_MODELS[kind]
@@ -169,7 +179,7 @@ class ImportReferences:
         except (ValueError, KeyError):
             raise model.DoesNotExist
 
-    def choices(self, kind):
+    def choices(self, kind: str) -> list[CSVChoice]:
         choices = [(obj.pk, self.object_label(kind, obj)) for obj in self.objects(kind).values()]
         for token, obj in self.staged.items():
             if obj._csv_kind == kind:
@@ -178,7 +188,7 @@ class ImportReferences:
         return choices
 
     @staticmethod
-    def object_label(kind, obj):
+    def object_label(kind: str, obj: Model) -> DisplayLabel:
         fields = NAME_FIELDS.get(kind, ('name',))
         if kind == 'institution':
             return f'{obj.name} ({obj.code})'
@@ -186,7 +196,7 @@ class ImportReferences:
             return obj.long_name or (str(getattr(obj, '_csv_values', {}).get('institution', '')) + ' ' + obj.reference).strip()
         return str(getattr(obj, fields[0], ''))
 
-    def match(self, kind, value, *, create=False):
+    def match(self, kind: str, value: str | None, *, create: bool = False) -> ReferenceToken | None:
         if not value:
             return None
         if kind not in self.name_cache:
@@ -217,5 +227,5 @@ class ImportReferences:
         return 'unresolved:' + str(value)
 
 
-def reference_value(obj):
+def reference_value(obj: Model | None) -> ReferenceToken:
     return (getattr(obj, '_csv_token', None) or obj.pk) if obj is not None else ''

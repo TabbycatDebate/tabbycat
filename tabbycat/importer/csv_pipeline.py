@@ -1,16 +1,28 @@
 """Reference context and execution shared by registered CSV types."""
 
+from __future__ import annotations
+
+from collections.abc import Sequence
+from typing import TYPE_CHECKING
+
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
 from django.db import DataError, IntegrityError
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 
 from .csv_types import CSV_TYPES, DependencyBlockedError, DependencyPendingError
+from .csv_typing import CSVChoice, CSVExecutionDraft, CSVResultRow, CSVRow, ReferenceToken, RowData, RowStatus, TeamCandidate
 from .references import ImportReferences
 
 
+if TYPE_CHECKING:
+    from django.contrib.auth.base_user import AbstractBaseUser
+
+    from tournaments.models import Tournament
+
+
 class CSVImportContext:
-    def __init__(self, tournament, rows):
+    def __init__(self, tournament: Tournament, rows: Sequence[CSVRow]) -> None:
         self.tournament = tournament
         self.rows = rows
         self.references = ImportReferences(tournament)
@@ -18,7 +30,7 @@ class CSVImportContext:
         self.references.add_speaker_teams(rows)
 
     @cached_property
-    def institutions(self):
+    def institutions(self) -> dict[tuple[int, str], ReferenceToken | None]:
         resolved = {}
         for row in self.rows:
             value = row['values'].get('institution', '')
@@ -28,7 +40,7 @@ class CSVImportContext:
             resolved[key] = self.references.match('institution', value) if value else None
         return resolved
 
-    def match_team(self, row):
+    def match_team(self, row: CSVRow) -> str:
         values = row['values']
         value = values.get('team', '')
         institution = self.institutions.get((row['file_index'], values.get('institution', '')))
@@ -41,7 +53,7 @@ class CSVImportContext:
         return '' if matches else 'new'
 
     @cached_property
-    def team_options(self):
+    def team_options(self) -> tuple[list[CSVChoice], list[TeamCandidate]]:
         choices, candidates = [], []
         for team in self.references.teams:
             token = f'existing:{team.pk}'
@@ -59,22 +71,22 @@ class CSVImportContext:
                 self.institutions.get((row['file_index'], values.get('institution', '')))))
         return choices, candidates
 
-    def initial_rows(self):
+    def initial_rows(self) -> list[RowData]:
         return [{**CSV_TYPES[row['kind']].initial(row, self), '_kind': row['kind'], '_row_token': f'row:{index}'}
             for index, row in enumerate(self.rows)]
 
 
-def process_csv_row(tournament, user, draft, row):
+def process_csv_row(tournament: Tournament, user: AbstractBaseUser, draft: CSVExecutionDraft, row: CSVResultRow) -> None:
     kind = CSV_TYPES[row['kind']]
     references = ImportReferences(tournament)
     references.configure(draft['rows'], results=True)
     data = row['data']
-    dependencies = kind.preview_dependencies(data)
+    parent_indices = kind.preview_dependencies(data)
     deferred = set(kind.deferred_fields) if row['status'] == 'pending' else set()
     if deferred:
         primary = {name: value for name, value in data.items() if name not in deferred}
-        dependencies = kind.preview_dependencies(primary)
-    for index in dependencies:
+        parent_indices = kind.preview_dependencies(primary)
+    for index in parent_indices:
         parent = draft['rows'][index]
         if parent['status'] == 'pending':
             raise DependencyPendingError(_('Import the referenced rows first.'))
@@ -114,7 +126,7 @@ def process_csv_row(tournament, user, draft, row):
             message = _('The object was created, but its remaining references could not be saved.')
         row.update(status='failed', errors=str(message))
     else:
-        status = 'created' if deferred and any(data.get(name) for name in deferred) else 'imported'
+        status: RowStatus = 'created' if deferred and any(data.get(name) for name in deferred) else 'imported'
         row.update(status=status, object_id=obj.pk)
         if row['kind'] == 'speaker':
             row['team_id'] = obj.team_id

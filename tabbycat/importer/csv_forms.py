@@ -1,8 +1,11 @@
 """Forms for the session-backed team CSV importer."""
 
+from __future__ import annotations
+
 import csv
 import io
 import uuid
+from collections.abc import Mapping, Sequence
 
 from django import forms
 from django.conf import settings
@@ -12,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .csv_row_forms import CSVTeamForm
 from .csv_types import CSV_TYPES, guess_file_type
+from .csv_typing import CSVRow, CSVSource
 from .references import ImportReferences
 
 
@@ -174,7 +178,7 @@ class CSVMappingForm(forms.Form):
         return data
 
 
-def mapped_rows(files, mapping, types=None):
+def mapped_rows(files: Sequence[CSVSource], mapping: Mapping[str, str], types: Mapping[str, str] | None = None) -> list[CSVRow]:
     rows = []
     for index, source in enumerate(files):
         for row_index, row in enumerate(source['rows']):

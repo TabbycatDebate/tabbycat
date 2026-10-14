@@ -1,5 +1,9 @@
 """Editable model rows with cached, existing or uploaded references."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
@@ -7,6 +11,10 @@ from django.utils.translation import gettext_lazy as _
 
 from .csv_values import convert_bool
 from .references import ImportReferences, reference_value
+
+
+if TYPE_CHECKING:
+    from .csv_model_types import ModelCSVType
 
 
 class CSVReferenceField(forms.Field):
@@ -53,7 +61,7 @@ def boolean_field(**kwargs):
 
 
 class CSVModelForm(forms.Form):
-    csv_type = None
+    csv_type: ModelCSVType
 
     def __init__(self, tournament, *args, references=None, team_choices=(), slots=0, extra_columns=(), instance=None, **kwargs):
         super().__init__(*args, **kwargs)
