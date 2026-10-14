@@ -1085,7 +1085,7 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
                         name for name, enabled in section['system_form'].cleaned_data.items() if enabled
                     ]
         messages.success(request, self.success_message)
-        return HttpResponseRedirect(request.path)
+        return HttpResponseRedirect(reverse_tournament(request.resolver_match.view_name, self.tournament))
 
 
 class BaseConfirmRegistrationView(LogActionMixin, TournamentMixin, AdministratorMixin, PostOnlyRedirectView):
