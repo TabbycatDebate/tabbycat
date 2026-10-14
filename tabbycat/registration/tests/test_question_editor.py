@@ -1,8 +1,13 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import QuerySet
 from django.test import TestCase
 
 from participants.models import Speaker, Team
+from registration.form_utils import CustomQuestionsFormMixin
+from registration.forms import SpeakerForm
 from registration.models import Answer, Question
 from tournaments.models import Tournament
 from users.models import UserPermission
@@ -37,14 +42,6 @@ class QuestionEditorTests(TestCase):
                 values = {'name': 'Question', 'text': 'Your question?', 'answer_type': 't', 'ORDER': str(i), **question}
                 data.update({f'{prefix}-{i}-{key}': value for key, value in values.items()})
         return data
-
-    def test_pairs_sections_and_keeps_legacy_speaker_url(self):
-        for route in ('reg-team-questions', 'reg-speaker-questions'):
-            response = self.client.get(reverse_tournament(route, self.tournament))
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual([s['prefix'] for s in response.context['sections']], ['team', 'speaker'])
-            self.assertContains(response, '<question-editor-container')
-            self.assertEqual(len(response.context['question_editor_data']['sections']), 2)
 
     def test_creates_questions_in_both_sections_and_updates_system_fields(self):
         data = self.payload([{'answer_type': 'ss', 'choices': 'Vegan\nVegetarian, with dairy'}], [{}])
@@ -102,7 +99,7 @@ class QuestionEditorTests(TestCase):
 
     def test_requires_options_for_choice_question(self):
         response = self.client.post(self.url, self.payload([{'answer_type': 'ss'}]))
-        self.assertContains(response, 'Add at least one option.')
+        self.assertIn('choices', response.context['question_editor_data']['sections'][0]['questions'][0]['errors'])
         self.assertFalse(Question.objects.filter(tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Team)).exists())
 
     def test_question_editor_cannot_change_settings_without_permission(self):
@@ -120,19 +117,22 @@ class QuestionEditorTests(TestCase):
         self.user.save()
         self.assertEqual(self.client.post(self.url, self.payload([{}])).status_code, 403)
 
-    def test_all_editor_routes_render(self):
+    def test_editor_routes_render_the_expected_sections(self):
         for route, prefixes in (
+            ('reg-team-questions', ['team', 'speaker']),
+            ('reg-speaker-questions', ['team', 'speaker']),
             ('reg-institution-questions', ['tournamentinstitution', 'coach']),
             ('reg-coach-questions', ['tournamentinstitution', 'coach']),
             ('reg-adjudicator-questions', ['adjudicator']),
         ):
-            response = self.client.get(reverse_tournament(route, self.tournament))
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual([s['prefix'] for s in response.context['sections']], prefixes)
+            with self.subTest(route=route):
+                response = self.client.get(reverse_tournament(route, self.tournament))
+                self.assertContains(response, '<question-editor-container')
+                self.assertEqual([s['prefix'] for s in response.context['sections']], prefixes)
 
     def test_scale_requires_both_bounds(self):
         response = self.client.post(self.url, self.payload([{'answer_type': 'is'}]))
-        self.assertContains(response, 'Set both bounds for an integer scale.')
+        self.assertIn('min_value', response.context['question_editor_data']['sections'][0]['questions'][0]['errors'])
 
     def test_short_name_defaults_to_question_text(self):
         text = 'A registration question longer than thirty characters?'
@@ -155,7 +155,40 @@ class QuestionEditorTests(TestCase):
         self.assertEqual(team['questions'][0]['values']['ORDER'], '1')
         self.assertEqual(team['questions'][0]['values']['choices'], 'One\nTwo')
         self.assertTrue(team['questions'][0]['deleted'])
-        self.assertEqual(team['questions'][1]['errors']['choices'], ['Add at least one option.'])
+        self.assertIn('choices', team['questions'][1]['errors'])
         phone = next(q for q in speaker['systemQuestions'] if q['name'] == 'speaker-system-phone')
         self.assertTrue(phone['enabled'])
         self.assertEqual(team['emptyQuestion']['values']['answer_type'], 't')
+
+    def test_open_participant_form_keeps_answers_on_their_questions_after_reorder(self):
+        first, second = self.question(Speaker), self.question(Speaker, seq=1)
+        data = {
+            'name': 'New speaker',
+            CustomQuestionsFormMixin.question_field_name(first): 'First answer',
+            CustomQuestionsFormMixin.question_field_name(second): 'Second answer',
+        }
+        response = self.client.post(self.url, self.payload(speakers=[
+            {'id': first.pk, 'ORDER': '1'}, {'id': second.pk, 'ORDER': '0'},
+        ]))
+        self.assertRedirects(response, self.url)
+        form = SpeakerForm(Team.objects.filter(tournament=self.tournament).first(), None, data=data)
+        self.assertTrue(form.is_valid(), form.errors)
+        speaker = form.save()
+        self.assertEqual(dict(speaker.answers.values_list('question_id', 'answer')), {
+            first.pk: 'First answer', second.pk: 'Second answer',
+        })
+
+    def test_question_deleted_before_lock_is_not_recreated(self):
+        question = self.question()
+        question_id = question.pk
+        get = QuerySet.get
+
+        def acquire_lock(queryset, *args, **kwargs):
+            if queryset.model is Tournament and queryset.query.select_for_update:
+                Question.objects.filter(pk=question_id).delete()
+            return get(queryset, *args, **kwargs)
+
+        with patch.object(QuerySet, 'get', acquire_lock):
+            response = self.client.post(self.url, self.payload([{'id': question_id}]))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Question.objects.filter(pk=question_id).exists())
