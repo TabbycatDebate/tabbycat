@@ -55,76 +55,28 @@ To load a demonstration dataset, click **New Tournament** link on the home page 
 CSV importer
 ============
 
-Open **Setup → Import Data → Simple Importer**, then select **CSV Importer**
-from its own group at the top to upload team and speaker CSV files.
-This importer supports arbitrary column headings: you choose what each column
-means before creating participants. You can upload teams without speakers,
-teams with numbered speaker name/email columns, or separate files containing
-one speaker per row. The upload screen provides downloadable header-only CSV
-templates for each of these layouts. Fill in your rows below the headers; add or
-remove numbered speaker columns as needed.
+Open **Setup → Import Data → Simple Importer**, then select **CSV Importer**.
+Upload related CSV files together, choose each file's type, map its columns, and
+review the rows before importing. The upload screen provides CSV templates;
+you can also use your own column headings.
 
-For example, a team file can contain:
+The wizard supports all file types from ``importtournament``, including teams,
+speakers, institutions, adjudicators, rooms, rounds, categories, motions and
+related records. Teams may include numbered speaker columns, or speakers may
+have their own file. References match existing records or other uploaded rows
+by name or code. Speaker files can also create missing teams.
 
-.. code-block:: text
+In **Preview and edit rows**, correct values and references or mark rows **Skip**.
+Going back preserves edits for unchanged files. After reviewing the totals,
+confirm the import and click **Import pending rows**. Keep the results page open
+to see progress and download row errors. If a request is interrupted, check the
+affected records before starting another import: uncertain requests are not
+retried automatically.
 
-    Team,Institution
-    A,Example University
-    B,Example University
-
-A separate speaker file can link to those teams:
-
-.. code-block:: text
-
-    Name,Email,Team,Institution
-    Alice,alice@example.com,A,Example University
-    Bob,bob@example.com,B,Example University
-
-Upload both files together, choose a format for each, and map the columns.
-The importer suggests the file type from case-insensitive filename words such as
-``teams`` and ``speakers``; you can change the suggested type. Each file has its
-own mapping card, headed by its selected type. For team files, map any included
-speaker columns to numbered speaker name/email fields. The preview derives the
-number of speaker fields from these mappings, so no maximum speaker count is
-required. A separate ``speakers.csv`` can use Anorak's ``team_name`` header in
-place of ``Team`` in the example above.
-
-Institutions are matched by their existing full names or codes. Confirm any
-ambiguous matches in **Preview and edit rows**; create missing institutions with
-the simple importer first, or explicitly select an existing institution or
-**Unaffiliated** in the preview.
-Separate speakers can link to teams already in the tournament or teams in the
-same upload. If no team matches the name and institution, the preview proposes
-creating a new team. Edit its name, institution and optional institutional prefix
-there, or select an existing/uploaded team instead. Speaker rows sharing the same
-team name and institution create one team, as in Anorak's ``import_speakers()``.
-The importer creates uploaded team rows before their linked speakers, regardless
-of upload order.
-
-A file list shows each filename, type, row count and review status. Select a file
-to map its columns or preview its rows; switching files preserves your edits.
-Preview rows show compact summaries. Expand **Edit row** to correct values or
-references, or check **Skip** for rows you do not want to import. Invalid rows open
-automatically, and filters show rows needing attention or rows already skipped. Invalid rows must be corrected or skipped. Existing participants are
-not overwritten. A separate speaker whose uploaded team is skipped or invalid is flagged before
-confirmation. Correct the reference, fix the team, or skip the speaker as well.
-If the linked team fails during execution, the speaker is reported as blocked. Blank numbered speaker groups do not create
-placeholder speakers.
-
-After reviewing the totals, confirm the import and click **Import pending rows**
-on the results page. Keep that page open to see each row's progress and errors.
-Each team and its inline speakers are saved together. If a request is interrupted,
-check the affected row in Participants before starting another import; it may
-already have been saved. The importer does not automatically retry uncertain
-requests. Results can be downloaded as CSV.
-
-Drafts are kept in your session and can disappear when it expires. Upload at most
-20 files, each no larger than 2 MiB, with 1,000 data rows in total. Previews with
-many columns may need smaller files to fit the server's form-field limit. UTF-8
-and Windows-1252 encodings, comma/semicolon/tab delimiters, and a configurable
-header row are supported. To import Google Sheets responses, download each
-response tab as CSV first. Direct Sheets access and custom-question mappings
-are not yet supported by this importer.
+Drafts are stored in your session. Upload up to 20 files of 2 MiB each, with
+1,000 rows in total; wide previews may need smaller files. Encoding, delimiter
+and header-row options are available. For Google Sheets, download each tab as
+CSV first. Direct Sheets access and custom-question mappings are not supported.
 
 Simple importer
 ===============

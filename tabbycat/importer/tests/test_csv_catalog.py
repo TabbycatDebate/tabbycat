@@ -13,6 +13,7 @@ from django.test.utils import CaptureQueriesContext
 
 from adjallocation.models import AdjudicatorAdjudicatorConflict
 from availability.models import RoundAvailability
+from draw.models import TeamSideAllocation
 from motions.models import RoundMotion
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.models import Round, Tournament
@@ -54,7 +55,7 @@ class CSVCatalogTests(TestCase):
         response = self.post('types', types)
         form = response.context['wizard']['form']
         response = self.post('mapping', {field.html_name: field.value() for field in form})
-        self.assertEqual(response.context['wizard']['steps'].current, 'preview', response.content)
+        self.assertEqual(response.context['wizard']['steps'].current, 'preview', response.context['wizard']['form'].errors)
         form = response.context['wizard']['form']
         self.assertTrue(form.is_valid(), form.errors)
         self.assertFalse(Team.objects.exists())
@@ -264,6 +265,17 @@ class CSVCatalogTests(TestCase):
             'team': team.pk, 'round': self.tournament.current_round.pk, 'side': 99})
         self.assertFalse(form.is_valid())
         self.assertIn('side', form.errors)
+
+    def test_scalar_side_file_imports_with_uploaded_team_and_round(self):
+        form = self.prepare([
+            ('sides', ['team', 'round', 'side'], [['A', 'R1', 'aff']]),
+            ('teams', ['reference'], [['A']]),
+            ('rounds', ['name', 'abbreviation', 'draw_type'], [['Round One', 'R1', 'random']]),
+        ])
+        self.execute(form)
+        allocation = TeamSideAllocation.objects.get()
+        self.assertEqual(allocation.team, Team.objects.get())
+        self.assertEqual(allocation.round.abbreviation, 'R1')
 
     def test_round_sequence_uses_data_row_order_after_header_and_blank_lines(self):
         rows = [{'kind': 'round', 'file': 'rounds.csv', 'file_index': 0, 'line': 9, 'row_index': 0,

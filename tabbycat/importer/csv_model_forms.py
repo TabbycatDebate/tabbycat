@@ -66,14 +66,12 @@ class CSVModelForm(forms.Form):
             label = kind.field_label(name)
             options = {'label': label, 'initial': self.initial.get(name), 'required': name in kind.required_targets}
             if name in kind.references:
-                target, multiple = kind.references[name]
-                self.fields[name] = CSVReferenceField(target, self.references, multiple=multiple, **options)
-            elif name == 'side' or name.startswith('side:'):
-                self.fields[name] = forms.TypedChoiceField(choices=kind.side_choices, coerce=int, empty_value=None, **options)
-            elif name.startswith('available:'):
-                self.fields[name] = boolean_field(empty_value=False, **options)
+                reference = kind.references[name]
+                self.fields[name] = CSVReferenceField(reference.kind, self.references, multiple=reference.multiple, **options)
             elif name in kind.extra_fields:
                 self.fields[name] = kind.extra_fields[name](**options)
+            elif ':' in name and name.partition(':')[0] in kind.dynamic_fields:
+                self.fields[name] = kind.dynamic_fields[name.partition(':')[0]](**options)
             else:
                 field = kind.model._meta.get_field(name)
                 if isinstance(field, models.BooleanField):
@@ -85,7 +83,7 @@ class CSVModelForm(forms.Form):
                     self.fields[name].label = label
                     self.fields[name].required = options['required']
         for name in extra_columns:
-            if name.startswith(('available:', 'side:')):
+            if ':' in name and name.partition(':')[0] in kind.dynamic_fields:
                 token = self.references.match('round', name.split(':', 1)[1])
                 self.fields['round_for_' + name] = CSVReferenceField('round', self.references, required=True,
                     label=_('Round for %(column)s') % {'column': name}, initial=self.initial.get('round_for_' + name, token))
