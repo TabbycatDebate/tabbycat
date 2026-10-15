@@ -426,6 +426,16 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
                 **self.metric_annotator_classes,
                 **criterion_metric_annotator_classes(tournament, standalone_criterion),
             }
+            # Criteria can be deleted, renumbered or made reply-only after
+            # their metric keys have been saved in tournament preferences.
+            valid_metrics = [m for m in metrics
+                if not is_criterion_metric_key(m) or m in self.metric_annotator_classes]
+            extra_metrics = [m for m in extra_metrics
+                if not is_criterion_metric_key(m) or m in self.metric_annotator_classes]
+            if metrics and not valid_metrics:
+                valid_metrics = ['average']
+                extra_metrics = [m for m in extra_metrics if m != 'average']
+            metrics = valid_metrics
         super().__init__(metrics, rankings, extra_metrics, **options)
 
     @classmethod

@@ -1,5 +1,6 @@
 import logging
 
+from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
@@ -257,6 +258,50 @@ class TestCriterionStandings(TestCase):
         with suppress_logs('django.request', logging.WARNING):
             response = self.client.get(url, {'metrics': 'criterion_avg_99'})
         self.assertEqual(response.status_code, 400)
+
+    def assert_stale_criterion_metric_ignored(self):
+        self.tournament.preferences['tab_release__speaker_tab_released'] = True
+        url = reverse('api-substantive-speaker-standings', kwargs={'tournament_slug': self.tournament.slug})
+        tab_url = reverse_tournament('standings-public-tab-speaker', self.tournament)
+        stale = 'criterion_avg_1'
+
+        for metrics, extra_metrics, expected in [
+            (['average'], [stale], 'average'),
+            ([stale, 'criterion_avg_2'], [], 'criterion_avg_2'),
+            ([stale], ['average'], 'average'),
+            ([stale], [], 'average'),
+        ]:
+            with self.subTest(metrics=metrics, extra_metrics=extra_metrics):
+                self.tournament.preferences['standings__speaker_standings_precedence'] = metrics
+                self.tournament.preferences['standings__speaker_standings_extra_metrics'] = extra_metrics
+                cache.clear()
+                with suppress_logs('standings.metrics', logging.INFO):
+                    response = self.client.get(url)
+                    tab_response = self.client.get(tab_url)
+                self.assertEqual(response.status_code, 200, response.data)
+                self.assertEqual(tab_response.status_code, 200)
+                self.assertNotContains(tab_response, 'There was an error generating the standings')
+                self.assertEqual(len(response.data), 2)
+                self.assertEqual([row['rank'] for row in response.data], [1, 2])
+                self.assertTrue(response.data[0]['speaker'].endswith('/%s' % self.speaker1.pk))
+                for row in response.data:
+                    values = {m['metric']: m['value'] for m in row['metrics']}
+                    self.assertNotIn(stale, values)
+                    self.assertIn(expected, values)
+
+    def test_saved_metric_after_criterion_deleted(self):
+        self.style.delete()
+        self.assert_stale_criterion_metric_ignored()
+
+    def test_saved_metric_after_criterion_renumbered(self):
+        self.style.seq = 3
+        self.style.save()
+        self.assert_stale_criterion_metric_ignored()
+
+    def test_saved_metric_after_criterion_made_reply_only(self):
+        self.style.speech_type = ScoreCriterion.SpeechType.REPLY
+        self.style.save()
+        self.assert_stale_criterion_metric_ignored()
 
     def test_criterion_metric_can_be_saved_as_a_preference(self):
         """The criteria are per-tournament, so they can't be in the static
