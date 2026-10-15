@@ -37,6 +37,22 @@ class SpeakerStandingsParamsSerializer(serializers.Serializer):
         child=serializers.ChoiceField(choices=SpeakerStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)), required=False, allow_null=True)
     category = fields.TournamentPrimaryKeyRelatedField(queryset=SpeakerCategory.objects.all(), required=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Score criterion metrics are per-tournament, so aren't in the static
+        # choices declared above; add this tournament's to the child fields.
+        tournament = self.context.get('tournament')
+        if tournament is None:
+            return
+
+        for name, ranked_only, for_extra in [
+            ('metrics', True, False),
+            ('extra_metrics', False, True),
+        ]:
+            self.fields[name].child.choices = SpeakerStandingsGenerator.get_metric_choices(
+                ranked_only=ranked_only, for_extra=for_extra, tournament=tournament)
+
 
 class TeamStandingsParamsSerializer(serializers.Serializer):
     metrics = fields.CharacterSeparatedField(separator=",",

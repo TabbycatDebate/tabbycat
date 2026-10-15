@@ -213,6 +213,14 @@ class Tournament(models.Model):
         from adjfeedback.models import AdjudicatorFeedbackQuestion
         return AdjudicatorFeedbackQuestion.objects.filter(tournament=self).order_by("seq")
 
+    @cached_property
+    def substantive_score_criteria(self):
+        """The score criteria that get their own speaker standings, i.e. all but
+        those scored only on reply speeches, since those standings are over
+        substantive speeches."""
+        from results.models import ScoreCriterion
+        return self.scorecriterion_set.exclude(speech_type=ScoreCriterion.SpeechType.REPLY)
+
     def break_categories_nongeneral(self):
         return self.breakcategory_set.exclude(is_general=True)
 

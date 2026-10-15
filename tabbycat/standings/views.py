@@ -15,7 +15,7 @@ from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
-from results.models import SpeakerScore, TeamScore
+from results.models import ScoreCriterion, SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
 from users.permissions import Permission
@@ -27,7 +27,8 @@ from utils.views import VueTableTemplateView
 from .base import StandingsError
 from .diversity import get_diversity_data_sets
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
-from .speakers import SpeakerStandingsGenerator
+from .speakers import (AverageCriterionScoreMetricAnnotator, SpeakerStandingsGenerator,
+    TotalCriterionScoreMetricAnnotator)
 from .teams import TeamStandingsGenerator
 from .templatetags.standingsformat import metricformat
 
@@ -205,6 +206,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
     rankings = ('rank',)
     missable_preference = None
     missable_field = None
+    standalone_criterion = None
 
     def get_standings(self):
         if self.round is None:
@@ -219,7 +221,9 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
-        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics, rank_filter=rank_filter)
+        generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics,
+            tournament=self.tournament, standalone_criterion=self.standalone_criterion,
+            rank_filter=rank_filter)
         standings = generator.generate(speakers, round=self.round)
 
         rounds = self.get_rounds()
@@ -413,6 +417,72 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
     page_title = gettext_lazy("Reply Speaker Tab")
     public_page_preference = 'replies_tab_released'
     public_limit_preference = 'replies_tab_limit'
+
+
+class BaseCriterionStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiveSpeakerStandingsView):
+    """Speaker standings view for a single score criterion."""
+
+    model = ScoreCriterion
+    slug_field = 'seq'
+    slug_url_kwarg = 'criterion'
+
+    @property
+    def standalone_criterion(self):
+        return self.object
+
+    def get_queryset(self):
+        # These standings are over substantive speeches, so a criterion scored
+        # only on replies has no tab; its URL 404s, as an unknown criterion's
+        # does.
+        return super().get_queryset().exclude(speech_type=ScoreCriterion.SpeechType.REPLY)
+
+    def get_speakers(self):
+        return Speaker.objects.filter(
+            team__tournament=self.tournament,
+            speakerscore__speakercriterionscore__criterion=self.object,
+        ).distinct()
+
+    def get_metrics(self):
+        return (AverageCriterionScoreMetricAnnotator.build_key(self.object.seq),), (
+            TotalCriterionScoreMetricAnnotator.build_key(self.object.seq), 'count')
+
+    def get_page_title(self):
+        return _("%(criterion)s Speaker Standings") % {'criterion': self.object.name}
+
+    def integer_score_columns(self, rounds):
+        # The criterion's own total, rather than the overall speaker score total.
+        if self.object.step % 1 == 0:
+            return [TotalCriterionScoreMetricAnnotator.build_key(self.object.seq)]
+        return []
+
+    def add_round_results(self, standings, rounds):
+        add_speaker_round_results(standings, rounds, self.tournament, criterion=self.object)
+        # The per-round columns hold criterion scores, so they follow the
+        # criterion's own step rather than the tournament's speaker score step.
+        if self.object.step % 1 == 0:
+            is_consensus_by_round = [
+                self.tournament.ballots_per_debate(rd.stage) == 'per-debate' for rd in rounds]
+            for info in standings:
+                for i, is_consensus in enumerate(is_consensus_by_round):
+                    if is_consensus and info.scores[i] is not None and info.scores[i].is_integer():
+                        info.scores[i] = int(info.scores[i])
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+
+class CriterionStandingsView(AdministratorMixin, BaseCriterionStandingsView):
+    view_permission = Permission.VIEW_SPEAKERSSTANDINGS
+
+
+class PublicCriterionTabView(PublicTabMixin, BaseCriterionStandingsView):
+    public_page_preference = 'criterion_tabs_released'
+    public_limit_preference = 'speaker_tab_limit'
+
+    def get_page_title(self):
+        title = _("%(criterion)s Speaker Tab") % {'criterion': self.object.name}
+        return self.append_limit(title)
 
 
 # ==============================================================================

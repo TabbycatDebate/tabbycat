@@ -168,6 +168,43 @@ that will be shown in the speaker standings, but won't be used to rank speakers.
       is normally used as an "extra" (unranked) metric, because it'd be weird
       to rank by number of speeches given, but you can if you want to.
 
+  * - Total for *[criterion]*
+    - The sum of the speaker's scores for a single :ref:`score criterion
+      <score-criteria-standings>`, e.g. their total score for *Style*.
+
+  * - Average for *[criterion]*
+    - The average of the speaker's scores for a single :ref:`score criterion
+      <score-criteria-standings>`, e.g. their average score for *Style*.
+
+
+.. _score-criteria-standings:
+
+Speaker standings by score criterion
+====================================
+
+If your tournament scores speeches against several **score criteria** (for
+example, *Style*, *Content* and *Strategy* in World Schools format), Tabbycat
+can rank speakers by any single criterion, in addition to ranking them by their
+overall speaker scores.
+
+Two metrics are added for each criterion you define, named after the criterion
+itself: **Total for [criterion]** and **Average for [criterion]**. These appear
+alongside the other metrics in the **speaker standings precedence** and
+**speaker standings extra metrics** settings, so you can also use a criterion to
+tie-break another metric, or display a criterion's scores without ranking by it.
+
+Each criterion additionally gets its own standings page, listing the top
+speakers by that criterion alone — for example, a "top speakers by *Style*"
+tab. These are linked from the speaker standings navigation. To show them to the
+public, enable **Release score criteria tabs to public** in the **Tab release**
+section of the tournament settings. Note that this releases the tabs for *all*
+criteria; it isn't currently possible to release them individually.
+
+As with the other speaker standings metrics, criterion metrics count substantive
+speeches only. A criterion scored only on reply speeches therefore has no
+standings of its own, and isn't listed in the speaker standings navigation;
+reply speeches are ranked by the reply standings, whose metrics are fixed.
+
 
 Motion balance
 ==============
