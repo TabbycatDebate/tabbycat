@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from collections.abc import Mapping
+from copy import deepcopy
 from datetime import date, datetime, time
 from functools import partial, partialmethod
 from typing import Optional
@@ -649,7 +650,39 @@ class SpeakerSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class AdjudicatorSerializer(serializers.ModelSerializer):
+class ConflictSerializerMixin:
+    conflict_fields = ()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name in self.conflict_fields:
+            field = deepcopy(self.fields[name])
+            field.required = False
+            field.write_only = True
+            field.help_text = None
+            self.fields['delete_' + name] = field
+            self.fields[name].help_text = 'Merges into existing conflicts'
+
+    def validate(self, data):
+        for name in self.conflict_fields:
+            deletion = 'delete_' + name
+            if deletion in data and not self.partial:
+                raise serializers.ValidationError({deletion: 'Conflict deletion lists are only supported with PATCH.'})
+            if set(data.get(name, [])) & set(data.get(deletion, [])):
+                raise serializers.ValidationError({deletion: 'Cannot add and delete the same conflict.'})
+        return super().validate(data)
+
+    def update(self, instance, validated_data):
+        if self.partial:
+            for name in self.conflict_fields:
+                relation = getattr(instance, name)
+                relation.add(*validated_data.pop(name, []))
+                relation.remove(*validated_data.pop('delete_' + name, []))
+        return super().update(instance, validated_data)
+
+
+class AdjudicatorSerializer(ConflictSerializerMixin, serializers.ModelSerializer):
+    conflict_fields = ('institution_conflicts', 'adjudicator_conflicts', 'team_conflicts')
 
     class AdjudicatorLinksSerializer(serializers.Serializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
@@ -692,10 +725,13 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
             if not with_permission(permission=Permission.VIEW_ADJ_INST_CONFLICTS):
                 self.fields.pop('institution_conflicts')
+                self.fields.pop('delete_institution_conflicts')
             if not with_permission(permission=Permission.VIEW_ADJ_TEAM_CONFLICTS):
                 self.fields.pop('team_conflicts')
+                self.fields.pop('delete_team_conflicts')
             if not with_permission(permission=Permission.VIEW_ADJ_ADJ_CONFLICTS):
                 self.fields.pop('adjudicator_conflicts')
+                self.fields.pop('delete_adjudicator_conflicts')
             if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
 
@@ -768,6 +804,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
         return adj
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         save_related(VenueConstraintSerializer, validated_data.pop('venue_constraints', []), self.context, {'subject': instance})
         save_related(AnswerSerializer, validated_data.pop('answers', []), self.context, {'content_object': instance})
@@ -777,15 +814,12 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
             AdjudicatorBaseScoreHistory.objects.create(
                 adjudicator=instance, round=self.context['tournament'].current_round, score=validated_data['base_score'])
 
-        if self.partial:
-            # Avoid removing conflicts if merely PATCHing
-            for field in ['institution_conflicts', 'adjudicator_conflicts', 'team_conflicts']:
-                validated_data[field] = list(getattr(instance, field).all()) + validated_data.get(field, [])
-
         return super().update(instance, validated_data)
 
 
-class TeamSerializer(serializers.ModelSerializer):
+class TeamSerializer(ConflictSerializerMixin, serializers.ModelSerializer):
+    conflict_fields = ('institution_conflicts',)
+
     class TeamSpeakerSerializer(SpeakerSerializer):
         team = None
 
@@ -833,6 +867,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
             if not with_permission(permission=Permission.VIEW_TEAM_INST_CONFLICTS):
                 self.fields.pop('institution_conflicts')
+                self.fields.pop('delete_institution_conflicts')
             if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
 
@@ -918,14 +953,11 @@ class TeamSerializer(serializers.ModelSerializer):
 
         return team
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         save_related(SpeakerSerializer, validated_data.pop('speakers', []), self.context, {'team': instance})
         save_related(VenueConstraintSerializer, validated_data.pop('venue_constraints', []), self.context, {'subject': instance})
         save_related(AnswerSerializer, validated_data.pop('answers', []), self.context, {'content_object': instance})
-
-        if self.partial:
-            # Avoid removing conflicts if merely PATCHing
-            validated_data['institution_conflicts'] = list(instance.institution_conflicts.all()) + validated_data.get('institution_conflicts', [])
 
         return super().update(instance, validated_data)
 

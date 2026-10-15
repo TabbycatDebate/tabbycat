@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Avg, Count, Prefetch, Q
 from django.db.models.functions import Coalesce
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiExample, OpenApiParameter
 from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from push_notifications.api.rest_framework import WebPushDeviceViewSet as BaseWebPushDeviceViewSet
@@ -407,7 +407,13 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
     create=extend_schema(summary="Create team"),
     retrieve=extend_schema(summary="Get team", parameters=[id_parameter]),
     update=extend_schema(summary="Update team", parameters=[id_parameter]),
-    partial_update=extend_schema(summary="Patch team", parameters=[id_parameter]),
+    partial_update=extend_schema(
+        summary="Patch team", parameters=[id_parameter],
+        examples=[OpenApiExample('Merge and remove conflicts', request_only=True, value={
+            'institution_conflicts': ['https://example.com/api/v1/institutions/2'],
+            'delete_institution_conflicts': ['https://example.com/api/v1/institutions/1'],
+        })],
+    ),
     destroy=extend_schema(summary="Delete team", parameters=[id_parameter]),
 )
 class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
@@ -449,7 +455,17 @@ class TeamViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
     create=extend_schema(summary="Create adjudicator"),
     retrieve=extend_schema(summary="Get adjudicator", parameters=[id_parameter]),
     update=extend_schema(summary="Update adjudicator", parameters=[id_parameter]),
-    partial_update=extend_schema(summary="Patch adjudicator", parameters=[id_parameter]),
+    partial_update=extend_schema(
+        summary="Patch adjudicator", parameters=[id_parameter],
+        examples=[OpenApiExample('Merge and remove conflicts', request_only=True, value={
+            'institution_conflicts': ['https://example.com/api/v1/institutions/2'],
+            'delete_institution_conflicts': ['https://example.com/api/v1/institutions/1'],
+            'team_conflicts': ['https://example.com/api/v1/tournaments/example/teams/2'],
+            'delete_team_conflicts': ['https://example.com/api/v1/tournaments/example/teams/1'],
+            'adjudicator_conflicts': ['https://example.com/api/v1/tournaments/example/adjudicators/2'],
+            'delete_adjudicator_conflicts': ['https://example.com/api/v1/tournaments/example/adjudicators/1'],
+        })],
+    ),
     destroy=extend_schema(summary="Delete adjudicator", parameters=[id_parameter]),
 )
 class AdjudicatorViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelViewSet):
