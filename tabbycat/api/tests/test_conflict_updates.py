@@ -1,3 +1,4 @@
+from itertools import product
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -33,6 +34,36 @@ class ConflictUpdateTests(APITestCase):
             return reverse(endpoint, kwargs={'pk': obj.pk})
         return reverse_tournament(endpoint, self.tournament, kwargs={'pk': obj.pk})
 
+    def assert_conflicts(self, response, participant, name, expected, status=200):
+        self.assertEqual(response.status_code, status, response.data)
+        if status == 200:
+            self.assertNotIn('delete_' + name, response.data)
+        participant.refresh_from_db()
+        self.assertEqual(set(getattr(participant, name).all()), expected)
+
+    def test_institution_changes_preserve_existing_conflicts(self):
+        old, unrelated, new = self.institutions
+        supplied = Institution.objects.create(name='Supplied', code='Supplied')
+        for participant, endpoint, name, objects, related_endpoint in self.cases[:2]:
+            fields = {'reference': 'Team'} if isinstance(participant, Team) else {'name': 'Judge', 'team_conflicts': [], 'adjudicator_conflicts': []}
+            for method, institution, conflicts in product(['patch', 'post'], [old, new, None, 'omitted'], ['omitted', [], [old, supplied]]):
+                with self.subTest(model=type(participant).__name__, method=method, institution=institution, conflicts=conflicts):
+                    participant.institution = old
+                    participant.save()
+                    participant.institution_conflicts.set([old, unrelated])
+                    data = dict(fields)
+                    if institution != 'omitted':
+                        data['institution'] = self.link(related_endpoint, institution) if institution else None
+                    if conflicts != 'omitted':
+                        data[name] = [self.link(related_endpoint, obj) for obj in conflicts]
+                    expected = {old, unrelated} if method == 'patch' or conflicts == 'omitted' else set(conflicts)
+                    if method == 'patch' and conflicts != 'omitted':
+                        expected.update(conflicts)
+                    invalid = isinstance(participant, Adjudicator) and method == 'post' and (institution == 'omitted' or conflicts == 'omitted')
+                    response = getattr(self.client, method)(self.link(endpoint, participant), data)
+                    self.assert_conflicts(response, participant, name, {old, unrelated} if invalid else expected, status=400 if invalid else 200)
+                    self.assertEqual(participant.institution, old if invalid or institution == 'omitted' else institution)
+
     def test_explicit_add_remove_and_retries(self):
         for participant, endpoint, name, objects, related_endpoint in self.cases:
             with self.subTest(model=type(participant).__name__, field=name):
@@ -40,16 +71,8 @@ class ConflictUpdateTests(APITestCase):
                 relation = getattr(participant, name)
                 relation.set([old, keep])
                 data = {name: [self.link(related_endpoint, new)], 'delete_' + name: [self.link(related_endpoint, old)]}
-                for attempt in range(2):
-                    response = self.client.patch(self.link(endpoint, participant), data)
-                    self.assertEqual(response.status_code, 200, response.data)
-                    self.assertNotIn('delete_' + name, response.data)
-                    participant.refresh_from_db()
-                    self.assertEqual(set(getattr(participant, name).all()), {keep, new})
-                response = self.client.patch(self.link(endpoint, participant), {'delete_' + name: []})
-                self.assertEqual(response.status_code, 200, response.data)
-                participant.refresh_from_db()
-                self.assertEqual(set(getattr(participant, name).all()), {keep, new})
+                for payload in [data, data, {'delete_' + name: []}]:
+                    self.assert_conflicts(self.client.patch(self.link(endpoint, participant), payload), participant, name, {keep, new})
 
     def test_deletion_without_additions_and_invalid_requests(self):
         for participant, endpoint, name, objects, related_endpoint in self.cases:
@@ -60,16 +83,12 @@ class ConflictUpdateTests(APITestCase):
                 old_url = self.link(related_endpoint, old)
                 url = self.link(endpoint, participant)
                 response = self.client.patch(url, {name: [old_url], 'delete_' + name: [old_url]})
-                self.assertEqual(response.status_code, 400)
+                self.assert_conflicts(response, participant, name, {old, keep}, status=400)
                 missing_url = old_url.rsplit('/', 1)[0] + '/999999999'
                 response = self.client.patch(url, {name: [self.link(related_endpoint, new)], 'delete_' + name: [missing_url]})
-                self.assertEqual(response.status_code, 400)
-                participant.refresh_from_db()
-                self.assertEqual(set(getattr(participant, name).all()), {old, keep})
+                self.assert_conflicts(response, participant, name, {old, keep}, status=400)
                 response = self.client.patch(url, {'delete_' + name: [old_url, self.link(related_endpoint, new)]})
-                self.assertEqual(response.status_code, 200, response.data)
-                participant.refresh_from_db()
-                self.assertEqual(set(getattr(participant, name).all()), {keep})
+                self.assert_conflicts(response, participant, name, {keep})
 
     def test_reject_deletion_on_post(self):
         url = self.link('api-team-detail', self.team)
@@ -101,9 +120,7 @@ class ConflictUpdateTests(APITestCase):
         }
         with patch.object(Team, 'save', side_effect=RuntimeError('save failed')), self.assertLogs('api.exceptions', level='ERROR'):
             response = self.client.patch(self.link('api-team-detail', self.team), data)
-        self.assertEqual(response.status_code, 500)
-        self.team.refresh_from_db()
-        self.assertEqual(set(self.team.institution_conflicts.all()), {old, keep})
+        self.assert_conflicts(response, self.team, 'institution_conflicts', {old, keep}, status=500)
 
     def test_schema_documents_write_only_deletion_lists(self):
         schema = SchemaGenerator().get_schema(request=None, public=True)
