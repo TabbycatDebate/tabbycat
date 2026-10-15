@@ -28,8 +28,8 @@ class GraphGeneratorMixin:
             return
 
         penalty = 0
-        if self.options["avoid_history"]:
-            penalty += t1.seen(t2) * self.options["history_penalty"]
+        if self.options["avoid_history"] and t1.seen(t2):
+            return None
         if self.options["avoid_institution"] and t1.same_institution(t2):
             penalty += self.options["institution_penalty"]
 
