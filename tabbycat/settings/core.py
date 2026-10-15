@@ -393,6 +393,8 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Tabbycat API',
+    'REDOC_DIST': 'https://cdn.jsdelivr.net/npm/redoc@latest',
+    'REDOC_UI_SETTINGS': {'jsonSamplesExpandLevel': 'all'},
     'DESCRIPTION': 'Parliamentary debate tabulation software',
     'VERSION': '1.4.0',
     'SERVE_INCLUDE_SCHEMA': False,

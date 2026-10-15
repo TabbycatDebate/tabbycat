@@ -1,0 +1,47 @@
+{% extends "drf_spectacular/redoc.html" %}
+
+{% block head %}
+{{ block.super }}
+<script>
+  try {
+    if (!localStorage.getItem('redoc.colorMode')) localStorage.setItem('redoc.colorMode', 'light');
+  } catch (error) {}
+</script>
+<style>
+  :root.light, :root.dark {
+    --sidebar-logo-max-height: 64px;
+    --sidebar-logo-max-width: 64px;
+  }
+  :root.light {
+    --panel-samples-border: 1px solid #b9c2ce;
+    --panel-samples-bg-color: #f1f3f6;
+    --panel-samples-heading-bg-color: #e9edf2;
+  }
+  [data-testid="logo"] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  [data-testid="logo"]::after {
+    content: "{{ title|escapejs }}";
+    color: var(--text-color-primary);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+</style>
+{% endblock head %}
+
+{% block body %}
+{% if settings %}
+<div id="redoc-container"></div>
+<script type="module">
+  import { init } from "{{ redoc_standalone }}";
+  const redocSettings = {{ settings|safe }};
+  init("{{ schema_url|escapejs }}", redocSettings, document.getElementById('redoc-container'));
+</script>
+{% else %}
+<redoc spec-url="{{ schema_url }}"></redoc>
+<script type="module" src="{{ redoc_standalone }}"></script>
+{% endif %}
+{% endblock body %}
