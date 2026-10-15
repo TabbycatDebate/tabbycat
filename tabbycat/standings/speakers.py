@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from tournaments.models import Round
 
-from .base import BaseStandingsGenerator
+from .base import BaseStandingsGenerator, StandingsError
 from .metrics import QuerySetMetricAnnotator, SCORE_PRECISION
 from .ranking import BasicRankAnnotator
 
@@ -340,8 +340,8 @@ class AverageCriterionScoreMetricAnnotator(BaseCriterionMetricAnnotator):
 def is_criterion_metric_key(key):
     """Whether `key` names a score criterion metric. The criteria themselves are
     per-tournament, so preference validation, which has no tournament to hand,
-    checks the key's shape only; unknown criteria are ignored when the standings
-    are generated."""
+    checks the key's shape only; unavailable criteria raise a StandingsError
+    when the standings are generated."""
     for base in (AverageCriterionScoreMetricAnnotator, TotalCriterionScoreMetricAnnotator):
         if key.startswith(base.key_prefix) and key[len(base.key_prefix):].isdigit():
             return True
@@ -426,16 +426,13 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
                 **self.metric_annotator_classes,
                 **criterion_metric_annotator_classes(tournament, standalone_criterion),
             }
-            # Criteria can be deleted, renumbered or made reply-only after
-            # their metric keys have been saved in tournament preferences.
-            valid_metrics = [m for m in metrics
-                if not is_criterion_metric_key(m) or m in self.metric_annotator_classes]
-            extra_metrics = [m for m in extra_metrics
-                if not is_criterion_metric_key(m) or m in self.metric_annotator_classes]
-            if metrics and not valid_metrics:
-                valid_metrics = ['average']
-                extra_metrics = [m for m in extra_metrics if m != 'average']
-            metrics = valid_metrics
+            unavailable = [m for m in (*metrics, *extra_metrics)
+                if is_criterion_metric_key(m) and m not in self.metric_annotator_classes]
+            if unavailable:
+                raise StandingsError(_(
+                    "The speaker standings reference unavailable score criteria: %(metrics)s. "
+                    "Update the speaker standings precedence and extra metrics in Setup > Standings.",
+                ) % {'metrics': ", ".join(dict.fromkeys(unavailable))})
         super().__init__(metrics, rankings, extra_metrics, **options)
 
     @classmethod
