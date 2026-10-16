@@ -289,7 +289,7 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
 
     def get_formset_factory_kwargs(self):
         return {
-            'fields': ('name', 'tournament', 'slug', 'break_size', 'is_general', 'priority', 'limit'),
+            'fields': ('name', 'tournament', 'slug', 'break_size', 'is_general', 'priority', 'limit', 'reserve_size'),
             'extra': 2,
             'widgets': {
                 'tournament': HiddenInput,

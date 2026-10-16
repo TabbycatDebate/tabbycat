@@ -24,6 +24,10 @@ urlpatterns = [
         views.PublicReplyTabView.as_view(),
         name='standings-public-tab-replies'),
 
+    path('criterion/<int:criterion>/',
+        views.PublicCriterionTabView.as_view(),
+        name='standings-public-tab-criterion'),
+
     path('adjudicators/',
         views.PublicAdjudicatorsTabView.as_view(),
         name='standings-public-adjudicators-tab'),

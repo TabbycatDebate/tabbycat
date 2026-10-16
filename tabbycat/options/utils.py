@@ -39,10 +39,21 @@ def use_team_code_names_data_entry(tournament, tabroom):
 
 
 def validate_metric_duplicates(generator, value):
-    # Check that non-repeatable metrics aren't listed twice
-    classes = [generator.metric_annotator_classes[metric] for metric in value]
+    # Check that non-repeatable metrics aren't listed twice. Score criterion
+    # metrics aren't in metric_annotator_classes (they're built per-tournament),
+    # and are never repeatable, so check those by key.
+    classes = []
+    criterion_keys = []
+    for metric in value:
+        klass = generator.metric_annotator_classes.get(metric)
+        if klass is None:
+            criterion_keys.append(metric)
+        else:
+            classes.append(klass)
+
     duplicates = [c for c in classes if not c.repeatable and classes.count(c) > 1]
-    if duplicates:
-        duplicates_str = ", ".join(list(set(force_str(c.name) for c in duplicates)))
+    duplicates_str = list({force_str(c.name) for c in duplicates})
+    duplicates_str += list({k for k in criterion_keys if criterion_keys.count(k) > 1})
+    if duplicates_str:
         raise ValidationError(_("The following metrics can't be listed twice: "
-                "%(duplicates)s") % {'duplicates': duplicates_str})
+                "%(duplicates)s") % {'duplicates': ", ".join(duplicates_str)})

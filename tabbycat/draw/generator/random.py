@@ -102,7 +102,10 @@ class SwapRandomDrawMixin:
 
 
 class GraphRandomDrawGenerator(GraphGeneratorMixin, GraphRandomDrawMixin, BaseRandomDrawGenerator):
-    pass
+    def _get_pools(self):
+        teams = super()._get_pools()
+        random.shuffle(teams)
+        return teams
 
 
 class SwapRandomDrawGenerator(SwapRandomDrawMixin, BaseRandomDrawGenerator):
@@ -124,7 +127,11 @@ class BaseRandomWithAllocatedSidesDrawGenerator(BaseRandomDrawGenerator):
 
 
 class GraphRandomWithAllocatedSidesDrawGenerator(GraphAllocatedSidesMixin, GraphRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):
-    pass
+    def _get_pools(self):
+        pools = super()._get_pools()
+        for pool in pools:
+            random.shuffle(pool)
+        return pools
 
 
 class SwapRandomWithAllocatedSidesDrawGenerator(SwapRandomDrawMixin, BaseRandomWithAllocatedSidesDrawGenerator):

@@ -14,7 +14,7 @@ from dynamic_preferences.api.serializers import PreferenceSerializer
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from push_notifications.api.rest_framework import WebPushDeviceViewSet as BaseWebPushDeviceViewSet
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.fields import DateTimeField
 from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or_404, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.mixins import ListModelMixin
@@ -38,6 +38,7 @@ from draw.models import Debate, DebateTeam
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
+from standings.base import StandingsError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.mixins import TournamentFromUrlMixin
@@ -834,6 +835,12 @@ def get_metrics_params(generator):
         },
     }
     desc_default = '; default is tournament settings'
+    if generator is SpeakerStandingsGenerator:
+        # Score criteria are per-tournament, so their metric keys can't be
+        # enumerated in a static schema.
+        desc_default += ('. Score criteria also provide the metrics '
+            '`criterion_avg_<seq>` and `criterion_total_<seq>`, where `<seq>` is '
+            "the criterion's sequence number")
     return [
         OpenApiParameter('metrics',
             description='Rank participants with these metrics' + desc_default,
@@ -880,8 +887,11 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
 
         queryset = self.get_queryset()
         metrics, extra_metrics = self.get_metrics()
-        generator = self.generator(metrics, ('rank',), extra_metrics, **self.generator_kwargs)
-        standings = generator.generate(queryset, round=self.get_max_round())
+        try:
+            generator = self.generator(metrics, ('rank',), extra_metrics, **self.generator_kwargs)
+            standings = generator.generate(queryset, round=self.get_max_round())
+        except StandingsError as e:
+            raise ValidationError({'detail': str(e)}) from e
         serializer = self.get_serializer(iter(standings), many=True)
         return Response(serializer.data)
 
@@ -917,12 +927,15 @@ class SubstantiveSpeakerStandingsView(BaseStandingsView):
 
     @property
     def generator_kwargs(self):
+        # Needed for the generator to build this tournament's score criterion metrics.
+        kwargs = {'tournament': self.tournament}
         missable = -1 if self.missable_preference is None else self.tournament.pref(self.missable_preference)
         if missable < 0:
-            return {}
+            return kwargs
         total_prelim_rounds = self.tournament.round_set.filter(
             stage=Round.Stage.PRELIMINARY).count()
-        return {'rank_filter': (self.missable_field, total_prelim_rounds - missable)}
+        kwargs['rank_filter'] = (self.missable_field, total_prelim_rounds - missable)
+        return kwargs
 
     def get_metrics(self):
         metrics, extra_metrics = super().get_metrics()

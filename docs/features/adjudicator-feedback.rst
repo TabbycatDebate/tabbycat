@@ -104,6 +104,31 @@ to give feedback on all adjudicators including trainees. The options that only
 expect feedback on the orallist still permit multiple submissions without
 counting each panel member as a separate expectation in feedback progress.
 
+Which rounds is feedback collected in?
+-------------------------------------
+
+By default, feedback is only collected during the preliminary rounds. The
+**expect feedback from adjudicators in** and **expect feedback from teams in**
+options, under *Setup* > *Configuration* > *Feedback*, each let you extend
+collection to the elimination rounds as well. The two options are independent,
+so you can collect adjudicator feedback during outrounds without also asking
+teams for it, or the other way around.
+
+The feedback paths and team feedback options themselves are unchanged by this:
+whoever adjudicators and teams are expected to give feedback on in the
+preliminary rounds, they are expected to give feedback on in the elimination
+rounds too. These options only control *which rounds* feedback is asked for in.
+
+Teams are never asked for feedback in silent rounds, in either stage.
+
+.. note:: Feedback submitted during elimination rounds is marked as
+  :ref:`ignored <feedback-ignored>` by default. It is still recorded, displayed in
+  the feedback tables and on each adjudicator's feedback page, and counted
+  towards feedback progress, but it does not count towards adjudicators' scores
+  unless you un-ignore it. This lets the adjudication core decide which pieces
+  of outround feedback, if any, should affect the scores used by the automated
+  allocation.
+
 .. admonition:: Advanced users
   :class: tip
 
@@ -145,6 +170,8 @@ it will always be their average feedback value.
 .. note:: A participant's base score can, in conjunction with feedback weight, also be used as a manual override for an adjudicator's overall ranking. At several tournaments, adjudication cores have set every round's feedback weight to 0, and manually adjusted an adjudicator's base score in response to feedback they have received and reviewed. In this way complete control over every adjudicator's overall score can be exerted.
 
 .. note:: If feedback from trainee adjudicators is enabled, any scores that they submit in their feedback are not counted towards that adjudicator's overall score.
+
+.. _feedback-ignored:
 
 Ignoring/Discarding feedback
 ============================

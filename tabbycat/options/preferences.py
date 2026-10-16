@@ -8,7 +8,7 @@ from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import (BooleanPreference, ChoicePreference, DecimalPreference, FloatPreference,
     IntegerPreference, LongStringPreference, MultipleChoicePreference, StringPreference)
 
-from standings.speakers import SpeakerStandingsGenerator
+from standings.speakers import is_criterion_metric_key, SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
@@ -162,7 +162,7 @@ class AdjHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class PreformedPanelMismatchPenalty(IntegerPreference):
-    help_text = _("Penality applied by preformed panel auto-allocator for priority mismatch")
+    help_text = _("Penalty applied by preformed panel auto-allocator for priority mismatch")
     verbose_name = _("Importance mismatch penalty")
     section = draw_rules
     name = 'preformed_panel_mismatch_penalty'
@@ -180,7 +180,8 @@ class TeamInstitutionPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class TeamHistoryPenalty(IntegerPreference):
-    help_text = _("Penalty applied by conflict avoidance method for teams seeing each other twice or more")
+    help_text = _("Penalty applied by one-up-one-down and random draw methods for teams seeing each other "
+        "twice or more. Minimum cost matching always prohibits rematches when avoid team history is enabled.")
     verbose_name = _("Team history penalty")
     section = draw_rules
     name = 'team_history_penalty'
@@ -198,7 +199,8 @@ class AvoidSameInstitution(BooleanPreference):
 
 @tournament_preferences_registry.register
 class AvoidTeamHistory(BooleanPreference):
-    help_text = _("If checked, the draw will try to avoid having teams see each other twice")
+    help_text = _("If checked, the draw will try to avoid having teams see each other twice. "
+        "Minimum cost matching never pairs teams that have met before.")
     verbose_name = _("Avoid team history")
     section = draw_rules
     name = 'avoid_team_history'
@@ -363,6 +365,17 @@ class DrawPullupPenalty(IntegerPreference):
     verbose_name = _("Pullup penalty")
     section = draw_rules
     name = 'draw_pullup_penalty'
+    default = 0
+
+
+@tournament_preferences_registry.register
+class DrawBracketPenalty(IntegerPreference):
+    help_text = _("Penalty applied by minimum cost matching (including pullups) for pairing teams "
+        "from different wins brackets. Scaled by the square of the bracket gap and the largest "
+        "pull-up bucket or pairing deviation penalty. Leave at 0 to disable.")
+    verbose_name = _("Cross-bracket penalty")
+    section = draw_rules
+    name = 'draw_bracket_penalty'
     default = 0
 
 
@@ -564,6 +577,35 @@ class FeedbackFromTeams(ChoicePreference):
     default = 'orallist'
 
 
+FEEDBACK_ROUNDS_CHOICES = (
+    ('prelims', _("Preliminary rounds only")),
+    ('all', _("Preliminary and elimination rounds")),
+)
+
+
+@tournament_preferences_registry.register
+class FeedbackPathsRounds(ChoicePreference):
+    verbose_name = _("Expect feedback from adjudicators in")
+    help_text = _("Which rounds adjudicators are asked for feedback in. Feedback given in elimination rounds is "
+                  "marked as ignored by default, so it doesn't count towards adjudicators' scores unless un-ignored.")
+    section = feedback
+    name = 'feedback_paths_rounds'
+    choices = FEEDBACK_ROUNDS_CHOICES
+    default = 'prelims'
+
+
+@tournament_preferences_registry.register
+class FeedbackFromTeamsRounds(ChoicePreference):
+    verbose_name = _("Expect feedback from teams in")
+    help_text = _("Which rounds teams are asked for feedback in. Teams are never asked for feedback in silent "
+                  "rounds. Feedback given in elimination rounds is marked as ignored by default, so it doesn't "
+                  "count towards adjudicators' scores unless un-ignored.")
+    section = feedback
+    name = 'feedback_from_teams_rounds'
+    choices = FEEDBACK_ROUNDS_CHOICES
+    default = 'prelims'
+
+
 @tournament_preferences_registry.register
 class ShowUnexpectedFeedback(BooleanPreference):
     verbose_name = _("Show unexpected feedback submissions in participants pages")
@@ -605,6 +647,7 @@ class TeamsInDebate(IntegerPreference):
     section = debate_rules
     name = 'teams_in_debate'
     default = 2
+    field_kwargs = {'validators': [MinValueValidator(1)]}
 
 
 @tournament_preferences_registry.register
@@ -669,6 +712,7 @@ class SubstantiveSpeakers(IntegerPreference):
     section = debate_rules
     name = 'substantive_speakers'
     default = 3
+    field_kwargs = {'validators': [MinValueValidator(1)]}
 
 
 @tournament_preferences_registry.register
@@ -784,6 +828,13 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     default = []
 
 
+def validate_speaker_metric_choices(parent, value):
+    """Runs the standard choice validation, but lets score criterion metrics
+    through: they're per-tournament, so they can't be in the static choices the
+    preference declares (the form adds them for the tournament being edited)."""
+    parent.validate([v for v in value if not is_criterion_metric_key(v)])
+
+
 @tournament_preferences_registry.register
 class SpeakerStandingsPrecedence(MultiValueChoicePreference):
     help_text = _("Metrics to use to rank speakers (see documentation for further details)")
@@ -796,7 +847,7 @@ class SpeakerStandingsPrecedence(MultiValueChoicePreference):
     default = ['average']
 
     def validate(self, value):
-        super().validate(value)
+        validate_speaker_metric_choices(super(), value)
         validate_metric_duplicates(SpeakerStandingsGenerator, value)
 
 
@@ -810,6 +861,9 @@ class SpeakerStandingsExtraMetrics(MultiValueChoicePreference):
     nfields = 5
     allow_empty = True
     default = ['stdev', 'count']
+
+    def validate(self, value):
+        validate_speaker_metric_choices(super(), value)
 
 
 # ==============================================================================
@@ -859,6 +913,15 @@ class RepliesTabReleased(BooleanPreference):
     verbose_name = _("Release replies tab to public")
     section = tab_release
     name = 'replies_tab_released'
+    default = False
+
+
+@tournament_preferences_registry.register
+class CriterionTabsReleased(BooleanPreference):
+    help_text = _("Enables public display of the per-criterion speaker tabs, e.g. a tab of the top speakers by 'Style'. Intended for use after the tournament.")
+    verbose_name = _("Release score criteria tabs to public")
+    section = tab_release
+    name = 'criterion_tabs_released'
     default = False
 
 

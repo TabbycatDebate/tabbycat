@@ -2,6 +2,9 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from dynamic_preferences.forms import preference_form_builder, PreferenceForm
 
+from standings.speakers import SpeakerStandingsGenerator
+
+from .fields import EMPTY_CHOICE
 from .preferences import tournament_preferences_registry
 
 
@@ -77,11 +80,36 @@ class TournamentPreferenceForm(PreferenceForm):
         return self.cleaned_data
 
 
+def add_criterion_metric_choices(FormClass, tournament):  # noqa: N803
+    """Adds the tournament's score criteria to the speaker standings metric
+    fields, as they can't be in the preferences' static choices."""
+    for name, ranked_only, for_extra in [
+        ('standings__speaker_standings_precedence', True, False),
+        ('standings__speaker_standings_extra_metrics', False, True),
+    ]:
+        field = FormClass.base_fields.get(name)
+        if field is None:
+            continue
+
+        choices = SpeakerStandingsGenerator.get_metric_choices(
+            ranked_only=ranked_only, for_extra=for_extra, tournament=tournament)
+        existing = list(field.fields[0].choices) if field.fields else []
+        if existing and existing[0][0] == EMPTY_CHOICE:
+            choices = [existing[0]] + choices  # keep the empty option
+
+        # Subfields are used for validation, the widgets for rendering.
+        for subfield in field.fields:
+            subfield.choices = choices
+        for widget in field.widget.widgets:
+            widget.choices = choices
+
+
 def tournament_preference_form_builder(instance, preferences=[], **kwargs):
     FormClass = preference_form_builder(  # noqa: N806
         TournamentPreferenceForm, preferences, model={'instance': instance}, **kwargs)
     # Django 5.1+ builds subclass fields from declared_fields merged along the MRO.
     # dynamic_preferences only assigns base_fields after type(); keep declared_fields in
     # sync so subclasses (e.g. preset forms with apply-action fields) still inherit prefs.
+    add_criterion_metric_choices(FormClass, instance)
     FormClass.declared_fields = FormClass.base_fields
     return FormClass
