@@ -579,7 +579,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         checkin = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
-    name = fields.AnonymisingParticipantNameField()
+    name = fields.AnonymisingParticipantNameField(max_length=Person._meta.get_field('name').max_length)
     team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
     categories = fields.TournamentHyperlinkedRelatedField(
         many=True,
@@ -721,7 +721,7 @@ class AdjudicatorSerializer(ConflictSerializerMixin, VenueConstraintSerializerMi
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
-    name = fields.AnonymisingParticipantNameField()
+    name = fields.AnonymisingParticipantNameField(max_length=Person._meta.get_field('name').max_length)
     institution = serializers.HyperlinkedRelatedField(
         allow_null=True,
         view_name='api-global-institution-detail',

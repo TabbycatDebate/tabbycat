@@ -213,6 +213,14 @@ class Tournament(models.Model):
         from adjfeedback.models import AdjudicatorFeedbackQuestion
         return AdjudicatorFeedbackQuestion.objects.filter(tournament=self).order_by("seq")
 
+    @cached_property
+    def substantive_score_criteria(self):
+        """The score criteria that get their own speaker standings, i.e. all but
+        those scored only on reply speeches, since those standings are over
+        substantive speeches."""
+        from results.models import ScoreCriterion
+        return self.scorecriterion_set.exclude(speech_type=ScoreCriterion.SpeechType.REPLY)
+
     def break_categories_nongeneral(self):
         return self.breakcategory_set.exclude(is_general=True)
 
@@ -237,11 +245,15 @@ class Tournament(models.Model):
     @cached_property
     def current_round_seq_limit(self):
         """Largest `seq` among `current_rounds` (for eligibility filters when parallel
-        preliminary panels use different sequence numbers)."""
+        preliminary panels use different sequence numbers), falling back to
+        `current_round` when no rounds are current."""
         crs = self.current_rounds
-        if not crs:
-            return 0
-        return max(r.seq for r in crs)
+        if crs:
+            return max(r.seq for r in crs)
+        # Keep completed rounds eligible after the tournament ends and while
+        # waiting for the first elimination draw to be created.
+        current = self.current_round
+        return current.seq if current is not None else 0
 
     @cached_property
     def current_rounds(self):
