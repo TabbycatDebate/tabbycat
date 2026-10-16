@@ -1,5 +1,4 @@
 from django.urls import include, path
-from drf_spectacular.settings import spectacular_settings
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 from rest_framework.routers import SimpleRouter
 
@@ -19,10 +18,7 @@ urlpatterns = [
 
     path('/schema', include([
         path('.yml', SpectacularAPIView.as_view(), name='api-schema'),
-        path('/redoc/', SpectacularRedocView.as_view(
-            url_name='api-schema', template_name='api/redoc.html',
-            title=f'{spectacular_settings.TITLE} ({spectacular_settings.VERSION})',
-        ), name='redoc'),
+        path('/redoc/', SpectacularRedocView.as_view(url_name='api-schema'), name='redoc'),
     ])),
 
     path('/v1', include([
