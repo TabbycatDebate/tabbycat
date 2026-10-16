@@ -9,7 +9,7 @@ from django.core.validators import validate_email
 from django.utils.translation import gettext as _, ngettext, ngettext_lazy
 
 from checkins.models import PersonIdentifier, VenueIdentifier
-from participants.models import Adjudicator, Institution, Speaker, Team
+from participants.models import Adjudicator, Institution, Region, Speaker, Team
 from privateurls.utils import populate_url_keys
 from venues.models import Venue
 
@@ -53,13 +53,16 @@ class ImportInstitutionsRawForm(forms.Form):
                     _("This line (for %(institution)s) didn't have a code") %
                     {'institution': line[0]}))
                 continue
-            if len(line) > 2:
+            if len(line) > 3:
                 errors.append(ImportValidationError(i,
                     _("This line (for %(institution)s) had too many columns") %
                     {'institution': line[0]}))
 
             line = [x.strip() for x in line]
-            institutions.append({'name': line[0], 'code': line[1]})
+            institutions.append({
+                'name': line[0], 'code': line[1],
+                'region_name': line[2] if len(line) > 2 else '',
+            })
 
         if errors:
             raise ValidationError(errors)
@@ -67,7 +70,7 @@ class ImportInstitutionsRawForm(forms.Form):
         if len(institutions) == 0:
             raise ValidationError(_("There were no institutions to import."))
 
-        max_allowed = MAX_FORM_DATA_FIELDS // 3  # 3 fields: 'name', 'code', 'id'.
+        max_allowed = MAX_FORM_DATA_FIELDS // 4  # 4 fields: 'name', 'code', 'region_name', 'id'.
         if len(institutions) > max_allowed:
             raise ValidationError(ngettext(
                 "Sorry, you can only import up to %(max_allowed)d institution at a "
@@ -79,6 +82,26 @@ class ImportInstitutionsRawForm(forms.Form):
                 max_allowed) % {'max_allowed': max_allowed, 'given': len(institutions)})
 
         return institutions
+
+
+class InstitutionDetailsForm(forms.ModelForm):
+    region_name = forms.CharField(
+        label=_("Region"), required=False,
+        max_length=Region._meta.get_field('name').max_length,
+        help_text=_("Enter an existing region name, or a new name to create a region."))
+
+    class Meta:
+        model = Institution
+        fields = ('name', 'code', 'region_name')
+
+    def save(self, commit=True):
+        institution = super().save(commit=False)
+        region_name = self.cleaned_data['region_name']
+        if region_name:
+            institution.region, _ = Region.objects.get_or_create(name=region_name)
+        if commit:
+            institution.save()
+        return institution
 
 
 class ImportVenuesRawForm(forms.Form):
