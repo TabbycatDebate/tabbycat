@@ -34,11 +34,11 @@ Updating participant conflicts
 
 On team and adjudicator detail endpoints, ``PATCH`` adds the relationships in
 conflict lists without removing existing ones. To remove specific conflicts,
-send their URLs in the corresponding write-only deletion list:
+send their URLs in the corresponding write-only removal list:
 
-* Teams: ``delete_institution_conflicts``.
-* Adjudicators: ``delete_institution_conflicts``, ``delete_team_conflicts``,
-  and ``delete_adjudicator_conflicts``.
+* Teams: ``remove_institution_conflicts``.
+* Adjudicators: ``remove_institution_conflicts``, ``remove_team_conflicts``,
+  and ``remove_adjudicator_conflicts``.
 
 For example, a ``PATCH`` to ``/api/v1/tournaments/example/adjudicators/42`` can
 change affiliation, add a new conflict, and remove a previous conflict together:
@@ -48,17 +48,42 @@ change affiliation, add a new conflict, and remove a previous conflict together:
    {
      "institution": "https://example.com/api/v1/institutions/2",
      "institution_conflicts": ["https://example.com/api/v1/institutions/2"],
-     "delete_institution_conflicts": ["https://example.com/api/v1/institutions/1"]
+     "remove_institution_conflicts": ["https://example.com/api/v1/institutions/1"]
    }
 
 Changing or clearing institution alone does not add or remove conflicts during
 updates. All changes in a participant PATCH are applied atomically. Omitted or
-empty deletion lists remove nothing, and removing a valid relationship that is
-already absent is a no-op. Adding and deleting the same relationship in one
+empty removal lists remove nothing, and removing a valid relationship that is
+already absent is a no-op. Adding and removing the same relationship in one
 request is rejected. Invalid URLs and references outside the applicable
 tournament are rejected before changes are saved.
 
-Deletion lists are only accepted with ``PATCH`` and are not returned in responses.
+Removal lists are only accepted with ``PATCH`` and are not returned in responses.
 Existing ``POST`` detail updates continue to replace explicitly supplied conflict
 lists; required full-update fields still apply. ``PUT`` is not exposed on these
 endpoints. Conflict handling when initially creating a participant is unchanged.
+
+Removing venue constraints
+==========================
+
+Team, adjudicator, and global institution detail endpoints accept a write-only
+``remove_venue_constraints`` list with ``PATCH``. Supply venue-category URLs,
+without priorities:
+
+.. code-block:: json
+
+   {
+     "remove_venue_constraints": ["https://example.com/api/v1/tournaments/example/venue-categories/3"]
+   }
+
+This removes all constraints for the listed categories belonging to the edited
+team, adjudicator, or institution, regardless of priority. Categories themselves
+and other participants' constraints are preserved. Omitted or empty lists and
+already absent constraints are no-ops.
+
+The existing category URL validation applies: team and adjudicator requests are
+restricted to their tournament; global institution requests can reference any
+tournament. Invalid URLs and adding and removing constraints for the same category
+in one request are rejected before saving. Additions, removals, and other changes
+in the update are atomic. Removal lists are not accepted with ``POST`` and are not
+returned in responses.

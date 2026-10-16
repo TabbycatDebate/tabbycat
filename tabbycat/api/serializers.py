@@ -156,8 +156,14 @@ class AvailabilitiesSerializer(serializers.ListSerializer):
     child = fields.ParticipantAvailabilityForeignKeyField(view_name='api-availability-list')
 
 
+class VenueConstraintCategoryField(fields.TournamentHyperlinkedRelatedField):
+    def lookup_kwargs(self):
+        # Global institution requests have no tournament context.
+        return super().lookup_kwargs() if 'tournament' in self.context else {}
+
+
 class VenueConstraintSerializer(serializers.ModelSerializer):
-    category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
+    category = VenueConstraintCategoryField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
 
     class Meta:
         model = VenueConstraint
@@ -656,20 +662,22 @@ class ConflictSerializerMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for name in self.conflict_fields:
+            # Copy the existing field to preserve URL validation and queryset restrictions.
+            # Keep it independent so removal-only settings don't affect the original field.
             field = deepcopy(self.fields[name])
             field.required = False
             field.write_only = True
-            field.help_text = None
-            self.fields['delete_' + name] = field
+            field.help_text = f"Remove these {name.removesuffix('_conflicts')} conflicts. Missing conflicts are ignored. Only available on PATCH"
+            self.fields['remove_' + name] = field
             self.fields[name].help_text = 'Merges into existing conflicts'
 
     def validate(self, data):
         for name in self.conflict_fields:
-            deletion = 'delete_' + name
-            if deletion in data and not self.partial:
-                raise serializers.ValidationError({deletion: 'Conflict deletion lists are only supported with PATCH.'})
-            if set(data.get(name, [])) & set(data.get(deletion, [])):
-                raise serializers.ValidationError({deletion: 'Cannot add and delete the same conflict.'})
+            removal = 'remove_' + name
+            if removal in data and not self.partial:
+                raise serializers.ValidationError({removal: 'Conflict removal lists are only supported with PATCH.'})
+            if set(data.get(name, [])) & set(data.get(removal, [])):
+                raise serializers.ValidationError({removal: 'Cannot add and remove the same conflict.'})
         return super().validate(data)
 
     def update(self, instance, validated_data):
@@ -677,11 +685,36 @@ class ConflictSerializerMixin:
             for name in self.conflict_fields:
                 relation = getattr(instance, name)
                 relation.add(*validated_data.pop(name, []))
-                relation.remove(*validated_data.pop('delete_' + name, []))
+                relation.remove(*validated_data.pop('remove_' + name, []))
         return super().update(instance, validated_data)
 
 
-class AdjudicatorSerializer(ConflictSerializerMixin, serializers.ModelSerializer):
+class VenueConstraintSerializerMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'venue_constraints' in self.fields:
+            # Reuse category URL validation; removing a constraint doesn't require its priority.
+            self.fields['remove_venue_constraints'] = serializers.ManyRelatedField(
+                child_relation=deepcopy(self.fields['venue_constraints'].child.fields['category']),
+                required=False, write_only=True,
+                help_text='Remove constraints for these venue categories. Missing constraints are ignored. Only available on PATCH',
+            )
+
+    def validate(self, data):
+        removal = 'remove_venue_constraints'
+        if removal in data and not self.partial:
+            raise serializers.ValidationError({removal: 'Constraint removal lists are only supported with PATCH.'})
+        if {constraint['category'] for constraint in data.get('venue_constraints', [])} & set(data.get(removal, [])):
+            raise serializers.ValidationError({removal: 'Cannot add and remove constraints for the same category.'})
+        return super().validate(data)
+
+    def update(self, instance, validated_data):
+        if self.partial:
+            instance.venue_constraints.filter(category__in=validated_data.pop('remove_venue_constraints', [])).delete()
+        return super().update(instance, validated_data)
+
+
+class AdjudicatorSerializer(ConflictSerializerMixin, VenueConstraintSerializerMixin, serializers.ModelSerializer):
     conflict_fields = ('institution_conflicts', 'adjudicator_conflicts', 'team_conflicts')
 
     class AdjudicatorLinksSerializer(serializers.Serializer):
@@ -725,15 +758,16 @@ class AdjudicatorSerializer(ConflictSerializerMixin, serializers.ModelSerializer
 
             if not with_permission(permission=Permission.VIEW_ADJ_INST_CONFLICTS):
                 self.fields.pop('institution_conflicts')
-                self.fields.pop('delete_institution_conflicts')
+                self.fields.pop('remove_institution_conflicts')
             if not with_permission(permission=Permission.VIEW_ADJ_TEAM_CONFLICTS):
                 self.fields.pop('team_conflicts')
-                self.fields.pop('delete_team_conflicts')
+                self.fields.pop('remove_team_conflicts')
             if not with_permission(permission=Permission.VIEW_ADJ_ADJ_CONFLICTS):
                 self.fields.pop('adjudicator_conflicts')
-                self.fields.pop('delete_adjudicator_conflicts')
+                self.fields.pop('remove_adjudicator_conflicts')
             if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
+                self.fields.pop('remove_venue_constraints')
 
             if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST) and not t.pref('show_adjudicator_institutions'):
                 self.fields.pop('institution')
@@ -817,7 +851,7 @@ class AdjudicatorSerializer(ConflictSerializerMixin, serializers.ModelSerializer
         return super().update(instance, validated_data)
 
 
-class TeamSerializer(ConflictSerializerMixin, serializers.ModelSerializer):
+class TeamSerializer(ConflictSerializerMixin, VenueConstraintSerializerMixin, serializers.ModelSerializer):
     conflict_fields = ('institution_conflicts',)
 
     class TeamSpeakerSerializer(SpeakerSerializer):
@@ -867,9 +901,10 @@ class TeamSerializer(ConflictSerializerMixin, serializers.ModelSerializer):
 
             if not with_permission(permission=Permission.VIEW_TEAM_INST_CONFLICTS):
                 self.fields.pop('institution_conflicts')
-                self.fields.pop('delete_institution_conflicts')
+                self.fields.pop('remove_institution_conflicts')
             if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
+                self.fields.pop('remove_venue_constraints')
 
             if not with_permission(permission=Permission.VIEW_CUSTOM_ANSWERS):
                 self.fields.pop('answers')
@@ -962,7 +997,7 @@ class TeamSerializer(ConflictSerializerMixin, serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class InstitutionSerializer(serializers.ModelSerializer):
+class InstitutionSerializer(VenueConstraintSerializerMixin, serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
     region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects.all(), required=False, allow_null=True)
     venue_constraints = VenueConstraintSerializer(many=True, required=False)
@@ -978,6 +1013,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
             with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
             if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
                 self.fields.pop('venue_constraints')
+                self.fields.pop('remove_venue_constraints')
 
     def create(self, validated_data):
         venue_constraints = validated_data.pop('venue_constraints', [])
@@ -988,6 +1024,7 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
         return institution
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         save_related(VenueConstraintSerializer, validated_data.pop('venue_constraints', []), self.context, {'subject': instance})
         return super().update(instance, validated_data)
