@@ -61,6 +61,34 @@ class TournamentViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(response.data["id"], self.tournament.id)
 
 
+class ParticipantNameValidationTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_create_participant_with_overlong_name(self):
+        self.client.login(username="admin", password="admin")
+        team = self.tournament.team_set.first()
+        payloads = {
+            'adjudicator': {
+                'institution': None,
+                'institution_conflicts': [],
+                'team_conflicts': [],
+                'adjudicator_conflicts': [],
+            },
+            'speaker': {
+                'team': 'http://testserver' + self.reverse_url('api-team-detail', pk=team.pk),
+                'categories': [],
+            },
+        }
+        for participant, payload in payloads.items():
+            with self.subTest(participant=participant):
+                response = self.client.post(self.reverse_url(f'api-{participant}-list'), {
+                    **payload,
+                    'name': 'a' * 71,
+                }, format='json')
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(set(response.data), {'name'})
+                self.assertEqual(response.data['name'][0].code, 'max_length')
+
+
 class MotionViewsetTests(CompletedTournamentTestMixin, APITestCase):
 
     def test_no_public_access_preferences(self):
