@@ -5,6 +5,7 @@ from django.test import SimpleTestCase, TestCase
 
 from participants.models import Institution, Region
 
+from .. import forms
 from ..forms import ImportInstitutionsRawForm, InstitutionDetailsForm
 
 
@@ -29,7 +30,7 @@ class TestImportInstitutionsRawForm(SimpleTestCase):
         self.assertIn('too many columns', str(form.errors))
 
     def test_import_limit_accounts_for_region_field(self):
-        with patch('importer.forms.MAX_FORM_DATA_FIELDS', 8):
+        with patch.object(forms, 'MAX_FORM_DATA_FIELDS', 8):
             form = ImportInstitutionsRawForm({'institutions_raw': 'A,A\nB,B\nC,C'})
             self.assertFalse(form.is_valid())
             self.assertIn('up to 2 institutions', str(form.errors))
