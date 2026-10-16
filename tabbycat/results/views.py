@@ -40,7 +40,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
 from .consumers import BallotStatusConsumer
-from .forms import (broadcast_results, PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm,
+from .forms import (BallotFlagForm, broadcast_results, PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm,
                     SingleBallotSetForm, SingleEliminationBallotSetForm)
 from .models import BallotSubmission, ScoreCriterion, TeamScore
 from .prefetch import populate_confirmed_ballots, populate_results
@@ -739,7 +739,7 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
 # Other public views
 # ==============================================================================
 
-class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
+class BasePublicBallotScoresheetsView(PersonalizablePublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
     """Base Public view showing the ballots for a debate as scoresheets."""
 
     model = Debate
@@ -783,7 +783,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         return super().get(request, *args, **kwargs)
 
 
-class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
+class PublicBallotScoresheetsView(PublicTournamentPageMixin, BasePublicBallotScoresheetsView):
     """Public view showing the confirmed ballots for a debate as scoresheets."""
 
     def check_permissions(self):
@@ -825,18 +825,38 @@ class AdjudicatorPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandom
             logger.warning("Refused public view of ballots for %s: no ballot", self.object)
             return 404, _("There is no result yet for debate %s.") % self.matchup_description()
 
-    def get_context_data(self, **kwargs):
+    def get_ballot(self):
         ballot = self.object.ballotsubmission_set.filter(
             Q(participant_submitter__isnull=True) | Q(participant_submitter__url_key=self.kwargs.get('url_key')) | Q(confirmed=True),
             discarded=False,
         ).order_by('confirmed', 'version').last()
         if ballot is None:
             raise Http404
+        return ballot
+
+    def get_context_data(self, **kwargs):
+        ballot = self.get_ballot()
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
         kwargs['adjudicator'] = Adjudicator.objects.get(url_key=self.kwargs.get('url_key'))
+        kwargs['flag_form'] = BallotFlagForm(instance=ballot)
         return super().get_context_data(**kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        error = self.check_permissions()
+        if error:
+            return self.response_error(error)
+
+        form = BallotFlagForm(request.POST, instance=self.get_ballot())
+        if form.is_valid():
+            ballot = form.save()
+            if ballot.flagged:
+                messages.success(request, _("The ballot has been flagged for the tab room."))
+            else:
+                messages.success(request, _("The flag on the ballot has been removed."))
+        return HttpResponseRedirect(request.path)
 
     def response_error(self, error):
         status, message = error
