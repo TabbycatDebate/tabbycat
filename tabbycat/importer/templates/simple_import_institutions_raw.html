@@ -12,12 +12,12 @@
   {% csrf_token %}
     <div class="list-group list-group-flush">
 
-      {% include "components/form-title.html" with text="Paste a list of institutions with one institution per line and following the format of: <code>full name,code</code>. Teams marked as using an institutional prefix will use the institution's code for this purpose, ie 'MUDS 1'. For example:" %}
+      {% include "components/form-title.html" with text="Paste a list of institutions with one institution per line and following the format of: <code>full name,code,region</code>. The region is optional; existing region names will be reused and new names will create regions. Teams marked as using an institutional prefix will use the institution's code for this purpose, ie 'MUDS 1'. For example:" %}
 
       <div class="list-group-item list-group-item-secondary pt-0 pb-0">
         <pre><code>
-Victoria University of Wellington,VIC
-University of Melbourne,MUDS
+Victoria University of Wellington,VIC,Oceania
+University of Melbourne,MUDS,Oceania
 Universiti Teknologi MARA,UTMARA</code></pre>
       </div>
 
