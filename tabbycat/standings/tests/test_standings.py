@@ -217,6 +217,14 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
         self.assertEqual(standings.get_standing(team_extra).rankings['rank'], (3, False))
 
+    def test_draw_strength_rank_no_debates(self):
+        team_extra = Team.objects.create(tournament=self.tournament, reference="extra", use_institution_prefix=False)
+        generator = TeamStandingsGenerator(('points',), ('rank', 'subrank'), extra_metrics=('draw_strength_rank',))
+        standings = self.get_standings(generator)
+        self.assertEqual(standings.get_standing(self.team1).metrics['draw_strength_rank'], 2)
+        self.assertEqual(standings.get_standing(self.team2).metrics['draw_strength_rank'], 1)
+        self.assertIsNone(standings.get_standing(team_extra).metrics['draw_strength_rank'])
+
     def test_wins_with_extra_team(self):
         # check that a team with no debates doesn't throw off the rankings
         team_extra = Team.objects.create(tournament=self.tournament, reference="extra", use_institution_prefix=False)

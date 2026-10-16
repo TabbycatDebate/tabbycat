@@ -180,7 +180,8 @@ class TeamInstitutionPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class TeamHistoryPenalty(IntegerPreference):
-    help_text = _("Penalty applied by conflict avoidance method for teams seeing each other twice or more")
+    help_text = _("Penalty applied by one-up-one-down and random draw methods for teams seeing each other "
+        "twice or more. Minimum cost matching always prohibits rematches when avoid team history is enabled.")
     verbose_name = _("Team history penalty")
     section = draw_rules
     name = 'team_history_penalty'
@@ -198,7 +199,8 @@ class AvoidSameInstitution(BooleanPreference):
 
 @tournament_preferences_registry.register
 class AvoidTeamHistory(BooleanPreference):
-    help_text = _("If checked, the draw will try to avoid having teams see each other twice")
+    help_text = _("If checked, the draw will try to avoid having teams see each other twice. "
+        "Minimum cost matching never pairs teams that have met before.")
     verbose_name = _("Avoid team history")
     section = draw_rules
     name = 'avoid_team_history'
@@ -326,7 +328,8 @@ class DrawAvoidConflicts(ChoicePreference):
 @tournament_preferences_registry.register
 class DrawPullupRestriction(ChoicePreference):
     help_text = _("If using pull-ups, restrict which teams can be pulled up. "
-        "Two-team formats only. Has no effect on BP or intermediate brackets.")
+        "Two-team formats only. Has no effect on BP, intermediate brackets, or "
+        "minimum cost matching including pullups (graph_one), which uses odd bracket resolution instead.")
     verbose_name = _("Pullup restriction")
     section = draw_rules
     name = 'draw_pullup_restriction'
@@ -348,6 +351,17 @@ class DrawPullupPenalty(IntegerPreference):
     verbose_name = _("Pullup penalty")
     section = draw_rules
     name = 'draw_pullup_penalty'
+    default = 0
+
+
+@tournament_preferences_registry.register
+class DrawBracketPenalty(IntegerPreference):
+    help_text = _("Penalty applied by minimum cost matching (including pullups) for pairing teams "
+        "from different wins brackets. Scaled by the square of the bracket gap and the largest "
+        "pull-up bucket or pairing deviation penalty. Leave at 0 to disable.")
+    verbose_name = _("Cross-bracket penalty")
+    section = draw_rules
+    name = 'draw_bracket_penalty'
     default = 0
 
 

@@ -32,9 +32,13 @@
 
 
   <link rel="preload" href="{% static 'fonts/Inter-Regular.woff2' %}" as="font" type="font/woff2">
-  <link rel="icon" type="image/png" href="{% static 'logo-32x32.png' %}" sizes="32x32" />
-  <link rel="icon" type="image/png" href="{% static 'logo-16x16.png' %}" sizes="16x16" />
+  {% if on_local %}
+  <link rel="icon" type="image/svg+xml" href="{% static 'logo-local.svg' %}" sizes="any" />
+  <link rel="mask-icon" href="{% static 'safari-tab.svg' %}" color="#c00072">
+  {% else %}
+  <link rel="icon" type="image/svg+xml" href="{% static 'logo.svg' %}" sizes="any" />
   <link rel="mask-icon" href="{% static 'safari-tab.svg' %}" color="rgb(102, 61, 160)">
+  {% endif %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
