@@ -7,6 +7,8 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
+from utils.logging import sentry_before_send
+
 from .core import TABBYCAT_VERSION
 
 # ==============================================================================
@@ -147,6 +149,7 @@ if not environ.get('DISABLE_SENTRY'):
             LoggingIntegration(event_level=logging.WARNING),
             RedisIntegration(),
         ],
+        before_send=sentry_before_send,
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )
