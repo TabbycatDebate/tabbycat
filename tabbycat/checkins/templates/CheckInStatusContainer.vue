@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { computed, ref, toRef } from 'vue'
 import { useWebSocket } from '../../templates/composables/useWebSocket.js'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
-import { normaliseSearch, searchGroups } from './checkinSearch.js'
+import { highlightName, normaliseSearch, searchGroups } from './checkinSearch.js'
 
 
 const props = defineProps({
@@ -669,7 +669,15 @@ const forAdmin = toRef(props, 'forAdmin')
                     data-toggle="tooltip"
                     :title="getToolTipForEntity(entity)"
                   >
-                    {{ entity.name }}
+                    <template
+                      v-for="(part, index) in highlightName(entity.name, searchQuery)"
+                      :key="index"
+                    >
+                      <mark v-if="part.match">{{ part.text }}</mark>
+                      <template v-else>
+                        {{ part.text }}
+                      </template>
+                    </template>
                   </div>
                   <template v-if="forAdmin">
                     <a
