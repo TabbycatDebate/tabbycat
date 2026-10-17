@@ -947,7 +947,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
     def get_form(self):
         form = super().get_form()
         for error in self.errors:
-            msg, t, side, pos = error.args
+            msg, t, side, pos = error.args[:4]
             if t == 'speaker':
                 field = form._fieldname_speaker(side, pos)
             elif t == 'ghost':
@@ -959,6 +959,8 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                     field = form._fieldname_declared_winner()
             elif t == 'scores':
                 field = form._fieldname_score(side, pos)
+            elif t == 'criterion':
+                field = form._fieldname_criterion_score(side, pos, error.args[4])
             elif t == 'speaker_ranks':
                 field = form._fieldname_srank(side, pos)
             form.cleaned_data = {}
