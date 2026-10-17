@@ -1,5 +1,6 @@
 import logging
 from statistics import mean
+from unittest.mock import patch
 
 from django.test import TestCase
 
@@ -7,8 +8,10 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Adjudicator, Institution, Speaker, Team
+from results.forms import SingleBallotSetForm
 from results.models import BallotSubmission, ScoreCriterion, SpeakerScore, SpeakerScoreByAdj, TeamScore
 from results.result import ConsensusDebateResultWithScores, DebateResultByAdjudicatorWithScores, ResultError    # absolute import to keep logger's name consistent
+from results.views import BaseMergeLatestBallotsView, BaseNewBallotSetView
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
@@ -913,6 +916,47 @@ class TestConsensusDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDeba
 
     debate_result_class = ConsensusDebateResultWithScores
     testdata = dict()
+
+    def test_merge_criterion_conflicts(self):
+        criteria = [
+            ScoreCriterion.objects.create(
+                tournament=self.tournament, name=name, seq=seq, weight=1,
+                min_score=0, max_score=50, step=1,
+            )
+            for seq, name in enumerate(('Content', 'Style'), start=1)
+        ]
+        blank = self.save_blank_result()
+        results = [self.debate_result_class(blank.ballotsub, criteria=criteria) for _ in range(3)]
+        for result in results:
+            for side in self.SIDES:
+                for pos in result.positions:
+                    for criterion in criteria:
+                        result.set_criterion_score(side, pos, criterion, 30)
+        merged = self.debate_result_class(blank.ballotsub, criteria=criteria)
+        self.assertEqual(merged.populate_from_merge(*results), [])
+        self.assertEqual(merged.get_score(DebateSide.AFF, 1), 60)
+
+        results[1].set_criterion_score(DebateSide.AFF, 1, criteria[0], 31)
+        errors = merged.populate_from_merge(*results)
+
+        self.assertEqual([error.args[1:] for error in errors], [
+            ('criterion', DebateSide.AFF, 1, criteria[0]),
+            ('scores', DebateSide.AFF, 1),
+        ])
+        self.assertIsNone(merged.get_criterion_score(DebateSide.AFF, 1, criteria[0]))
+        self.assertEqual(merged.get_criterion_score(DebateSide.AFF, 1, criteria[1]), 30)
+        self.assertIsNone(merged.get_score(DebateSide.AFF, 1))
+        self.assertFalse(merged.scoresheet.is_complete())
+        self.assertEqual(merged.get_score(DebateSide.NEG, 1), 60)
+
+        form = SingleBallotSetForm(blank.ballotsub, result=merged, tabroom=True, filled=True, vetos={})
+        view = BaseMergeLatestBallotsView()
+        view.errors = errors
+        with patch.object(BaseNewBallotSetView, 'get_form', return_value=form):
+            form = view.get_form()
+        field = form._fieldname_criterion_score(DebateSide.AFF, 1, criteria[0])
+        self.assertIsNone(form.initial[field])
+        self.assertIn('Criterion scores are not identical', form.errors[field])
 
     testdata['high'] = {
         'declared_winner': DebateSide.AFF,

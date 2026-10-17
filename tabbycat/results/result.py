@@ -978,6 +978,9 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def populate_from_merge(self, *results) -> list[ResultError]:
         errors = []
+        for side, pos in product(self.sides, getattr(self, 'positions', [])):
+            for criterion in getattr(self, 'criteria', []):
+                self.set_criterion_score(side, pos, criterion, None)
         for result in results:
             errors.extend(self.merge_speaker_result(result))
             if self.scoresheet_class.uses_declared_winners:
@@ -987,10 +990,13 @@ class ConsensusDebateResult(BaseDebateResult):
                     errors.append(ResultError(_("Winners are not identical"), "winners", result.scoresheet.winners(), None))
 
         for error in errors:
-            key, side, pos = error.args[1:]
+            key, side, pos = error.args[1:4]
 
             if key == 'winners':
                 self.set_winners(set())
+
+            if key == 'criterion':
+                self.set_criterion_score(side, pos, error.args[4], None)
 
             # Clear ghosts for speaker order problems too
             if key == 'ghost':
