@@ -498,7 +498,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
         # For draw details and draw draft pages
         standings = None
-        if r.draw_status is Round.Status.DRAFT or self.detailed:
+        if r.draw_status == Round.Status.DRAFT or self.detailed:
             if r.prev:
                 teams = Team.objects.filter(debateteam__debate__round=r)
                 metrics = self.tournament.pref('team_standings_precedence')
@@ -528,7 +528,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
                     self._add_break_rank_columns(table, draw, r.break_category)
                 table.add_debate_metric_columns(draw, standings)
                 table.add_debate_side_history_columns(draw, r.prev)
-            elif r.draw_type is Round.DrawType.SEEDED:
+            elif r.draw_type == Round.DrawType.SEEDED:
                 table.add_debate_seed_columns(draw)
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
