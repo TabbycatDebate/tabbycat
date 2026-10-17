@@ -751,6 +751,12 @@ class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     message_template = 'team_points_email_message'
 
     round_redirect_pattern_name = 'tournament-complete-round-check'
+    template_variables = RoundTemplateEmailCreateView.template_variables + [
+        ("ROUND", gettext_lazy("round name")),
+        ("URL", gettext_lazy("link to public team standings (if enabled)")),
+        ("TEAM", gettext_lazy("recipient team name")),
+        ("POINTS", gettext_lazy("recipient team points total")),
+    ]
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament)
