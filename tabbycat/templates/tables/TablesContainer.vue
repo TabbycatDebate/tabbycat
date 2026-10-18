@@ -81,20 +81,6 @@ const copyTableTrigger = async (i, event) => {
           :label="gettext('Find in Table')"
           :placeholder="gettext('Find in Table')"
         />
-        <div
-          v-for="(table, i) in tablesData"
-          :key="i"
-        >
-          <button
-            class="btn btn-light border ml-2"
-            data-toggle="tooltip"
-            data-trigger="hover"
-            title="Copy table data to clipboard in a CSV format"
-            @click.prevent="copyTableTrigger(i, $event)"
-          >
-            <i data-feather="clipboard" />
-          </button>
-        </div>
         <auto-save-counter
           v-if="hasAjaxSelectCells"
           class="ml-2"
@@ -114,18 +100,30 @@ const copyTableTrigger = async (i, event) => {
         class="card table-container pl-1"
       >
         <div class="card-body pl-3 pr-0 py-2">
-          <h4
-            v-if="table.title"
-            class="card-title mt-1 mb-2"
-          >
-            {{ table.title }}
-            <small
-              v-if="table.subtitle"
-              class="text-muted d-md-inline d-none"
+          <div class="d-flex justify-content-between align-items-start">
+            <h4
+              v-if="table.title"
+              class="card-title mt-1 mb-2"
             >
-              {{ table.subtitle }}
-            </small>
-          </h4>
+              {{ table.title }}
+              <small
+                v-if="table.subtitle"
+                class="text-muted d-md-inline d-none"
+              >
+                {{ table.subtitle }}
+              </small>
+            </h4>
+            <button
+              class="btn btn-light btn-sm border p-1 ml-auto mr-3 mb-2 d-print-none"
+              data-toggle="tooltip"
+              data-trigger="hover"
+              title="Copy table data to clipboard in a CSV format"
+              aria-label="Copy table data to clipboard"
+              @click.prevent="copyTableTrigger(i, $event)"
+            >
+              <i data-feather="clipboard" />
+            </button>
+          </div>
           <smart-table
             :ref="setTableRef(i)"
             :table-headers="table.head"
