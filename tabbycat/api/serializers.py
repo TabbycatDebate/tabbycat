@@ -1719,7 +1719,7 @@ class BallotSerializer(serializers.ModelSerializer):
         return ballot
 
     def update(self, instance, validated_data):
-        if validated_data['confirmed'] and not instance.confirmed:
+        if validated_data.get('confirmed') and not instance.confirmed:
             instance.confirmer = self.context['request'].user
             instance.confirm_timestamp = timezone.now()
 
