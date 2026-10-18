@@ -4,6 +4,7 @@ import test from 'node:test'
 import { compileScript, compileTemplate, parse } from '@vue/compiler-sfc'
 import { computed, ref, toRef } from 'vue'
 import _ from 'lodash'
+import { normaliseSearch, searchGroups } from './checkinSearch.js'
 
 const source = readFileSync(new URL('./CheckInStatusContainer.vue', import.meta.url), 'utf8')
 const { descriptor } = parse(source)
@@ -15,7 +16,7 @@ const tct = (text, values) => {
 }
 
 // Run the actual component setup with only its browser services stubbed.
-const setup = new Function('props', '_', 'computed', 'ref', 'toRef', 'useWebSocket', 'useDjangoI18n',
+const setup = new Function('props', '_', 'computed', 'ref', 'toRef', 'useWebSocket', 'useDjangoI18n', 'normaliseSearch', 'searchGroups',
   `${script.content.replace(/^import .* from .*$/gm, '')}\nreturn component.setup(props, { expose() {} })`)
 const person = (id, type, extra = {}) => ({
   id, type, name: `${type} ${id}`, identifier: [`id-${id}`],
@@ -24,7 +25,7 @@ const person = (id, type, extra = {}) => ({
 const speaker = (id, team = 'Team A', extra = {}) => person(id, 'Speaker', { team, ...extra })
 const event = id => ({ identifier: `id-${id}`, time: '2026-10-03T08:00:00Z' })
 const create = (props = {}) => setup({ teamSize: 2, forAdmin: true, teamCodes: false, showAdjudicatorInstitutions: true, ...props },
-  _, computed, ref, toRef, () => ({ sendToSocket() {} }), () => ({ gettext, interpolate: tct, tct }))
+  _, computed, ref, toRef, () => ({ sendToSocket() {} }), () => ({ gettext, interpolate: tct, tct }), normaliseSearch, searchGroups)
 
 test('component template compiles', () => {
   const template = compileTemplate({ source: descriptor.template.content, filename: 'CheckInStatusContainer.vue', id: 'checkins-test' })

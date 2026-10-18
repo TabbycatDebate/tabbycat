@@ -56,7 +56,7 @@ In *By Team* mode, the checked-in count includes viable partial teams: at least 
 
 Use *Copy* to copy absent participants as a plain-text list for sharing in group chats. The list follows the selected participant type filter and includes missing speakers from partial teams, regardless of whether you are viewing teams or individual people. Each entry includes the participant's role and team or institution. Team names follow the selected real/code name display. Adjudicator institutions are omitted when code names are displayed or the Show adjudicator institutions setting is disabled. If clipboard access is unavailable, a selectable list is shown instead.
 
-.. image:: images/checkin_statuses.png
+.. image:: images/checkins-copy-preview.jpg
 
 The blue "tick" boxes allow you to manually check-in people and/or entire institutions (for *People*) or venues and/or venue groups (for *Venues*) , without the need to scan their identifiers. This style of check-in is designed for use an auditorium roll-call type situation where you might be running through a list of people to the room or identifying absences on a per-institution basis.
 
