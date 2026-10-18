@@ -54,7 +54,7 @@ On the *People Statuses* section of Check-ins you can view who has or has not be
 
 In *By Team* mode, the checked-in count includes viable partial teams: at least one speaker must be present, and at most one substantive speaker may be missing. Partial teams retain their distinct colour. The *Present* and *Absent* filters use this same rule.
 
-Use *Copy* to copy absent participants as a plain-text list for sharing in group chats. The list follows the selected participant type filter and includes missing speakers from partial teams, regardless of whether you are viewing teams or individual people. Each entry includes the participant's role and team or institution. If clipboard access is unavailable, a selectable list is shown instead.
+Use *Copy* to copy absent participants as a plain-text list for sharing in group chats. The list follows the selected participant type filter and includes missing speakers from partial teams, regardless of whether you are viewing teams or individual people. Each entry includes the participant's role and team or institution. Team names follow the selected real/code name display. Adjudicator institutions are omitted when code names are displayed or the Show adjudicator institutions setting is disabled. If clipboard access is unavailable, a selectable list is shown instead.
 
 .. image:: images/checkin_statuses.png
 

@@ -23,7 +23,7 @@ const person = (id, type, extra = {}) => ({
 })
 const speaker = (id, team = 'Team A', extra = {}) => person(id, 'Speaker', { team, ...extra })
 const event = id => ({ identifier: `id-${id}`, time: '2026-10-03T08:00:00Z' })
-const create = (props = {}) => setup({ teamSize: 2, forAdmin: true, teamCodes: false, ...props },
+const create = (props = {}) => setup({ teamSize: 2, forAdmin: true, teamCodes: false, showAdjudicatorInstitutions: true, ...props },
   _, computed, ref, toRef, () => ({ sendToSocket() {} }), () => ({ gettext, interpolate: tct, tct }))
 
 test('component template compiles', () => {
@@ -105,4 +105,22 @@ test('hover refreshes Bootstrap cached tooltip text for the current participant'
   view.hideEntityTooltip({ currentTarget: element })
   assert.equal(actions.at(-1), 'hide')
   delete globalThis.window
+})
+
+
+test('copy respects code names and hidden adjudicator institutions in either grouping', () => {
+  const speakers = [speaker(1, 'University A', { team_code_name: 'Orion', team_real_name: 'University A' })]
+  const adjudicators = [person(2, 'Adjudicator')]
+  const coded = create({ teamCodes: true, speakers, adjudicators })
+  for (const grouping of ['Team', 'Speaker']) {
+    coded.setListContext('speakerGroupings', grouping, true)
+    assert.equal(coded.absentParticipantsText.value, 'Adjudicator 2 (Adjudicator)\nSpeaker 1 (Speaker, Orion)')
+  }
+  coded.setNameDisplay(false)
+  assert.equal(coded.absentParticipantsText.value, 'Adjudicator 2 (Adjudicator, UNI)\nSpeaker 1 (Speaker, University A)')
+  const hidden = create({ showAdjudicatorInstitutions: false, speakers, adjudicators })
+  assert.equal(hidden.absentParticipantsText.value, 'Adjudicator 2 (Adjudicator)\nSpeaker 1 (Speaker, University A)')
+  hidden.setNameDisplay(true)
+  hidden.setNameDisplay(false)
+  assert.equal(hidden.absentParticipantsText.value, 'Adjudicator 2 (Adjudicator)\nSpeaker 1 (Speaker, University A)')
 })

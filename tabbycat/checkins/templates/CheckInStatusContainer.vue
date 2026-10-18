@@ -10,6 +10,10 @@ import { normaliseSearch, searchGroups } from './checkinSearch.js'
 const props = defineProps({
   initialEvents: Array,
   teamCodes: Boolean,
+  showAdjudicatorInstitutions: {
+    type: Boolean,
+    default: true,
+  },
   tournamentSlug: String,
   forAdmin: Boolean,
   speakers: Array,
@@ -315,7 +319,9 @@ const absentParticipants = computed(() => {
 
 const absentParticipantsText = computed(() => absentParticipants.value.map(person => {
   const role = person.type === 'Adjudicator' ? gettext('Adjudicator') : gettext('Speaker')
-  const affiliation = person.type === 'Speaker' ? person.team : person.institution?.code
+  const affiliation = person.type === 'Speaker'
+    ? person.team
+    : (!showCodeNames.value && props.showAdjudicatorInstitutions ? person.institution?.code : null)
   return affiliation
     ? tct('%s (%s, %s)', [person.name, role, affiliation])
     : tct('%s (%s)', [person.name, role])
