@@ -486,7 +486,7 @@ const forAdmin = toRef(props, 'forAdmin')
           v-model="searchText"
           class="form-control"
           type="search"
-          :placeholder="gettext('Find in Statuses')"
+          :placeholder="gettext('Find affiliations, participants in Statuses')"
           autocomplete="off"
         >
         <div
