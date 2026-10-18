@@ -1,36 +1,92 @@
-export const normaliseSearch = value => value.toLowerCase().normalize('NFD').trim()
+import _ from 'lodash'
+import { caseFold } from 'unicode-case-folding'
 
-// Filter before rendering so bulk check-in actions only receive visible entities.
-export function searchGroups (groups, query) {
-  if (!query) return Object.entries(groups)
-  return Object.entries(groups)
-    .map(([label, entities]) => [label, entities.filter(entity => normaliseSearch(entity.name).includes(query))])
-    .filter(([, entities]) => entities.length)
+const segments = value => new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(value)
+const fold = (value, unicode) => unicode ? caseFold(value).normalize('NFD') : value.toLowerCase()
+const clean = (value, unicode) => unicode ? value.normalize('NFD') : _.deburr(value).split('\'').join('').split('’').join('')
+const searchForms = value => [_.lowerCase(value), fold(value.normalize('NFD'), true)]
+
+function closeWord (query, word) {
+  const a = [...query]
+  const b = [...word]
+  if (a.length < 4 || !Number.isNaN(Number(query)) || Math.abs(a.length - b.length) > 1) return false
+  let edits = 0
+  for (let i = 0, j = 0; i < a.length || j < b.length;) {
+    if (a[i] === b[j]) { i++; j++ } else {
+      if (edits++) return false
+      if (a.length >= b.length) i++
+      if (a.length <= b.length) j++
+    }
+  }
+  return true
 }
 
-// Map normalized matches back to original text; Vue renders each part as text.
-export function highlightName (name, query) {
-  if (!query) return [{ text: name, match: false }]
-  const folded = name.toLowerCase().normalize('NFD')
-  const offsets = []
-  let offset = 0
-  for (const character of name) {
-    const value = character.toLowerCase().normalize('NFD')
-    for (let i = 0; i < value.length; i++) offsets.push({ start: offset, end: offset + character.length })
-    offset += character.length
+// Query words are alternatives; retain phrase matches and include one-edit word matches.
+function matchRanges (text, query) {
+  if (!query) return []
+  const tokens = _.words(query)
+  const matches = []
+  for (const pattern of new Set([query, ...tokens])) {
+    for (let index = text.indexOf(pattern); index !== -1; index = text.indexOf(pattern, index + 1)) {
+      matches.push([index, index + pattern.length])
+    }
   }
+  let cursor = 0
+  for (const word of _.words(text)) {
+    const index = text.indexOf(word, cursor)
+    cursor = index + word.length
+    if (tokens.some(token => !word.includes(token) && closeWord(token, word))) matches.push([index, cursor])
+  }
+  return matches
+}
+
+export function normaliseSearch (value) {
+  const input = value.trim()
+  if ((Intl.Segmenter ? [...segments(input)] : [...input]).length < 2) return null
+  return searchForms(input)
+}
+
+// Keep Lodash matches and add canonical Unicode matches, preserving group order and live entities.
+export function searchGroups (groups, query) {
+  const entries = Object.entries(groups)
+  if (!query) return entries
+  return entries.map(([label, entities]) => [label, entities.filter(entity =>
+    searchForms(entity.name).some((text, mode) => !query[mode] || matchRanges(text, query[mode]).length),
+  )]).filter(([, entities]) => entities.length)
+}
+
+export function highlightName (name, query) {
+  if (!query || !Intl.Segmenter) return [{ text: name, match: false }]
+  const graphemes = [...segments(name)]
   const highlighted = Array(name.length).fill(false)
-  let match = folded.indexOf(query)
-  while (match !== -1) {
-    highlighted.fill(true, offsets[match].start, offsets[match + query.length - 1].end)
-    match = folded.indexOf(query, match + query.length)
+  for (const unicode of [false, true]) {
+    const source = clean(name, unicode)
+    const sourceOffsets = []
+    for (const { segment, index } of graphemes) {
+      sourceOffsets.push(...Array(clean(segment, unicode).length).fill([index, index + segment.length]))
+    }
+    const offsets = []
+    let cursor = 0
+    // Normalize the whole name (Unicode) or whole words (Lodash); offsets only map back to display text.
+    const text = (unicode ? [source] : _.words(source)).map(word => {
+      let index = source.indexOf(word, cursor)
+      cursor = index + word.length
+      for (const char of word) {
+        offsets.push(...Array(fold(char, unicode).length).fill(sourceOffsets[index]))
+        index += char.length
+      }
+      offsets.push(null) // Space inserted between words, rather than a displayed character.
+      return fold(word, unicode)
+    }).join(' ')
+    for (const [start, end] of matchRanges(text, query[Number(unicode)])) {
+      highlighted.fill(true, offsets[start][0], offsets[end - 1][1])
+    }
   }
   const parts = []
-  for (let start = 0; start < name.length;) {
-    let end = start + 1
-    while (end < name.length && highlighted[end] === highlighted[start]) end++
-    parts.push({ text: name.slice(start, end), match: highlighted[start] })
-    start = end
+  for (const { segment, index } of graphemes) {
+    const match = highlighted[index]
+    if (parts.length && parts[parts.length - 1].match === match) parts[parts.length - 1].text += segment
+    else parts.push({ text: segment, match })
   }
   return parts
 }
