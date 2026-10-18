@@ -225,7 +225,7 @@ const annotatedVenues = computed(() => {
   return venues.map((venue) => {
     const venueCopy = { ...venue }
     const id = Array.isArray(venueCopy.identifier) ? venueCopy.identifier[0] : null
-    venueCopy.status = id ? _.find(events.value, ['identifier', id]) : false
+    venueCopy.status = id ? _.find(events.value, ['identifier', id]) || false : false
     venueCopy.name = venueCopy.display_name
     return venueCopy
   })
