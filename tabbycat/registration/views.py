@@ -4,13 +4,14 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 from django.db.models import Count, F, Max, Prefetch, Sum
-from django.db.models.functions import Coalesce
-from django.forms import HiddenInput, modelformset_factory, Textarea
+from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from formtools.wizard.views import SessionWizardView
 
@@ -29,11 +30,11 @@ from participants.models import (
     TournamentInstitution,
 )
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from users.permissions import Permission
+from users.permissions import has_permission, Permission
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
-from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
 from .forms import (
     AdjudicatorForm,
@@ -46,6 +47,7 @@ from .forms import (
     TournamentInstitutionForm,
 )
 from .models import Invitation, Question, SlotTransferRequest
+from .question_editor import QuestionEditorForm, QuestionEditorFormSet, serialize_question_section, system_questions
 from .utils import add_confirm_button_column, add_slot_transfer_status_column, populate_invitation_url_keys
 
 
@@ -999,62 +1001,91 @@ class AdjudicatorRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
         return table
 
 
-class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, ModelFormSetView):
-    formset_model = Question
-    formset_factory_kwargs = {
-        'fields': ['tournament', 'for_content_type', 'name', 'text', 'help_text', 'answer_type', 'required', 'min_value', 'max_value', 'choices'],
-        'widgets': {
-            'tournament': HiddenInput,
-            'for_content_type': HiddenInput,
-            'help_text': Textarea(attrs={'rows': 3}),
-        },
-        'extra': 3,
-    }
+class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateView):
     question_model = None
     template_name = 'questions_edit.html'
-
     view_permission = True
     edit_permission = Permission.EDIT_QUESTIONS
-
     page_emoji = '❓'
-    page_title = gettext_lazy("Custom Questions")
+    page_title = gettext_lazy("Registration Questions")
+    formset_model = Question
+    question_form_class = QuestionEditorForm
+    success_message = gettext_lazy("Registration questions were successfully saved.")
+    editor_help = gettext_lazy(
+        "Build each section in registration order. Use + to add a question, then drag its handle or use the arrow buttons to reorder it within its section. "
+        "Built-in questions appear first; optional built-in questions can be included or removed using their checkboxes.")
 
-    def get_formset_kwargs(self):
-        return {
-            'initial': [{
-                'tournament': self.tournament,
-                'for_content_type': ContentType.objects.get_for_model(self.question_model),
-            }] * 3,
-        }
+    def get_system_questions(self, model, data, editable):
+        return system_questions(self.tournament, model, data, editable)
 
-    def get_page_subtitle(self):
-        return _("for %s") % self.question_model._meta.verbose_name_plural
-
-    def get_formset_queryset(self):
-        return super().get_formset_queryset().filter(tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(self.question_model)).order_by('seq')
-
-    def formset_valid(self, formset):
-        self.instances = formset.save(commit=False)
-        if self.instances:
-            for cat, fields in formset.changed_objects:
-                cat.save()
-
-            for i, question in enumerate(formset.new_objects, start=self.get_formset_queryset().aggregate(m=Coalesce(Max('seq'), 0) + 1)['m']):
-                question.tournament = self.tournament
-                question.for_content_type = ContentType.objects.get_for_model(self.question_model)
-                question.seq = i
-                question.save()
-
-            messages.success(self.request, _("Questions for %(model)s were successfully saved.") % {'model': self.question_model._meta.verbose_name_plural})
+    def get_sections(self, data=None):
+        if self.question_model in (Team, Speaker):
+            models = (Team, Speaker)
+        elif self.question_model in (TournamentInstitution, Coach):
+            models = (TournamentInstitution, Coach)
         else:
-            messages.success(self.request, _("No changes were made to the questions."))
+            models = (self.question_model,)
+        factory = modelformset_factory(
+            self.formset_model, form=self.question_form_class, formset=QuestionEditorFormSet,
+            extra=0, can_order=True, can_delete=True,
+        )
+        can_edit_system = has_permission(self.request.user, Permission.EDIT_SETTINGS, self.tournament)
+        sections = []
+        for model in models:
+            content_type = ContentType.objects.get_for_model(model)
+            queryset = self.formset_model.objects.filter(tournament=self.tournament, for_content_type=content_type).order_by('seq', 'pk')
+            system_form, questions, preference = self.get_system_questions(model, data, can_edit_system)
+            sections.append({
+                'title': _("Primary contact") if model is Coach else model._meta.verbose_name_plural.capitalize(),
+                'prefix': model._meta.model_name,
+                'content_type': content_type,
+                'formset': factory(data=data, queryset=queryset, prefix=model._meta.model_name),
+                'system_form': system_form, 'system_questions': questions, 'preference': preference,
+            })
+        return sections
 
-        if "add_more" in self.request.POST:
-            return HttpResponseRedirect(self.request.path_info)
-        return super().formset_valid(formset)
+    def get_context_data(self, **kwargs):
+        if 'sections' not in kwargs:
+            kwargs['sections'] = self.get_sections()
+        kwargs['can_edit_system'] = has_permission(self.request.user, Permission.EDIT_SETTINGS, self.tournament)
+        context = super().get_context_data(**kwargs)
+        context['editor_help'] = self.editor_help
+        context['question_editor_data'] = {
+            'canEdit': context['can_edit'], 'canEditSystem': context['can_edit_system'],
+            'sections': [serialize_question_section(section) for section in context['sections']],
+        }
+        return context
 
-    def get_success_url(self, *args, **kwargs):
-        return reverse_tournament(self.success_url, self.tournament)
+    def post(self, request, *args, **kwargs):
+        with transaction.atomic():
+            # Bind after locking so a waiting editor sees earlier saves and deletions.
+            type(self.tournament).objects.select_for_update().get(pk=self.tournament.pk)
+            sections = self.get_sections(request.POST)
+            valid = all([section['formset'].is_valid() and section['system_form'].is_valid() for section in sections])
+            if not valid:
+                return self.render_to_response(self.get_context_data(sections=sections))
+            for section in sections:
+                formset = section['formset']
+                queryset = formset.get_queryset()
+                # Move sequences above their maximum so swaps stay unique.
+                maximum = queryset.aggregate(value=Max('seq'))['value'] or 0
+                for index, question in enumerate(queryset, start=max(maximum, len(formset.forms)) + 1):
+                    Question.objects.filter(pk=question.pk).update(seq=index)
+                for form in formset.deleted_forms:
+                    if form.instance.pk:
+                        form.instance.delete()
+                for seq, form in enumerate(formset.ordered_forms):
+                    question = form.save(commit=False)
+                    question.tournament = self.tournament
+                    question.for_content_type = section['content_type']
+                    question.seq = seq
+                    question.save()
+                if section['preference'] and has_permission(request.user, Permission.EDIT_SETTINGS, self.tournament):
+                    self.tournament.preferences['registration__' + section['preference'].name] = [
+                        name for name, enabled in section['system_form'].cleaned_data.items() if enabled
+                    ]
+        messages.success(request, self.success_message)
+        return HttpResponseRedirect(reverse_tournament(request.resolver_match.view_name, self.tournament))
 
 
 class BaseConfirmRegistrationView(LogActionMixin, TournamentMixin, AdministratorMixin, PostOnlyRedirectView):

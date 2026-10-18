@@ -72,7 +72,7 @@ class CustomQuestionsFormMixin:
 
     @staticmethod
     def question_field_name(question):
-        return f'q{question.for_content_type_id}-{question.seq}'
+        return f'q{question.for_content_type_id}-id{question.pk}'
 
     def add_question_fields(self):
         for question in self.get_custom_question_queryset():
