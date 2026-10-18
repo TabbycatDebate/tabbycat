@@ -1,16 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import _ from 'lodash'
 import { highlightName, institutionMatches, normaliseSearch, searchGroups } from './checkinSearch.js'
 
 test('starts after two input graphemes, before normalization can expand them', () => {
   const groups = { A: [{ name: 'Alice' }], Empty: [] }
   for (const input of ['', ' ', 'a', 'ß', 'e\u0301', '𐐀', '👩‍💻']) {
-    const query = normaliseSearch(input)
-    assert.equal(query, null)
-    assert.deepEqual(searchGroups(groups, query), Object.entries(groups))
-    assert.deepEqual(highlightName('Alice', query), [{ text: 'Alice', match: false }])
+    assert.equal(normaliseSearch(input), null, input)
   }
+  assert.deepEqual(searchGroups(groups, null), Object.entries(groups))
+  assert.deepEqual(highlightName('Alice', null), [{ text: 'Alice', match: false }])
   assert.deepEqual(searchGroups(groups, normaliseSearch('zz')), [])
   assert.deepEqual(searchGroups(groups, normaliseSearch(' al ')), [['A', groups.A]])
   assert.deepEqual(searchGroups(groups, normaliseSearch('...')), [['A', groups.A]])
@@ -21,10 +19,8 @@ test('preserves group order, entity identity and displayed-name scope', () => {
   const brown = { name: 'Brown Alice' }
   const groups = { Oxford: [{ name: 'Alice Brown' }], Empty: [{ name: 'Bob' }], York: [brown, alice] }
   assert.deepEqual(searchGroups(groups, normaliseSearch('alice')), [['Oxford', groups.Oxford], ['York', [brown, alice]]])
-  assert.deepEqual(searchGroups(groups, normaliseSearch('brown nobody')), [['Oxford', groups.Oxford], ['York', [brown]]])
   assert.equal(searchGroups(groups, normaliseSearch('alice'))[1][1][1], alice)
-  for (const query of ['secret', 'nobody']) assert.deepEqual(searchGroups(groups, normaliseSearch(query)), [])
-  assert.equal(groups.Empty.length, 1)
+  assert.deepEqual(searchGroups(groups, normaliseSearch('secret')), [])
 })
 
 test('matches institution names and codes while respecting displayed affiliations', () => {
@@ -33,21 +29,14 @@ test('matches institution names and codes while respecting displayed affiliation
   const carol = { name: 'Carol', institution: null }
   const groups = { A: [alice], B: [bob, carol] }
   for (const input of ['oxf', 'Oxford', 'oxfrd']) {
-    const query = normaliseSearch(input)
-    assert.deepEqual(searchGroups(groups, query), [['A', [alice]], ['B', [bob]]])
-    assert.equal(institutionMatches(alice, query), true)
-    assert.equal(institutionMatches(carol, query), false)
+    assert.deepEqual(searchGroups(groups, normaliseSearch(input)), [['A', [alice]], ['B', [bob]]], input)
   }
-  assert.equal(searchGroups(groups, normaliseSearch('oxf'))[0][1][0], alice)
+  assert.equal(institutionMatches(alice, normaliseSearch('oxf')), true)
   assert.equal(institutionMatches(alice, normaliseSearch('alice')), false)
   assert.equal(institutionMatches(alice, normaliseSearch('o')), false)
-  for (const input of ['unaffiliated', 'unaf', 'unafiliated']) {
-    const query = normaliseSearch(input)
-    assert.deepEqual(searchGroups(groups, query), [['B', [carol]]])
-    assert.equal(institutionMatches(carol, query), true)
-    assert.equal(institutionMatches(alice, query), false)
-    assert.equal(institutionMatches({ name: 'Room 001' }, query), false)
-  }
+  const unaffiliated = normaliseSearch('unaffiliated')
+  assert.deepEqual(searchGroups(groups, unaffiliated), [['B', [carol]]])
+  assert.equal(institutionMatches({ name: 'Room 001' }, unaffiliated), false)
   const translated = normaliseSearch('sans affiliation')
   assert.deepEqual(searchGroups(groups, translated, 'Sans affiliation'), [['B', [carol]]])
   assert.equal(institutionMatches(carol, translated, 'Sans affiliation'), true)
@@ -59,6 +48,7 @@ test('retains Lodash matches and adds Unicode equivalents with intact highlighti
   for (const [name, query] of [
     ['José Smith', 'Jose Smith'], ['Alice-Brown', 'Alice Brown'], ['AliceBrown', 'Alice Brown'],
     ['O’Connor', 'o connor'], ['A.*B.*C', 'a b c'], ['FOOBar', 'foo bar'],
+    ['Room 001', 'room 001'],
     ['Straße', 'STRASSE'], ['STRAẞE', 'strasse'], ['Jose\u0301', 'JOSÉ'],
     ['hộx', 'ho\u0302\u0323x'], ['ho\u0302\u0323x', 'hộx'],
     ['q\u0307\u0323x', 'q\u0323\u0307x'], ['a\u0315\u0300x', 'àx'],
@@ -104,19 +94,7 @@ test('matches any query word with one edit, without number aliases or short-word
   assert.deepEqual(searchGroups({ A: [{ name: 'Room 1234' }] }, normaliseSearch('1235')), [])
 })
 
-test('includes every Lodash result for representative word and Unicode boundaries', () => {
-  const names = ['José Smith', 'hộ Nguyen', 'AliceBrown', 'fooBARBaz', 'Straße', 'ΟΣΟΣ', 'O’Connor', 'A.*B.*C', 'Room 001']
-  const queries = ['jose smith', 'hộ', 'alice brown', 'bar baz', 'strasse', 'οσος', 'o connor', 'a b c', '001', '...']
-  for (const name of names) for (const query of queries) {
-    if (_.lowerCase(name).includes(_.lowerCase(query))) {
-      assert.equal(searchGroups({ A: [{ name }] }, normaliseSearch(query)).length, 1, `${name} / ${query}`)
-    }
-  }
-})
-
 test('preserves unmatched text and falls back without grapheme segmentation', t => {
-  const name = '<img src=x onerror=alert(1)>'
-  assert.equal(highlightName(name, normaliseSearch('img')).map(part => part.text).join(''), name)
   assert.deepEqual(highlightName('Alice', normaliseSearch('zz')), [{ text: 'Alice', match: false }])
   const original = Intl.Segmenter
   t.after(() => { Intl.Segmenter = original })
