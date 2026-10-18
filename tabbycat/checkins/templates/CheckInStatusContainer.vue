@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { computed, ref, toRef } from 'vue'
 import { useWebSocket } from '../../templates/composables/useWebSocket.js'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
-import { highlightName, normaliseSearch, searchGroups } from './checkinSearch.js'
+import { highlightName, institutionMatches, normaliseSearch, searchGroups } from './checkinSearch.js'
 
 
 const props = defineProps({
@@ -27,14 +27,8 @@ const props = defineProps({
 
 const { gettext, ngettext, tct } = useDjangoI18n()
 
-const searchInput = ref(null)
 const searchText = ref('')
 const searchQuery = computed(() => normaliseSearch(searchText.value))
-
-const clearSearch = () => {
-  searchText.value = ''
-  searchInput.value.focus()
-}
 
 const filterByPresence = ref({ All: true, Absent: false, Present: false })
 const events = ref([...(props.initialEvents ?? [])])
@@ -349,7 +343,7 @@ const entitiesBySortingSetting = computed(() => {
   return entitiesByTime.value
 })
 
-const visibleGroups = computed(() => searchGroups(entitiesBySortingSetting.value, searchQuery.value))
+const visibleGroups = computed(() => searchGroups(entitiesBySortingSetting.value, searchQuery.value, gettext('Unaffiliated')))
 const resultCount = computed(() => visibleGroups.value.reduce((count, [, entities]) => count + entities.length, 0))
 
 const getEntityStatusClass = (entity) => {
@@ -487,32 +481,19 @@ const forAdmin = toRef(props, 'forAdmin')
         for="checkin-search"
       >{{ gettext('Search check-ins') }}</label>
       <div class="input-group">
-        <div
-          class="input-group-prepend"
-          aria-hidden="true"
-        >
-          <span class="input-group-text"><i data-feather="search" /></span>
-        </div>
         <input
           id="checkin-search"
-          ref="searchInput"
           v-model="searchText"
           class="form-control"
           type="search"
-          :placeholder="gettext('Start typing to search')"
+          :placeholder="gettext('Find in Statuses')"
           autocomplete="off"
         >
         <div
-          v-if="searchText"
           class="input-group-append"
+          aria-hidden="true"
         >
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            @click="clearSearch"
-          >
-            {{ gettext('Clear') }}
-          </button>
+          <span class="input-group-text"><i data-feather="search" /></span>
         </div>
       </div>
       <small
@@ -633,6 +614,7 @@ const forAdmin = toRef(props, 'forAdmin')
       v-for="[grouper, entities] in visibleGroups"
       :key="entities[0].id"
       class="card mt-1"
+      :class="{ 'border-info': sortByGroup.Institution && entities.some(entity => institutionMatches(entity, searchQuery, gettext('Unaffiliated'))) }"
     >
       <div class="card-body p-0">
         <div class="row no-gutters">

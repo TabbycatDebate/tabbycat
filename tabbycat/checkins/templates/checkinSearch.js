@@ -46,12 +46,21 @@ export function normaliseSearch (value) {
   return searchForms(input)
 }
 
+const matchesSearch = (value, query) => query && searchForms(value).some((text, mode) =>
+  !query[mode] || matchRanges(text, query[mode]).length,
+)
+
+export function institutionMatches (entity, query, unaffiliated = 'Unaffiliated') {
+  const institution = entity.institution === null ? { name: unaffiliated } : entity.institution
+  return [institution?.code, institution?.name].some(value => value && matchesSearch(value, query))
+}
+
 // Keep Lodash matches and add canonical Unicode matches, preserving group order and live entities.
-export function searchGroups (groups, query) {
+export function searchGroups (groups, query, unaffiliated = 'Unaffiliated') {
   const entries = Object.entries(groups)
   if (!query) return entries
   return entries.map(([label, entities]) => [label, entities.filter(entity =>
-    searchForms(entity.name).some((text, mode) => !query[mode] || matchRanges(text, query[mode]).length),
+    matchesSearch(entity.name, query) || institutionMatches(entity, query, unaffiliated),
   )]).filter(([, entities]) => entities.length)
 }
 
