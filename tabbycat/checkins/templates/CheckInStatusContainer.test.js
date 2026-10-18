@@ -125,3 +125,31 @@ test('copy respects code names and hidden adjudicator institutions in either gro
   hidden.setNameDisplay(false)
   assert.equal(hidden.absentParticipantsText.value, 'Adjudicator 2 (Adjudicator)\nSpeaker 1 (Speaker, University A)')
 })
+
+
+test('copy applies search to displayed team or person names and excludes present people', () => {
+  const view = create({
+    speakers: [speaker(1, 'Team A'), speaker(2, 'Team A'), speaker(3, 'Team B')],
+    adjudicators: [person(4, 'Adjudicator')],
+    initialEvents: [event(1)],
+  })
+  view.searchText.value = ' TEAM a '
+  view.setListContext('filterByPresence', 'Present', true)
+  assert.equal(view.absentParticipantsText.value, 'Speaker 2 (Speaker, Team A)')
+  view.setListContext('speakerGroupings', 'Speaker', true)
+  assert.equal(view.absentParticipants.value.length, 0)
+  view.searchText.value = 'speaker'
+  assert.equal(view.absentParticipantsText.value, 'Speaker 2 (Speaker, Team A)\nSpeaker 3 (Speaker, Team B)')
+  view.searchText.value = 'adjudicator'
+  assert.equal(view.absentParticipantsText.value, 'Adjudicator 4 (Adjudicator, UNI)')
+  view.setListContext('filterByType', 'Debaters', true)
+  assert.equal(view.absentParticipants.value.length, 0)
+  view.searchText.value = ''
+  assert.equal(view.absentParticipants.value.length, 2)
+
+  const coded = create({ teamCodes: true, speakers: [speaker(5, 'University A', { team_code_name: 'Orion' })] })
+  coded.searchText.value = 'university'
+  assert.equal(coded.absentParticipants.value.length, 0)
+  coded.searchText.value = 'orion'
+  assert.equal(coded.absentParticipantsText.value, 'Speaker 5 (Speaker, Orion)')
+})

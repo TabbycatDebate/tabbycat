@@ -313,7 +313,8 @@ const stats = computed(() => {
 
 const absentParticipants = computed(() => {
   if (isForVenues.value) return []
-  const individuals = peopleByType.value.flatMap(entity => entity.type === 'Team' ? entity.speakers : [entity])
+  const matchingEntities = peopleByType.value.filter(entity => normaliseSearch(entity.name).includes(searchQuery.value))
+  const individuals = matchingEntities.flatMap(entity => entity.type === 'Team' ? entity.speakers : [entity])
   return _.sortBy(individuals.filter(person => person.status === false), person => person.name.toLowerCase())
 })
 
@@ -577,10 +578,10 @@ const forAdmin = toRef(props, 'forAdmin')
         type="button"
         class="btn btn-outline-primary"
         :disabled="absentParticipants.length === 0"
-        :title="gettext('Copy absent participants from the selected participant filter')"
+        :title="gettext('Copy absent participants matching the participant filter and search')"
         @click="copyAbsentParticipants"
       >
-        {{ gettext('Copy') }}
+        {{ gettext('Copy Absent') }}
       </button>
     </div>
     <textarea
