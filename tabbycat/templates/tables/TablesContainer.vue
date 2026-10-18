@@ -1,7 +1,7 @@
 <script setup>
 import SmartTable from './SmartTable.vue'
 import SearchInput from '../components/SearchInput.vue'
-import { computed, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import AutoSaveCounter from '../allocations/AutoSaveCounter.vue'
 import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 
@@ -17,6 +17,12 @@ const filterKey = ref('')
 const lastSaved = ref(null)
 
 const tableRefs = ref({})
+let copyTimeout
+let clearCopyFeedback = () => {}
+onUnmounted(() => {
+  clearTimeout(copyTimeout)
+  clearCopyFeedback()
+})
 
 const hasAjaxSelectCells = computed(() => props.tablesData.some(table =>
   table.data.some(row => row.some(cell => cell.component === 'ajax-select-cell')),
@@ -45,9 +51,23 @@ const tableClass = computed(() => {
 
 const getTableId = (i) => `tableContainer-${i}`
 
-const copyTableTrigger = (i) => {
+const copyTableTrigger = async (i, event) => {
+  const button = event.currentTarget
+  window.jQuery(button).tooltip('hide')
+  if (event.detail) button.blur()
   const child = tableRefs.value[i]
-  child?.copyTableData?.()
+  if (!child) return
+  await child.copyTableData()
+  clearTimeout(copyTimeout)
+  clearCopyFeedback()
+  const tooltip = window.jQuery(button)
+  const title = tooltip.attr('data-original-title')
+  tooltip.tooltip('dispose').attr('title', gettext('Copied!'))
+    .tooltip({ trigger: 'manual', animation: false }).tooltip('show')
+  clearCopyFeedback = () => {
+    tooltip.tooltip('dispose').attr('title', title).tooltip({ html: true, trigger: 'hover' })
+  }
+  copyTimeout = setTimeout(clearCopyFeedback, 1500)
 }
 </script>
 
@@ -68,8 +88,9 @@ const copyTableTrigger = (i) => {
           <button
             class="btn btn-light border ml-2"
             data-toggle="tooltip"
+            data-trigger="hover"
             title="Copy table data to clipboard in a CSV format"
-            @click.prevent="copyTableTrigger(i)"
+            @click.prevent="copyTableTrigger(i, $event)"
           >
             <i data-feather="clipboard" />
           </button>
