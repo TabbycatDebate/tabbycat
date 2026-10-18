@@ -31,7 +31,7 @@ from venues.models import Venue
 from .archive import Exporter, Importer
 from .forms import (AdjudicatorDetailsForm, ArchiveImportForm, ImportAdjudicatorsNumbersForm,
                     ImportInstitutionsRawForm, ImportTeamsNumbersForm,
-                    ImportVenuesRawForm, TeamDetailsForm, TeamDetailsFormSet,
+                    ImportVenuesRawForm, InstitutionDetailsForm, TeamDetailsForm, TeamDetailsFormSet,
                     VenueDetailsForm)
 from .importers import TournamentDataImporterError
 from .management.commands import importtournament
@@ -101,7 +101,7 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
     edit_permission = Permission.ADD_INSTITUTIONS
     form_list = [
         ('raw', ImportInstitutionsRawForm),
-        ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
+        ('details', modelformset_factory(Institution, form=InstitutionDetailsForm, extra=0)),
     ]
     action_log_type = ActionLogEntry.ActionType.SIMPLE_IMPORT_INSTITUTIONS
 

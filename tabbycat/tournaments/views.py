@@ -26,7 +26,7 @@ from breakqual.utils import auto_make_break_rounds
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
-from results.prefetch import populate_confirmed_ballots
+from results.prefetch import populate_results
 from tournaments.models import Round
 from users.permissions import has_permission, Permission
 from utils.ical import ICalendar
@@ -103,11 +103,13 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
 
         results_perm = has_permission(self.request.user, 'view.ballotsubmission', self.tournament)
         if results_perm:
-            debates = t.current_round.debate_set.filter(
-                ballotsubmission__confirmed=True,
-            ).order_by('-ballotsubmission__timestamp')[:updates]
-            populate_confirmed_ballots(debates, results=True)
-            subs = [d._confirmed_ballot.serialize_like_actionlog for d in debates]
+            ballots = list(BallotSubmission.objects.filter(
+                debate__round=t.current_round, confirmed=True,
+            ).select_related('debate__round__tournament').prefetch_related(
+                'debate__debateadjudicator_set__adjudicator__institution',
+            ).order_by('-timestamp', '-pk')[:updates])
+            populate_results(ballots, tournament=t)
+            subs = [ballot.serialize_like_actionlog for ballot in ballots]
             kwargs["initialBallots"] = json.dumps(subs)
         else:
             kwargs["initialBallots"] = json.dumps([])

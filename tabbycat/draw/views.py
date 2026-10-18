@@ -384,6 +384,14 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     message_template = 'adj_email_message'
 
     round_redirect_pattern_name = 'draw-display'
+    template_variables = RoundTemplateEmailCreateView.template_variables + [
+        ("ROUND", gettext_lazy("round name")),
+        ("VENUE", gettext_lazy("assigned venue name")),
+        ("PANEL", gettext_lazy("all adjudicators in the panel with positions")),
+        ("DRAW", gettext_lazy("team matchup in the debate")),
+        ("POSITION", gettext_lazy("recipient adjudicator's position")),
+        ("URL", gettext_lazy("link to the recipient's private URL")),
+    ]
 
     dadj_type_display = dict(DebateAdjudicator.TYPE_CHOICES)
 
@@ -426,6 +434,14 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
     message_template = 'team_draw_email_message'
 
     round_redirect_pattern_name = 'draw-display'
+    template_variables = RoundTemplateEmailCreateView.template_variables + [
+        ("ROUND", gettext_lazy("round name")),
+        ("VENUE", gettext_lazy("assigned venue name")),
+        ("PANEL", gettext_lazy("adjudicator panel for the debate")),
+        ("DRAW", gettext_lazy("team matchup in the debate")),
+        ("TEAM", gettext_lazy("recipient team name")),
+        ("SIDE", gettext_lazy("recipient team side")),
+    ]
 
     def get_queryset(self):
         return Speaker.objects.filter(team__debateteam__debate__round=self.round).select_related('team')
@@ -498,7 +514,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
 
         # For draw details and draw draft pages
         standings = None
-        if r.draw_status is Round.Status.DRAFT or self.detailed:
+        if r.draw_status == Round.Status.DRAFT or self.detailed:
             if r.prev:
                 teams = Team.objects.filter(debateteam__debate__round=r)
                 metrics = self.tournament.pref('team_standings_precedence')
@@ -528,7 +544,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
                     self._add_break_rank_columns(table, draw, r.break_category)
                 table.add_debate_metric_columns(draw, standings)
                 table.add_debate_side_history_columns(draw, r.prev)
-            elif r.draw_type is Round.DrawType.SEEDED:
+            elif r.draw_type == Round.DrawType.SEEDED:
                 table.add_debate_seed_columns(draw)
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)

@@ -7,6 +7,10 @@
 
 {% block page-alerts %}
 
+{% if form.errors %}
+  {% include "components/form-errors.html" with errors=form.errors %}
+{% endif %}
+
 {% if pref.reply_to_address == "" %}
   {% tournamenturl 'options-tournament-section' section='email' as notifications_options_url %}
   {% blocktrans trimmed asvar p1 %}
@@ -21,6 +25,44 @@
     The webhook URL for use in SendGrid is <a href="{{ notifications_webhook_url }}">{{ notifications_webhook_url }}</a>. Please point the HTTP POST URL in <a href="https://app.sendgrid.com/settings/mail_settings">SendGrid</a> to that.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
+{% endif %}
+
+{% if template_variables %}
+  <div class="card mt-3 mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{% trans "Available variables" %}</h5>
+      <p class="card-text">
+        {% blocktrans trimmed %}
+          You can personalise the subject and message using the variables below.
+          They are replaced per recipient when the email is sent.
+        {% endblocktrans %}
+      </p>
+      <ul class="mb-0">
+        {% for variable_name, variable_description in template_variables %}
+          <li>
+            <code>{% templatetag openvariable %} {{ variable_name }} {% templatetag closevariable %}</code>
+            - {{ variable_description }}
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if template_math_examples %}
+        <hr>
+        <h6 class="card-subtitle mb-2">{% trans "Arithmetic (for pricing, etc.)" %}</h6>
+        <p class="card-text mb-1">
+          {% blocktrans trimmed %}
+            Use the <code>calc</code> tag for calculations with <code>+</code>, <code>-</code>,
+            <code>*</code>, <code>/</code>:
+          {% endblocktrans %}
+        </p>
+        <ul class="mb-0">
+          {% for math_example in template_math_examples %}
+            <li><code>{{ math_example }}</code></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
 {% endif %}
 
 {% endblock %}
