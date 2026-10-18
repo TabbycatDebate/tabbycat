@@ -17,11 +17,10 @@ const filterKey = ref('')
 const lastSaved = ref(null)
 
 const tableRefs = ref({})
+const copiedTableIndex = ref(null)
 let copyTimeout
-let clearCopyFeedback = () => {}
 onUnmounted(() => {
   clearTimeout(copyTimeout)
-  clearCopyFeedback()
 })
 
 const hasAjaxSelectCells = computed(() => props.tablesData.some(table =>
@@ -51,23 +50,16 @@ const tableClass = computed(() => {
 
 const getTableId = (i) => `tableContainer-${i}`
 
-const copyTableTrigger = async (i, event) => {
-  const button = event.currentTarget
-  window.jQuery(button).tooltip('hide')
-  if (event.detail) button.blur()
+const copyTableTrigger = async (i) => {
   const child = tableRefs.value[i]
   if (!child) return
   await child.copyTableData()
+  if (tableRefs.value[i] !== child) return
   clearTimeout(copyTimeout)
-  clearCopyFeedback()
-  const tooltip = window.jQuery(button)
-  const title = tooltip.attr('data-original-title')
-  tooltip.tooltip('dispose').attr('title', gettext('Copied!'))
-    .tooltip({ trigger: 'manual', animation: false }).tooltip('show')
-  clearCopyFeedback = () => {
-    tooltip.tooltip('dispose').attr('title', title).tooltip({ html: true, trigger: 'hover' })
-  }
-  copyTimeout = setTimeout(clearCopyFeedback, 1500)
+  copiedTableIndex.value = i
+  copyTimeout = setTimeout(() => {
+    copiedTableIndex.value = null
+  }, 1500)
 }
 </script>
 
@@ -97,13 +89,13 @@ const copyTableTrigger = async (i, event) => {
     >
       <div
         :id="getTableId(i)"
-        class="card table-container pl-1"
+        class="card table-container pl-1 pl-sm-0"
       >
-        <div class="card-body pl-3 pr-0 py-2">
-          <div class="d-flex justify-content-between align-items-start">
+        <div class="card-body pl-3 pr-0 pr-sm-3 py-2">
+          <div class="d-flex justify-content-between align-items-center mb-2">
             <h4
               v-if="table.title"
-              class="card-title mt-1 mb-2"
+              class="card-title my-0"
             >
               {{ table.title }}
               <small
@@ -113,16 +105,28 @@ const copyTableTrigger = async (i, event) => {
                 {{ table.subtitle }}
               </small>
             </h4>
-            <button
-              class="btn btn-light btn-sm border p-1 ml-auto mr-3 mb-2 d-print-none"
-              data-toggle="tooltip"
-              data-trigger="hover"
-              title="Copy table data to clipboard in a CSV format"
-              aria-label="Copy table data to clipboard"
-              @click.prevent="copyTableTrigger(i, $event)"
+            <div
+              class="d-flex align-items-center ml-auto mr-3 mr-sm-0 d-print-none"
             >
-              <i data-feather="clipboard" />
-            </button>
+              <span
+                class="small text-success mr-2"
+                role="status"
+              >{{ copiedTableIndex === i ? gettext('Copied!') : '' }}</span>
+              <button
+                class="btn btn-light btn-sm border p-1"
+                type="button"
+                data-toggle="tooltip"
+                data-trigger="hover focus"
+                :title="gettext('Copy table data to clipboard in a CSV format')"
+                :aria-label="gettext('Copy table data to clipboard')"
+                @click="copyTableTrigger(i)"
+              >
+                <i
+                  data-feather="clipboard"
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
           </div>
           <smart-table
             :ref="setTableRef(i)"
