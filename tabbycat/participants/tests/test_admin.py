@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from django.contrib import admin
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
@@ -9,6 +11,42 @@ from utils.tests import BaseMinimalTournamentTestCase
 
 
 class TestInstitutionConflictForms(BaseMinimalTournamentTestCase):
+    def test_removal_checkbox_and_conflict_updates(self):
+        for model, form_class, admin_class in [(Team, TeamForm, TeamAdmin), (Adjudicator, AdjudicatorForm, AdjudicatorAdmin)]:
+            participant = model.objects.first()
+            old = participant.institution
+            new, unrelated = list(Institution.objects.exclude(pk=old.pk)[:2])
+            form = form_class(instance=participant)
+            self.assertTrue(form.fields['remove_previous_institution_conflict'].initial)
+            field_names = admin_class(model, admin.site).get_fields(self._admin_request(), participant)
+            self.assertEqual(field_names.index('remove_previous_institution_conflict'), field_names.index('institution') + 2)
+            for target in [old, new, None]:
+                for remove in [False, True]:
+                    for create in [False, True]:
+                        with self.subTest(model=model.__name__, target=target, remove=remove, create=create):
+                            participant.institution = target
+                            participant.save()
+                            participant.institution_conflicts.set([old, unrelated])
+                            form = SimpleNamespace(
+                                instance=participant, initial={'institution': old.pk},
+                                changed_data=['institution'] if target != old else [],
+                                cleaned_data={'remove_previous_institution_conflict': remove, 'create_institution_conflict': create},
+                                save_m2m=lambda: None,
+                            )
+                            model_admin = admin_class(model, admin.site)
+                            model_admin.save_related(None, form, [], True)
+                            expected = {old, unrelated}
+                            if target != old:
+                                if remove:
+                                    expected.discard(old)
+                                if create and target is not None:
+                                    expected.add(target)
+                            self.assertEqual(set(participant.institution_conflicts.all()), expected)
+                            participant.institution_conflicts.add(old)
+                            form.changed_data = []
+                            model_admin.save_related(None, form, [], True)
+                            self.assertEqual(set(participant.institution_conflicts.all()), expected | {old})
+
     def _admin_request(self):
         request = RequestFactory().get('/')
         request.user = AnonymousUser()
