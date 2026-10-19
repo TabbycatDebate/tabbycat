@@ -269,8 +269,10 @@ class PowerPairedDrawManager(BaseDrawManager):
         pullup_penalty = self.round.tournament.pref("draw_pullup_penalty")
         if pullup_penalty > 0:
             extra_metrics.add("npullups")
+        if self.round.tournament.pref("draw_odd_bracket") in ('pullup_lowest_ds_rank', 'pullup_lowest_ds_rank_npulls'):
+            extra_metrics.add('draw_strength_rank')
         if self.round.tournament.pref("draw_odd_bracket") == 'pullup_lowest_ds_rank_npulls':
-            extra_metrics |= {'npullups', 'draw_strength_rank'}
+            extra_metrics.add('npullups')
         extra_metrics -= set(metrics)
 
         generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random", extra_metrics=list(extra_metrics))
@@ -287,9 +289,10 @@ class PowerPairedDrawManager(BaseDrawManager):
                 setattr(team, pullup_metric, standing.metrics[pullup_metric])
             if pullup_penalty > 0:
                 team.npullups = standing.metrics.get('npullups', 0)
+            if self.round.tournament.pref("draw_odd_bracket") in ('pullup_lowest_ds_rank', 'pullup_lowest_ds_rank_npulls'):
+                team.draw_strength_rank = standing.metrics.get('draw_strength_rank')
             if self.round.tournament.pref("draw_odd_bracket") == 'pullup_lowest_ds_rank_npulls':
                 team.npullups = standing.metrics.get('npullups')
-                team.draw_strength_rank = standing.metrics.get('draw_strength_rank')
 
             ranked.append(team)
 

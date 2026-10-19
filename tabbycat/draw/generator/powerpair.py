@@ -324,7 +324,7 @@ class GraphCostMixin:
 
     @staticmethod
     def _pairings_fold(teams, size: int, bracket: Optional[int] = None) -> int:
-        return abs(teams[0] + teams[1] - 1 - size)
+        return abs(teams[0] + teams[1] - 1 - size) ** 2
 
     @staticmethod
     def _pairings_random(teams, size: int, bracket: Optional[int] = None) -> int:
@@ -588,11 +588,13 @@ class SingleGraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, B
 
     @staticmethod
     def _pullup_lowest_ds_rank(team, size=None):
-        return -getattr(team, 'draw_strength_rank', 0)
+        rank = getattr(team, 'draw_strength_rank', None)
+        # Teams with no previous opponents have the lowest draw strength.
+        return (rank is not None, -rank if rank is not None else 0)
 
     @staticmethod
     def _pullup_lowest_ds_rank_npulls(team, size=None):
-        return [team.npullups, -team.draw_strength_rank]
+        return (team.npullups or 0, *SingleGraphPowerPairedDrawGenerator._pullup_lowest_ds_rank(team, size))
 
     def annotate_team_flags(self, pairings):
         """Only flag that can be added is 'pullup', and can only be determined after generation"""
