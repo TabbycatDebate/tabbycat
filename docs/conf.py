@@ -60,7 +60,7 @@ author = 'Philip Belesky, Chuan-Zheng Lee, Étienne Beaulé'
 # The short X.Y version.
 version = '2.12'
 # The full version, including alpha/beta/rc tags.
-release = '2.12.0'
+release = '2.12.1'
 
 rst_epilog = """
 .. |vrelease| replace:: v{release}
