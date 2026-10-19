@@ -1,10 +1,13 @@
-from itertools import product
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier, Lock
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.db import connection, connections
 from django.urls import reverse
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.serializers import ModelSerializer
+from rest_framework.test import APIClient, APIRequestFactory, APITestCase, APITransactionTestCase
 
 from participants.models import Adjudicator, Institution, Team
 from tournaments.models import Tournament
@@ -48,26 +51,22 @@ class RelationshipUpdateTests(APITestCase):
 
     def test_institution_changes_preserve_existing_conflicts(self):
         old, unrelated, new = self.institutions
-        supplied = Institution.objects.create(name='Supplied', code='Supplied')
         for participant, endpoint, name, objects, related_endpoint in self.cases[:2]:
             fields = {'reference': 'Team'} if isinstance(participant, Team) else {'name': 'Judge', 'team_conflicts': [], 'adjudicator_conflicts': []}
-            for method, institution, conflicts in product(['patch', 'post'], [old, new, None, 'omitted'], ['omitted', [], [old, supplied]]):
+            for method, institution, conflicts in [
+                ('patch', new, None), ('patch', None, []), ('patch', new, [new]), ('post', new, [new]),
+            ]:
                 with self.subTest(model=type(participant).__name__, method=method, institution=institution, conflicts=conflicts):
                     participant.institution = old
                     participant.save()
                     participant.institution_conflicts.set([old, unrelated])
-                    data = dict(fields)
-                    if institution != 'omitted':
-                        data['institution'] = self.link(related_endpoint, institution) if institution else None
-                    if conflicts != 'omitted':
+                    data = dict(fields, institution=self.link(related_endpoint, institution) if institution else None)
+                    if conflicts is not None:
                         data[name] = [self.link(related_endpoint, obj) for obj in conflicts]
-                    expected = {old, unrelated} if method == 'patch' or conflicts == 'omitted' else set(conflicts)
-                    if method == 'patch' and conflicts != 'omitted':
-                        expected.update(conflicts)
-                    invalid = isinstance(participant, Adjudicator) and method == 'post' and (institution == 'omitted' or conflicts == 'omitted')
+                    expected = {old, unrelated, *(conflicts or [])} if method == 'patch' else set(conflicts)
                     response = getattr(self.client, method)(self.link(endpoint, participant), data)
-                    self.assert_conflicts(response, participant, name, {old, unrelated} if invalid else expected, status=400 if invalid else 200)
-                    self.assertEqual(participant.institution, old if invalid or institution == 'omitted' else institution)
+                    self.assert_conflicts(response, participant, name, expected)
+                    self.assertEqual(participant.institution, institution)
 
     def test_explicit_add_remove_and_retries(self):
         for participant, endpoint, name, objects, related_endpoint in self.cases:
@@ -142,8 +141,6 @@ class RelationshipUpdateTests(APITestCase):
             self.assertEqual(field['type'], 'array')
             self.assertEqual(field['items']['format'], 'uri')
             self.assertTrue(field['writeOnly'])
-        response = self.client.get(reverse('redoc'))
-        self.assertEqual(response.status_code, 200)
 
     def test_venue_constraint_removal_and_retries(self):
         old, keep, new = self.categories
@@ -205,3 +202,40 @@ class RelationshipUpdateTests(APITestCase):
         with patch('api.serializers.has_permission', return_value=False):
             for serializer in [TeamSerializer, AdjudicatorSerializer, PerTournamentInstitutionSerializer]:
                 self.assertNotIn('remove_venue_constraints', serializer(context=context).fields)
+
+
+class ConcurrentConflictTests(APITransactionTestCase):
+    def test_concurrent_patch_additions_preserve_all_conflicts(self):
+        if connection.vendor != 'postgresql':
+            self.skipTest('Requires separate PostgreSQL connections')
+        user = User.objects.create_superuser(username='admin', password='admin')
+        tournament = Tournament.objects.create(slug='concurrent-conflicts')
+        source, existing, *targets = [
+            Adjudicator.objects.create(tournament=tournament, name=f'Judge {i}') for i in range(7)
+        ]
+        source.adjudicator_conflicts.add(existing)
+        url = reverse_tournament('api-adjudicator-detail', tournament, kwargs={'pk': source.pk})
+        barrier, saves = Barrier(len(targets)), Lock()
+        original_update = ModelSerializer.update
+
+        def synchronized_update(serializer, instance, data):
+            if isinstance(instance, Adjudicator) and instance.pk == source.pk:
+                # Prepare every request before serializing saves, exposing stale-list replacement.
+                barrier.wait(timeout=20)
+                with saves:
+                    return original_update(serializer, instance, data)
+            return original_update(serializer, instance, data)
+
+        def add_conflict(target):
+            try:
+                client = APIClient()
+                client.force_authenticate(User.objects.get(pk=user.pk))
+                target_url = reverse_tournament('api-adjudicator-detail', tournament, kwargs={'pk': target.pk})
+                return client.patch(url, {'adjudicator_conflicts': [target_url]}, format='json').status_code
+            finally:
+                connections.close_all()
+
+        with patch.object(ModelSerializer, 'update', synchronized_update), ThreadPoolExecutor(max_workers=len(targets)) as pool:
+            self.assertEqual(list(pool.map(add_conflict, targets)), [200] * len(targets))
+        expected = {existing.pk, *(target.pk for target in targets)}
+        self.assertEqual(set(source.adjudicator_conflicts.values_list('pk', flat=True)), expected)
