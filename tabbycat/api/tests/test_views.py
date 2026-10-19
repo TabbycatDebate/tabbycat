@@ -1,14 +1,19 @@
 import json
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from django.conf import settings
+from django.db import connection
 from django.test import Client
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
+from actionlog.models import ActionLogEntry
+from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
+from checkins.models import Event
 from participants.models import Team
-from results.models import SpeakerScore
+from results.models import BallotSubmission, SpeakerScore
 from tournaments.models import Round
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
@@ -59,6 +64,34 @@ class TournamentViewsetTests(CompletedTournamentTestMixin, APITestCase):
         response = self.client.get(self.reverse_url('api-tournament-detail'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["id"], self.tournament.id)
+
+
+class ParticipantNameValidationTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_create_participant_with_overlong_name(self):
+        self.client.login(username="admin", password="admin")
+        team = self.tournament.team_set.first()
+        payloads = {
+            'adjudicator': {
+                'institution': None,
+                'institution_conflicts': [],
+                'team_conflicts': [],
+                'adjudicator_conflicts': [],
+            },
+            'speaker': {
+                'team': 'http://testserver' + self.reverse_url('api-team-detail', pk=team.pk),
+                'categories': [],
+            },
+        }
+        for participant, payload in payloads.items():
+            with self.subTest(participant=participant):
+                response = self.client.post(self.reverse_url(f'api-{participant}-list'), {
+                    **payload,
+                    'name': 'a' * 71,
+                }, format='json')
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(set(response.data), {'name'})
+                self.assertEqual(response.data['name'][0].code, 'max_length')
 
 
 class MotionViewsetTests(CompletedTournamentTestMixin, APITestCase):
@@ -200,6 +233,28 @@ class SpeakerRoundStandingsViewsetTests(CompletedTournamentTestMixin, APITestCas
             for speech in round_data['speeches']
         ]
 
+    def test_paginates_before_loading_round_scores(self):
+        url = self.reverse_url('api-speaker-round-standings')
+        full_response = self.client.get(url)
+        self.assertEqual(full_response.status_code, 200)
+        self.assertGreater(len(full_response.data), 1)
+
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(url, {'limit': 1, 'offset': 1})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, full_response.data[1:2])
+        self.assertIn('rel="next"', response['Link'])
+        self.assertIn('rel="prev"', response['Link'])
+        speaker_id = int(response.data[0]['speaker'].rsplit('/', 1)[1])
+        score_queries = [q['sql'] for q in queries if 'FROM "results_speakerscore"' in q['sql']]
+        self.assertEqual(len(score_queries), 1)
+        self.assertIn('"results_speakerscore"."speaker_id" IN (%d)' % speaker_id, score_queries[0])
+
+        response = self.client.get(url, {'limit': 1, 'offset': len(full_response.data)})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [])
+
     def test_defaults_to_substantive_speeches(self):
         self.assertTrue(SpeakerScore.objects.filter(position=self.tournament.reply_position).exists())
 
@@ -298,6 +353,34 @@ class BreakingTeamsViewsetTests(CompletedTournamentTestMixin, APITestCase):
 
 class BallotViewSetTests(CompletedTournamentTestMixin, APITestCase):
 
+    def get_ballot_url(self, ballot):
+        return self.reverse_url('api-ballot-detail', round_seq=ballot.debate.round.seq, debate_pk=ballot.debate_id, pk=ballot.pk)
+
+    def test_patch_discarded_preserves_confirmation(self):
+        self.client.login(username="admin", password="admin")
+        ballot = BallotSubmission.objects.filter(debate__round__tournament=self.tournament, confirmed=True).first()
+        confirmation = (ballot.confirmer_id, ballot.confirm_timestamp)
+
+        response = self.client.patch(self.get_ballot_url(ballot), {'discarded': True})
+
+        self.assertEqual(response.status_code, 200)
+        ballot.refresh_from_db()
+        self.assertTrue(ballot.discarded)
+        self.assertTrue(ballot.confirmed)
+        self.assertEqual((ballot.confirmer_id, ballot.confirm_timestamp), confirmation)
+
+    def test_delete_discards_and_logs_ballot(self):
+        self.client.login(username="admin", password="admin")
+        ballot = BallotSubmission.objects.filter(debate__round__tournament=self.tournament).first()
+
+        response = self.client.delete(self.get_ballot_url(ballot))
+
+        self.assertEqual(response.status_code, 200)
+        ballot.refresh_from_db()
+        self.assertTrue(ballot.discarded)
+        log = ActionLogEntry.objects.get(type=ActionLogEntry.ActionType.BALLOT_DISCARD, agent=ActionLogEntry.Agent.API)
+        self.assertEqual(log.content_object, ballot)
+
     def test_access_with_user_auth(self):
         self.client.login(username="admin", password="admin")
         response = self.client.get(reverse('api-ballot-list', kwargs={'tournament_slug': self.tournament.slug, 'round_seq': 1, 'debate_pk': 12}))
@@ -306,6 +389,66 @@ class BallotViewSetTests(CompletedTournamentTestMixin, APITestCase):
     def test_access_with_private_url(self):
         response = self.client.get(reverse('api-ballot-list', kwargs={'tournament_slug': self.tournament.slug, 'round_seq': 1, 'debate_pk': 12}), headers={"Authorization": "Key urlkey"})
         self.assertEqual(response.status_code, 200)
+
+
+class RoundActionTests(CompletedTournamentTestMixin, APITestCase):
+    round_seq = 1
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+
+    def assert_round_action_logged(self, action_type):
+        log = ActionLogEntry.objects.get(type=action_type, agent=ActionLogEntry.Agent.API)
+        self.assertEqual(log.content_object, self.round)
+        self.assertEqual(log.round, self.round)
+        self.assertEqual(log.tournament, self.tournament)
+
+    def test_delete_all_pairings(self):
+        self.assertTrue(self.round.debate_set.exists())
+        response = self.client.delete(self.reverse_url('api-pairing-list'))
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(self.round.debate_set.exists())
+        self.assert_round_action_logged(ActionLogEntry.ActionType.DRAW_REGENERATE)
+
+    def test_delete_all_preformed_panels(self):
+        PreformedPanel.objects.create(round=self.round, room_rank=1)
+        response = self.client.delete(self.reverse_url('api-preformedpanel-list'))
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(PreformedPanel.objects.filter(round=self.round).exists())
+        self.assert_round_action_logged(ActionLogEntry.ActionType.PREFORMED_PANELS_DELETE)
+
+    def test_add_blank_preformed_panels(self):
+        response = self.client.put(self.reverse_url('api-preformedpanel-list'))
+
+        self.assertEqual(response.status_code, 200)
+        expected_panels = self.tournament.team_set.count() // self.tournament.pref('teams_in_debate')
+        self.assertGreater(expected_panels, 0)
+        self.assertEqual(PreformedPanel.objects.filter(round=self.round).count(), expected_panels)
+        self.assertEqual(len(response.data), expected_panels)
+        self.assert_round_action_logged(ActionLogEntry.ActionType.PREFORMED_PANELS_CREATE)
+
+    @patch('api.views.get_channel_layer')
+    def test_debate_checkin_broadcasts_matchup(self, get_channel_layer):
+        group_send = AsyncMock()
+        get_channel_layer.return_value.group_send = group_send
+        debate = self.round.debate_set.first()
+        url = self.reverse_url('api-debate-checkin', debate_pk=debate.pk)
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 201)
+
+        response = self.client.put(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data['checked'])
+        self.assertIsNotNone(response.data['timestamp'])
+        self.assertEqual(Event.objects.filter(identifier=debate.checkin_identifier).count(), 1)
+        group_send.assert_awaited_once()
+        message = group_send.call_args.args[1]
+        self.assertTrue(message['created'])
+        self.assertEqual(message['checkins'][0]['owner_name'], debate.matchup)
 
 
 class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):

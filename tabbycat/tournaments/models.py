@@ -237,11 +237,15 @@ class Tournament(models.Model):
     @cached_property
     def current_round_seq_limit(self):
         """Largest `seq` among `current_rounds` (for eligibility filters when parallel
-        preliminary panels use different sequence numbers)."""
+        preliminary panels use different sequence numbers), falling back to
+        `current_round` when no rounds are current."""
         crs = self.current_rounds
-        if not crs:
-            return 0
-        return max(r.seq for r in crs)
+        if crs:
+            return max(r.seq for r in crs)
+        # Keep completed rounds eligible after the tournament ends and while
+        # waiting for the first elimination draw to be created.
+        current = self.current_round
+        return current.seq if current is not None else 0
 
     @cached_property
     def current_rounds(self):

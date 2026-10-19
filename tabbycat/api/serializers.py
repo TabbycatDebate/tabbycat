@@ -572,7 +572,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
         checkin = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(tournament_field='team__tournament', view_name='api-speaker-detail')
-    name = fields.AnonymisingParticipantNameField()
+    name = fields.AnonymisingParticipantNameField(max_length=Person._meta.get_field('name').max_length)
     team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
     categories = fields.TournamentHyperlinkedRelatedField(
         many=True,
@@ -655,7 +655,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         checkin = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-checkin')
 
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
-    name = fields.AnonymisingParticipantNameField()
+    name = fields.AnonymisingParticipantNameField(max_length=Person._meta.get_field('name').max_length)
     institution = serializers.HyperlinkedRelatedField(
         allow_null=True,
         view_name='api-global-institution-detail',
@@ -1716,7 +1716,7 @@ class BallotSerializer(serializers.ModelSerializer):
         return ballot
 
     def update(self, instance, validated_data):
-        if validated_data['confirmed'] and not instance.confirmed:
+        if validated_data.get('confirmed') and not instance.confirmed:
             instance.confirmer = self.context['request'].user
             instance.confirm_timestamp = timezone.now()
 

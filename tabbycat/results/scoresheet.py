@@ -74,11 +74,8 @@ class ScoresMixin:
         ]
 
     def is_complete(self):
-        if len(self.criteria) == 0:
-            scores_complete = all(self.scores[s][p] is not None for s in self.sides
-                    for p in self.positions)
-        else:
-            scores_complete = True
+        scores_complete = all(self.get_score(s, p) is not None for s in self.sides
+                for p in self.positions)
         return super().is_complete() and scores_complete
 
     def set_score(self, side, position, score):
@@ -87,6 +84,8 @@ class ScoresMixin:
 
     def get_score(self, side: str, position: int):
         if len(self.criteria) > 0:
+            if None in self.criteria_scores[side][position].values():
+                return None
             return sum(score * type(score)(criterion.weight) for criterion, score in self.criteria_scores[side][position].items())
         return self.scores[side][position]
 

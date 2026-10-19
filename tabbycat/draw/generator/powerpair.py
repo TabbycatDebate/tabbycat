@@ -303,8 +303,7 @@ class GraphCostMixin:
             penalty += max(t1.pullup_debates, t2.pullup_debates) * self.options["pullup_debates_penalty"]
 
         # Add penalty for deviations in the pairing method
-        if self.options["pairing_method"] != "random":
-            penalty += self.calculate_pairing_penalty(t1, t2, size, bracket)
+        penalty += self.calculate_pairing_penalty(t1, t2, size, bracket)
         return penalty
 
     def calculate_pairing_penalty(self, t1, t2, size, bracket=None) -> int:
@@ -325,11 +324,14 @@ class GraphCostMixin:
 
     @staticmethod
     def _pairings_fold(teams, size: int, bracket: Optional[int] = None) -> int:
-        return abs(teams[0] + teams[1] - 1 - size)
+        return abs(teams[0] + teams[1] - 1 - size) ** 2
 
     @staticmethod
     def _pairings_random(teams, size: int, bracket: Optional[int] = None) -> int:
-        return 0
+        # A tiny random value here is safe at pairing_penalty=1:
+        # ~1,000,000x below the smallest real penalty
+        # unit (side_penalty=1), so it can only ever break exact ties.
+        return random.uniform(0, 1e-6)
 
     @staticmethod
     def _pairings_adjacent(teams, size: int, bracket: Optional[int] = None) -> int:
@@ -586,11 +588,13 @@ class SingleGraphPowerPairedDrawGenerator(GraphCostMixin, GraphGeneratorMixin, B
 
     @staticmethod
     def _pullup_lowest_ds_rank(team, size=None):
-        return -getattr(team, 'draw_strength_rank', 0)
+        rank = getattr(team, 'draw_strength_rank', None)
+        # Teams with no previous opponents have the lowest draw strength.
+        return (rank is not None, -rank if rank is not None else 0)
 
     @staticmethod
     def _pullup_lowest_ds_rank_npulls(team, size=None):
-        return [team.npullups, -team.draw_strength_rank]
+        return (team.npullups or 0, *SingleGraphPowerPairedDrawGenerator._pullup_lowest_ds_rank(team, size))
 
     def annotate_team_flags(self, pairings):
         """Only flag that can be added is 'pullup', and can only be determined after generation"""

@@ -22,9 +22,9 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.12.0'
+TABBYCAT_VERSION = '2.12.1'
 TABBYCAT_CODENAME = 'Ukrainian Levkoy'
-READTHEDOCS_VERSION = 'v2.12.0'
+READTHEDOCS_VERSION = 'v2.12.1'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -393,6 +393,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Tabbycat API',
+    'REDOC_DIST': 'https://cdn.jsdelivr.net/npm/redoc@2.5.4',
     'DESCRIPTION': 'Parliamentary debate tabulation software',
     'VERSION': '1.4.0',
     'SERVE_INCLUDE_SCHEMA': False,

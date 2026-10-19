@@ -2,6 +2,33 @@
 Change Log
 ==========
 
+2.12.1
+------
+
+*Release date: 19 October 2026*
+
+- Fix BP elimination advancement when speaker scores are enabled, including selecting one winner in finals. (`#2957 <https://github.com/TabbycatDebate/tabbycat/pull/2957>`_)
+- Fix merging ballots with conflicting criterion scores and prevent incomplete criterion scores from being treated as complete. (`#2980 <https://github.com/TabbycatDebate/tabbycat/pull/2980>`_)
+- Fix graph random draws retaining deterministic team ordering and pairing ties. (`#2948 <https://github.com/TabbycatDebate/tabbycat/pull/2948>`_, `#2946 <https://github.com/TabbycatDebate/tabbycat/pull/2946>`_) Thank you to Chirag!
+- Fix minimum-cost matching allowing rematches when team history avoidance is enabled, and correct fold-pairing penalties. (`#2974 <https://github.com/TabbycatDebate/tabbycat/pull/2974>`_)
+- Fix draw-strength pullup selection, including teams with no previous opponents. (`#2974 <https://github.com/TabbycatDebate/tabbycat/pull/2974>`_)
+- Validate round-robin seeds in all debate formats. (`#2964 <https://github.com/TabbycatDebate/tabbycat/pull/2964>`_)
+- Report missing previous-round results before generating elimination draws. (`#2963 <https://github.com/TabbycatDebate/tabbycat/pull/2963>`_) Thank you to Teymour Aldridge!
+- Validate that debates have at least one team and teams have at least one substantive speaker. (`#2962 <https://github.com/TabbycatDebate/tabbycat/pull/2962>`_) Thank you to Teymour Aldridge!
+- Fix draft-draw details and seeded-draw seed columns not being displayed. (`#2983 <https://github.com/TabbycatDebate/tabbycat/pull/2983>`_)
+- Keep feedback available for completed rounds when no rounds are current, including after the tournament ends. (`#2970 <https://github.com/TabbycatDebate/tabbycat/pull/2970>`_)
+- Remove introductory text from printable feedback forms. (`#2959 <https://github.com/TabbycatDebate/tabbycat/pull/2959>`_) Thank you to Chirag!
+- Fix public results pages for rounds without pairings. (`#2981 <https://github.com/TabbycatDebate/tabbycat/pull/2981>`_)
+- Fix dashboard ballot-loading race conditions. (`#2984 <https://github.com/TabbycatDebate/tabbycat/pull/2984>`_)
+- Fix unchecked rooms displaying as checked in. (`#2985 <https://github.com/TabbycatDebate/tabbycat/pull/2985>`_) Thank you to Alekh Bhardwaj!
+- Fix partial API ballot updates, action logging, debate check-ins, preformed-panel creation responses, and speaker round-score pagination. (`#2986 <https://github.com/TabbycatDebate/tabbycat/pull/2986>`_)
+- Validate participant name lengths through the API. (`#2977 <https://github.com/TabbycatDebate/tabbycat/pull/2977>`_)
+- Restore API documentation rendering. (`#2976 <https://github.com/TabbycatDebate/tabbycat/pull/2976>`_) Thank you to Alekh Bhardwaj!
+- Fix copying participant data to CSV. (`#2680 <https://github.com/TabbycatDebate/tabbycat/pull/2680>`_) Thank you to JWPCode!
+- Fix frontend module preload requests. (`#2951 <https://github.com/TabbycatDebate/tabbycat/pull/2951>`_) Thank you to Ido Wolf!
+- Display email form validation errors and preserve selected recipients when validation fails. (`#2973 <https://github.com/TabbycatDebate/tabbycat/pull/2973>`_)
+
+
 2.12.0 (Ukrainian Levkoy)
 -------------------------
 

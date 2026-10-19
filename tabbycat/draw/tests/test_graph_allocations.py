@@ -1,7 +1,7 @@
 import unittest
 
 from .utils import TestTeam
-from ..generator.powerpair import GraphCostMixin, GraphPowerPairedDrawGenerator
+from ..generator.powerpair import GraphCostMixin, GraphPowerPairedDrawGenerator, SingleGraphPowerPairedDrawGenerator
 from ..types import DebateSide
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side=DebateSide.AFF), TestTeam(2, 'B', allocated_side=DebateSide.NEG)]
@@ -46,38 +46,38 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
         for i, team in enumerate(teams):
             """Expected:
-            (A-A): 7
-            A - B: 6
-            A - C: 5
-            A - D: 4
-            A - E: 3
-            A - F: 2
+            (A-A): 49
+            A - B: 36
+            A - C: 25
+            A - D: 16
+            A - E: 9
+            A - F: 4
             A - G: 1
             A - H: 0"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_fold([teams[0].subrank, team.subrank], 8), 7-i)
+                self.assertEqual(GraphCostMixin._pairings_fold([teams[0].subrank, team.subrank], 8), (7-i) ** 2)
 
     def test_pairings_fold_deviation(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
 
         for i, team in enumerate(teams):
             """Expected:
-            D - A: 4
-            D - B: 3
-            D - C: 2
+            D - A: 16
+            D - B: 9
+            D - C: 4
             (D-D): 1
             D - E: 0
             D - F: 1
-            D - G: 2
-            D - H: 3"""
+            D - G: 4
+            D - H: 9"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_fold([teams[3].subrank, team.subrank], 8), abs(4-i))
-        return [abs(4-i) for i in range(8)]
+                self.assertEqual(GraphCostMixin._pairings_fold([teams[3].subrank, team.subrank], 8), abs(4-i) ** 2)
+        return [abs(4-i) ** 2 for i in range(8)]
 
     def test_pairings_random_deviation_zero(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
         # Always 0
-        self.assertEqual(GraphCostMixin._pairings_random([teams[0].subrank, teams[1].subrank], 8), 0)
+        self.assertAlmostEqual(GraphCostMixin._pairings_random([teams[0].subrank, teams[1].subrank], 8), 0, delta=1e-6)
 
     def test_pairings_adjacent_deviation_top(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -122,9 +122,9 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
     def test_add_pullup_penalty(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), points=i, subrank=i+1, pullup_debates=i+1) for i in range(2)]
         gcm = GraphPowerPairedDrawGenerator(teams)
-        gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'random', 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False}
+        gcm.options = {'pullup_debates_penalty': 1, 'pairing_method': 'random', 'pairing_penalty': 1, 'avoid_history': False, 'avoid_institution': False, 'side_allocations': False}
         gcm.team_flags = {teams[0]: ['pullup']}
-        self.assertEqual(gcm.assignment_cost(*teams, 2), 2)
+        self.assertAlmostEqual(gcm.assignment_cost(*teams, 2), 2, delta=1e-6)
 
     def test_add_subrank_pullup(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=(None if i else 1)) for i in range(2)]
@@ -145,3 +145,49 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
                        'avoid_history': False, 'avoid_institution': False, 'side_penalty': 1, 'pairing_method': 'fold', 'pairing_penalty': 1, 'pullup_debates_penalty': 1}
         cost = gcm.assignment_cost(*teams, 2)
         self.assertEqual(cost, None)
+
+    def test_graph_avoid_history_bans_rematch(self):
+        teams = [TestTeam(1, 'A', hist=[2]), TestTeam(2, 'B', hist=[1])]
+        gcm = GraphPowerPairedDrawGenerator(teams)
+        gcm.options = {'avoid_history': True, 'avoid_institution': False, 'side_allocations': False,
+                       'pairing_method': 'random', 'pullup_debates_penalty': 0}
+        self.assertEqual(gcm.assignment_cost(*teams, 2), None)
+
+    def test_pullup_lowest_ds_rank_none_first(self):
+        teams = [
+            TestTeam(1, 'A', draw_strength_rank=5.0),
+            TestTeam(2, 'B', draw_strength_rank=None),
+            TestTeam(3, 'C', draw_strength_rank=3.0),
+        ]
+        sort_key = SingleGraphPowerPairedDrawGenerator._pullup_lowest_ds_rank
+        sorted_teams = sorted(teams, key=sort_key)
+        self.assertEqual(sorted_teams[0], teams[1])
+        self.assertEqual(sorted_teams[1], teams[0])
+        self.assertEqual(sorted_teams[2], teams[2])
+
+    def test_pullup_lowest_ds_rank_npulls_none_first(self):
+        teams = [
+            TestTeam(1, 'A', npullups=0, draw_strength_rank=5.0),
+            TestTeam(2, 'B', npullups=0, draw_strength_rank=None),
+            TestTeam(3, 'C', npullups=1, draw_strength_rank=None),
+        ]
+        sort_key = SingleGraphPowerPairedDrawGenerator._pullup_lowest_ds_rank_npulls
+        sorted_teams = sorted(teams, key=sort_key)
+        self.assertEqual(sorted_teams[0], teams[1])
+        self.assertEqual(sorted_teams[1], teams[0])
+        self.assertEqual(sorted_teams[2], teams[2])
+
+    def test_single_graph_uses_cross_bracket_pairs_to_avoid_rematches(self):
+        teams = [TestTeam(1, 'A', points=3, subrank=1, hist=[2]),
+                 TestTeam(2, 'B', points=3, subrank=2, hist=[1]),
+                 TestTeam(3, 'C', points=2, subrank=1),
+                 TestTeam(4, 'D', points=2, subrank=2)]
+        generator = SingleGraphPowerPairedDrawGenerator(teams, pairing_method='fold',
+            odd_bracket='pullup_top', avoid_institution=False, side_allocations='none')
+        draw = generator.generate()
+        self.assertEqual(len(draw), 2)
+        self.assertEqual({team.id for pairing in draw for team in pairing.teams}, {1, 2, 3, 4})
+        for pairing in draw:
+            first, second = pairing.teams
+            self.assertFalse(first.seen(second))
+            self.assertNotEqual(first.points, second.points)

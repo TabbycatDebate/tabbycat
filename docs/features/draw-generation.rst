@@ -190,7 +190,11 @@ It's a bit more complicated than that, for two reasons:
 
 **Minimum cost matching** is a set of more flexible methods designed for APDA and other formats. These methods create either graphs between teams in the same bracket or a single graph between all teams, weighing all possible pairings for conflicts, and finding the minimum weight matching with the `Blossom algorithm <https://en.wikipedia.org/wiki/Blossom_algorithm>`_. Depending on the penalties set, this can have a greater effect than one-up-one-down.
 
-In addition to history and institution conflicts, it can try to minimize the number of times teams have seen a pulled-up team, and stabilise side balance. There is also an option to have the pullups decided by this method versus being decided beforehand. Having them decided beforehand is faster, but can result in a less optimal full draw. The difference is that when pullups are predetermined, the generator will create and solve for graphs for each bracket, rather than create one single big graph between all teams.
+When **avoid team history** is enabled, minimum cost matching prohibits rematches, regardless of the **team history penalty**.
+
+In addition to institution conflicts, it can try to minimize the number of times teams have seen a pulled-up team, and stabilise side balance. There is also an option to have the pullups decided by this method versus being decided beforehand. Having them decided beforehand is faster, but can result in a less optimal full draw. The difference is that when pullups are predetermined, the generator will create and solve for graphs for each bracket, rather than create one single big graph between all teams.
+
+Minimum cost matching including pullups uses **draw odd brackets** to rank pullup candidates; **pullup restriction** does not apply. Teams without previous opponents are treated as having the lowest draw strength when selecting pullups by draw-strength rank.
 
 When sides are pre-allocated, this general graph problem reduces to a bipartite graph, where we can apply to `Hungarian algorithm <https://en.wikipedia.org/wiki/Hungarian_algorithm>`_ with the same penalties as would be set under the general case.
 
