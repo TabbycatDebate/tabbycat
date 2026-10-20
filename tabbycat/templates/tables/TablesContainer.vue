@@ -9,7 +9,7 @@ const props = defineProps({
   orientation: String, // Passed down from template
 })
 
-const emit = defineEmits(['toggle-checked'])
+const emit = defineEmits(['toggle-checked', 'toggle-checked-saveapathetic'])
 
 const { gettext } = useDjangoI18n()
 const filterKey = ref('')
@@ -121,6 +121,7 @@ const copyTableTrigger = (i) => {
             :external-filter-key="filterKey"
             @saved="lastSaved = $event"
             @toggle-checked="emit('toggle-checked', $event)"
+            @toggle-checked-saveapathetic="emit('toggle-checked-saveapathetic')"
           />
         </div>
       </div>

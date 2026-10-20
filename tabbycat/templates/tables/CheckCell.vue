@@ -6,12 +6,18 @@ const props = defineProps({
   cellData: Object,
 })
 
-const emit = defineEmits(['toggle-checked', 'update-sort'])
+const emit = defineEmits(['toggle-checked', 'toggle-checked-saveapathetic', 'update-sort'])
 
 const { ajaxSave } = useAjax()
 
 const checkUpdate = (newChecked) => {
-  if (props.cellData.noSave || props.cellData.disabled) {
+  if (props.cellData.disabled) {
+    return
+  }
+
+  emit('toggle-checked-saveapathetic')
+
+  if (props.cellData.noSave) {
     return
   }
   const cd = props.cellData

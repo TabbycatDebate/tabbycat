@@ -38,7 +38,8 @@
                                  :urls=urls
                                  :navigation=navigation
                                  :hide-auto-save=hideAutoSave
-                                 orientation={{ tables_orientation|safe }} >
+                                 orientation={{ tables_orientation|safe }}
+                                 @toggle-checked-saveapathetic="onTogglesChanged" >
       </checkbox-tables-container>
     </div>
 
@@ -64,6 +65,9 @@
       translations: null,
       urls: null,
       navigation: null,
+      onTogglesChanged: function() {
+        console.log('Checks changed for parent');
+      }
     }
   </script>
   {{ block.super }}

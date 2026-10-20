@@ -32,7 +32,7 @@ const props = defineProps({
   externalFilterKey: String,
 })
 
-const emit = defineEmits(['saved', 'toggle-checked'])
+const emit = defineEmits(['saved', 'toggle-checked', 'toggle-checked-saveapathetic'])
 
 const rows = computed(() => {
   const rows = []
@@ -177,6 +177,7 @@ const resolveCellComponent = (cellData) => {
             :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
             @saved="emit('saved', $event)"
             @toggle-checked="emit('toggle-checked', $event)"
+            @toggle-checked-saveapathetic="emit('toggle-checked-saveapathetic')"
           />
         </tr>
       </tbody>
