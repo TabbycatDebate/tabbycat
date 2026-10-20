@@ -1,4 +1,3 @@
-import json
 import logging
 from dataclasses import asdict
 from email.utils import formataddr
@@ -93,9 +92,7 @@ class NotificationQueueConsumer(SyncConsumer):
                 email = mail.EmailMultiAlternatives(
                     subject=subject.render(context), body=html2text(body),
                     from_email=from_email, to=[formataddr((recipient.name.strip(), recipient.email))],
-                    reply_to=reply_to, headers={
-                        'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),  # SendGrid-specific 'hook-id'
-                    },
+                    reply_to=reply_to,
                 )
                 email.attach_alternative(body, "text/html")
                 raw_message = email.message()

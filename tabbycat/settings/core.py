@@ -166,6 +166,7 @@ INSTALLED_APPS = (
     'drf_spectacular',
     'django_better_admin_arrayfield',
     'push_notifications',
+    'anymail',
 )
 
 ROOT_URLCONF = 'urls'
@@ -287,6 +288,11 @@ for app in TABBYCAT_APPS:
         'handlers': ['console'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
+
+# AWS and HTTP client libraries log full requests (including email contents and
+# participants' private URLs) at debug level, so keep them quiet
+for library in ('boto3', 'botocore', 's3transfer', 'urllib3'):
+    LOGGING['loggers'][library] = {'level': 'WARNING'}
 
 # ==============================================================================
 # Messages
