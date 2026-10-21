@@ -57,6 +57,33 @@
 {% block js %}
 
   <script>
+    function activateSendButton() {
+      console.log('activate');
+    }
+
+    function deactivateSendButton() {
+      console.log('deactivate');
+    }
+
+    function onTogglesChanged(newChecked) {
+        if (window.vueData.tablesData == null || (newChecked && window.vueData.tablesData[0].data.length != 0)) {
+          activateSendButton();
+          return;
+        }
+
+        let rows = window.vueData.tablesData[0].data;
+        for (let i = 0; i < rows.length; i++) {
+          if (rows[i][0].checked) {
+            activateSendButton();
+            return;
+          }
+        }
+
+        deactivateSendButton();
+      }
+  </script>
+
+  <script>
     window.vueData = {
       tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
       roundInfo: null,
@@ -65,10 +92,10 @@
       translations: null,
       urls: null,
       navigation: null,
-      onTogglesChanged: function(newChecked) {
+      onTogglesChanged: onTogglesChanged
+    };
 
-      }
-    }
+    onTogglesChanged();
   </script>
   {{ block.super }}
 
