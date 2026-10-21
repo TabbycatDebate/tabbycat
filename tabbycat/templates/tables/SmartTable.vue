@@ -177,7 +177,7 @@ const resolveCellComponent = (cellData) => {
             :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
             @saved="emit('saved', $event)"
             @toggle-checked="emit('toggle-checked', $event)"
-            @toggle-checked-saveapathetic="emit('toggle-checked-saveapathetic')"
+            @toggle-checked-saveapathetic="emit('toggle-checked-saveapathetic', $event)"
           />
         </tr>
       </tbody>

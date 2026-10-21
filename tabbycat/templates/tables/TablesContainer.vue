@@ -121,7 +121,7 @@ const copyTableTrigger = (i) => {
             :external-filter-key="filterKey"
             @saved="lastSaved = $event"
             @toggle-checked="emit('toggle-checked', $event)"
-            @toggle-checked-saveapathetic="emit('toggle-checked-saveapathetic')"
+            @toggle-checked-saveapathetic="emit('toggle-checked-saveapathetic', $event)"
           />
         </div>
       </div>

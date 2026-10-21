@@ -49,8 +49,8 @@ const checked = computed(() => {
 
 const csrftoken = computed(() => getCookie('csrftoken'))
 
-const togglesChanged = () => {
-  emit('toggle-checked-saveapathetic')
+const togglesChanged = (newChecked) => {
+  emit('toggle-checked-saveapathetic', newChecked)
 }
 
 const saveChecks = (type) => {
@@ -68,7 +68,7 @@ const copyFromPrevious = () => {
     row[0].checked = row[0].prev
     row[0].sort = row[0].prev
   })
-  togglesChanged()
+  togglesChanged(false)
   saveChecks(0)
 }
 
@@ -82,7 +82,7 @@ const setFromCheckIns = (set, unset) => {
       row[0].sort = false
     }
   })
-  togglesChanged()
+  togglesChanged(set)
   saveChecks(0)
 }
 
@@ -95,7 +95,7 @@ const massSelect = (state, type) => {
       }
     })
   })
-  togglesChanged()
+  togglesChanged(state)
   if (!props.hideAutoSave) {
     saveChecks(type)
   }
@@ -224,7 +224,7 @@ const massSelect = (state, type) => {
         <tables-container
           :tables-data="tablesData"
           @toggle-checked="toggleChecked"
-          @toggle-checked-saveapathetic="togglesChanged"
+          @toggle-checked-saveapathetic="togglesChanged($event)"
         />
       </div>
     </div>

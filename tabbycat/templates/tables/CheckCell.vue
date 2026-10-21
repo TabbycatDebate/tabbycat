@@ -15,7 +15,7 @@ const checkUpdate = (newChecked) => {
     return
   }
 
-  emit('toggle-checked-saveapathetic')
+  emit('toggle-checked-saveapathetic', newChecked)
 
   if (props.cellData.noSave) {
     return
