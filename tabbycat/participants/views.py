@@ -230,6 +230,15 @@ class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     message_template = 'team_email_message'
 
     tournament_redirect_pattern_name = 'participants-list'
+    template_variables = TournamentTemplateEmailCreateView.template_variables + [
+        ("SHORT", gettext_lazy("recipient team short name")),
+        ("LONG", gettext_lazy("recipient team long name")),
+        ("CODE", gettext_lazy("recipient team code name")),
+        ("EMOJI", gettext_lazy("recipient team emoji")),
+        ("BREAK", gettext_lazy("break categories the recipient team is in")),
+        ("SPEAKERS", gettext_lazy("list of speakers in the recipient team")),
+        ("INSTITUTION", gettext_lazy("recipient team institution name")),
+    ]
 
     def get_queryset(self):
         return Speaker.objects.filter(team__tournament=self.tournament).select_related('team').prefetch_related('team__speaker_set')

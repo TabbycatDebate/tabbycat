@@ -257,6 +257,10 @@ class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
     message_template = 'motion_email_message'
 
     round_redirect_pattern_name = 'draw-display'
+    template_variables = RoundTemplateEmailCreateView.template_variables + [
+        ("ROUND", gettext_lazy("round name")),
+        ("MOTIONS", gettext_lazy("list of released motions")),
+    ]
 
     def get_default_send_queryset(self):
         return Speaker.objects.filter(team__round_availabilities__round=self.round, email__isnull=False).exclude(email__exact="")

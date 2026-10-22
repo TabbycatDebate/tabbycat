@@ -180,7 +180,10 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
         table = TabbycatTableBuilder(view=self, sort_key="venue")
         table.add_debate_venue_columns(debates)
-        table.add_debate_results_columns(debates, n_cols=debates.aggregate(n=Max('debateteam__side'))['n']+1)
+        n_cols = debates.aggregate(
+            n=Coalesce(Max('debateteam__side'), self.tournament.pref('teams_in_debate') - 1),
+        )['n'] + 1
+        table.add_debate_results_columns(debates, n_cols=n_cols)
         if not (self.tournament.pref('teams_in_debate') == 4 and self.round.is_break_round):
             table.add_debate_ballot_link_column(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True)
@@ -947,7 +950,7 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
     def get_form(self):
         form = super().get_form()
         for error in self.errors:
-            msg, t, side, pos = error.args
+            msg, t, side, pos = error.args[:4]
             if t == 'speaker':
                 field = form._fieldname_speaker(side, pos)
             elif t == 'ghost':
@@ -959,6 +962,8 @@ class BaseMergeLatestBallotsView(BaseNewBallotSetView):
                     field = form._fieldname_declared_winner()
             elif t == 'scores':
                 field = form._fieldname_score(side, pos)
+            elif t == 'criterion':
+                field = form._fieldname_criterion_score(side, pos, error.args[4])
             elif t == 'speaker_ranks':
                 field = form._fieldname_srank(side, pos)
             form.cleaned_data = {}

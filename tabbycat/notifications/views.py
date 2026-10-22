@@ -222,6 +222,11 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     page_title = gettext_lazy("Email Participants")
     page_emoji = '📤'
     edit_permission = Permission.SEND_EMAILS
+    template_variables = [
+        ("USER", gettext_lazy("name of the recipient")),
+        ("TOURN", gettext_lazy("tournament name")),
+    ]
+    template_math_examples = []
 
     form_class = BasicEmailForm
 
@@ -231,6 +236,8 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
+        context['template_variables'] = self.template_variables
+        context['template_math_examples'] = self.template_math_examples
 
         context['categories'] = [{'id': 'spk', 'name': "Email"}]
         return context
@@ -247,6 +254,12 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def default_send(self, p: Person, default_send_queryset: Optional['QuerySet[Person]'] = None) -> bool:
         """Whether the person should be emailed by default"""
         return p in default_send_queryset
+
+    def get_selected_recipients(self) -> Optional[set[int]]:
+        """Recipient IDs selected in the submitted form, if this is a POST request."""
+        if self.request.method != "POST":
+            return None
+        return {int(recipient_id) for recipient_id in self.request.POST.getlist('recipients')}
 
     def add_sent_notification(self, email_count: int) -> None:
         text = ngettext("%(email_count)s email has been queued for sending.",
@@ -265,10 +278,11 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
         queryset = self.get_queryset()
         default_send_queryset = self.get_default_send_queryset()
+        selected_recipients = self.get_selected_recipients()
 
         table.add_column({'key': 'send', 'title': _("Send Email")}, [{
             'component': 'check-cell',
-            'checked': self.default_send(p, default_send_queryset),
+            'checked': p.id in selected_recipients if selected_recipients is not None else self.default_send(p, default_send_queryset),
             'id': p.id,
             'name': 'recipients',
             'value': p.id,
@@ -381,6 +395,7 @@ class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
 class CustomEmailCreateView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     tournament_redirect_pattern_name = 'notifications-email'
     event = BulkNotification.EventType.CUSTOM
+    template_variables = BaseSelectPeopleEmailView.template_variables
 
     def get_initial(self) -> Dict[str, str]:
         return {}  # Have everything unset

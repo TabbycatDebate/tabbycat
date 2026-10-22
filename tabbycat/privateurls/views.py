@@ -163,6 +163,10 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
     message_template = 'url_email_message'
 
     tournament_redirect_pattern_name = 'privateurls-list'
+    template_variables = TournamentTemplateEmailCreateView.template_variables + [
+        ("URL", _("recipient private URL")),
+        ("KEY", _("recipient private URL key")),
+    ]
 
     def get_extra(self) -> Dict[str, Any]:
         extra = super().get_extra()

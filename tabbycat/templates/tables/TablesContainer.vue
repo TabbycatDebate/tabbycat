@@ -1,5 +1,6 @@
 <script setup>
 import SmartTable from './SmartTable.vue'
+import SearchInput from '../components/SearchInput.vue'
 import { computed, ref } from 'vue'
 import AutoSaveCounter from '../allocations/AutoSaveCounter.vue'
 import { useDjangoI18n } from '../composables/useDjangoI18n.js'
@@ -53,17 +54,13 @@ const copyTableTrigger = (i) => {
 <template>
   <div class="row">
     <div class="col-12 mb-3 d-print-none">
-      <div class="input-group">
-        <input
+      <div class="d-flex align-items-center">
+        <search-input
           id="table-search"
           v-model="filterKey"
-          class="form-control table-search"
-          type="search"
+          :label="gettext('Find in Table')"
           :placeholder="gettext('Find in Table')"
-        >
-        <div class="input-group-append">
-          <span class="input-group-text"><i data-feather="search" /></span>
-        </div>
+        />
         <div
           v-for="(table, i) in tablesData"
           :key="i"

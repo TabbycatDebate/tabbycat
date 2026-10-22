@@ -902,11 +902,23 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
 class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
     """Compose and send a custom email to institution contacts (coaches)."""
 
-    template_name = 'email_institution_coaches.html'
     page_title = gettext_lazy("Email Institution Coaches")
     page_emoji = '📧'
     tournament_redirect_pattern_name = 'reg-email-coaches'
     event = BulkNotification.EventType.INSTITUTION_CUSTOM
+    template_variables = TournamentTemplateEmailCreateView.template_variables + [
+        ("INSTITUTION", gettext_lazy("recipient institution name")),
+        ("CONTACT", gettext_lazy("recipient contact name")),
+        ("TEAMS_REQUESTED", gettext_lazy("teams requested by the recipient institution")),
+        ("TEAMS_ALLOCATED", gettext_lazy("teams allocated to the recipient institution")),
+        ("ADJUDICATORS_REQUESTED", gettext_lazy("adjudicators requested by the recipient institution")),
+        ("ADJUDICATORS_ALLOCATED", gettext_lazy("adjudicators allocated to the recipient institution")),
+    ]
+    template_math_examples = [
+        '{% calc "TEAMS_ALLOCATED * 80" %}',
+        '{% calc "TEAMS_ALLOCATED * 80 + ADJUDICATORS_ALLOCATED * 50" %}',
+        '{{ TEAMS_ALLOCATED|mul:80 }}',
+    ]
 
     def get_initial(self):
         return {}

@@ -5,6 +5,7 @@ import { computed, ref, toRef } from 'vue'
 import { useWebSocket } from '../../templates/composables/useWebSocket.js'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 import { normaliseSearch, searchGroups } from './checkinSearch.js'
+import SearchInput from '../../templates/components/SearchInput.vue'
 
 
 const props = defineProps({
@@ -27,14 +28,8 @@ const props = defineProps({
 
 const { gettext, ngettext, tct } = useDjangoI18n()
 
-const searchInput = ref(null)
 const searchText = ref('')
 const searchQuery = computed(() => normaliseSearch(searchText.value))
-
-const clearSearch = () => {
-  searchText.value = ''
-  searchInput.value.focus()
-}
 
 const filterByPresence = ref({ All: true, Absent: false, Present: false })
 const events = ref([...(props.initialEvents ?? [])])
@@ -235,7 +230,7 @@ const annotatedVenues = computed(() => {
   return venues.map((venue) => {
     const venueCopy = { ...venue }
     const id = Array.isArray(venueCopy.identifier) ? venueCopy.identifier[0] : null
-    venueCopy.status = id ? _.find(events.value, ['identifier', id]) : false
+    venueCopy.status = id ? _.find(events.value, ['identifier', id]) || false : false
     venueCopy.name = venueCopy.display_name
     return venueCopy
   })
@@ -478,43 +473,13 @@ const forAdmin = toRef(props, 'forAdmin')
 
 <template>
   <div>
-    <div
-      class="mb-3"
-      role="search"
-    >
-      <label
-        class="sr-only"
-        for="checkin-search"
-      >{{ gettext('Search check-ins') }}</label>
-      <div class="input-group">
-        <div
-          class="input-group-prepend"
-          aria-hidden="true"
-        >
-          <span class="input-group-text"><i data-feather="search" /></span>
-        </div>
-        <input
-          id="checkin-search"
-          ref="searchInput"
-          v-model="searchText"
-          class="form-control"
-          type="search"
-          :placeholder="gettext('Start typing to search')"
-          autocomplete="off"
-        >
-        <div
-          v-if="searchText"
-          class="input-group-append"
-        >
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            @click="clearSearch"
-          >
-            {{ gettext('Clear') }}
-          </button>
-        </div>
-      </div>
+    <div class="mb-3 d-print-none">
+      <search-input
+        id="checkin-search"
+        v-model="searchText"
+        :label="gettext('Search check-ins')"
+        :placeholder="gettext('Start typing to search')"
+      />
       <small
         class="form-text text-muted"
         aria-live="polite"
