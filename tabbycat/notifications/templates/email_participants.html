@@ -23,6 +23,11 @@
   {% include "components/explainer-card.html" with type="info" %}
 {% endif %}
 
+{% blocktrans trimmed asvar p1 %}
+  You have not selected any recipients.
+{% endblocktrans %}
+{% include "components/explainer-card.html" with type="danger" id="emailDisableWarning" %}
+
 {% endblock %}
 
 {% block content %}
@@ -47,7 +52,8 @@
     {% for field in form.visible_fields %}
       {% include "components/form-field.html" %}
     {% endfor %}
-    <button type="submit" class="btn btn-block btn-success">
+
+    <button type="submit" class="btn btn-block btn-success" id="emailSendButton">
       {% trans "Send Message(s)" %}
     </button>
   </form>
@@ -57,12 +63,17 @@
 {% block js %}
 
   <script>
+    let sendButton = document.getElementById('emailSendButton');
+    let emailWarning = document.getElementById('emailDisableWarning');
+
     function activateSendButton() {
-      console.log('activate');
+      sendButton.removeAttribute('disabled');
+      emailWarning.style.display = 'none';
     }
 
     function deactivateSendButton() {
-      console.log('deactivate');
+      sendButton.setAttribute('disabled', 'disabled');
+      emailWarning.style.display = 'block';
     }
 
     function onTogglesChanged(newChecked) {
