@@ -41,6 +41,8 @@ daphne = "*"
 drf-link-header-pagination = "*"
 networkx = "*" # Avoid its dependencies (SciPy)
 django-push-notifications = {extras = ["wp"], version = "*"}
+django-anymail = "*"
+boto3 = "*"
 
 [dev-packages]
 pre-commit = "*"
