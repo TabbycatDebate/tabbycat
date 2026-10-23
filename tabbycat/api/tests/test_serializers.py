@@ -251,6 +251,49 @@ class AdjudicatorSerializerTests(CompletedTournamentTestMixin, APITestCase):
         })
         self.assertEqual(response.status_code, 201)
 
+    def test_create_adj_without_conflicts(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.post(reverse_tournament('api-adjudicator-list', self.tournament), {
+            'name': 'No conflicts',
+            'institution': None,
+        })
+        self.assertEqual(response.status_code, 201, response.data)
+        for field in ('institution_conflicts', 'team_conflicts', 'adjudicator_conflicts'):
+            self.assertEqual(response.data[field], [])
+
+
+class SpeakerSerializerTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_create_speaker_without_categories(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.post(reverse_tournament('api-speaker-list', self.tournament), {
+            'name': 'No categories',
+            'team': reverse_tournament('api-team-detail', self.tournament,
+                                       kwargs={'pk': self.tournament.team_set.first().pk}),
+        })
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data['categories'], [])
+
+
+class VenueSerializerTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_create_room_without_categories(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.post(reverse_tournament('api-venue-list', self.tournament), {
+            'name': 'Uncategorised room',
+            'priority': 10,
+        })
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data['categories'], [])
+
+    def test_create_room_category_without_venues(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.post(reverse_tournament('api-venuecategory-list', self.tournament), {
+            'name': 'Empty room category',
+        })
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data['venues'], [])
+
 
 class BallotSerializerTests(APITestCase):
 

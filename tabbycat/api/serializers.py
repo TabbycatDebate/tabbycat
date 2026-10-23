@@ -576,6 +576,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
     categories = fields.TournamentHyperlinkedRelatedField(
         many=True,
+        default=list,
         view_name='api-speakercategory-detail',
         queryset=SpeakerCategory.objects.all(),
     )
@@ -664,16 +665,19 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     institution_conflicts = serializers.HyperlinkedRelatedField(
         many=True,
+        default=list,
         view_name='api-global-institution-detail',
         queryset=Institution.objects.all(),
     )
     team_conflicts = fields.TournamentHyperlinkedRelatedField(
         many=True,
+        default=list,
         view_name='api-team-detail',
         queryset=Team.objects.all(),
     )
     adjudicator_conflicts = fields.TournamentHyperlinkedRelatedField(
         many=True,
+        default=list,
         view_name='api-adjudicator-detail',
         queryset=Adjudicator.objects.all(),
     )
@@ -1030,6 +1034,7 @@ class VenueSerializer(serializers.ModelSerializer):
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-venue-detail')
     categories = fields.TournamentHyperlinkedRelatedField(
         source='venuecategory_set', many=True,
+        default=list,
         view_name='api-venuecategory-detail',
         queryset=VenueCategory.objects.all(),
     )
@@ -1060,6 +1065,7 @@ class VenueCategorySerializer(serializers.ModelSerializer):
     url = fields.TournamentHyperlinkedIdentityField(view_name='api-venuecategory-detail')
     venues = fields.TournamentHyperlinkedRelatedField(
         many=True,
+        default=list,
         view_name='api-venue-detail',
         queryset=Venue.objects.all(),
     )
