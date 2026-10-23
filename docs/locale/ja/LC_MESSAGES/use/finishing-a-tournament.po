@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2025-02-15 07:22\n"
+"PO-Revision-Date: 2026-10-23 03:15\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #: ../../use/finishing-a-tournament.rst:5
 msgid "Finishing a Tournament"
-msgstr ""
+msgstr "トーナメントを終了する"
 
 #: ../../use/finishing-a-tournament.rst:7
 msgid "This page outlines some final steps to take after the conclusion of outrounds."
-msgstr ""
+msgstr "このページでは決勝トーナメント終了後に実施すべき最終手順について説明します。"
 
 #: ../../use/finishing-a-tournament.rst:10
 msgid "Tab Release"
@@ -32,7 +32,7 @@ msgstr "タブリリース設定"
 
 #: ../../use/finishing-a-tournament.rst:12
 msgid "Tabs can be released using the *Tab released* option under **Setup** > **Configuration**. Tabbycat offers the following system tabs:"
-msgstr ""
+msgstr "試合結果は「設定」メニュー下の「タブ公開」のオプションから公開できます。Tabbycat のシステムタブは下記のとおりです。"
 
 #: ../../use/finishing-a-tournament.rst:14
 msgid "Team Tab"
@@ -40,7 +40,7 @@ msgstr "チームのタブ"
 
 #: ../../use/finishing-a-tournament.rst:15
 msgid "Speakers Tab"
-msgstr ""
+msgstr "スピーカータブ"
 
 #: ../../use/finishing-a-tournament.rst:16
 msgid "Replies Tab"
@@ -52,11 +52,11 @@ msgstr "モーションのタブ"
 
 #: ../../use/finishing-a-tournament.rst:19
 msgid "You can configure the team, speakers and replies tab to display only a certain number of speakers, *e.g.*, to show only a \"Top 10 Speakers\" tab."
-msgstr ""
+msgstr "チーム、スピーカー、リプライのタブは、特定数のスピーカーのみを表示することができます。【例：上位10人のみ表示】。"
 
 #: ../../use/finishing-a-tournament.rst:21
 msgid "If you defined any speaker categories (for example, Novice, ESL or EFL), a tab for each category marked \"public\" can also be released using the **Release speaker category tabs to public**. You can similarly limit each of these tabs to display just the top few speakers, in the definition of the speaker categories. The speaker categories not marked public are *not* released by this option."
-msgstr ""
+msgstr "Novice、ESL、EFLなどのスピーカーカテゴリを設定した場合、スピーカーカテゴリ自体を公開設定にするか、「スピーカーカテゴリごとの結果を公開する」ことでも結果を公開できます。 同様に、スピーカーカテゴリの定義として上位入賞者だけを表示することもできます。 ただし、その場合はスピーカーカテゴリ自体が公開に設定されている必要があります。"
 
 #: ../../use/finishing-a-tournament.rst:23
 msgid "You can also redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving)."
