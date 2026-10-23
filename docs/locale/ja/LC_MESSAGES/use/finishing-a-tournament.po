@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-31 10:38-0400\n"
-"PO-Revision-Date: 2026-10-23 02:13\n"
+"PO-Revision-Date: 2026-10-23 03:15\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgstr "チーム、スピーカー、リプライのタブは、特定数のス
 
 #: ../../use/finishing-a-tournament.rst:21
 msgid "If you defined any speaker categories (for example, Novice, ESL or EFL), a tab for each category marked \"public\" can also be released using the **Release speaker category tabs to public**. You can similarly limit each of these tabs to display just the top few speakers, in the definition of the speaker categories. The speaker categories not marked public are *not* released by this option."
-msgstr ""
+msgstr "Novice、ESL、EFLなどのスピーカーカテゴリを設定した場合、スピーカーカテゴリ自体を公開設定にするか、「スピーカーカテゴリごとの結果を公開する」ことでも結果を公開できます。 同様に、スピーカーカテゴリの定義として上位入賞者だけを表示することもできます。 ただし、その場合はスピーカーカテゴリ自体が公開に設定されている必要があります。"
 
 #: ../../use/finishing-a-tournament.rst:23
 msgid "You can also redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving)."
