@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.core.validators import EmailValidator, MinValueValidator, validate_slug
+from django.core.validators import EmailValidator, MaxValueValidator, MinValueValidator, validate_slug
 from django.forms import SelectMultiple
 from django.utils.translation import gettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
@@ -328,8 +328,8 @@ class DrawAvoidConflicts(ChoicePreference):
 @tournament_preferences_registry.register
 class DrawPullupRestriction(ChoicePreference):
     help_text = _("If using pull-ups, restrict which teams can be pulled up. "
-        "Two-team formats only. Has no effect on BP, intermediate brackets, or "
-        "minimum cost matching including pullups (graph_one), which uses odd bracket resolution instead.")
+        "Two-team formats only. Has no effect on BP or minimum cost matching "
+        "including pullups (graph_one), which uses odd bracket resolution instead.")
     verbose_name = _("Pullup restriction")
     section = draw_rules
     name = 'draw_pullup_restriction'
@@ -340,6 +340,20 @@ class DrawPullupRestriction(ChoicePreference):
         ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
+
+
+@tournament_preferences_registry.register
+class DrawPullupPercentage(IntegerPreference):
+    help_text = _("Only teams ranked within this percentage of the bracket below "
+        "(and always at least 2 teams) can be pulled up. Affects pull-up methods & "
+        "intermediate brackets. No effect on BP, pre-allocated sides or minimum cost matching "
+        "(including pullups). Leave at 100 always unless certain rules require "
+        "otherwise; Australs uses 25 with 'pulled up the fewest times so far'.")
+    verbose_name = _("Pullup lower bracket percentage")
+    section = draw_rules
+    name = 'draw_pullup_percentage'
+    default = 100
+    field_kwargs = {'validators': [MinValueValidator(0), MaxValueValidator(100)]}
 
 
 @tournament_preferences_registry.register
