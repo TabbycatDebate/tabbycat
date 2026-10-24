@@ -112,18 +112,28 @@ const copyTableData = async () => {
     decoder.innerHTML = html.replace(/<[^>]*>?/gm, '')
     return decoder.value
   }
-  const content = props.tableContent.map(row =>
+  const content = dataFilteredByKey.value.map(row =>
     row.reduce((acc, cell, index) => {
+      const header = props.tableHeaders[index]
+      if (header.csvRounds) {
+        for (const [seq] of header.csvRounds) {
+          acc[`${header.key}_${seq}`] = cell.graphData.find(point => point.x === seq)?.y ?? ''
+        }
+        return acc
+      }
       const value = cell.export ?? (['ajax-select-cell', 'check-cell'].includes(cell.component)
         ? getCellValue(cell)
         : cell.text)
-      acc[props.tableHeaders[index].key] = typeof value === 'string'
+      acc[header.key] = typeof value === 'string'
         ? getPlainText(value)
         : (value ?? '')
       return acc
     }, {}),
   )
-  const csvConfig = mkConfig({ useKeysAsHeaders: true })
+  const columnHeaders = props.tableHeaders.flatMap(header => header.csvRounds
+    ? header.csvRounds.map(([seq, name]) => ({ key: `${header.key}_${seq}`, displayLabel: name }))
+    : [header.key])
+  const csvConfig = mkConfig({ columnHeaders })
   const csvData = generateCsv(csvConfig)(content)
   await navigator.clipboard.writeText(csvData)
 }
