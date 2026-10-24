@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 
@@ -5,9 +6,13 @@ import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
+from .postgres_channels_cache import postgres_channel_layers, postgres_database_cache
+
+
+def _truthy_env(name: str) -> bool:
+    return os.environ.get(name, '').lower() in ('1', 'true', 'yes')
 
 # ==============================================================================
 # Render per https://render.com/docs/deploy-django
@@ -44,33 +49,41 @@ DATABASES = {
 }
 
 # ==============================================================================
-# Redis
+# Channels & cache (PostgreSQL by default; optional Redis)
 # ==============================================================================
 
-REDIS_HOST = os.environ.get('REDIS_HOST')
-REDIS_PORT = os.environ.get('REDIS_PORT')
+USE_REDIS_CHANNELS_CACHE = _truthy_env('TABBYCAT_USE_REDIS_CHANNELS_CACHE')
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://" + REDIS_HOST + ":" + REDIS_PORT,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "SOCKET_CONNECT_TIMEOUT": 5,
-            "SOCKET_TIMEOUT": 60,
-            "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
-        },
-    },
-}
+if USE_REDIS_CHANNELS_CACHE:
+    REDIS_HOST = os.environ.get('REDIS_HOST')
+    REDIS_PORT = os.environ.get('REDIS_PORT')
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": ["redis://" + REDIS_HOST + ":" + REDIS_PORT],
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': 'redis://' + REDIS_HOST + ':' + REDIS_PORT,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'SOCKET_CONNECT_TIMEOUT': 5,
+                'SOCKET_TIMEOUT': 60,
+                'IGNORE_EXCEPTIONS': True,
+            },
         },
-    },
-}
+    }
+
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': ['redis://' + REDIS_HOST + ':' + REDIS_PORT],
+                'group_expiry': 10800,
+            },
+        },
+    }
+else:
+    DATABASES['channels_postgres'] = copy.deepcopy(DATABASES['default'])
+    CACHES = postgres_database_cache()
+    CHANNEL_LAYERS = postgres_channel_layers(copy.deepcopy(DATABASES['default']))
 
 # ==============================================================================
 # Sentry
@@ -78,13 +91,17 @@ CHANNEL_LAYERS = {
 
 if not os.environ.get('DISABLE_SENTRY'):
     DISABLE_SENTRY = False
+    _sentry_integrations = [
+        DjangoIntegration(),
+        LoggingIntegration(event_level=logging.WARNING),
+    ]
+    if USE_REDIS_CHANNELS_CACHE:
+        from sentry_sdk.integrations.redis import RedisIntegration
+
+        _sentry_integrations.append(RedisIntegration())
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@o85113.ingest.sentry.io/185382",
-        integrations=[
-            DjangoIntegration(),
-            LoggingIntegration(event_level=logging.WARNING),
-            RedisIntegration(),
-        ],
+        integrations=_sentry_integrations,
         send_default_pii=True,
         release=TABBYCAT_VERSION,
     )

@@ -50,6 +50,31 @@ If you have any feedback or would like to request support, we'd love to hear fro
 
 Contributions are welcome, and are greatly appreciated! Details about how to contribute [are also outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/contributing.html).
 
+### Local workers: PostgreSQL or Redis
+
+The local development server and Channels worker use PostgreSQL by default. Start the complete development stack with:
+
+```sh
+npm run serve
+# or, explicitly:
+npm run serve:postgres
+```
+
+To use Redis for both Channels and the Django cache, install the optional dependencies, start Redis on `localhost:6379`, then run:
+
+```sh
+pipenv install --categories=redis-channels-cache
+npm run serve:redis
+```
+
+To run only the worker with PostgreSQL, use `npm run serve-worker`. To run only the worker with Redis, set the same switch explicitly:
+
+```sh
+TABBYCAT_USE_REDIS_CHANNELS_CACHE=1 npm run serve-worker
+```
+
+The npm worker command enables `LOCAL_DEVELOPMENT` automatically, so `tabbycat/settings/development.py` is included. When invoking `manage.py runworker` directly, set `LOCAL_DEVELOPMENT=1` yourself.
+
 Monetary donations are much appreciated and help us to continue the development and maintenance of Tabbycat. We suggest that tournaments donate at the level of C$1 (1 Canadian dollar) per team; especially if your tournament is run for profit or fundraising purposes. More details [are available in our documentation](http://tabbycat.readthedocs.io/en/latest/about/licence.html).
 
 ## ©️ Licence

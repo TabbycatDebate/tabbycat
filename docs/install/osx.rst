@@ -59,18 +59,13 @@ You'll need to use the PostgreSQL command-line tools, so run the command that th
 
 Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/v12.18.1/node-v12.18.1.pkg>`_
 
-1(d). Redis
------------
-  *Redis is an in-memory data structure store, used as a message broker and cache.*
+1(d). Channels, caching, and PostgreSQL
+---------------------------------------
+Real-time features and public page caching use PostgreSQL via `channels_postgres <https://github.com/danidee10/channels_postgres>`_ and Django's database cache backend. You do **not** need Redis for a normal installation.
 
-Tabbycat requires Redis for two critical functions:
+After ``dj migrate``, run ``dj createcachetable`` once to create the cache table (Heroku, Render, and Docker do this in their install scripts).
 
-  1. Asynchronous Background Tasks: Redis serves as a message broker for Django Channels, handling real-time features like live adjudicator allocation, check-ins updates, and round results display.
-
-  2. Page Caching: Redis caches frequently accessed public pages (draws, standings, results) to improve performance during high-traffic periods, especially during tournament events.
-
-  $ brew install redis
-  $ brew services start redis
+To use Redis instead, install Redis locally (e.g. ``brew install redis``), add ``django-redis``, ``channels-redis``, and ``redis`` with pip, and uncomment the Redis section in **settings/local.py**.
 
 2. Get the source code
 ================================================================================
@@ -153,6 +148,7 @@ e. Navigate to the **tabbycat** sub-directory, initialize the database, compile 
 
     (tabbycat-9BkbSRuB) $ cd tabbycat
     (tabbycat-9BkbSRuB) $ dj migrate
+    (tabbycat-9BkbSRuB) $ dj createcachetable
     (tabbycat-9BkbSRuB) $ npm run build
     (tabbycat-9BkbSRuB) $ dj collectstatic
     (tabbycat-9BkbSRuB) $ dj createsuperuser
