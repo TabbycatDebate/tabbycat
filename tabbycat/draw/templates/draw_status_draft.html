@@ -3,7 +3,7 @@
 
 {% block page-subnav-sections %}
   <a href="{% roundurl 'draw-regenerate' %}" class="btn btn-outline-danger">
-    <i data-feather="chevron-left"></i> {% trans "Delete Draw" %}
+    <i data-icon="chevron-left"></i> {% trans "Delete Draw" %}
   </a>
   <a href="{% roundurl 'edit-debate-teams' round %}" class="btn btn-outline-primary">
     {% trans "Edit Sides/Matchups" %}
@@ -14,7 +14,7 @@
   <form id="confirmForm" method="POST" action="{% roundurl 'draw-confirm' %}">
     {% csrf_token %}
     <button id="confirmDraw" class="btn btn-success" type="submit">
-      {% trans "Confirm Draw" %}<i data-feather="chevron-right"></i>
+      {% trans "Confirm Draw" %}<i data-icon="chevron-right"></i>
     </button>
   </form>
 {% endblock %}
@@ -33,7 +33,7 @@
       tournaments, the first metric should be points or wins.
     {% endblocktrans %}
     {# Now just 'info' because the user already clicked through the 'warning' when creating the draw. #}
-    {% include "components/alert.html" with type="info" icon="alert-circle" %}
+    {% include "components/alert.html" with type="info" icon="circle-alert" %}
   {% endif %}
 
   {% if pref.teams_in_debate == 4 and pref.team_standings_precedence|length > 0 and pref.team_standings_precedence.0 != 'points' %}
@@ -45,7 +45,7 @@
       <a href="{{ standings_config_url }}" class="alert-link">change the team standings precedence
       in the standings configuration page</a>.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+    {% include "components/alert.html" with type="info" icon='circle-alert' %}
   {% endif %}
 
   {% if round.draw_type == round.DrawType.MANUAL and round.debate_set.count == 0 %}
@@ -56,7 +56,7 @@
       <a href="{{ edit_matchups_url }}" class="alert-link">Edit Sides/Matchups</a>
       to fill it in.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+    {% include "components/alert.html" with type="info" icon='circle-alert' %}
   {% endif %}
 
   {% if pref.adj_min_score == pref.adj_max_score %}
@@ -64,7 +64,7 @@
     {% blocktrans trimmed asvar message %}
       The adjudicator score range is 0, and so adjudicator scores will be ignored when allocating. You can <a href="{{ feedback_config_url }}" class="alert-link">change the adjudicator score range in the feedback configuration page</a>.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+    {% include "components/alert.html" with type="info" icon='circle-alert' %}
   {% endif %}
 {% endblock %}
 

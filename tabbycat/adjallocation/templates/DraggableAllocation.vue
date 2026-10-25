@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import { computed, ref } from 'vue'
 import DraggableCollection from '../../templates/allocations/DraggableCollection.vue'
 import DroppableItem from '../../templates/allocations/DroppableItem.vue'
@@ -81,7 +82,7 @@ const hidePanelHoverConflicts = () => {
       @mouseleave="hidePanelHoverConflicts"
     >
       <div class="d-flex">
-        <i data-feather="move" />
+        <svg-icon name="move" />
       </div>
     </div>
 
@@ -92,7 +93,7 @@ const hidePanelHoverConflicts = () => {
       :drop-context="{ assignment: debateOrPanel.id }"
     >
       <div class="px-4 d-flex">
-        <i data-feather="download" />
+        <svg-icon name="download" />
       </div>
     </droppable-item>
 

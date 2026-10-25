@@ -21,7 +21,7 @@
   }
 }
 
-.navbar .dropdown-item .feather {
+.navbar .dropdown-item .svg-icon {
   margin-bottom: -3px;
   margin-right: 5px;
 }
@@ -95,11 +95,11 @@
       color: lighten($sidebar-muted-text, 20%);
     }
 
-    &[aria-expanded="true"] .feather-chevron-down {
+    &[aria-expanded="true"] [data-icon="chevron-down"] {
       display: none !important; // Need to override d-none for mobile
     }
 
-    &[aria-expanded="false"] .feather-chevron-up {
+    &[aria-expanded="false"] [data-icon="chevron-up"] {
       display: none !important; // Need to override d-none for mobile
     }
   }
@@ -113,7 +113,7 @@
     background: darken($sidebar-bg, 5%);
     border: 0;
 
-    .feather {
+    .svg-icon {
       display: inline-block;
       width: 31px;
       padding-right: 13px;
@@ -189,14 +189,14 @@
     font-size: 12px;
     padding: 0.75rem 0.25rem;
 
-    .feather {
+    .svg-icon {
       width: 12px;
       height: 12px;
       margin-right: 0;
     }
 
-    .feather-chevron-down,
-    .feather-chevron-up {
+    [data-icon="chevron-down"],
+    [data-icon="chevron-up"] {
       margin-top: 2px;
       margin-right: 0;
     }
@@ -206,7 +206,7 @@
   .admin-sidebar .list-group-item > .collapsing .list-group-item {
     font-size: 12px;
 
-    .feather {
+    .svg-icon {
       padding-right: 8px;
       padding-top: 3px;
       padding-left: 2px;
@@ -231,7 +231,7 @@
       font-size: 12px;
       padding: 0.5rem 0.5rem;
 
-      .feather {
+      .svg-icon {
         width: 12px;
         height: 12px;
         padding-right: 2px;
@@ -246,7 +246,7 @@
     font-size: 11px;
     padding-top: 0.5rem 0.25rem;
 
-    .feather {
+    .svg-icon {
       width: 16px;
       padding-right: 6px;
       padding-left: 0;
@@ -270,14 +270,14 @@
       font-size: $font-size-base;
       padding: 0.5rem 1rem;
 
-      .feather {
+      .svg-icon {
         width: 20px;
         height: 16px;
         padding-right: 4px;
       }
 
-      .feather-chevron-down,
-      .feather-chevron-up {
+      [data-icon="chevron-down"],
+      [data-icon="chevron-up"] {
         margin-top: 2px;
         margin-right: 0;
       }
@@ -293,7 +293,7 @@
   .admin-sidebar .list-group-item > .collapsing .list-group-item {
     font-size: 14px;
 
-    .feather {
+    .svg-icon {
       width: 25px;
       padding-right: 9px;
       height: 18px;

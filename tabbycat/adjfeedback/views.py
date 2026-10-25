@@ -384,7 +384,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
         if tournament.pref('show_team_institutions'):
             teams_table.add_column({
                 'key': 'institution',
-                'icon': 'home',
+                'icon': 'house',
                 'tooltip': _("Institution"),
             }, [escape(team.institution.code) if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
 
@@ -401,7 +401,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
         if tournament.pref('show_adjudicator_institutions'):
             adjs_table.add_column({
                 'key': 'institution',
-                'icon': 'home',
+                'icon': 'house',
                 'tooltip': _("Institution"),
             }, [escape(adj.institution.code) if adj.institution else TabbycatTableBuilder.BLANK_TEXT for adj in adjudicators])
 

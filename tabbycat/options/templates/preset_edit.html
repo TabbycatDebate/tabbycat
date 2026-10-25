@@ -4,7 +4,7 @@
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary "
      href="{% tournamenturl 'options-tournament-index' %}">
-    <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
+    <i data-icon="chevron-left"></i> {% trans "Back to Configuration" %}
   </a>
 {% endblock %}
 
@@ -41,7 +41,7 @@
   <div class="card mt-3">
     <div class="card-body text-secondary border-secondary">
       <h4 class="card-title mb-0">
-        <i data-feather="check-circle"></i> {% trans "Preset actions already in effect" %}
+        <i data-icon="circle-check-big"></i> {% trans "Preset actions already in effect" %}
       </h4>
       <p class="form-text text-muted small mb-0">
         {% trans "The tournament already matches these parts of the preset. They will not run again when you save." %}
@@ -51,7 +51,7 @@
       {% for action, field in form.preset_action_rows_already %}
       <li class="list-group-item text-muted">
         <span class="d-flex align-items-start">
-          <i data-feather="check" class="text-success mr-2 mt-1 flex-shrink-0" style="width:1.1rem;height:1.1rem;"></i>
+          <i data-icon="check" class="text-success mr-2 mt-1 flex-shrink-0" style="width:1.1rem;height:1.1rem;"></i>
           <span>{{ field.label }}</span>
         </span>
       </li>
@@ -64,7 +64,7 @@
   <div class="card mt-3">
     <div class="card-body text-info border-info">
       <h4 class="card-title mb-0">
-        <i data-feather="settings"></i> {% trans "Preset actions to apply when you save" %}
+        <i data-icon="settings"></i> {% trans "Preset actions to apply when you save" %}
       </h4>
       <p class="form-text text-muted small mb-0">
         {% trans "These options are not tournament preferences; they adjust other data (for example rounds). Uncheck any you do not want applied." %}

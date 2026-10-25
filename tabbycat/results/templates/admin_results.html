@@ -3,7 +3,7 @@
 
 {% block page-subnav-sections %}
   <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-primary">
-    <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
+    <i data-icon="chevron-left"></i> {% trans "Display Draw" %}
   </a>
   <a class="btn btn-outline-primary" href="{% tournamenturl 'admin-checkin-prescan' %}">
     {% trans "Check-In Ballots" %}
@@ -63,7 +63,7 @@
 {% block page-subnav-actions %}
   {% if round.is_current %}
     <a class="btn {% if incomplete_ballots %}btn-danger disabled{% else %}btn-outline-success{% endif %} " href="{% roundurl 'tournament-complete-round-check' %}">
-      {% trans "Complete Round" %} <i data-feather="chevron-right"></i>
+      {% trans "Complete Round" %} <i data-icon="chevron-right"></i>
     </a>
   {% else %}
     <div class="hidden"></div><!-- Just keeps the spacing consistent -->
@@ -98,7 +98,7 @@
       <a href="{{ editdb_speakerscorebyadj_url }}?debate_adjudicator__type__exact=T" class="alert-link">"speaker
       scores by adj" objects</a>, and then opening and resaving the result here.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="danger" icon="alert-octagon" extra=trainee_extra %}
+    {% include "components/alert.html" with type="danger" icon="octagon-alert" extra=trainee_extra %}
   {% endif %}
 
   {% comment %}
@@ -117,7 +117,7 @@
       debate(s) and ballot submissions yourself in the Edit Database area, or if
       that doesn't work, you might need to find them using SQL queries directly.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="danger" icon="alert-octagon" %}
+    {% include "components/alert.html" with type="danger" icon="octagon-alert" %}
   {% endif %}
 
   {% if pref.teams_in_debate == 4 and round.ballots_per_debate == "per-adj" %}

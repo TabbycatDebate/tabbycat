@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import DroppableItem from './DroppableItem.vue'
 import { useDragAndDropStore } from './DragAndDropStore.js'
@@ -178,8 +179,8 @@ onBeforeUnmount(() => {
           @dragover.prevent
           @mousedown="resizeStart"
         >
-          <i
-            data-feather="menu"
+          <svg-icon
+            name="menu"
             class="mx-auto d-block"
           />
         </div>

@@ -32,7 +32,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_tester_checkbox(self, adjudicators):
         tester_header = {
             'key': 'tester',
-            'icon': 'check-circle',
+            'icon': 'circle-check-big',
             'tooltip': _("Whether the adj tests other adjs (click to mark). "
                          "Adjudication core members are always testers"),
         }
@@ -125,7 +125,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_score_variance_columns(self, adjudicators):
         diff_header = {
             'key': 'score-variance',
-            'icon': 'bar-chart-2',
+            'icon': 'chart-no-axes-column',
             'tooltip': _("The standard deviation of this adjudicator's current scores; with larger numbers meaning less consistent feedback scores."),
         }
         diff_data = [{

@@ -72,7 +72,7 @@
 
     {% if checkins_used %}
       {% trans "Show barcode for check-in" as text %}
-      {% include "components/item-action.html" with id="openBarcode" url="#" icon="grid" child=False data_toggle="modal" data_target="#barcodeModal" %}
+      {% include "components/item-action.html" with id="openBarcode" url="#" icon="grid-3x3" child=False data_toggle="modal" data_target="#barcodeModal" %}
     {% endif %}
 
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}

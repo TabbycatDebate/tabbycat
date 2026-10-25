@@ -24,7 +24,7 @@
     <form action="{% tournamenturl 'breakqual-generate-all' category.slug %}" class="form-inline" method="POST">
       {% csrf_token %}
       <button class="btn btn-danger" id="generateBreakingTeams" type="submit">
-        {% trans "Delete and Regenerate All Breaks" %} <i data-feather="repeat"></i>
+        {% trans "Delete and Regenerate All Breaks" %} <i data-icon="repeat"></i>
       </button>
     </form>
   {% else %}
@@ -33,7 +33,7 @@
         {% csrf_token %}
         <button class="btn btn-{{ pref.public_breaking_teams|yesno:"danger,success" }} form-control"
                 id="generateBreakingTeams" type="submit">
-          {% trans "Generate the Break for All Categories" %} <i data-feather="chevron-right"></i>
+          {% trans "Generate the Break for All Categories" %} <i data-icon="chevron-right"></i>
         </button>
       </form>
     </div>
@@ -71,7 +71,7 @@
   {% else %}
     {% if pref.public_breaking_teams %}
       <div class="alert alert-danger">
-        <i data-feather="alert-circle"></i>
+        <i data-icon="circle-alert"></i>
         {% tournamenturl 'options-tournament-index' as options_url %}
         {% blocktrans trimmed %}
           The <strong>public breaking teams</strong> configuration setting is

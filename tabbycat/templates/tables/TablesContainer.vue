@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 import SmartTable from './SmartTable.vue'
 import SearchInput from '../components/SearchInput.vue'
 import { computed, ref } from 'vue'
@@ -71,7 +72,7 @@ const copyTableTrigger = (i) => {
             title="Copy table data to clipboard in a CSV format"
             @click.prevent="copyTableTrigger(i)"
           >
-            <i data-feather="clipboard" />
+            <svg-icon name="clipboard" />
           </button>
         </div>
         <auto-save-counter

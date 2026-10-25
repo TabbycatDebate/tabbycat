@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 import { createPopper } from '@popperjs/core'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { usePopoverManager } from '../composables/usePopoverManager.js'
@@ -110,8 +111,8 @@ onBeforeUnmount(() => {
             @click="hidePopOver(true)"
             @tap="hidePopOver(true)"
           >
-            <i
-              data-feather="x"
+            <svg-icon
+              name="x"
               class="hoverable text-danger"
             />
           </div>
