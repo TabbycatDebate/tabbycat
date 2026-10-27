@@ -8,13 +8,13 @@ import motions.models as mm
 import participants.models as pm
 import tournaments.models as tm
 import venues.models as vm
-from draw.types import DebateSide
-from participants.emoji import set_emoji
+from importer.references import ImportReferences
 
-from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
+from .base import BaseTournamentDataImporter, make_interpreter
+from .lookups import TournamentDataLookups
 
 
-class AnorakTournamentDataImporter(BaseTournamentDataImporter):
+class AnorakTournamentDataImporter(TournamentDataLookups, BaseTournamentDataImporter):
     """Anorak: The original tournament data format."""
 
     order = [
@@ -33,48 +33,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         'adj_venue_constraints',
         'team_venue_constraints',
     ]
-
-    lookup_round_stage = make_lookup("round stage", {
-        ("preliminary", "p"): tm.Round.Stage.PRELIMINARY,
-        ("elimination", "break", "e", "b"): tm.Round.Stage.ELIMINATION,
-    })
-
-    lookup_draw_type = make_lookup("draw type", {
-        ("random", "r"): tm.Round.DrawType.RANDOM,
-        ("manual", "m"): tm.Round.DrawType.MANUAL,
-        ("round robin", "d"): tm.Round.DrawType.ROUNDROBIN,
-        ("power paired", "p"): tm.Round.DrawType.POWERPAIRED,
-        ("elimination", "break", "e", "b"): tm.Round.DrawType.ELIMINATION,
-    })
-
-    lookup_gender = make_lookup("gender", {
-        ("male", "m"): pm.Person.GENDER_MALE,
-        ("female", "f"): pm.Person.GENDER_FEMALE,
-        ("other", "o"): pm.Person.GENDER_OTHER,
-    })
-
-    lookup_team_position = make_lookup("team position", {
-        ("affirmative", "aff", "a"): DebateSide.AFF,
-        ("negative", "neg", "n"): DebateSide.NEG,
-    })
-
-    lookup_feedback_answer_type = make_lookup("feedback answer type", {
-        "checkbox": fm.AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_CHECKBOX,
-        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.AnswerType.BOOLEAN_SELECT,
-        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.AnswerType.INTEGER_TEXTBOX,
-        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.AnswerType.INTEGER_SCALE,
-        "float": fm.AdjudicatorFeedbackQuestion.AnswerType.FLOAT,
-        "text": fm.AdjudicatorFeedbackQuestion.AnswerType.TEXT,
-        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.AnswerType.LONGTEXT,
-        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.AnswerType.SINGLE_SELECT,
-        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.AnswerType.MULTIPLE_SELECT,
-    })
-
-    lookup_venue_category_display = make_lookup("venue category display", {
-        "": vm.VenueCategory.DISPLAY_SUFFIX,
-        "suffix": vm.VenueCategory.DISPLAY_SUFFIX,
-        "prefix": vm.VenueCategory.DISPLAY_PREFIX,
-    })
 
     def import_rounds(self, f):
         round_interpreter_part = make_interpreter(
@@ -164,9 +122,10 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         """Imports teams. If 'create_dummy_speakers' is True, it also creates
         dummy speakers."""
 
+        references = ImportReferences(self.tournament)
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
-            institution=pm.Institution.objects.lookup,
+            institution=references.lookup_institution,
         )
 
         def team_interpreter(lineno, line):
@@ -175,7 +134,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             return line
 
         teams = self._import(f, pm.Team, team_interpreter)
-        set_emoji(teams.values(), self.tournament)
+        self._initialize_teams(teams.values())
 
         if create_dummy_speakers:
             def speakers_interpreter(lineno, line):
@@ -184,21 +143,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     yield dict(name=name, team=team)
             self._import(f, pm.Speaker, speakers_interpreter)
 
-        def own_team_institution_conflict_interpreter(lineno, line):
-            team = teams[lineno]
-            if team.institution is not None:
-                return {
-                    'team': team,
-                    'institution': team.institution,
-                }
-        self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
-
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers, also creating teams as needed (unless
         'auto_create_teams' is False). Institutions are not created as needed;
         if an institution doesn't exist, an error is raised.
         """
 
+        references = ImportReferences(self.tournament)
         if auto_create_teams:
 
             def team_interpreter(lineno, line):
@@ -208,22 +159,13 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'short_reference':  line['team_name'][:34],
                 }
                 if line.get('institution'):
-                    interpreted['institution'] = pm.Institution.objects.lookup(line['institution'])
+                    interpreted['institution'] = references.lookup_institution(line['institution'])
                 if line.get('use_institution_prefix'):
                     interpreted['use_institution_prefix'] = line['use_institution_prefix']
                 return interpreted
 
             teams = self._import(f, pm.Team, team_interpreter, expect_unique=False)
-            set_emoji(teams.values(), self.tournament)
-
-            def own_team_institution_conflict_interpreter(lineno, line):
-                team = teams.get(lineno)
-                if team is not None and team.institution is not None:
-                    return {
-                        'team': team,
-                        'institution': team.institution,
-                    }
-            self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
+            self._initialize_teams(teams.values())
 
         speaker_interpreter_part = make_interpreter(
             DELETE=['use_institution_prefix', 'institution', 'team_name'],
@@ -231,9 +173,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         )
 
         def speaker_interpreter(lineno, line):
-            institution = pm.Institution.objects.lookup(line['institution']) if line.get('institution') else None
-            line['team'] = pm.Team.objects.get(
-                institution=institution, reference=line['team_name'], tournament=self.tournament)
+            institution = references.lookup_institution(line['institution']) if line.get('institution') else None
+            line['team'] = references.lookup_team(institution, line['team_name'])
             line = speaker_interpreter_part(lineno, line)
             return line
         self._import(f, pm.Speaker, speaker_interpreter)

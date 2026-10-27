@@ -225,6 +225,7 @@ CACHES = {
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+TEST_RUNNER = 'utils.test_runner.TabbycatTestRunner'
 
 # ==============================================================================
 # Static Files and Compilation
