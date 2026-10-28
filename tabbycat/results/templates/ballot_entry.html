@@ -33,7 +33,7 @@
 
     {% csrf_token %}
 
-    <div id="ballot"><!-- Parsed by Vue for data and as a mirror input -->
+    <div id="ballot" data-restrict-reply-speaker="{{ form.restrict_reply_speaker|yesno:'true,false' }}"><!-- Parsed by Vue for data and as a mirror input -->
       {% include "ballot_entry_form.html" %}
     </div>
 

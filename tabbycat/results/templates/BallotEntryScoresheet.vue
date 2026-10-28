@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import BallotEntrySpeaker from './BallotEntrySpeaker.vue'
 
 const props = defineProps({
@@ -12,9 +12,17 @@ const props = defineProps({
   blindEntry: Boolean,
   blindReveal: Boolean,
   hasIron: Boolean,
+  restrictReplySpeaker: Boolean,
 })
 
 const emit = defineEmits(['update-speaker-score', 'blind-validation-fail'])
+const speakerSelections = reactive({})
+
+const setSpeaker = (speakerPosition, speaker) => {
+  speakerSelections[speakerPosition] = speaker
+}
+
+const disallowedReplySpeaker = computed(() => speakerSelections[2] || '')
 
 const rankLabels = {
   1: '1st',
@@ -95,7 +103,11 @@ const blindValidationFail = () => {
         :index="index"
         :show-duplicates="showDuplicates"
         :has-iron="hasIron"
+        :is-reply-speaker="index === team.speakers.length - 1"
+        :restrict-reply-speaker="restrictReplySpeaker"
+        :disallowed-reply-speaker="disallowedReplySpeaker"
         @set-speaker-score="setSpeakerScore"
+        @speaker-changed="setSpeaker"
         @blind-validation-fail="blindValidationFail"
       />
 
