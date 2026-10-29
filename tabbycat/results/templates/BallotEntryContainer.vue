@@ -28,7 +28,6 @@ const ballotSheets = ref([])
 const speakerScores = reactive({})
 const teamScores = reactive({})
 const showDuplicates = ref(false)
-const restrictReplySpeaker = ref(false)
 
 const canSubmit = computed(() => {
   const individualTeamScores = Object.values(teamScores)
@@ -72,7 +71,6 @@ onMounted(() => {
     return
   }
   const ballotForm = $('#ballot').first()
-  restrictReplySpeaker.value = ballotForm.attr('data-restrict-reply-speaker') === 'true'
   for (const sheet of $(ballotForm).find('div[data-type="sheet"]')) {
     const sheetData = {
       teams: [],
@@ -150,7 +148,6 @@ onMounted(() => {
               :blind-entry="blindEntry"
               :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates"
-              :restrict-reply-speaker="restrictReplySpeaker"
               @update-speaker-score="setSpeakerScore"
               @blind-validation-fail="blindValidationFail"
             />
@@ -171,7 +168,6 @@ onMounted(() => {
               :blind-entry="blindEntry"
               :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates"
-              :restrict-reply-speaker="restrictReplySpeaker"
               @update-speaker-score="setSpeakerScore"
               @blind-validation-fail="blindValidationFail"
             />

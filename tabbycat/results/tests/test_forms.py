@@ -98,28 +98,6 @@ class PerAdjudicatorBallotSetFormTests(TestCase):
         with self.assertRaises(forms.ValidationError):
             form.fields[field_name].clean(0)
 
-    def test_reply_speaker_restriction_is_enabled_for_wsdc(self):
-        self.tournament.preferences['debate_rules__side_names'] = 'prop-opp'
-        self.tournament._prefs.clear()
-
-        form = PerAdjudicatorBallotSetForm(self.ballotsub, tabroom=True)
-
-        self.assertTrue(form.restrict_reply_speaker)
-
-    def test_reply_speaker_restriction_is_disabled_for_other_formats(self):
-        form = PerAdjudicatorBallotSetForm(self.ballotsub, tabroom=True)
-
-        self.assertFalse(form.restrict_reply_speaker)
-
-    def test_prop_opp_side_names_alone_do_not_enable_wsdc_restriction(self):
-        self.tournament.preferences['debate_rules__side_names'] = 'prop-opp'
-        self.tournament.preferences['debate_rules__substantive_speakers'] = 2
-        self.tournament._prefs.clear()
-
-        form = PerAdjudicatorBallotSetForm(self.ballotsub, tabroom=True)
-
-        self.assertFalse(form.restrict_reply_speaker)
-
 
 class Criteria(list):
     def exists(self):

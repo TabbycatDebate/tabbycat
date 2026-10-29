@@ -260,16 +260,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         self.get_preferences_options()
 
-        # WSDC rules allow only the first or second substantive speaker to
-        # give the reply. There is no persisted preset identity, so use the
-        # complete structural WSDC signature rather than side names alone.
-        self.restrict_reply_speaker = (
-            self.tournament.pref('teams_in_debate') == 2
-            and self.tournament.pref('substantive_speakers') == 3
-            and self.tournament.pref('reply_scores_enabled')
-            and self.tournament.pref('side_names') == 'prop-opp'
-        )
-
         self.create_fields()
         self.set_tab_indices()
         self.initial.update(self.initial_data())

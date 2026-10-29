@@ -1,6 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { replySpeakerOptions } from './replySpeakerOptions.js'
+import { computed, nextTick, onMounted, ref } from 'vue'
 
 const props = defineProps({
   speaker: Object,
@@ -12,12 +11,9 @@ const props = defineProps({
   blindEntry: Boolean,
   blindReveal: Boolean,
   hasIron: Boolean,
-  isReplySpeaker: Boolean,
-  restrictReplySpeaker: Boolean,
-  disallowedReplySpeaker: String,
 })
 
-const emit = defineEmits(['set-speaker-score', 'speaker-changed', 'blind-validation-fail'])
+const emit = defineEmits(['set-speaker-score', 'blind-validation-fail'])
 
 const speakerName = ref(null)
 const speakerDuplicate = ref(false)
@@ -32,7 +28,7 @@ const selectOptions = computed(() => {
   for (const speakerOpt of props.speaker.nameField) {
     options.push({ text: speakerOpt.textContent, value: speakerOpt.getAttribute('value') })
   }
-  return replySpeakerOptions(options, props.restrictReplySpeaker, props.isReplySpeaker, props.disallowedReplySpeaker)
+  return options.sort((a, b) => a.text.localeCompare(b.text))
 })
 
 const selectAttributes = computed(() => {
@@ -73,19 +69,6 @@ const setShadowSpeaker = (setValue) => {
       option.selected = true
     }
   }
-}
-
-const setSpeaker = (setValue) => {
-  setShadowSpeaker(setValue)
-  emit('speaker-changed', props.index, setValue)
-}
-const clearInvalidReplySpeaker = () => {
-  if (!props.restrictReplySpeaker || !props.isReplySpeaker || speakerName.value !== props.disallowedReplySpeaker) {
-    return
-  }
-  speakerName.value = ''
-  setShadowSpeaker('')
-  emit('speaker-changed', props.index, '')
 }
 
 const setShadowDuplicate = (setValue) => {
@@ -132,15 +115,12 @@ const scoreError = computed(() => {
 
 onMounted(async () => {
   speakerName.value = props.speaker.nameField.options[props.speaker.nameField.selectedIndex].value
-  clearInvalidReplySpeaker()
-  emit('speaker-changed', props.index, speakerName.value)
   speakerDuplicate.value = props.speaker.duplicateField.checked
   speakerScore.value = Number(props.speaker.scoreField.getAttribute('value'))
   props.speaker.duplicateField.setAttribute('tabindex', -1)
   await nextTick()
   emit('set-speaker-score', props.team.position, props.speaker.position, speakerScoreForBallotType.value)
 })
-watch(() => props.disallowedReplySpeaker, clearInvalidReplySpeaker)
 </script>
 
 <template>
@@ -244,7 +224,7 @@ watch(() => props.disallowedReplySpeaker, clearInvalidReplySpeaker)
                    blindSpeakerMatches && blindEntry ? 'is-valid' : '']"
           v-bind="selectAttributes"
           :disabled="!isNew && !isAdmin"
-          @change="setSpeaker(speakerName)"
+          @change="setShadowSpeaker(speakerName)"
         >
           <option
             v-for="option in selectOptions"
