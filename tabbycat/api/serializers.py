@@ -1206,7 +1206,6 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         class Meta:
             model = DebateTeam
             fields = ('team', 'side', 'flags')
-            read_only_fields = ('flags',)
 
         def save(self, **kwargs):
             seq = kwargs.pop('seq')
@@ -1249,7 +1248,6 @@ class RoundPairingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Debate
         exclude = ('round',)
-        read_only_fields = ('flags',)
 
     def create(self, validated_data):
         teams_data = validated_data.pop('debateteam_set', [])
@@ -1282,9 +1280,10 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         if has_permission(user, Permission.EDIT_DEBATETEAMS, tournament):
             for team in dt_set:
                 try:
-                    DebateTeam.objects.update_or_create(debate=instance, side=team.get('side'), defaults={
-                        'team': team.get('team'),
-                    })
+                    defaults = {'team': team.get('team')}
+                    if 'flags' in team:
+                        defaults['flags'] = team['flags']
+                    DebateTeam.objects.update_or_create(debate=instance, side=team.get('side'), defaults=defaults)
                 except (IntegrityError, TypeError) as e:
                     raise serializers.ValidationError(e)
 

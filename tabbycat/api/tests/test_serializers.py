@@ -1170,6 +1170,39 @@ class PairingSerializerTests(APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual([dt.team for dt in self.round.debate_set.prefetch_related('debateteam_set__team').first().debateteam_set.order_by('side')], [self.t1, self.t2])
 
+    def test_can_create_and_update_pairing_flags(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post(reverse_round('api-pairing-list', self.round), {
+            'flags': ['max_swapped'],
+            'teams': [
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                    'flags': ['1u1d_hist'],
+                },
+                {
+                    'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t2.pk}),
+                },
+            ],
+        })
+        self.assertEqual(response.status_code, 201, response.data)
+        debate = self.round.debate_set.first()
+        self.assertEqual(debate.flags, ['max_swapped'])
+        self.assertEqual(debate.debateteam_set.get(side=0).flags, ['1u1d_hist'])
+
+        response = client.patch(reverse_round('api-pairing-detail', self.round, kwargs={'debate_pk': debate.pk}), {
+            'flags': ['bub_up_hist'],
+            'teams': [{
+                'team': reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': self.t1.pk}),
+                'side': 'aff',
+                'flags': ['1u1d_inst'],
+            }],
+        })
+        self.assertEqual(response.status_code, 200, response.data)
+        debate.refresh_from_db()
+        self.assertEqual(debate.flags, ['bub_up_hist'])
+        self.assertEqual(debate.debateteam_set.get(side=0).flags, ['1u1d_inst'])
+
     def test_can_create_pairing_sides_precedence(self):
         client = APIClient()
         client.force_authenticate(user=self.user)
