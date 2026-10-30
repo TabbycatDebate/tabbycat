@@ -64,6 +64,11 @@ def _create_url(url: str) -> str:
     return mark_safe('<a href="%s">%s</a>' % (url, url)) if url else ''
 
 
+def _create_private_url(url: str, url_key: str) -> str:
+    # People who haven't been given a private URL yet have no key
+    return _create_url(url + url_key + '/') if url_key else ''
+
+
 class NotificationContextGenerator:
     context_class = EmailContextData
 
@@ -106,7 +111,7 @@ class AdjudicatorAssignmentEmailGenerator(NotificationContextGenerator):
                     continue
 
                 context_user = cls.context_class(**context, POSITION=adj_position_names[pos],
-                    URL=_create_url(url + adj.url_key + '/'))
+                    URL=_create_private_url(url, adj.url_key))
                 emails.append((context_user, adj))
 
         return emails
@@ -124,7 +129,8 @@ class RandomizedUrlEmailGenerator(NotificationContextGenerator):
 
     @classmethod
     def generate(cls, to: 'QuerySet[Person]', url: str, tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
-        return [(cls.context_class(URL=_create_url(url + p.url_key + '/'), KEY=p.url_key, TOURN=str(tournament)), p) for p in to]
+        return [(cls.context_class(URL=_create_private_url(url, p.url_key), KEY=p.url_key, TOURN=str(tournament)), p)
+                for p in to if p.url_key]
 
 
 class BallotsEmailGenerator(NotificationContextGenerator):
