@@ -141,7 +141,7 @@ class AnonymisingParticipantNameField(CharField):
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
     default_tournament_field = 'team__tournament'
 
-    def __init__(self, view_name=None, queryset=Speaker.objects.all(), **kwargs):
+    def __init__(self, view_name=None, queryset=Speaker.objects, **kwargs):
         self.null_when = kwargs.pop('anonymous_source')
         super().__init__(view_name=view_name, queryset=queryset, **kwargs)
 
