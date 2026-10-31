@@ -21,7 +21,7 @@
 {% block page-alerts %}
   {% if not pref.team_tab_released and not pref.motion_tab_released and pref.public_draw == 'off' and not pref.public_results and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and pref.participant_ballots == 'off' and pref.participant_feedback == 'off' %}
     <div class="alert alert-info">
-      <i data-feather="alert-circle"></i>
+      <i data-icon="circle-alert"></i>
       {% trans "There is currently no public information available for this tournament." %}
     </div>
   {% endif %}
@@ -157,7 +157,7 @@
         {% if pref.public_team_standings and current_round.prev and not pref.team_tab_released %}
           {% trans "Team Standings" as text %}
           {% tournamenturl 'standings-public-teams-current' as url %}
-          {% include "components/item-action.html" with icon="bar-chart-2" %}
+          {% include "components/item-action.html" with icon="chart-no-axes-column" %}
         {% endif %}
 
         {% if pref.public_breaking_teams %}
@@ -166,7 +166,7 @@
               {{ category }} Break
             {% endblocktrans %}
             {% tournamenturl 'breakqual-public-teams' category.slug as url %}
-            {% include "components/item-action.html" with icon="pie-chart" %}
+            {% include "components/item-action.html" with icon="chart-pie" %}
             {% if pref.public_results %}
               {% blocktrans trimmed asvar text with category=category.name %}
                 {{ category }} Bracket
@@ -211,14 +211,14 @@
           {% for round in tournament.current_rounds %}
             {% blocktrans trimmed with round=round.name asvar text %}Enter Ballot for {{round }}{% endblocktrans %}
             {% roundurl 'results-public-ballot-submission-index' as url %}
-            {% include "components/item-action.html" with icon="plus-circle" %}
+            {% include "components/item-action.html" with icon="circle-plus" %}
           {% endfor %}
         {% endif %}
 
         {% if pref.participant_feedback == 'public' %}
           {% trans "Enter Feedback" as text %}
           {% tournamenturl 'adjfeedback-public-add-index' as url %}
-          {% include "components/item-action.html" with icon="plus-square" %}
+          {% include "components/item-action.html" with icon="square-plus" %}
         {% endif %}
 
         {% if pref.public_draw == 'all-released' %}
@@ -239,7 +239,7 @@
         {% if pref.institution_registration %}
           {% trans "Register Institution" as text %}
           {% tournamenturl 'reg-create-institution' as url %}
-          {% include "components/item-action.html" with icon="home" %}
+          {% include "components/item-action.html" with icon="house" %}
         {% endif %}
 
         {% if pref.open_team_registration %}
@@ -251,7 +251,7 @@
         {% if pref.open_adj_registration %}
           {% trans "Register Open Adjudicator" as text %}
           {% tournamenturl 'reg-create-adjudicator' as url %}
-          {% include "components/item-action.html" with icon="columns" %}
+          {% include "components/item-action.html" with icon="columns-2" %}
         {% endif %}
       </div>
 

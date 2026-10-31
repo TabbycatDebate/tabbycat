@@ -93,7 +93,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
     def add_room_rank_columns(self, debates):
         header = {
             'key': "room-rank",
-            'icon': 'bar-chart-2',
+            'icon': 'chart-no-axes-column',
             'tooltip': _("Room rank of this debate"),
         }
         self.add_column(header, [debate.room_rank for debate in debates])
@@ -101,7 +101,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
     def add_debate_bracket_columns(self, debates):
         header = {
             'key': "bracket",
-            'icon': 'bar-chart-2',
+            'icon': 'chart-no-axes-column',
             'tooltip': _("Bracket of this debate"),
         }
 
@@ -428,7 +428,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             cells.append(", ".join(strs))
         header = {
             'key': "room",
-            'icon': "bar-chart",
+            'icon': "chart-no-axes-column-increasing",
             'tooltip': _("Teams with this many points are permitted in this debate<br>\n(bracket in bold)"),
         }
         self.add_column(header, cells)

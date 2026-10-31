@@ -75,8 +75,8 @@ thead,
   }
 
   // By default don't show if not hovering or active
-  .feather-chevrons-up,
-  .feather-chevrons-down {
+  [data-icon="chevrons-up"],
+  [data-icon="chevrons-down"] {
     display: none;
     margin-bottom: -3px; // Align with text
     margin-right: -4px; // Overwrite the padding as it acts as a spacer
@@ -87,7 +87,7 @@ thead,
 
     cursor: pointer;
     // By default; if not sorting is active; show sort-desc
-    .vue-sort-key .feather-chevrons-up {
+    .vue-sort-key [data-icon="chevrons-up"] {
       display: inline;
     }
   }
@@ -95,22 +95,22 @@ thead,
   // When active show the currently active sort order
   .vue-sort-active.sort-by-desc {
 
-    .feather-chevrons-down {
+    [data-icon="chevrons-down"] {
       display: inline;
     }
 
-    .feather-chevrons-up {
+    [data-icon="chevrons-up"] {
       display: none;
     }
   }
 
   .vue-sort-active.sort-by-asc {
 
-    .feather-chevrons-up {
+    [data-icon="chevrons-up"] {
       display: inline;
     }
 
-    .feather-chevrons-down {
+    [data-icon="chevrons-down"] {
       display: none;
     }
   }
@@ -160,12 +160,12 @@ thead,
 .table > tbody > tr > td {
 
   i,
-  .feather {
+  .svg-icon {
     width: 24px;
     height: 24px;
   }
 
-  .feather {
+  .svg-icon {
     margin-bottom: -6px;
     margin-left: -2px;
   }

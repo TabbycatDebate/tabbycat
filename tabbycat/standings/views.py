@@ -667,7 +667,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, getattr(t, name_attr)))
         key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 4 else ('wins', _("Wins"))
-        header = {'key': key, 'tooltip': title, 'icon': 'bar-chart'}
+        header = {'key': key, 'tooltip': title, 'icon': 'chart-no-axes-column-increasing'}
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)

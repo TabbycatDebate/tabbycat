@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 import { toRef } from 'vue'
 import { useSortableHeader } from '../composables/useSortableHeader.js'
 
@@ -40,9 +41,9 @@ const headerLabel = (header) => {
       :aria-label="header.icon && !header.text ? headerLabel(header) : null"
       @click="resort(header.key, $event)"
     >
-      <i
+      <svg-icon
         v-if="header.icon"
-        :data-feather="header.icon"
+        :name="header.icon"
         :class="['header-icon', header.tooltip ? 'tooltip-trigger' : '']"
         aria-hidden="true"
       />
@@ -61,8 +62,14 @@ const headerLabel = (header) => {
       </div>
 
       <div :class="['mr-auto', sortClasses(header['key'])]">
-        <i data-feather="chevrons-down" aria-hidden="true" />
-        <i data-feather="chevrons-up" aria-hidden="true" />
+        <svg-icon
+          name="chevrons-down"
+          aria-hidden="true"
+        />
+        <svg-icon
+          name="chevrons-up"
+          aria-hidden="true"
+        />
         <span
           v-if="sortHistory.length > 1 && sortPosition(header.key)"
           class="vue-sort-position"

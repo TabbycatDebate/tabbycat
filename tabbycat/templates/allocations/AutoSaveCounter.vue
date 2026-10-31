@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 // Note this has to work across the VueX pages (where save updates are located in the store) and
 // across checkbox tables (where save updates are notified through callbacks)
 
@@ -66,7 +67,7 @@ watch(() => props.lastSaved, () => {
     :title="gettext('The time of the last saved change (changes are automatically saved)')"
   >
     <span v-if="lastSavedDisplay === ''">
-      <span>{{ gettext('No ') }}</span> <i data-feather="save" />
+      <span>{{ gettext('No ') }}</span> <svg-icon name="save" />
     </span>
     <span
       v-if="lastSavedDisplay !== ''"
