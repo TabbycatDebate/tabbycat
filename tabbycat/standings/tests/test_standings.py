@@ -177,6 +177,14 @@ class TestTrivialStandings(TestCase):
     def test_pullup_debates_combinable(self):
         self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'pullup_debates': [2, 2]})
 
+    def test_pullups_with_extra_ballot_submission(self):
+        debate = Debate.objects.get(round__tournament=self.tournament, round__seq=1)
+        extra_ballot = BallotSubmission.objects.create(debate=debate, confirmed=False)
+        for debate_team in DebateTeam.objects.filter(debate=debate):
+            TeamScore.objects.create(debate_team=debate_team, ballot_submission=extra_ballot,
+                margin=0, points=0, score=100, win=False, votes_given=0, votes_possible=1)
+        self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'pullup_debates': [2, 2]})
+
     def test_points_ranked(self):
         generator = TeamStandingsGenerator(('points',), ('rank',))
         standings = self.get_standings(generator)
