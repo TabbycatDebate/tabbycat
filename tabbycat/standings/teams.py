@@ -302,6 +302,11 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     def get_where_field(self):
         return 'debateteam__flags__contains'
 
+    def get_annotation(self, round=None):
+        # A debate with more than one ballot submission has more than one
+        # TeamScore per DebateTeam. The extra joined rows must not inflate the pull-up counts.
+        return self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field, distinct=True)
+
 
 class PullupDebatesMetricAnnotator(TeamPullupsMetricAnnotator):
     """Metric annotator for number of times the team has been in a pull-up room.
