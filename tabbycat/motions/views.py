@@ -34,10 +34,13 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     def get_context_data(self, **kwargs):
         order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
 
-        # Include rounds whether *either* motions are released *or* it's this
-        # round or a previous round. The template checks motion_released again
-        # and displays a "not released" message if motions are not released.
-        filter_q = Q(motions_status=Round.MotionsStatus.MOTIONS_RELEASED) | Q(seq__lte=self.tournament.current_round_seq_limit)
+        # Sequence numbers span independent breaks, so each category needs
+        # its own current-round cutoff.
+        filter_q = Q(motions_status=Round.MotionsStatus.MOTIONS_RELEASED) | Q(completed=True)
+        filter_q |= Q(stage=Round.Stage.PRELIMINARY, seq__lte=self.tournament.current_round_seq_limit)
+        for round in self.tournament.current_rounds:
+            if round.is_break_round:
+                filter_q |= Q(stage=Round.Stage.ELIMINATION, break_category_id=round.break_category_id, seq__lte=round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related(Prefetch('roundmotion_set',
