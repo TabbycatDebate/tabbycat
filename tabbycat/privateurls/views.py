@@ -168,6 +168,26 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
         ("KEY", _("recipient private URL key")),
     ]
 
+    def get_default_send_queryset(self) -> 'QuerySet[Person]':
+        return super().get_default_send_queryset().exclude(url_key__isnull=True).exclude(url_key='')
+
+    def get_valid_email_recipient_ids(self, selected_ids: List[int]) -> List[int]:
+        valid_ids = super().get_valid_email_recipient_ids(selected_ids)
+        recipients = self.get_queryset().in_bulk(valid_ids)
+        recipients_without_url = [recipients[pk] for pk in valid_ids if not recipients[pk].url_key]
+
+        if recipients_without_url:
+            recipient_names = ", ".join(recipient.name for recipient in recipients_without_url)
+            messages.warning(self.request, ngettext(
+                "The email to %(recipients)s was not queued because they don't have a private URL. "
+                "Generate private URLs for them first.",
+                "Emails to %(recipients)s were not queued because they don't have private URLs. "
+                "Generate private URLs for them first.",
+                len(recipients_without_url),
+            ) % {'recipients': recipient_names})
+
+        return [pk for pk in valid_ids if recipients[pk].url_key]
+
     def get_extra(self) -> Dict[str, Any]:
         extra = super().get_extra()
         extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
