@@ -141,6 +141,7 @@ class Standings:
 
         self.metric_keys = list()
         self.metric_ascending = dict()
+        self.metrics_with_none_lowest = set()
         self.ranking_keys = list()
         self._metric_specs = list()
         self._ranking_specs = list()
@@ -222,9 +223,11 @@ class Standings:
         except KeyError as e:
             raise ValueError("{!r} isn't in these standings.".format(e.args[0]))
 
-    def record_added_metric(self, key, name, abbr, icon, ascending):
+    def record_added_metric(self, key, name, abbr, icon, ascending, none_is_lowest=False):
         self.metric_keys.append(key)
         self.metric_ascending[key] = ascending
+        if none_is_lowest:
+            self.metrics_with_none_lowest.add(key)
         self._metric_specs.append((key, name, abbr, icon))
 
     def record_added_ranking(self, key, name, abbr, icon):
@@ -317,13 +320,13 @@ class BaseStandingsGenerator:
         self._check_annotators(self.metric_annotators, _("The same metric would be added twice:"))
         self._check_annotators(self.ranking_annotators, _("The same ranking would be added twice:"))
 
-    def _annotate_metrics(self, queryset, annotators, standings, round):
+    def _annotate_metrics(self, queryset, annotators, standings, round, tournament=None):
         """Runs the annotators to be added to the Standings. All annotators are
         run, but SQL-based annotators merely add the field to the Standings,
         as the annotation was already calculated in the SQL query."""
         for annotator in annotators:
             logger.debug("Running metric annotator: %s", annotator.name)
-            annotator.run(queryset, standings, round)
+            annotator.run(queryset, standings, round, tournament=tournament)
         logger.debug("Metric annotators done.")
 
         if self.options["include_filter"]:
@@ -342,6 +345,7 @@ class BaseStandingsGenerator:
             (That is, rounds after `round` are excluded from the standings.)
         """
 
+        tournament = tournament or getattr(round, 'tournament', None)
         rank_filter = self.get_rank_filter() if self.options["rank_filter"][0] is not None else None
         standings = Standings(queryset, rank_filter=rank_filter)
 
@@ -359,7 +363,7 @@ class BaseStandingsGenerator:
 
         queryset_for_metrics = queryset.model.objects.filter(tournament_q, id__in=queryset.values_list('id', flat=True))
 
-        self._annotate_metrics(queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round)
+        self._annotate_metrics(queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round, tournament=tournament)
 
         for annotator in self.queryset_metric_annotators:
             queryset_for_metrics = annotator.get_annotated_queryset(queryset_for_metrics, round)
@@ -367,11 +371,11 @@ class BaseStandingsGenerator:
         if len(self.precedence) > 0 and set(self.precedence) <= {a.key for a in self.queryset_metric_annotators}:
             # If there is a precedence and all used metrics are combinable aggregation-based,
             # we can use SQL window functions for rankings
-            return self.generate_from_queryset(queryset_for_metrics, standings, round)
+            return self.generate_from_queryset(queryset_for_metrics, standings, round, tournament=tournament)
 
         # Otherwise (not all precedence metrics are SQL-based), need to sort Standings
         non_qs_ranked_annotators = [annotator for annotator in self.non_queryset_annotators if not annotator.extra_only]
-        self._annotate_metrics(queryset_for_metrics, non_qs_ranked_annotators, standings, round)
+        self._annotate_metrics(queryset_for_metrics, non_qs_ranked_annotators, standings, round, tournament=tournament)
 
         standings.sort(self.precedence, self._tiebreak_func)
 
@@ -382,12 +386,12 @@ class BaseStandingsGenerator:
 
         # Do Draw Strength by Rank annotator after ranking standings
         non_qs_extra_annotators = [annotator for annotator in self.non_queryset_annotators if annotator.extra_only]
-        self._annotate_metrics(queryset_for_metrics, non_qs_extra_annotators, standings, round)
+        self._annotate_metrics(queryset_for_metrics, non_qs_extra_annotators, standings, round, tournament=tournament)
 
         standings.set_metric_display_order(self.ordered_metric_keys)
         return standings
 
-    def generate_from_queryset(self, queryset, standings, round):
+    def generate_from_queryset(self, queryset, standings, round, tournament=None):
         """Generates standings if rankings can be calculated through the
         aggregations present from the queryset (no repeated metrics)"""
 
@@ -413,7 +417,7 @@ class BaseStandingsGenerator:
         standings.sort_from_rankings(tiebreak_func)
 
         # Add metrics that aren't used for ranking (done afterwards for "draw strength by rank")
-        self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round)
+        self._annotate_metrics(queryset, self.non_queryset_annotators, standings, round, tournament=tournament)
 
         standings.set_metric_display_order(self.ordered_metric_keys)
         return standings
