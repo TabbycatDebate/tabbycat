@@ -55,11 +55,14 @@ const speakerGroupingNames = {
 
 const isForVenues = computed(() => Array.isArray(props.venues))
 const filterByType = computed(() => (isForVenues.value ? null : peopleFilterByType.value))
+const hasBreakingData = computed(() =>
+  [...(props.speakers ?? []), ...(props.adjudicators ?? [])].some(person => 'breaking' in person),
+)
 const filterByTypeOptions = computed(() => {
   const f = peopleFilterByType.value
   const options = []
   _.forEach(f, (state, key) => {
-    if (key === 'Breaking' && !props.prelimsCompleted) {
+    if (key === 'Breaking' && (!props.prelimsCompleted || !hasBreakingData.value)) {
       return
     }
     options.push({ key, state })
@@ -513,7 +516,7 @@ const forAdmin = toRef(props, 'forAdmin')
       </div>
 
       <div
-        v-if="!isForVenues"
+        v-if="!isForVenues && (forAdmin || hasBreakingData)"
         class="btn-group mb-md-0 mb-3"
       >
         <button
