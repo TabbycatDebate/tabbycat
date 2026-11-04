@@ -1528,7 +1528,7 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
 
     def get_field(self):
         field = ParticipantAvailabilityForeignKeyField(many=True, view_name='api-availability-list')  # Dummy view name
-        field.root._context = {'request': self.request}
+        field.root._context = {'request': self.request, 'tournament': self.tournament}
         return field
 
     def get_filters(self):

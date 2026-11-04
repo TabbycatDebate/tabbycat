@@ -12,10 +12,11 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
 from checkins.models import Event
-from participants.models import Team
+from participants.models import Adjudicator, Team
 from results.models import BallotSubmission, SpeakerScore
-from tournaments.models import Round
+from tournaments.models import Round, Tournament
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
+from venues.models import Venue
 
 
 class RootTests(APITestCase):
@@ -489,3 +490,52 @@ class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):
             {int(url.rsplit('/', 1)[-1]) for url in availabilities},
             {self.objects['teams'].pk, self.objects['venues'].pk},
         )
+
+    def test_write_methods_accept_items_from_tournament(self):
+        for method in ('put', 'patch', 'post'):
+            for obj in self.objects.values():
+                with self.subTest(method=method, model=type(obj).__name__):
+                    availability = obj.round_availabilities.filter(round=self.round)
+                    availability.delete()
+                    if method != 'put':
+                        RoundAvailability.objects.create(round=self.round, content_object=obj)
+                    url = reverse('api-%s-detail' % obj._meta.model_name, kwargs={
+                        'tournament_slug': self.tournament.slug, 'pk': obj.pk,
+                    })
+
+                    response = getattr(self.client, method)(
+                        self.reverse_url('api-availability-list'), [url], format='json')
+
+                    self.assertEqual(response.status_code, 200)
+                    self.assertEqual(availability.exists(), method == 'put')
+
+    def test_write_methods_reject_items_from_other_tournament(self):
+        other_tournament = Tournament.objects.create(slug='other')
+        other_objects = [
+            Adjudicator.objects.create(tournament=other_tournament, name='Other adjudicator'),
+            Team.objects.create(tournament=other_tournament, reference='Other team'),
+            Venue.objects.create(tournament=other_tournament, name='Other room', priority=0),
+        ]
+        for method in ('put', 'patch', 'post'):
+            for obj in other_objects:
+                for slug in (other_tournament.slug, self.tournament.slug):
+                    with self.subTest(method=method, model=type(obj).__name__, slug=slug):
+                        local_obj = self.objects['teams']
+                        if method == 'put':
+                            local_obj.round_availabilities.filter(round=self.round).delete()
+                        elif not local_obj.round_availabilities.filter(round=self.round).exists():
+                            RoundAvailability.objects.create(round=self.round, content_object=local_obj)
+                        local_url = reverse('api-team-detail', kwargs={
+                            'tournament_slug': self.tournament.slug, 'pk': local_obj.pk,
+                        })
+                        foreign_url = reverse('api-%s-detail' % obj._meta.model_name, kwargs={
+                            'tournament_slug': slug, 'pk': obj.pk,
+                        })
+                        before = set(RoundAvailability.objects.values_list('pk', flat=True))
+
+                        response = getattr(self.client, method)(
+                            self.reverse_url('api-availability-list'),
+                            [local_url, foreign_url], format='json')
+
+                        self.assertEqual(response.status_code, 400)
+                        self.assertEqual(set(RoundAvailability.objects.values_list('pk', flat=True)), before)
