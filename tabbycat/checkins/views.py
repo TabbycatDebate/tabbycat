@@ -78,12 +78,14 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
         prelims_completed = not self.tournament.prelim_rounds().filter(completed=False).exists()
         kwargs["prelims_completed"] = prelims_completed
 
+        include_team_break = self.for_admin or self.tournament.pref('public_breaking_teams')
+        include_adj_break = self.for_admin or self.tournament.pref('public_breaking_adjs')
         breaking_team_ids = set(
             BreakingTeam.objects.filter(
                 break_category__tournament=self.tournament,
                 remark__isnull=True,
             ).values_list('team_id', flat=True),
-        )
+        ) if include_team_break else set()
 
         # Include the extra fields for the admin name-display toggle only when appropriate.
         include_real_name_field = self.for_admin and (
@@ -99,12 +101,14 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 code = None
 
             institution = InstitutionSerializer(adj.institution).data if adj.institution else None
-            adjudicators.append({
+            adjudicator_data = {
                 'id': adj.id, 'name': adj.get_public_name(self.tournament), 'type': 'Adjudicator',
                 'identifier': [code], 'locked': False, 'independent': adj.independent,
                 'institution': institution,
-                'breaking': adj.breaking,
-            })
+            }
+            if include_adj_break:
+                adjudicator_data['breaking'] = adj.breaking
+            adjudicators.append(adjudicator_data)
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
@@ -121,8 +125,9 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
                 'team_code_name': speaker.team.code_name,
                 'institution': institution,
-                'breaking': speaker.team_id in breaking_team_ids,
             }
+            if include_team_break:
+                speaker_data['breaking'] = speaker.team_id in breaking_team_ids
             if include_real_name_field:
                 speaker_data['team_real_name'] = speaker.team.short_name
             speakers.append(speaker_data)
