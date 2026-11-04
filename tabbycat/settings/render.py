@@ -17,9 +17,6 @@ from .core import TABBYCAT_VERSION
 if os.environ.get('TAB_DIRECTOR_EMAIL', ''):
     TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL')
 
-if os.environ.get('DJANGO_SECRET_KEY', ''):
-    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-
 # https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
 

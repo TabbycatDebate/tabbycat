@@ -17,9 +17,6 @@ from .core import TABBYCAT_VERSION
 if environ.get('TAB_DIRECTOR_EMAIL', ''):
     TAB_DIRECTOR_EMAIL = environ.get('TAB_DIRECTOR_EMAIL')
 
-if environ.get('DJANGO_SECRET_KEY', ''):
-    SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
-
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
