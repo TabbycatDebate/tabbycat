@@ -176,7 +176,7 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     def get_annotation(self, annotators, min_field, min_rounds):
         return Window(
             expression=Rank(),
-            order_by=self._get_ordering(self.metrics[1:], annotators, min_field, min_rounds),
+            order_by=self._get_ordering(self.metrics, annotators, min_field, min_rounds),
             partition_by=F('institution_id'),
         )
 

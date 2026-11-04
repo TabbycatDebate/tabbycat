@@ -258,6 +258,23 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, False))
         self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, False))
 
+    def test_institution_rank_uses_full_precedence(self):
+        # team1 has more points but team2 has higher speaks, so ranking within
+        # the institution must not ignore the first metric
+        institution = Institution.objects.create(name="Institution", code="Inst")
+        self.tournament.team_set.update(institution=institution)
+        TeamScore.objects.filter(debate_team__team=self.team2).update(score=110)
+
+        # speaks_sum is computed in SQL, draw_strength is not; both paths must agree
+        for metrics in [('points', 'speaks_sum'), ('points', 'draw_strength')]:
+            with self.subTest(metrics=metrics):
+                generator = TeamStandingsGenerator(metrics, ('rank', 'institution_rank'))
+                standings = self.get_standings(generator)
+                self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, False))
+                self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
+                self.assertEqual(standings.get_standing(self.team1).rankings['institution_rank'], (1, False))
+                self.assertEqual(standings.get_standing(self.team2).rankings['institution_rank'], (2, False))
+
     def test_double_metric_error(self):
         self.assertRaises(StandingsError, TeamStandingsGenerator, ('points', 'wbw', 'points'), ('rank',))
 
