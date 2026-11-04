@@ -868,7 +868,10 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     def get_max_round(self):
         if self.params.get('round'):
             return self.params.get('round')
-        return Round.objects.filter(tournament=self.tournament, stage=Round.Stage.PRELIMINARY, completed=True).order_by('seq').last()
+        round = Round.objects.filter(tournament=self.tournament, stage=Round.Stage.PRELIMINARY, completed=True).order_by('seq').last()
+        if round is None:
+            raise ValidationError({'round': 'No completed preliminary rounds. Specify a round explicitly.'})
+        return round
 
     @property
     def generator_kwargs(self):
@@ -877,7 +880,7 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     @extend_schema(tags=['standings'], parameters=[
         tournament_parameter,
         OpenApiParameter('category', description='Only include participants in a category (ID)', required=False, type=int),
-        OpenApiParameter('round', description='Sequence of last round to take into account', required=False, type=int),
+        OpenApiParameter('round', description='Sequence of last round to take into account. Defaults to the last completed preliminary round; required if none exist.', required=False, type=int),
     ])
     def get(self, request, **kwargs):
         """Get current standings"""

@@ -217,6 +217,46 @@ class SpeakerCategoryViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(len(response.data), 2)
 
 
+class StandingsRoundTests(CompletedTournamentTestMixin, APITestCase):
+
+    view_names = ('api-substantive-speaker-standings', 'api-reply-speaker-standings', 'api-team-standings')
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+
+    def test_requires_explicit_round_when_no_prelims_completed(self):
+        self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY).update(completed=False)
+
+        for view_name in self.view_names:
+            with self.subTest(view=view_name):
+                response = self.client.get(self.reverse_url(view_name))
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(response.data, {'round': 'No completed preliminary rounds. Specify a round explicitly.'})
+
+    def test_explicit_round_can_be_incomplete(self):
+        self.tournament.round_set.update(completed=False)
+
+        for view_name in self.view_names:
+            with self.subTest(view=view_name):
+                response = self.client.get(self.reverse_url(view_name), {'round': 2})
+                self.assertEqual(response.status_code, 200)
+                self.assertTrue(response.data)
+
+    def test_defaults_to_last_completed_preliminary_round(self):
+        last_completed = self.tournament.round_set.filter(stage=Round.Stage.PRELIMINARY, completed=True).order_by('seq').last()
+
+        for view_name in self.view_names:
+            with self.subTest(view=view_name):
+                url = self.reverse_url(view_name)
+                response = self.client.get(url)
+                explicit_response = self.client.get(url, {'round': last_completed.seq})
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(explicit_response.status_code, 200)
+                self.assertTrue(response.data)
+                self.assertEqual(response.data, explicit_response.data)
+
+
 class SpeakerRoundStandingsViewsetTests(CompletedTournamentTestMixin, APITestCase):
 
     def setUp(self):
