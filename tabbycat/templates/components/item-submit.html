@@ -10,13 +10,13 @@
 
       <div class="col-auto pr-1">
         {% if icon %}
-          <i data-feather="{{ icon }}"></i>
+          <i data-icon="{{ icon }}"></i>
         {% elif to_complete %}
-          <i data-feather="check-square"></i>
+          <i data-icon="square-check-big"></i>
         {% elif emoji %}
           <span class="emoji">{{ emoji }}</span>
         {% else %}
-          <i data-feather="edit"></i>
+          <i data-icon="square-pen"></i>
         {% endif %}
       </div>
 
@@ -36,7 +36,7 @@
       </div>
 
       <div class="col-auto pr-1">
-        <i data-feather="chevron-right"></i>
+        <i data-icon="chevron-right"></i>
       </div>
 
     </div>

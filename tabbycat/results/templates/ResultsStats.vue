@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import { computed } from 'vue'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 
@@ -41,7 +42,7 @@ const statusWidths = computed(() => {
               data-toggle="tooltip"
               :title="checks.checked + ' ' + gettext('Checked-In')"
             >
-              <i data-feather="x" />&nbsp;&nbsp;{{ checks.checked }}
+              <svg-icon name="x" />&nbsp;&nbsp;{{ checks.checked }}
             </div>
             <div
               class="progress-bar bg-dark"
@@ -50,7 +51,7 @@ const statusWidths = computed(() => {
               data-toggle="tooltip"
               :title="checks.missing + ' ' + gettext('Not Checked-In')"
             >
-              <i data-feather="circle" />&nbsp;&nbsp;{{ checks.missing }}
+              <svg-icon name="circle" />&nbsp;&nbsp;{{ checks.missing }}
             </div>
           </div>
           <h6 class="pt-3 text-center text-secondary">
@@ -67,7 +68,7 @@ const statusWidths = computed(() => {
               data-toggle="tooltip"
               :title="statuses.none + ' ' + gettext('Unknown')"
             >
-              <i data-feather="x" />&nbsp;&nbsp;{{ statuses.none }}
+              <svg-icon name="x" />&nbsp;&nbsp;{{ statuses.none }}
             </div>
             <div
               class="progress-bar bg-warning"
@@ -76,7 +77,7 @@ const statusWidths = computed(() => {
               data-toggle="tooltip"
               :title="statuses.postponed + ' ' + gettext('Postponed')"
             >
-              <i data-feather="pause" />&nbsp;&nbsp;{{ statuses.postponed }}
+              <svg-icon name="pause" />&nbsp;&nbsp;{{ statuses.postponed }}
             </div>
             <div
               class="progress-bar bg-info"
@@ -85,7 +86,7 @@ const statusWidths = computed(() => {
               data-toggle="tooltip"
               :title="statuses.draft + ' ' + gettext('Unconfirmed')"
             >
-              <i data-feather="circle" />&nbsp;&nbsp;{{ statuses.draft }}
+              <svg-icon name="circle" />&nbsp;&nbsp;{{ statuses.draft }}
             </div>
             <div
               class="progress-bar bg-success"
@@ -94,7 +95,7 @@ const statusWidths = computed(() => {
               data-toggle="tooltip"
               :title="statuses.confirmed + ' ' + gettext('Confirmed')"
             >
-              <i data-feather="check" />&nbsp;&nbsp;{{ statuses.confirmed }}
+              <svg-icon name="check" />&nbsp;&nbsp;{{ statuses.confirmed }}
             </div>
           </div>
           <h6 class="pt-3 text-center text-secondary">

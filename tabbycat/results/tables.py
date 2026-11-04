@@ -74,6 +74,6 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
     def add_ballot_entry_columns(self, debates, view_role, user):
 
-        entry_header = {'key': 'EB', 'icon': "plus-circle"}
+        entry_header = {'key': 'EB', 'icon': "circle-plus"}
         entry_cells = [self.get_ballot_cells(d, self.tournament, view_role, user) for d in debates]
         self.add_column(entry_header, entry_cells)

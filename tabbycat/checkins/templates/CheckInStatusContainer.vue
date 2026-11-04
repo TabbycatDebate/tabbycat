@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import _ from 'lodash'
 
 import { computed, ref, toRef } from 'vue'
@@ -500,13 +501,13 @@ const forAdmin = toRef(props, 'forAdmin')
           @click="setListContext('filterByPresence', optionKey, !optionState)"
         >
           <span v-if="optionKey === 'All'">{{ gettext('All') }}</span>
-          <i
+          <svg-icon
             v-if="optionKey === 'Absent'"
-            data-feather="x"
+            name="x"
           />
-          <i
+          <svg-icon
             v-if="optionKey === 'Present'"
-            data-feather="check"
+            name="check"
           />
           {{ stats[optionKey] }}
         </button>

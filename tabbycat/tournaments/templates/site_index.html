@@ -55,10 +55,10 @@
   {% if user.is_superuser %}
 
     {% trans "New Tournament" as text %}{% url 'tournament-create' as url %}
-    {% include "components/item-action.html" with icon="plus-circle" %}
+    {% include "components/item-action.html" with icon="circle-plus" %}
 
     {% trans "Edit Database Area" as text %}{% url 'admin:index' as url %}
-    {% include "components/item-action.html" with icon="edit" %}
+    {% include "components/item-action.html" with icon="square-pen" %}
 
     {% trans "Send a Test Email" as text %}{% url 'notifications-test-email' as url %}
     {% include "components/item-action.html" with icon="send" %}
@@ -81,7 +81,7 @@
       <button type="submit" class="btn btn-link p-0 list-group-item-action text-primary">
         <div class="row align-items-center">
           <div class="col-auto pr-1">
-            <i data-feather="log-out"></i>
+            <i data-icon="log-out"></i>
           </div>
 
           <div class="col pl-0 pr-0">
@@ -89,7 +89,7 @@
           </div>
 
           <div class="col-auto pr-1">
-            <i data-feather="chevron-right"></i>
+            <i data-icon="chevron-right"></i>
           </div>
         </div>
       </button>
