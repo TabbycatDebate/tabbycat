@@ -74,7 +74,6 @@ class BaseMetricAnnotator:
     repeatable = False
     listed = True
     ascending = False  # if True, this metric is sorted in ascending order, not descending
-    combinable = False  # if True, use single query with all combinable metrics
     none_is_lowest = False  # if True, None sorts below all numeric values rather than as zero
 
     def run(self, queryset, standings, round=None, tournament=None):
@@ -120,7 +119,10 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
-    combinable = True
+
+    # Metrics may share a query only when their joins preserve the same rows.
+    # None gives the annotator its own query; subclasses can name a shared group.
+    query_group = None
 
     def get_annotation(self, round):
         raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
@@ -143,8 +145,5 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(item, self.key, getattr(item, self.key))
 
     def annotate(self, queryset, standings, round=None, tournament=None):
-        if self.combinable:
-            assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
-            self.annotate_with_queryset(queryset, standings)
-        else:
-            self.annotate_with_queryset(self.get_annotated_queryset(queryset, round), standings)
+        assert self.queryset_annotated, "get_annotated_queryset() must be run before annotate()"
+        self.annotate_with_queryset(queryset, standings)
