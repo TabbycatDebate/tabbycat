@@ -200,7 +200,9 @@ class ParticipantAvailabilityForeignKeyField(TournamentHyperlinkedRelatedField):
             'api-adjudicator-detail': Adjudicator,
             'api-team-detail': Team,
             'api-venue-detail': Venue,
-        }[view_name].objects.get(tournament__slug=view_kwargs['tournament_slug'], pk=view_kwargs['pk'])
+        }[view_name].objects.get(
+            tournament=self.context['tournament'],
+            tournament__slug=view_kwargs['tournament_slug'], pk=view_kwargs['pk'])
 
     def to_internal_value(self, data):
         try:
