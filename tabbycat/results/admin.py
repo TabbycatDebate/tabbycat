@@ -2,9 +2,10 @@ from itertools import groupby
 
 from django.contrib import admin
 from django.db.models import Prefetch
+from django.forms.models import BaseInlineFormSet
 from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
-from draw.admin_widgets import BallotSubmissionScoreInlineDebateTeamRawIdMixin
+from draw.admin_widgets import BallotSubmissionScoreInlineDebateTeamRawIdMixin, PrefetchedForeignKeyRawIdWidget
 from draw.models import DebateTeam
 from utils.admin import ModelAdmin, TabbycatModelAdminFieldsMixin
 
@@ -16,67 +17,67 @@ from .prefetch import populate_results
 # BallotSubmission inlines (Jet shows each inline as a tab on the change form)
 # ==============================================================================
 
-class TeamScoreInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
-    model = TeamScore
+class BallotScoreInlineFormSet(BaseInlineFormSet):
+    """Reuse the inline queryset's related objects for raw-ID labels."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name in ('debate_team', 'debate_adjudicator', 'speaker'):
+            if name not in self.form.base_fields:
+                continue
+            field = self.form.base_fields[name]
+            widget = field.widget
+            objects = {getattr(score, f'{name}_id'): getattr(score, name) for score in self.get_queryset()}
+            if isinstance(widget, PrefetchedForeignKeyRawIdWidget):
+                widget.objects = objects
+                widget.queryset = field.queryset
+            else:
+                field.widget = PrefetchedForeignKeyRawIdWidget(
+                    widget.rel, widget.admin_site, attrs=widget.attrs,
+                    using=widget.db, queryset=field.queryset, objects=objects,
+                )
+
+
+class BallotScoreInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+    formset = BallotScoreInlineFormSet
     extra = 0
+    show_change_link = True
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request).select_related('debate_team__team__tournament')
+        relations = ['debate_team']
+        if hasattr(self.model, 'debate_adjudicator'):
+            qs = qs.select_related('debate_adjudicator__adjudicator')
+            relations.append('debate_adjudicator')
+        for relation in relations:
+            qs = qs.select_related(f'{relation}__debate__round__tournament').prefetch_related(
+                Prefetch(f'{relation}__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+            )
+        return qs
+
+
+class TeamScoreInline(BallotScoreInline):
+    model = TeamScore
     ordering = ('debate_team__side',)
     raw_id_fields = ('debate_team',)
-    show_change_link = True
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.select_related(
-            'debate_team__team__tournament',
-            'debate_team__debate__round__tournament',
-        )
 
 
-class TeamScoreByAdjInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+class TeamScoreByAdjInline(BallotScoreInline):
     model = TeamScoreByAdj
-    extra = 0
     ordering = ('debate_adjudicator_id', 'debate_team__side')
     raw_id_fields = ('debate_team', 'debate_adjudicator')
-    show_change_link = True
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.select_related(
-            'debate_adjudicator__adjudicator',
-            'debate_team__team__tournament',
-            'debate_team__debate__round__tournament',
-        )
 
 
-class SpeakerScoreInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+class SpeakerScoreInline(BallotScoreInline):
     model = SpeakerScore
-    extra = 0
     ordering = ('debate_team__side', 'position')
     raw_id_fields = ('debate_team', 'speaker')
-    show_change_link = True
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.select_related(
-            'debate_team__team__tournament',
-            'debate_team__debate__round__tournament',
-            'speaker',
-        )
 
 
-class SpeakerScoreByAdjInline(BallotSubmissionScoreInlineDebateTeamRawIdMixin, admin.TabularInline):
+class SpeakerScoreByAdjInline(BallotScoreInline):
     model = SpeakerScoreByAdj
-    extra = 0
     ordering = ('debate_adjudicator_id', 'debate_team__side', 'position')
     raw_id_fields = ('debate_team', 'debate_adjudicator')
-    show_change_link = True
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.select_related(
-            'debate_adjudicator__adjudicator',
-            'debate_team__team__tournament',
-            'debate_team__debate__round__tournament',
-        )
 
 
 class SpeakerCriterionScoreInline(admin.TabularInline):
