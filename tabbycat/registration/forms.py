@@ -7,7 +7,7 @@ from participants.emoji import EMOJI_RANDOM_FIELD_CHOICES, pick_unused_emoji
 from participants.models import Adjudicator, Coach, Institution, Region, RegistrationStatus, Speaker, Team, TournamentInstitution
 from privateurls.utils import populate_url_keys
 
-from .form_utils import CustomQuestionsFormMixin, get_answers_initial
+from .form_utils import BlockCheckboxWidget, CustomQuestionsFormMixin, get_answers_initial
 from .models import SlotTransferRequest
 
 
@@ -197,11 +197,10 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
 
         if 'break_categories' in self.fields:
             bcs = self.tournament.breakcategory_set.exclude(is_general=True)
-            if len(bcs) == 0:
+            if not bcs.exists():
                 self.fields.pop('break_categories')
             else:
                 self.fields['break_categories'].queryset = bcs
-                self.fields['break_categories'].widget = forms.CheckboxSelectMultiple()
 
         self.add_question_fields()
 
@@ -226,6 +225,7 @@ class TeamForm(CustomQuestionsFormMixin, forms.ModelForm):
             'reference': _("Team name (excluding institution)"),
         }
         widgets = {
+            'break_categories': BlockCheckboxWidget(),
             'tournament': forms.HiddenInput(),
         }
 
@@ -267,8 +267,11 @@ class SpeakerForm(CustomQuestionsFormMixin, forms.ModelForm):
             self.fields.pop(field)
 
         if 'categories' in self.fields:
-            self.fields['categories'].queryset = self.get_category_queryset()
-            self.fields['categories'].widget = forms.CheckboxSelectMultiple()
+            categories = self.get_category_queryset()
+            if categories.exists():
+                self.fields['categories'].queryset = categories
+            else:
+                self.fields.pop('categories')
 
         self.add_question_fields()
 
@@ -286,6 +289,9 @@ class SpeakerForm(CustomQuestionsFormMixin, forms.ModelForm):
         fields = ('name', 'last_name', 'email', 'phone', 'gender', 'categories')
         labels = {
             'name': _("Full name for tab"),
+        }
+        widgets = {
+            'categories': BlockCheckboxWidget(),
         }
 
     def save(self, commit=True):
