@@ -205,8 +205,7 @@ class Standings:
     def set_metric_display_order(self, keys_in_order):
         """Reorder metric columns to follow tournament settings (standings
         precedence, then extra metrics) instead of the order they were
-        computed (e.g. non-combinable SQL metrics are evaluated before
-        combinable ones)."""
+        computed in their query groups."""
         if not self.metric_keys:
             return
         by_key = {k: self._metric_specs[i] for i, k in enumerate(self.metric_keys)}
@@ -363,17 +362,27 @@ class BaseStandingsGenerator:
 
         queryset_for_metrics = queryset.model.objects.filter(tournament_q, id__in=queryset.values_list('id', flat=True))
 
-        self._annotate_metrics(queryset_for_metrics, self.distinct_queryset_metric_annotators, standings, round, tournament=tournament)
+        ranking_metrics = set(self.precedence)
+        if self.options["rank_filter"][0] is not None:
+            ranking_metrics.add(self.options["rank_filter"][0])
+        ranking_queryset = None
+        ranking_metric_annotators = None
+        for annotators in self.queryset_metric_annotator_groups.values():
+            group_queryset = queryset_for_metrics
+            for annotator in annotators:
+                group_queryset = annotator.get_annotated_queryset(group_queryset, round)
 
-        for annotator in self.queryset_metric_annotators:
-            queryset_for_metrics = annotator.get_annotated_queryset(queryset_for_metrics, round)
+            # Window rankings are possible only if all their inputs share a query.
+            if self.precedence and ranking_metrics <= {a.key for a in annotators}:
+                ranking_queryset = group_queryset
+                ranking_metric_annotators = annotators
+            else:
+                self._annotate_metrics(group_queryset, annotators, standings, round, tournament=tournament)
 
-        if len(self.precedence) > 0 and set(self.precedence) <= {a.key for a in self.queryset_metric_annotators}:
-            # If there is a precedence and all used metrics are combinable aggregation-based,
-            # we can use SQL window functions for rankings
-            return self.generate_from_queryset(queryset_for_metrics, standings, round, tournament=tournament)
+        if ranking_queryset is not None:
+            return self.generate_from_queryset(ranking_queryset, ranking_metric_annotators, standings, round, tournament=tournament)
 
-        # Otherwise (not all precedence metrics are SQL-based), need to sort Standings
+        # Ranking inputs span query groups or include metrics computed in Python.
         non_qs_ranked_annotators = [annotator for annotator in self.non_queryset_annotators if not annotator.extra_only]
         self._annotate_metrics(queryset_for_metrics, non_qs_ranked_annotators, standings, round, tournament=tournament)
 
@@ -391,18 +400,12 @@ class BaseStandingsGenerator:
         standings.set_metric_display_order(self.ordered_metric_keys)
         return standings
 
-    def generate_from_queryset(self, queryset, standings, round, tournament=None):
+    def generate_from_queryset(self, queryset, metric_annotators, standings, round, tournament=None):
         """Generates standings if rankings can be calculated through the
         aggregations present from the queryset (no repeated metrics)"""
 
         for annotator in self.ranking_annotators:
-            queryset = annotator.get_annotated_queryset(queryset, self.queryset_metric_annotators, *self.options["rank_filter"])
-
-        # Can use window functions to rank standings if all are from queryset
-        for annotator in self.ranking_annotators:
-            logger.debug("Running ranking queryset annotator: %s", annotator.name)
-            annotator.run_queryset(queryset, standings)
-        logger.debug("Ranking queryset annotators done.")
+            queryset = annotator.get_annotated_queryset(queryset, metric_annotators, *self.options["rank_filter"])
 
         # Order by rank and tie-breaker if available.
         tiebreak_func = None
@@ -413,6 +416,12 @@ class BaseStandingsGenerator:
         else:
             ordering_keys.append(self._qs_tiebreak_field)
         queryset = queryset.order_by(*ordering_keys)
+
+        self._annotate_metrics(queryset, metric_annotators, standings, round, tournament=tournament)
+        for annotator in self.ranking_annotators:
+            logger.debug("Running ranking queryset annotator: %s", annotator.name)
+            annotator.run_queryset(queryset, standings)
+        logger.debug("Ranking queryset annotators done.")
 
         standings.sort_from_rankings(tiebreak_func)
 
@@ -449,8 +458,8 @@ class BaseStandingsGenerator:
         """
         self.precedence = list()
         self.metric_annotators = list()
-        self.queryset_metric_annotators = list()
-        self.distinct_queryset_metric_annotators = list()
+        self.queryset_metric_annotator_groups = {}
+        self.non_queryset_annotators = list()
         repeated_metric_indices = {}
 
         all_metrics = [(m, True) for m in metrics] + [(m, False) for m in extra_metrics]
@@ -471,16 +480,15 @@ class BaseStandingsGenerator:
 
             annotator = klass(*args)
             if issubclass(klass, QuerySetMetricAnnotator):
-                if klass.combinable:
-                    self.queryset_metric_annotators.append(annotator)
-                else:
-                    self.distinct_queryset_metric_annotators.append(annotator)
+                group = annotator.query_group if annotator.query_group is not None else annotator
+                self.queryset_metric_annotator_groups.setdefault(group, []).append(annotator)
+            else:
+                self.non_queryset_annotators.append(annotator)
             self.metric_annotators.append(annotator)
 
             if ranked:
                 self.precedence.append(annotator.key)
 
-        self.non_queryset_annotators = [a for a in self.metric_annotators if a not in self.distinct_queryset_metric_annotators]
         self.ordered_metric_keys = [a.key for a in self.metric_annotators]
 
     def _interpret_rankings(self, rankings):

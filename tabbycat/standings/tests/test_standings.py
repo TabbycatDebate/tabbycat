@@ -1,7 +1,9 @@
 import logging
 from types import SimpleNamespace
 
+from django.db import connection
 from django.test import SimpleTestCase, TestCase
+from django.test.utils import CaptureQueriesContext
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
@@ -227,7 +229,7 @@ class TestTrivialStandings(TestCase):
     def test_pullup_debates(self):
         self._base_metric_test({'pullup_debates': [2, 2]})
 
-    def test_pullup_debates_combinable(self):
+    def test_pullup_debates_with_points(self):
         self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'pullup_debates': [2, 2]})
 
     def test_points_ranked(self):
@@ -304,15 +306,51 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, True))
         self.assertEqual(standings.get_standing(team_extra).rankings['rank'], (2, True))
 
-    def test_noncombinable_metric(self):
+    def test_metrics_with_different_joins(self):
         # Check that metrics that add a join do not interfere with other metrics
         self.set_up_speaker_scores(1)
         self.set_up_speaker_scores(2)
         self._base_metric_test({'wins': [2, 0], 'speaks_ind_avg': [101.5, 98.5]})
 
+    def test_metric_query_groups_with_multiple_ballot_versions(self):
+        self.set_up_speaker_scores(1)
+        self.set_up_speaker_scores(2)
+        round = self.tournament.round_set.get(seq=2)
+        debate = self.tournament.round_set.get(seq=1).debate_set.get()
+        ballot = BallotSubmission.objects.create(debate=debate, confirmed=False)
+        for dt in debate.debateteam_set.all():
+            TeamScore.objects.create(debate_team=dt, ballot_submission=ballot, points=3, score=500)
+            speaker = Speaker.objects.filter(team=dt.team).first()
+            SpeakerScore.objects.create(debate_team=dt, ballot_submission=ballot,
+                speaker=speaker, position=1, score=500)
+
+        groups = (('wins', 'points', 'speaks_avg'), ('speaks_ind_avg',), ('npullups', 'pullup_debates'))
+        expected = {'wins': [2, 0], 'speaks_ind_avg': [101.5, 98.5], 'points': [2, 0],
+                    'npullups': [2, 0], 'speaks_avg': [101.5, 98.5], 'pullup_debates': [2, 2]}
+        for metrics in (tuple(expected), *groups):
+            with self.subTest(metrics=metrics):
+                extra_metrics = tuple(key for key in expected if key not in metrics)
+                generator = TeamStandingsGenerator(metrics, ('rank',), extra_metrics)
+                with CaptureQueriesContext(connection) as queries:
+                    standings = generator.generate(self.tournament.team_set.all(), round=round)
+
+                for key, values in expected.items():
+                    for team, value in zip((self.team1, self.team2), values):
+                        self.assertEqual(standings.get_standing(team).metrics[key], value)
+                self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, False))
+                self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
+                self.assertEqual(standings.metric_keys, list(metrics + extra_metrics))
+
+                metric_queries = [q['sql'] for q in queries if any(f' AS "{group[0]}"' in q['sql'] for group in groups)]
+                self.assertEqual(len(metric_queries), len(groups))
+                for group in groups:
+                    query, = [sql for sql in metric_queries if f' AS "{group[0]}"' in sql]
+                    for key in group:
+                        self.assertIn(f' AS "{key}"', query)
+                    self.assertNotIn('DISTINCT', query)
+
     def test_metric_columns_follow_settings_order(self):
-        # Non-combinable metrics (e.g. AISS) are computed in an earlier pass than
-        # combinable ones; display order must still follow precedence + extras.
+        # Query grouping must preserve the configured metric display order.
         self.set_up_speaker_scores(1)
         self.set_up_speaker_scores(2)
         generator = TeamStandingsGenerator(('wins', 'speaks_ind_avg', 'points'), ())
