@@ -33,3 +33,9 @@ RUN npm ci
 # Compile all the static files
 RUN npm run build
 RUN python ./tabbycat/manage.py collectstatic --noinput -v 0
+
+# Nginx workers must be able to traverse and read the collected root assets.
+RUN chmod a+rx /tcd /tcd/tabbycat /tcd/tabbycat/staticfiles /tcd/tabbycat/staticfiles/root \
+    && chmod a+r /tcd/tabbycat/staticfiles/root/robots.txt \
+                 /tcd/tabbycat/staticfiles/root/favicon.ico \
+                 /tcd/tabbycat/staticfiles/root/navigatorPush.service.js

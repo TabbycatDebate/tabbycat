@@ -29,9 +29,35 @@ http {
 
     server_tokens off;
 
-    log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
-    access_log logs/nginx/access.log l2met;
-    error_log logs/nginx/error.log;
+    # Use normalized paths; query strings and private URL credentials stay out of logs.
+    map $uri $log_path {
+        default $uri;
+        ~*/privateurls/                       "[privateurls]";
+        ~*/checkins/submit/                    "[participant-checkin]";
+        ~*/results/round/[^/]+/(adjudicator|speaker)/ "[private-ballot]";
+        ~*/feedback/add/[at][^/]+              "[private-feedback]";
+        ~*/registration/                      "[registration]";
+        ~*/ia-app/                            "[ia-application]";
+        ~*/(accept|reset)/                    "[account-token]";
+    }
+
+    # These paths are never application routes. Reject probes before proxying.
+    map $uri $scanner_probe {
+        default 0;
+        ~*/\.(env|git|svn|hg|ssh|aws)([./]|$) 1;
+        ~*/(id_rsa|id_ed25519|docker-compose\.ya?ml)([./]|$) 1;
+    }
+
+    log_format timing escape=json
+        '{"time":"$time_iso8601","request_id":"$request_id",'
+        '"method":"$request_method","path":"$log_path","status":$status,'
+        '"bytes":$body_bytes_sent,"request_time":$request_time,'
+        '"upstream_connect_time":"$upstream_connect_time",'
+        '"upstream_header_time":"$upstream_header_time",'
+        '"upstream_response_time":"$upstream_response_time",'
+        '"scanner_probe":$scanner_probe,"user_agent":"$http_user_agent"}';
+    access_log logs/nginx/access.log timing;
+    error_log logs/nginx/error.log warn;
 
     include mime.types;
     default_type application/octet-stream;
@@ -66,6 +92,11 @@ http {
     server {
         listen <%= ENV["PORT"] %>;
         server_name _;
+        add_header X-Request-ID $request_id always;
+
+        if ($scanner_probe) {
+            return 404;
+        }
         # Set as-is this stops websocket connection for lasting as long as specified TODO: return to default once other settings compensate?
         # DOCS: A timeout during which a keep-alive client connection will stay open on the server side
         keepalive_timeout 6000; # 100m
@@ -79,6 +110,7 @@ http {
             # Repeating earlier Uvicorn config
             # Don't set X-Forwarded-Port; sets infinite redirects
             proxy_set_header Host $http_host;
+            proxy_set_header X-Request-ID $request_id;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
             proxy_redirect off;
@@ -134,6 +166,7 @@ http {
         # Pass to wsgi server
         location / {
             proxy_set_header Host $http_host;
+            proxy_set_header X-Request-ID $request_id;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_redirect off;
             proxy_pass http://wsgi_server;
