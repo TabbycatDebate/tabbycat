@@ -18,6 +18,8 @@ class SentMessage(models.Model):
         verbose_name="Message-ID") # Technical, Untranslatable term
     hook_id = models.CharField(max_length=16, unique=True, blank=True, null=True,
         verbose_name="Hook-ID")
+    esp_message_id = models.CharField(max_length=254, blank=True, null=True, db_index=True,
+        verbose_name=_("email provider message ID"))
 
     recipient = models.ForeignKey('participants.Person', models.SET_NULL, null=True,
         verbose_name=_("recipient"))
