@@ -345,10 +345,10 @@ class SideChoiceField(IntegerField):
         if t.pref('side_names') != '1-2':
             if value == -1:
                 return 'bye'
-            if t.pref('teams_in_debate') == 2:
-                return ['aff', 'neg'][value]
-            if t.pref('teams_in_debate') == 4:
-                return ['og', 'oo', 'cg', 'co'][value]
+            sides = {2: ['aff', 'neg'], 4: ['og', 'oo', 'cg', 'co']}.get(t.pref('teams_in_debate'), [])
+            if 0 <= value < len(sides):
+                return sides[value]
+            # Preserve stored sides that no longer match the tournament's format.
         return int(value)
 
 
