@@ -47,8 +47,11 @@ class TournamentRelatedFieldMixin:
 class TournamentHyperlinkedRelatedField(TournamentRelatedFieldMixin, HyperlinkedRelatedField):
     def get_url_kwargs(self, obj):
         lookup_value = getattr(obj, self.lookup_field)
+        tournament = self.get_tournament(obj)
+        if tournament is None:
+            tournament = self.context['tournament']
         kwargs = {
-            'tournament_slug': self.get_tournament(obj).slug,
+            'tournament_slug': tournament.slug,
             self.lookup_url_kwarg: lookup_value,
         }
         return kwargs
