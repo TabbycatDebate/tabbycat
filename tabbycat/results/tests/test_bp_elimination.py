@@ -54,10 +54,27 @@ class TestBPScoredElimination(TestCase):
 
     def test_advancement_from_saved_speaker_scores(self):
         ballot = self.make_ballot(self.teams[:4])
-        # Reload to exercise existing ballots, whose stored win fields are false.
+        # Simulate a ballot saved before scored elimination wins were recorded.
+        ballot.teamscore_set.update(win=False)
         result = BallotSubmission.objects.get(pk=ballot.pk).result
         self.assertEqual(result.advancing_teams(), self.teams[2:4])
         self.assertEqual([dt.team for dt in result.eliminated_dt()], self.teams[:2])
+
+    def test_saved_wins_match_advancing_teams(self):
+        ballot = self.make_ballot(self.teams[:4])
+        self.assertEqual(dict(ballot.teamscore_set.values_list('debate_team__side', 'win')), {
+            DebateSide.OG: False, DebateSide.OO: False,
+            DebateSide.CG: True, DebateSide.CO: True,
+        })
+
+    def test_resaving_repairs_existing_win_values(self):
+        ballot = self.make_ballot(self.teams[:4])
+        ballot.teamscore_set.update(win=False)
+        BallotSubmission.objects.get(pk=ballot.pk).result.save()
+        self.assertCountEqual(
+            ballot.teamscore_set.filter(win=True).values_list('debate_team__team_id', flat=True),
+            [team.pk for team in self.teams[2:4]],
+        )
 
     def test_subsequent_draw(self):
         self.make_ballot(self.teams[:4], room_rank=1)
@@ -81,6 +98,10 @@ class TestBPScoredElimination(TestCase):
 
     def test_final_has_one_winner(self):
         ballot = self.make_ballot(self.teams[:4], round=self.final)
+        self.assertEqual(
+            list(ballot.teamscore_set.filter(win=True).values_list('debate_team__side', flat=True)),
+            [DebateSide.CG],
+        )
         result = BallotSubmission.objects.get(pk=ballot.pk).result
         self.assertEqual(result.advancing_teams(), [self.teams[2]])
         self.assertEqual([dt.team for dt in result.eliminated_dt()], [
@@ -100,7 +121,9 @@ class TestBPScoredElimination(TestCase):
             tournament=self.tournament, seq=0, schedule_group=0,
             stage=Round.Stage.PRELIMINARY, draw_type=Round.DrawType.RANDOM,
         )
-        result = self.make_ballot(self.teams[:4], round=preliminary).result
+        ballot = self.make_ballot(self.teams[:4], round=preliminary)
+        self.assertFalse(ballot.teamscore_set.filter(win=True).exists())
+        result = ballot.result
         self.assertEqual([dt.team for dt in result.get_ranked_dt()], [
             self.teams[2], self.teams[3], self.teams[0], self.teams[1],
         ])
@@ -117,6 +140,10 @@ class TestBPScoredElimination(TestCase):
         )
         ballot.result.set_winners({DebateSide.OG, DebateSide.CO})
         ballot.result.save()
+        self.assertCountEqual(
+            ballot.teamscore_set.filter(win=True).values_list('debate_team__side', flat=True),
+            [DebateSide.OG, DebateSide.CO],
+        )
         result = BallotSubmission.objects.get(pk=ballot.pk).result
         self.assertEqual(result.advancing_teams(), [self.teams[0], self.teams[3]])
         self.assertEqual([dt.team for dt in result.eliminated_dt()], self.teams[1:3])
