@@ -1,26 +1,23 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n static %}
-
-{% block extra-head %}
-  <script src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'admin/js/jquery.init.js' %}"></script>
-  <script src="{% static 'js/django_better_admin_arrayfield.min.js' %}"></script>
-{% endblock %}
+{% load i18n %}
 
 {% block content %}
+  {% include "components/explainer-card.html" with type="info" p1=editor_help %}
+  <form method="post" id="question-editor">
+    {% csrf_token %}
+    <div id="vueMount">
+      <question-editor-container :initial-data="questionEditorData"></question-editor-container>
+    </div>
+    <noscript><p class="alert alert-warning">{% trans "Enable JavaScript to edit questions." %}</p></noscript>
+  </form>
+{% endblock %}
 
-  {% blocktrans trimmed asvar p1 %}
-    These questions appear as extra fields for participants to answer, in feedback or registration forms.
-  {% endblocktrans %}
-
-  {% url 'admin:registration_question_changelist' as edit_db_url %}
-  {% blocktrans trimmed asvar p2 %}
-    If you want to delete questions (and their associated answers), use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
-  {% endblocktrans %}
-
-  {% include "components/explainer-card.html" with type="info" %}
-
-  {% trans "Save Questions" as save_text %}
-  {% include "components/formset.html" with double=True %}
-
-{% endblock content %}
+{% block js %}
+  {{ question_editor_data|json_script:"question-editor-data" }}
+  <script>
+    window.vueData = {
+      questionEditorData: JSON.parse(document.getElementById('question-editor-data').textContent),
+    }
+  </script>
+  {{ block.super }}
+{% endblock %}

@@ -6,7 +6,7 @@ import math
 from django.contrib import messages
 from django.db.models import Count, F, Q
 from django.db.models.functions import Coalesce
-from django.forms import HiddenInput
+from django.forms import Form
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.utils.html import conditional_escape, escape
@@ -32,7 +32,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
-from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
+from .forms import FeedbackQuestionEditorForm, make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
@@ -875,25 +875,27 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
 
 class AdjFeedbackQuestionsFormset(CustomQuestionFormsetView):
     formset_model = AdjudicatorFeedbackQuestion
-    formset_factory_kwargs = {
-        'fields': [
-            'tournament', 'for_content_type',
-            'name', 'reference', 'from_adj', 'from_team',
-            'text', 'help_text', 'answer_type', 'required', 'min_value', 'max_value', 'choices',
-        ],
-        'widgets': {
-            'tournament': HiddenInput,
-            'for_content_type': HiddenInput,
-        },
-    }
+    question_form_class = FeedbackQuestionEditorForm
     question_model = AdjudicatorFeedback
-    success_url = 'adjfeedback-overview'
 
     page_emoji = '❓'
     page_title = gettext_lazy("Custom Feedback Questions")
 
-    def get_page_subtitle(self):
-        return ''
+    success_message = gettext_lazy("Feedback questions were successfully saved.")
+    editor_help = gettext_lazy(
+        "Use + to add a feedback question, then drag its handle or use the arrow buttons to reorder it. "
+        "Choose whether each question is asked of adjudicators, teams, or both. The overall score is controlled by feedback settings.")
+
+    def get_system_questions(self, model, data, editable):
+        return Form(data=data), [{
+            'label': _("Overall score"), 'type': _("Number"), 'required': True, 'toggle': None,
+            'help_text': _("Minimum: %(min)s; maximum: %(max)s; step: %(step)s.") % {
+                'min': self.tournament.pref('adj_min_score'),
+                'max': self.tournament.pref('adj_max_score'),
+                'step': self.tournament.pref('adj_score_step'),
+            },
+            'condition': _("Configured in feedback settings."),
+        }], None
 
 
 # ==============================================================================
