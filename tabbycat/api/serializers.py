@@ -973,29 +973,31 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
             model = Coach
             exclude = ('tournament_institution',)
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+        def get_fields(self):
+            # Nested serializers are instantiated without context, so redact
+            # fields once bound to the parent serializer, not in __init__().
+            visible_fields = super().get_fields()
 
-            if not is_staff(kwargs.get('context')):
-                t = kwargs['context']['tournament']
-                with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=t)
+            if not is_staff(self.context):
+                t = self.context['tournament']
+                with_permission = partial(has_permission, user=self.context['request'].user, tournament=t)
 
                 if not with_permission(permission=Permission.VIEW_PARTICIPANT_CONTACT):
-                    self.fields.pop('email')
-                    self.fields.pop('phone')
+                    visible_fields.pop('email')
+                    visible_fields.pop('phone')
                 if not with_permission(permission=Permission.VIEW_PARTICIPANT_GENDER):
-                    self.fields.pop('gender')
-                    self.fields.pop('pronoun')
+                    visible_fields.pop('gender')
+                    visible_fields.pop('pronoun')
                 if not with_permission(permission=Permission.VIEW_PRIVATE_URLS):
-                    self.fields.pop('url_key')
-                if not with_permission(permission=Permission.VIEW_CHECKIN):
-                    self.fields.pop('barcode')
+                    visible_fields.pop('url_key')
 
                 if not with_permission(permission=Permission.VIEW_CUSTOM_ANSWERS):
-                    self.fields.pop('answers')
+                    visible_fields.pop('answers')
 
                 if not with_permission(permission=Permission.VIEW_PARTICIPANT_DECODED) and t.pref('participant_code_names') == 'everywhere':
-                    self.fields.pop('name')
+                    visible_fields.pop('name')
+
+            return visible_fields
 
     teams = fields.TournamentHyperlinkedRelatedField(
         source='team_set',
@@ -1196,12 +1198,14 @@ class RoundPairingSerializer(serializers.ModelSerializer):
         team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
         side = fields.SideChoiceField(required=False)
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            if not is_staff(kwargs.get('context')):
-                with_permission = partial(has_permission, user=kwargs['context']['request'].user, tournament=kwargs['context']['tournament'])
-                if not with_permission(permission=Permission.VIEW_ADMIN_DRAW):
-                    self.fields.pop('flags')
+        def get_fields(self):
+            # Nested serializers are instantiated without context, so redact
+            # fields once bound to the parent serializer, not in __init__().
+            visible_fields = super().get_fields()
+            if not is_staff(self.context):
+                if not has_permission(self.context['request'].user, Permission.VIEW_ADMIN_DRAW, self.context['tournament']):
+                    visible_fields.pop('flags')
+            return visible_fields
 
         class Meta:
             model = DebateTeam

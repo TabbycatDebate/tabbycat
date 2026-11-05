@@ -200,6 +200,64 @@ class RoundViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(self.round.silent, True)
 
 
+class PairingViewsetTests(CompletedTournamentTestMixin, APITestCase):
+    round_seq = 1
+
+    def setUp(self):
+        super().setUp()
+        self.tournament.preferences['public_features__public_draw'] = 'all-released'
+        debate = self.round.debate_set.first()
+        debate.flags = ['max_swapped']
+        debate.save()
+        debate.debateteam_set.update(flags=['pullup'])
+
+    def test_exclude_flags_public(self):
+        response = self.client.get(self.reverse_url('api-pairing-list'))
+        self.assertEqual(response.status_code, 200)
+        for debate in response.data:
+            self.assertNotIn('flags', debate)
+            for team in debate['teams']:
+                self.assertNotIn('flags', team)
+
+    def test_include_flags_authenticated(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(self.reverse_url('api-pairing-list'))
+        self.assertEqual(response.status_code, 200)
+        flagged = [debate for debate in response.data if debate['flags']]
+        self.assertEqual(len(flagged), 1)
+        self.assertEqual([team['flags'] for team in flagged[0]['teams']], [['pullup'], ['pullup']])
+
+
+class InstitutionViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.tournament.preferences['public_features__public_institutions_list'] = True
+        institution = self.tournament.team_set.exclude(institution=None).first().institution
+        tournament_institution = self.tournament.tournamentinstitution_set.create(institution=institution)
+        tournament_institution.coach_set.create(name="Coach", email="coach@example.com",
+            phone="0123456789", url_key="coachkey", gender='F', pronoun="she")
+
+    def get_coaches(self):
+        response = self.client.get(self.reverse_url('api-institution-list'))
+        self.assertEqual(response.status_code, 200)
+        return [coach for institution in response.data for coach in institution.get('coaches') or []]
+
+    def test_exclude_coach_private_fields_public(self):
+        coaches = self.get_coaches()
+        self.assertEqual(len(coaches), 1)
+        for field in ('email', 'phone', 'url_key', 'gender', 'pronoun', 'answers'):
+            self.assertNotIn(field, coaches[0])
+        self.assertEqual(coaches[0]['name'], "Coach")
+
+    def test_include_coach_private_fields_authenticated(self):
+        self.client.login(username="admin", password="admin")
+        coaches = self.get_coaches()
+        self.assertEqual(len(coaches), 1)
+        self.assertEqual(coaches[0]['email'], "coach@example.com")
+        self.assertEqual(coaches[0]['url_key'], "coachkey")
+
+
 class SpeakerCategoryViewsetTests(CompletedTournamentTestMixin, APITestCase):
 
     def setUp(self):
