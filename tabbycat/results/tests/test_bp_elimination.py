@@ -1,11 +1,15 @@
+from importlib import import_module
+
+from django.db import connection
 from django.test import TestCase
 
+from breakqual.models import BreakCategory
 from draw.generator.bpelimination import AfterPartialBPEliminationDrawGenerator, SubsequentBPEliminationDrawGenerator
 from draw.generator.pairing import BPEliminationResultPairing
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Institution, Speaker, Team
-from results.models import BallotSubmission
+from results.models import BallotSubmission, TeamScore
 from tournaments.models import Round, Tournament
 
 
@@ -75,6 +79,70 @@ class TestBPScoredElimination(TestCase):
             ballot.teamscore_set.filter(win=True).values_list('debate_team__team_id', flat=True),
             [team.pk for team in self.teams[2:4]],
         )
+
+    def run_win_repair(self):
+        migration = import_module('results.migrations.0021_repair_scored_bp_elimination_wins')
+        with connection.schema_editor() as editor:
+            migration.Migration.operations[0].database_forwards('results', editor, None, None)
+
+    def test_migration_repairs_saved_ballots(self):
+        semifinal = self.make_ballot(self.teams[:4])
+        final = self.make_ballot(self.teams[:4], round=self.final)
+        final.confirmed = False
+        final.save()
+        for ballot in (semifinal, final):
+            ballot.teamscore_set.update(win=False)
+        self.run_win_repair()
+        self.run_win_repair()  # Running the repair again preserves corrected wins.
+        for ballot, winners in ((semifinal, [DebateSide.CG, DebateSide.CO]), (final, [DebateSide.CG])):
+            with self.subTest(ballot=ballot.pk):
+                self.assertCountEqual(
+                    ballot.teamscore_set.filter(win=True).values_list('debate_team__side', flat=True), winners,
+                )
+
+    def test_migration_final_ignores_later_rounds_in_other_categories(self):
+        categories = [BreakCategory.objects.create(
+            tournament=self.tournament, name=name, slug=name, seq=seq,
+            break_size=4, is_general=True, priority=seq,
+        ) for seq, name in enumerate(['open', 'esl'])]
+        self.final.break_category = categories[0]
+        self.final.save()
+        Round.objects.create(
+            tournament=self.tournament, seq=3, schedule_group=3, break_category=categories[1],
+            stage=Round.Stage.ELIMINATION, draw_type=Round.DrawType.ELIMINATION,
+        )
+        ballot = self.make_ballot(self.teams[:4], round=self.final)
+        ballot.teamscore_set.update(win=False)
+        self.run_win_repair()
+        self.assertEqual(
+            list(ballot.teamscore_set.filter(win=True).values_list('debate_team__side', flat=True)),
+            [DebateSide.CG],
+        )
+
+    def test_migration_preserves_ineligible_ballots(self):
+        preliminary = Round.objects.create(
+            tournament=self.tournament, seq=0, schedule_group=0,
+            stage=Round.Stage.PRELIMINARY, draw_type=Round.DrawType.RANDOM,
+        )
+        self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-debate'
+        prelim_ballot = self.make_ballot(self.teams[:4], round=preliminary)
+        forfeit = self.make_ballot(self.teams[:4])
+        forfeit.forfeit = True
+        forfeit.save()
+        unranked = self.make_ballot(self.teams[:4])
+        unranked.teamscore_set.update(points=None, score=None)
+        incomplete = self.make_ballot(self.teams[:4])
+        incomplete.teamscore_set.filter(debate_team__side=DebateSide.CO).delete()
+        tied = self.make_ballot(self.teams[:4])
+        tied.teamscore_set.update(points=2)
+        two_team = self.make_ballot(self.teams[:4])
+        two_team.debate.debateteam_set.filter(side__in=[DebateSide.CG, DebateSide.CO]).delete()
+        ballots = [prelim_ballot, forfeit, unranked, incomplete, tied, two_team]
+        for ballot in ballots:
+            ballot.teamscore_set.update(win=False)
+        scores = list(TeamScore.objects.order_by('pk').values())
+        self.run_win_repair()
+        self.assertEqual(list(TeamScore.objects.order_by('pk').values()), scores)
 
     def test_subsequent_draw(self):
         self.make_ballot(self.teams[:4], room_rank=1)
