@@ -73,11 +73,22 @@ class InviteUserForm(forms.Form):
 
         return emails
 
+    @staticmethod
+    def _get_unused_username(email):
+        # Only a placeholder: invitees choose their username when accepting.
+        local_part = email.split("@")[0]
+        username = local_part
+        suffix = 1
+        while User.objects.filter(username__iexact=username).exists():
+            suffix += 1
+            username = f"{local_part}{suffix}"
+        return username
+
     def _get_or_create_user(self, email):
         user, created = User.objects.get_or_create(
             email=email,
             defaults={
-                'username': email.split("@")[0],
+                'username': lambda: self._get_unused_username(email),
             },
         )
         Membership.objects.get_or_create(
@@ -164,6 +175,12 @@ class AcceptInvitationForm(SetPasswordForm):
     username = UsernameField(label=_("Username"), help_text=get_user_model()._meta.get_field('username').help_text)
 
     field_order = ('username', 'new_password1', 'new_password2')
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username__iexact=username).exclude(pk=self.user.pk).exists():
+            raise self.user.unique_error_message(User, ['username'])
+        return username
 
     def save(self, commit=True):
         self.user.username = self.cleaned_data['username']
