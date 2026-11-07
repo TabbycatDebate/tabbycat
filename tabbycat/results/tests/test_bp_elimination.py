@@ -5,7 +5,7 @@ from draw.generator.pairing import BPEliminationResultPairing
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
 from participants.models import Institution, Speaker, Team
-from results.models import BallotSubmission
+from results.models import BallotSubmission, TeamScore
 from tournaments.models import Round, Tournament
 
 
@@ -58,6 +58,15 @@ class TestBPScoredElimination(TestCase):
         result = BallotSubmission.objects.get(pk=ballot.pk).result
         self.assertEqual(result.advancing_teams(), self.teams[2:4])
         self.assertEqual([dt.team for dt in result.eliminated_dt()], self.teams[:2])
+        saved_wins = dict(TeamScore.objects.filter(ballot_submission=ballot).values_list(
+            'debate_team__team_id', 'win',
+        ))
+        self.assertEqual(saved_wins, {
+            self.teams[0].id: False,
+            self.teams[1].id: False,
+            self.teams[2].id: True,
+            self.teams[3].id: True,
+        })
 
     def test_subsequent_draw(self):
         self.make_ballot(self.teams[:4], room_rank=1)

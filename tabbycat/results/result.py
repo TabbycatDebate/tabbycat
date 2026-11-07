@@ -50,6 +50,7 @@ from django.utils.translation import gettext_lazy as _
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from draw.types import DebateSide
+from tournaments.models import Round
 
 from .result_info import DebateResultInfo
 from .scoresheet import (HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet, PolyEliminationScoresheet,
@@ -1026,6 +1027,9 @@ class ConsensusDebateResult(BaseDebateResult):
         return len(self.sides) - self.scoresheet.rank(side)
 
     def teamscore_field_win(self, side):
+        if (self.debate.round.stage == Round.Stage.ELIMINATION
+                and hasattr(self.scoresheet, 'ranked_sides')):
+            return self.debateteams[side] in self.advancing_dt()
         return side in self.scoresheet.winners()
 
     def teamscore_field_score(self, side):
