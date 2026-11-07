@@ -75,13 +75,14 @@ class InviteUserForm(forms.Form):
 
     @staticmethod
     def _get_unused_username(email):
-        # Only a placeholder: invitees choose their username when accepting.
-        local_part = email.split("@")[0]
-        username = local_part
+        # Only a placeholder: invitees choose their username when accepting. The
+        # address is only taken if someone chose it as their own username.
+        max_length = User._meta.get_field('username').max_length
+        username = email[:max_length]
         suffix = 1
         while User.objects.filter(username__iexact=username).exists():
             suffix += 1
-            username = f"{local_part}{suffix}"
+            username = f"{email[:max_length - len(str(suffix))]}{suffix}"
         return username
 
     def _get_or_create_user(self, email):

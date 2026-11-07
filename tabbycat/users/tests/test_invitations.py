@@ -39,32 +39,37 @@ class TestInviteUser(InvitationTestMixin, TestCase):
         self.assertTrue(Membership.objects.filter(user=user, group=self.role).exists())
         self.assertTrue(any(message.to == [email] for message in mail.outbox))
 
-    def test_invite_uses_local_part_as_username(self):
+    def test_invite_uses_email_as_username(self):
         self.assertEqual(self.invite("alice@example.com").status_code, 302)
-        self.assertInvited("alice@example.com", "alice")
-
-    def test_invite_with_existing_username(self):
-        User.objects.create_user("alice", "other@example.com", "password")
-        self.assertEqual(self.invite("alice@example.com").status_code, 302)
-        self.assertInvited("alice@example.com", "alice2")
-        self.assertEqual(User.objects.get(username="alice").email, "other@example.com")
-
-    def test_invite_with_existing_username_of_different_case(self):
-        User.objects.create_user("Alice", "other@example.com", "password")
-        self.assertEqual(self.invite("alice@example.com").status_code, 302)
-        self.assertInvited("alice@example.com", "alice2")
+        self.assertInvited("alice@example.com", "alice@example.com")
 
     def test_invite_with_same_local_part_in_one_request(self):
-        emails = ("alice@example.com", "alice@example.org", "alice@example.net")
+        emails = ("alice@example.com", "alice@example.org")
         self.assertEqual(self.invite(*emails).status_code, 302)
-        for email, username in zip(emails, ("alice", "alice2", "alice3")):
-            self.assertInvited(email, username)
+        for email in emails:
+            self.assertInvited(email, email)
+
+    def test_invite_with_existing_username(self):
+        User.objects.create_user("alice@example.com", "other@example.com", "password")
+        self.assertEqual(self.invite("alice@example.com").status_code, 302)
+        self.assertInvited("alice@example.com", "alice@example.com2")
+        self.assertEqual(User.objects.get(username="alice@example.com").email, "other@example.com")
+
+    def test_invite_with_existing_username_of_different_case(self):
+        User.objects.create_user("Alice@Example.com", "other@example.com", "password")
+        self.assertEqual(self.invite("alice@example.com").status_code, 302)
+        self.assertInvited("alice@example.com", "alice@example.com2")
+
+    def test_invite_with_email_longer_than_username(self):
+        email = "a" * 64 + "@" + "b" * 60 + "." + "c" * 60 + ".com"
+        self.assertEqual(self.invite(email).status_code, 302)
+        self.assertInvited(email, email[:150])
 
     def test_reinvite_keeps_existing_username(self):
         self.invite("alice@example.com")
         self.assertEqual(self.invite("alice@example.com").status_code, 302)
         self.assertEqual(User.objects.filter(email="alice@example.com").count(), 1)
-        self.assertInvited("alice@example.com", "alice")
+        self.assertInvited("alice@example.com", "alice@example.com")
 
 
 class TestAcceptInvitation(InvitationTestMixin, TestCase):
