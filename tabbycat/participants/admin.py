@@ -135,7 +135,7 @@ class TeamSideAllocationInline(admin.TabularInline):
 
 
 class InstitutionConflictFormMixin(forms.Form):
-    """Adds and positions an institution-conflict checkbox on a participant form."""
+    """Adds and positions institution-conflict checkboxes on a participant form."""
 
     create_institution_conflict = forms.BooleanField(
         initial=True,
@@ -144,11 +144,19 @@ class InstitutionConflictFormMixin(forms.Form):
         help_text=_("Automatically create a conflict between the selected institution and this participant."),
     )
 
+    remove_previous_institution_conflict = forms.BooleanField(
+        initial=True,
+        required=False,
+        label=_("Remove previous institution conflict"),
+        help_text=_("When changing or clearing institution, remove the conflict with the previous institution. Uncheck to keep that conflict."),
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         field_names = list(self.fields)
-        field_names.remove('create_institution_conflict')
-        field_names.insert(field_names.index('institution') + 1, 'create_institution_conflict')
+        for offset, name in enumerate(('create_institution_conflict', 'remove_previous_institution_conflict'), start=1):
+            field_names.remove(name)
+            field_names.insert(field_names.index('institution') + offset, name)
         self.order_fields(field_names)
 
 
@@ -158,13 +166,16 @@ class InstitutionConflictAdminMixin:
 
     def get_fields(self, request, obj=None):
         field_names = list(super().get_fields(request, obj))
-        field_names.remove('create_institution_conflict')
-        field_names.insert(field_names.index('institution') + 1, 'create_institution_conflict')
+        for offset, name in enumerate(('create_institution_conflict', 'remove_previous_institution_conflict'), start=1):
+            field_names.remove(name)
+            field_names.insert(field_names.index('institution') + offset, name)
         return field_names
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         instance = form.instance
+        if 'institution' in form.changed_data and form.cleaned_data.get('remove_previous_institution_conflict'):
+            self.institution_conflict_model.objects.filter(**{self.institution_conflict_object_field: instance}, institution_id=form.initial.get('institution')).delete()
         if ('institution' in form.changed_data and
                 form.cleaned_data.get('create_institution_conflict') and instance.institution_id):
             self.institution_conflict_model.objects.bulk_create([
