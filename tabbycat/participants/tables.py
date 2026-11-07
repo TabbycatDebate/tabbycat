@@ -1,6 +1,5 @@
 from django.db.models import Max, Prefetch
 from django.db.models.functions import Coalesce
-from django.utils.html import escape
 from django.utils.translation import gettext as _
 
 from adjallocation.models import DebateAdjudicator
@@ -11,7 +10,7 @@ from results.prefetch import populate_confirmed_ballots, populate_wins
 from standings.templatetags.standingsformat import metricformat
 from tournaments.models import Round
 from users.permissions import has_permission, Permission
-from utils.tables import TabbycatTableBuilder
+from utils.tables import escape_if_unsafe, TabbycatTableBuilder
 
 
 class TeamResultTableBuilder(TabbycatTableBuilder):
@@ -36,9 +35,14 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
         self.add_column(header, data)
 
     def add_speaker_scores_column(self, teamscores):
+        unredact = self.admin and has_permission(self.user, Permission.VIEW_ANONYMOUS, self.tournament)
         data = [{
             'text': ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—",
-            'tooltip': "<br>".join(["%s for %s" % (metricformat(ss.score), escape(ss.speaker)) for ss in ts.debate_team.speaker_scores]),
+            'tooltip': "<br>".join([
+                "%s for %s" % (metricformat(ss.score), escape_if_unsafe(
+                    ss.speaker.name if unredact else ss.speaker.get_public_name(self.tournament)))
+                for ss in ts.debate_team.speaker_scores
+            ]),
         } for ts in teamscores]
         header = {'key': 'speaks', 'tooltip': _("Speaker scores<br>(in speaking order)"), 'text': _("Speaks")}
         self.add_column(header, data)

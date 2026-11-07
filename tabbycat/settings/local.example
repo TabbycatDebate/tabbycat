@@ -76,3 +76,4 @@ CACHES = {
             "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
         }
     }
+}

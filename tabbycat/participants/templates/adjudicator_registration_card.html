@@ -62,7 +62,7 @@
           <strong>{% trans "Custom Questions:" %}</strong>
 
           <details>
-            <summary>{{ adjudicator.name }}</summary>
+            <summary>{% person_display_name adjudicator %}</summary>
 
             <ul>
               {% for answer in adjudicator.answers.all %}

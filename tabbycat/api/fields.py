@@ -13,9 +13,8 @@ from rest_framework.utils import html
 
 from draw.types import DebateSide
 from participants.models import Adjudicator, Speaker, Team
+from users.permissions import has_permission, Permission
 from venues.models import Venue
-
-from .utils import is_staff
 
 
 class TournamentRelatedFieldMixin:
@@ -125,11 +124,18 @@ class AnonymisingParticipantNameField(CharField):
         return instance
 
     def to_representation(self, instance):
-        if not is_staff(self.context):
-            if instance.anonymous:
+        if 'view' not in self.context:
+            return super().to_representation(instance.name)
+
+        tournament = self.context['tournament']
+        user = self.context['request'].user
+        if instance.anonymous:
+            if not has_permission(user, Permission.VIEW_ANONYMOUS, tournament):
                 return None
-            return instance.get_public_name(self.context['tournament'])
-        return super().to_representation(instance.name)
+            return super().to_representation(instance.name)
+        if tournament.pref('participant_code_names') == 'off' or has_permission(user, Permission.VIEW_PARTICIPANT_DECODED, tournament):
+            return super().to_representation(instance.name)
+        return instance.get_public_name(tournament)
 
 
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):

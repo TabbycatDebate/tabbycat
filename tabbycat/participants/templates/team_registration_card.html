@@ -132,7 +132,7 @@
 
           {% for speaker in team.speakers %}
             <details>
-              <summary>{{ speaker.name }}</summary>
+              <summary>{% person_display_name speaker %}</summary>
               <ul>
                 {% for answer in speaker.answers.all %}
                   <li><strong>{{ answer.question.name }}</strong>: {{ answer.answer }}</li>
@@ -151,7 +151,7 @@
         </div>
         {% for speaker in team.speakers %}
           <div class="d-flex align-items-center mb-1">
-            <span class="flex-grow-1">{{ speaker.name }}</span>
+            <span class="flex-grow-1">{% person_display_name speaker %}</span>
             {% if delete_speaker_perm %}
               <a href="{% tournamenturl 'participants-team-speaker-delete' pk=team.pk speaker_pk=speaker.pk %}"
                   class="btn btn-sm btn-outline-danger ml-2 flex-shrink-0">

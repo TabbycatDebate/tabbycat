@@ -1,6 +1,7 @@
 import logging
+from types import SimpleNamespace
 
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
@@ -11,8 +12,60 @@ from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
 
-from ..base import StandingsError
+from ..base import Standings, StandingsError
+from ..ranking import BasicRankAnnotator
 from ..teams import TeamStandingsGenerator
+
+
+class TestNoneMetricOrdering(SimpleTestCase):
+
+    class Instance:
+        _meta = SimpleNamespace(verbose_name='instance')
+
+        def __init__(self, id):
+            self.id = id
+
+    def test_none_can_sort_and_rank_below_zero(self):
+        none_instance = self.Instance(1)
+        zero_instance = self.Instance(2)
+        standings = Standings([none_instance, zero_instance])
+        standings.record_added_metric(
+            'progress',
+            'progress',
+            'Prog',
+            None,
+            ascending=False,
+            none_is_lowest=True,
+        )
+        standings.add_metric(none_instance, 'progress', None)
+        standings.add_metric(zero_instance, 'progress', 0)
+
+        standings.sort(('progress',))
+        BasicRankAnnotator(('progress',)).run(standings)
+
+        self.assertEqual(standings.get_instance_list(), [zero_instance, none_instance])
+        self.assertEqual(standings.get_standing(zero_instance).rankings['rank'], (1, False))
+        self.assertEqual(standings.get_standing(none_instance).rankings['rank'], (2, False))
+
+
+class TestEmptyEliminationStandings(TestCase):
+
+    def test_empty_queryset_with_tournament_context(self):
+        tournament = Tournament.objects.create(name="Empty elimination standings", slug="empty-elimination")
+        for metrics, extra_metrics in ((('elim_progress',), ()), (('points',), ('elim_progress',))):
+            with self.subTest(metrics=metrics):
+                generator = TeamStandingsGenerator(metrics, ('rank',), extra_metrics)
+                standings = generator.generate(tournament.team_set.all(), tournament=tournament)
+                self.assertEqual(len(standings), 0)
+                self.assertIn('elim_progress', standings.metric_keys)
+
+    def test_empty_queryset_with_round_context(self):
+        tournament = Tournament.objects.create(name="Empty round standings", slug="empty-round")
+        round = Round.objects.create(tournament=tournament, seq=1)
+        generator = TeamStandingsGenerator(('elim_progress',), ('rank',))
+        standings = generator.generate(tournament.team_set.all(), round=round)
+        self.assertEqual(len(standings), 0)
+        self.assertIn('elim_progress', standings.metric_keys)
 
 
 class TestTrivialStandings(TestCase):
@@ -204,6 +257,23 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
         self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, False))
         self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, False))
+
+    def test_institution_rank_uses_full_precedence(self):
+        # team1 has more points but team2 has higher speaks, so ranking within
+        # the institution must not ignore the first metric
+        institution = Institution.objects.create(name="Institution", code="Inst")
+        self.tournament.team_set.update(institution=institution)
+        TeamScore.objects.filter(debate_team__team=self.team2).update(score=110)
+
+        # speaks_sum is computed in SQL, draw_strength is not; both paths must agree
+        for metrics in [('points', 'speaks_sum'), ('points', 'draw_strength')]:
+            with self.subTest(metrics=metrics):
+                generator = TeamStandingsGenerator(metrics, ('rank', 'institution_rank'))
+                standings = self.get_standings(generator)
+                self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, False))
+                self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
+                self.assertEqual(standings.get_standing(self.team1).rankings['institution_rank'], (1, False))
+                self.assertEqual(standings.get_standing(self.team2).rankings['institution_rank'], (2, False))
 
     def test_double_metric_error(self):
         self.assertRaises(StandingsError, TeamStandingsGenerator, ('points', 'wbw', 'points'), ('rank',))

@@ -24,7 +24,8 @@ SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 TABBYCAT_VERSION = '2.13.0-dev'
 TABBYCAT_CODENAME = 'V'
-READTHEDOCS_VERSION = 'v2.13.0'
+# Docs for a version only exist once it is released, so development builds link to the latest docs
+READTHEDOCS_VERSION = 'latest' if '-dev' in TABBYCAT_VERSION else 'v' + TABBYCAT_VERSION
 
 # ==============================================================================
 # Internationalization and Localization
