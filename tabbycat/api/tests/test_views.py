@@ -12,7 +12,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
 from checkins.models import Event
-from participants.models import Team
+from participants.models import Speaker, Team
 from results.models import BallotSubmission, SpeakerScore
 from tournaments.models import Round
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
@@ -29,6 +29,10 @@ class RootTests(APITestCase):
             "version": settings.TABBYCAT_VERSION,
             "version_name": settings.TABBYCAT_CODENAME,
         })
+
+    def test_get_schema(self):
+        response = self.client.get(reverse('api-schema'))
+        self.assertEqual(response.status_code, 200)
 
     def test_get_v1_root(self):
         response = self.client.get(reverse('api-v1-root'))
@@ -198,6 +202,112 @@ class RoundViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(response.data['silent'], True)
         self.round.refresh_from_db()
         self.assertEqual(self.round.silent, True)
+
+
+class PairingViewsetTests(CompletedTournamentTestMixin, APITestCase):
+    round_seq = 1
+
+    def setUp(self):
+        super().setUp()
+        self.tournament.preferences['public_features__public_draw'] = 'all-released'
+        debate = self.round.debate_set.first()
+        debate.flags = ['max_swapped']
+        debate.save()
+        debate.debateteam_set.update(flags=['pullup'])
+
+    def test_exclude_flags_public(self):
+        response = self.client.get(self.reverse_url('api-pairing-list'))
+        self.assertEqual(response.status_code, 200)
+        for debate in response.data:
+            self.assertNotIn('flags', debate)
+            for team in debate['teams']:
+                self.assertNotIn('flags', team)
+
+    def test_include_flags_authenticated(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(self.reverse_url('api-pairing-list'))
+        self.assertEqual(response.status_code, 200)
+        flagged = [debate for debate in response.data if debate['flags']]
+        self.assertEqual(len(flagged), 1)
+        self.assertEqual([team['flags'] for team in flagged[0]['teams']], [['pullup'], ['pullup']])
+
+
+class InstitutionViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.tournament.preferences['public_features__public_institutions_list'] = True
+        institution = self.tournament.team_set.exclude(institution=None).first().institution
+        tournament_institution = self.tournament.tournamentinstitution_set.create(institution=institution)
+        tournament_institution.coach_set.create(name="Coach", email="coach@example.com",
+            phone="0123456789", url_key="coachkey", gender='F', pronoun="she")
+
+    def get_coaches(self):
+        response = self.client.get(self.reverse_url('api-institution-list'))
+        self.assertEqual(response.status_code, 200)
+        return [coach for institution in response.data for coach in institution.get('coaches') or []]
+
+    def test_exclude_coach_private_fields_public(self):
+        coaches = self.get_coaches()
+        self.assertEqual(len(coaches), 1)
+        for field in ('email', 'phone', 'url_key', 'gender', 'pronoun', 'answers'):
+            self.assertNotIn(field, coaches[0])
+        self.assertEqual(coaches[0]['name'], "Coach")
+
+    def test_include_coach_private_fields_authenticated(self):
+        self.client.login(username="admin", password="admin")
+        coaches = self.get_coaches()
+        self.assertEqual(len(coaches), 1)
+        self.assertEqual(coaches[0]['email'], "coach@example.com")
+        self.assertEqual(coaches[0]['url_key'], "coachkey")
+
+
+class TeamViewsetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.tournament.preferences['public_features__public_participants'] = True
+        Speaker.objects.filter(team__tournament=self.tournament).update(email="speaker@example.com")
+
+    def test_exclude_speaker_private_fields_public(self):
+        response = self.client.get(self.reverse_url('api-team-list'))
+        self.assertEqual(response.status_code, 200)
+        for team in response.data:
+            self.assertGreater(len(team['speakers']), 0)
+            for speaker in team['speakers']:
+                for field in ('email', 'phone', 'url_key', 'gender', 'pronoun', 'barcode', 'answers'):
+                    self.assertNotIn(field, speaker)
+                self.assertIn('name', speaker)
+
+    def test_include_speaker_private_fields_authenticated(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(self.reverse_url('api-team-list'))
+        self.assertEqual(response.status_code, 200)
+        for team in response.data:
+            self.assertGreater(len(team['speakers']), 0)
+            for speaker in team['speakers']:
+                self.assertEqual(speaker['email'], "speaker@example.com")
+                self.assertIn('url_key', speaker)
+
+    def test_create_with_speakers(self):
+        self.client.login(username="admin", password="admin")
+        response = self.client.post(self.reverse_url('api-team-list'), {
+            'reference': "New team",
+            'speakers': [{'name': "New speaker", 'email': "new@example.com"}],
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual([speaker['name'] for speaker in response.data['speakers']], ["New speaker"])
+        self.assertEqual(Speaker.objects.get(email="new@example.com").team_id, response.data['id'])
+
+    def test_update_with_speakers(self):
+        self.client.login(username="admin", password="admin")
+        team = self.tournament.team_set.first()
+        speakers = team.speaker_set.count()
+        response = self.client.patch(self.reverse_url('api-team-detail', pk=team.pk), {
+            'speakers': [{'name': "New speaker", 'email': "new@example.com"}],
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(team.speaker_set.count(), speakers + 1)
 
 
 class SpeakerCategoryViewsetTests(CompletedTournamentTestMixin, APITestCase):
