@@ -165,7 +165,10 @@ onBeforeUnmount(() => {
       :handle-drop="handleUnusedDrop"
       :drop-context="{ 'assignment': null, 'position': null }"
     >
-      <section class="mb-1 d-flex">
+      <section
+        class="mb-1 d-flex"
+        data-allocation-ignore
+      >
         <div class="small mt-2 pl-1 text-muted text-unselectable">
           <span
             v-for="(value, key) in sorts"

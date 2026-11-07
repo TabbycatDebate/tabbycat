@@ -10,6 +10,8 @@ export const useDragAndDropStore = defineStore('dragAndDrop', {
     institutions: {},
     regions: {},
     loading: false, // Used by modal windows when waiting for an allocation etc
+    selectedAllocationItem: null,
+    selectedAllocationTarget: null,
     draggingPanel: false, // Needed to switch UI affordances for whole-panel drops
     round: null,
     tournament: null,
@@ -125,6 +127,39 @@ export const useDragAndDropStore = defineStore('dragAndDrop', {
     panelIsDragging: (state) => state.draggingPanel,
   },
   actions: {
+    clearAllocationSelection() {
+      this.selectedAllocationItem = null
+      this.selectedAllocationTarget = null
+    },
+    isAllocationItemSelected(payload) {
+      const selected = this.selectedAllocationItem
+      return selected !== null && selected.item === payload.item &&
+        selected.assignment === payload.assignment && selected.position === payload.position
+    },
+    isAllocationTargetSelected(context) {
+      const selected = this.selectedAllocationTarget?.context
+      return selected !== undefined && selected.assignment === context.assignment &&
+        selected.position === context.position
+    },
+    selectAllocationItem(payload) {
+      this.selectedAllocationItem = this.isAllocationItemSelected(payload) ? null : { ...payload }
+      this.placeSelectedAllocation()
+    },
+    selectAllocationTarget(context, handler) {
+      this.selectedAllocationTarget = this.isAllocationTargetSelected(context) ? null : {
+        context: { ...context }, handler,
+      }
+      this.placeSelectedAllocation()
+    },
+    placeSelectedAllocation() {
+      const item = this.selectedAllocationItem
+      const target = this.selectedAllocationTarget
+      if (!item || !target) return
+      this.clearAllocationSelection()
+      // Dropping on the source slot must not remove or duplicate its occupant.
+      if (item.assignment === target.context.assignment && item.position === target.context.position) return
+      target.handler(item, target.context)
+    },
     setupInitialData(initialData) {
       // Set primary data across all drag and drop views
       const loadDirectFromKey = ['round', 'tournament', 'extra']
@@ -153,6 +188,7 @@ export const useDragAndDropStore = defineStore('dragAndDrop', {
       this.wsPseudoComponentID = Math.floor(Math.random() * 10000)
     },
     setDebateOrPanelAttributes(changes) {
+      this.clearAllocationSelection()
       // For a given set of debates or panels update their attribute values
       changes.forEach((debateOrPanel) => {
         if (this.debatesOrPanels[debateOrPanel.id]) {
@@ -238,6 +274,7 @@ export const useDragAndDropStore = defineStore('dragAndDrop', {
       }
     },
     setSharding(payload) {
+      this.clearAllocationSelection()
       this.sharding[payload.option] = payload.value
     },
     setHoverPanel(payload) {
@@ -276,6 +313,7 @@ export const useDragAndDropStore = defineStore('dragAndDrop', {
       this.lastSaved = new Date()
     },
     setLoadingState(isLoading) {
+      this.clearAllocationSelection()
       this.loading = isLoading
     },
     setPanelDraggingTracker(status) {
