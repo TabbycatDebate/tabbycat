@@ -47,6 +47,11 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
             "lowest_ds_speaks" - Choose from teams who have the lowest draw strength by
                                  speaks (indicative of having been against easier teams)
 
+        "pullup_percentage" - Only the highest-ranked teams making up this
+            percentage of the bracket being pulled from (and always at least
+            2 teams) can be pulled up. Applied before "pullup_restriction".
+            100 means the entire bracket below is considered.
+
         "pairing_method" - How to pair teams. Permitted values:
             (best explained by example, these examples have a ten-team bracket)
 
@@ -76,6 +81,7 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         "pairing_method"        : "slide",
         "avoid_conflicts"       : "one_up_one_down",
         "pullup_restriction"    : "none",
+        "pullup_percentage"     : 100,
         "pullup_debates_penalty": 0,
         "pullup_penalty"        : 0,
         "bracket_penalty"       : 0,
@@ -153,6 +159,11 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         except KeyError:
             raise ValueError("Invalid option for pullup_restriction: {0}".format(option))
 
+        # Only the highest-ranked teams (by percentage, minimum 2) are candidates
+        n = len(teams)
+        n_candidates = min(n, max((self.options["pullup_percentage"] * n) // 100, 2))
+        teams = teams[:n_candidates]
+
         if metric is None:
             return teams
         else:
@@ -212,14 +223,19 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
         if pullup_needed_for:
             raise DrawFatalError("Last bracket is still odd!\n" + repr(pullup_needed_for))
 
-    @classmethod
-    def _intermediate_brackets(cls, brackets):
+    def _intermediate_brackets(self, brackets):
         """Operates in-place."""
         new = OrderedDict()
+        self._pullup_pools = {}
         odd_team = None
         for points, teams in brackets.items():
             if odd_team:
-                new[points+0.5] = [odd_team, teams.pop(0)]
+                candidates = self._pullup_filter(teams)
+                pullup_team = candidates[0]
+                teams.remove(pullup_team)
+                new[points+0.5] = [odd_team, pullup_team]
+                self.add_team_flag(pullup_team, "pullup")
+                self._pullup_pools[points+0.5] = candidates[1:]
                 odd_team = None
             if len(teams) % 2 != 0:
                 odd_team = teams.pop()
@@ -273,11 +289,21 @@ class BasePowerPairedDrawGenerator(BasePairDrawGenerator):
 
             # bubble down, if bubble up didn't work
             if points-0.5 in brackets:
-                swap_team = brackets[points-0.5][0]  # Bottom team
-                if not _check_conflict(swap_team, teams[0]):
+                lower_bracket = brackets[points-0.5]
+                if self.options["pullup_restriction"] == "none":
+                    candidates = lower_bracket[:1]
+                else:
+                    pool = self._pullup_pools[points]
+                    candidates = [t for t in lower_bracket if t in pool]
+
+                swap_team = next((t for t in candidates if not _check_conflict(t, teams[0])), None)
+                if swap_team is not None:
                     self.add_team_flag(teams[1], (conflict == 1) and "bub_dn_inst" or "bub_dn_hist")
                     self.add_team_flag(swap_team, "bub_dn_accom")
-                    teams[1], brackets[points-0.5][0] = swap_team, teams[1]
+                    self.remove_team_flag(teams[1], "pullup")
+                    self.add_team_flag(swap_team, "pullup")
+                    idx = lower_bracket.index(swap_team)
+                    teams[1], lower_bracket[idx] = swap_team, teams[1]
                     continue
 
             # if nothing worked, add a "didn't work" flag
