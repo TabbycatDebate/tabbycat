@@ -98,6 +98,21 @@ test('the latest column and direction outrank earlier sorts', () => {
   assert.deepEqual(names(state), ['Alpha', 'Bravo', 'Charlie'])
 })
 
+test('row keys follow their rows when sorting reorders them', () => {
+  const state = table(rows())
+  const keyOf = name => state.getRowKey(state.sortableData.value.find(row => row[0].text === name))
+  const keys = () => state.dataOrderedByKey.value.map(row => state.getRowKey(row))
+  const original = { Alpha: keyOf('Alpha'), Bravo: keyOf('Bravo'), Charlie: keyOf('Charlie') }
+  assert.equal(new Set(Object.values(original)).size, 3)
+  state.updateSorting('name')
+  assert.deepEqual(keys(), [original.Charlie, original.Bravo, original.Alpha])
+  state.updateSorting('name')
+  assert.deepEqual(keys(), [original.Alpha, original.Bravo, original.Charlie])
+  state.sortableData.value = [...state.sortableData.value, [{ text: 'Delta' }, { text: 10 }]]
+  assert.deepEqual(keys().slice(0, 3), [original.Alpha, original.Bravo, original.Charlie])
+  assert.ok(!Object.values(original).includes(keyOf('Delta')))
+})
+
 // The same sort history drives tie-breaking and each header's visible priority.
 test('headers expose priorities, directions, and only the primary ARIA sort', () => {
   const state = table(rows())

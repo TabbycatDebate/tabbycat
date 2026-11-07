@@ -78,6 +78,7 @@ const {
   sortOrder,
   sortHistory,
   updateSorting,
+  getRowKey,
   dataFilteredByKey,
 } = useSortableTable({
   headers,
@@ -169,7 +170,10 @@ const resolveCellComponent = (cellData) => {
             {{ emptyTitle }}
           </td>
         </tr>
-        <tr v-for="(row, rowIndex) in dataFilteredByKey">
+        <tr
+          v-for="(row, rowIndex) in dataFilteredByKey"
+          :key="getRowKey(row)"
+        >
           <component
             :is="resolveCellComponent(cellData)"
             v-for="(cellData, cellIndex) in row"

@@ -79,6 +79,19 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
     })
   })
 
+  // Rows are keyed by identity rather than position so that re-sorting moves
+  // each row's elements along with it. Reusing elements by position would
+  // leave state not tracked by Vue, such as a checkbox that was just ticked,
+  // attached to whichever row moves into that position.
+  const rowKeys = new WeakMap()
+  let nextRowKey = 0
+  const getRowKey = (row) => {
+    if (!rowKeys.has(row)) {
+      rowKeys.set(row, nextRowKey++)
+    }
+    return rowKeys.get(row)
+  }
+
   const dataFilteredByKey = computed(() => {
     if (filterKey.value === '') {
       return dataOrderedByKey.value
@@ -105,6 +118,7 @@ export function useSortableTable ({ headers, sortableData, getSortableProperty, 
     sortHistory,
     filterKey,
     updateSorting,
+    getRowKey,
     dataOrderedByKey,
     dataFilteredByKey,
   }
