@@ -4,6 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.consumer import SyncConsumer
 from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
+from django.db import transaction
 
 from actionlog.models import ActionLogEntry
 from adjallocation.serializers import SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer
@@ -160,11 +161,16 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
         return super().receive_json(content)
 
+    @transaction.atomic
     def modify_debate_teams(self, debate, sent_teams):
         sent_team_ids = [team_id for team_id in sent_teams if team_id is not None]
         if Team.objects.filter(id__in=sent_team_ids,
                 tournament=self.tournament).count() != len(set(sent_team_ids)):
             return
+
+        existing_teams = dict(debate.debateteam_set.values_list('side', 'team_id'))
+        new_teams = {side: team_id for side, team_id in enumerate(sent_teams) if team_id is not None}
+        matchup_changed = existing_teams != new_teams
 
         # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
         delete_count, deleted = debate.debateteam_set.exclude(side__in=self.tournament.sides).delete()
@@ -187,6 +193,13 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
                 logger.debug("%s debate team: %s in [%s] is now %s",
                              "Created" if created else "Updated",
                              side, debate.matchup, team_id)
+
+        if matchup_changed:
+            # Generated flags describe the original matchup and side assignments.
+            # In particular, a pullup must not be inherited by a replacement team.
+            debate.flags = []
+            debate.save(update_fields=['flags'])
+            debate.debateteam_set.update(flags=[])
 
         debate._populate_teams()
 
