@@ -126,10 +126,10 @@ const moveSelection = (event) => {
   if (position) extend(position.row, position.column)
 }
 
-const finishSelection = (event) => {
+const finishSelection = (event, focusTable = true) => {
   if (!gesture || (event && event.pointerId !== gesture.id)) return
   suppressClick = dragging.value
-  if (dragging.value) tableElement.value?.focus({ preventScroll: true })
+  if (dragging.value && focusTable) tableElement.value?.focus({ preventScroll: true })
   dragging.value = false
   gesture = null
   stop()
@@ -140,7 +140,8 @@ const finishSelection = (event) => {
 }
 
 const cancelSelection = () => {
-  finishSelection()
+  finishSelection(undefined, false)
+  suppressClick = false
   clear()
 }
 
@@ -160,18 +161,20 @@ const beginSelection = (event) => {
 }
 
 const preventDragClick = (event) => {
-  if (suppressClick) {
+  if (!suppressClick) return
+  suppressClick = false
+  if (event.detail !== 0) {
     event.preventDefault()
     event.stopPropagation()
-    suppressClick = false
   }
 }
 
 const setSelected = (checked, keepSelection = false) => {
   const changedTypes = new Map()
   for (const cell of selected.value) {
-    if (cell.checked === checked || cell.disabled) continue
-    cellRefs.get(cell)?.checkUpdate(checked, false)
+    const instance = cellRefs.get(cell)
+    if (!instance || cell.checked === checked || cell.disabled) continue
+    instance.checkUpdate(checked, false)
     if (!cell.noSave && cell.saveURL === undefined) changedTypes.set(cell.type, cell)
   }
   for (const cell of changedTypes.values()) emit('toggle-checked', cell)
@@ -179,8 +182,13 @@ const setSelected = (checked, keepSelection = false) => {
 }
 
 const toggleSelectedWithSpace = (event) => {
-  if (!selected.value.size || (event.target !== tableElement.value &&
-    !event.target.matches('input[type="checkbox"]'))) return
+  if (!selected.value.size) return
+  if (event.target !== tableElement.value) {
+    if (!event.target.matches('input[type="checkbox"]')) return
+    const position = getPosition(event.target)
+    const cell = position && dataFilteredByKey.value[position.row]?.[position.column]
+    if (!selected.value.has(cell)) return
+  }
   event.preventDefault()
   if (!event.repeat) {
     const checkAll = [...selected.value].some(cell => !cell.disabled && !cell.checked)
@@ -188,7 +196,7 @@ const toggleSelectedWithSpace = (event) => {
   }
 }
 
-watch(() => [props.externalFilterKey, sortHistory.value, props.tableContent], cancelSelection)
+watch(() => [props.externalFilterKey, sortHistory.value, rows.value], cancelSelection)
 onBeforeUnmount(cancelSelection)
 
 const copyTableData = async () => {
@@ -230,7 +238,10 @@ const resolveCellComponent = (cellData) => {
 </script>
 
 <template>
-  <div @keydown.space.capture="toggleSelectedWithSpace">
+  <div
+    @keydown.space.capture="toggleSelectedWithSpace"
+    @keydown.esc="cancelSelection"
+  >
     <div
       v-if="hasCheckboxes"
       class="checkbox-selection-tools mb-2 d-print-none"
@@ -282,7 +293,6 @@ const resolveCellComponent = (cellData) => {
         :class="[tableClass, { 'checkbox-dragging': dragging, 'has-checkbox-selection': selected.size > 0 }]"
         @pointerdown="beginSelection"
         @click.capture="preventDragClick"
-        @keydown.esc="cancelSelection"
       >
         <thead>
           <tr>

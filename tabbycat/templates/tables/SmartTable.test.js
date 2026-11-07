@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { compileScript, compileTemplate, parse } from '@vue/compiler-sfc'
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, nextTick, shallowReactive, ref, toRef, watch } from 'vue'
 import _ from 'lodash'
 import { useCheckboxSelection } from '../composables/useCheckboxSelection.js'
 import { useSortableTable } from '../composables/useSortableTable.js'
@@ -13,7 +13,7 @@ function component (filename, props, services = {}, emit = () => {}) {
   assert.deepEqual(compileTemplate({ source: descriptor.template.content, filename, id: filename }).errors, [])
   const script = compileScript(descriptor, { id: filename, genDefaultAs: 'component' })
   const dependencies = {
-    _, computed, ref, toRef, watch, onBeforeUnmount() {}, defineAsyncComponent: () => ({}),
+    _, computed, nextTick, shallowReactive, ref, toRef, watch, onBeforeUnmount() {}, defineAsyncComponent: () => ({}),
     useCheckboxSelection, useSortableTable, useDjangoI18n: () => ({ gettext: text => text }),
     SmartHeader: {}, SmartCell: {}, CheckCell: {}, AjaxSelectCell: {}, BallotsCell: {},
     ...services,
@@ -27,14 +27,15 @@ const checkbox = extra => ({ component: 'check-cell', checked: false, type: 0, .
 
 function table (cells, save = () => {}) {
   const events = []
-  const view = component('./SmartTable.vue', { tableHeaders: [{ key: 'check' }], tableContent: cells.map(cell => [cell]) }, {},
+  const props = shallowReactive({ tableHeaders: [{ key: 'check' }], tableContent: cells.map(cell => [cell]) })
+  const view = component('./SmartTable.vue', props, {},
     (...event) => events.push(event))
   for (const cell of cells) {
     const instance = component('./CheckCell.vue', { cellData: cell }, { useAjax: () => ({ ajaxSave: save }) },
       (...event) => events.push(event))
     view.setCellRef(cell, instance)
   }
-  return { view, events }
+  return { view, events, props }
 }
 
 test('bulk updates use final category state, preserve form-only changes, and save individual cells', () => {
@@ -70,11 +71,11 @@ test('mouse drags select without toggling and suppress the release click; normal
   }
   globalThis.document = { elementFromPoint: () => target(1) }
   try {
-    const event = { button: 0, pointerType: 'mouse', pointerId: 1, clientX: 0, clientY: 0, target: target(0) }
+    const event = { button: 0, buttons: 1, pointerType: 'mouse', pointerId: 1, clientX: 0, clientY: 0, target: target(0) }
     view.beginSelection(event)
     listeners.get('pointerup')(event)
     let prevented = false
-    const click = { preventDefault: () => { prevented = true }, stopPropagation() {} }
+    const click = { detail: 1, preventDefault: () => { prevented = true }, stopPropagation() {} }
     view.preventDragClick(click)
     assert.equal(prevented, false)
     view.beginSelection(event)
@@ -108,7 +109,7 @@ test('Space checks mixed selections, unchecks fully checked selections, and igno
   assert.deepEqual(cells.map(cell => cell.checked), [true, true, true])
   view.toggleSelectedWithSpace({ ...event, target: { matches: () => false } })
   assert.equal(prevented, 2, 'buttons and text fields keep their normal Space behavior')
-  view.toggleSelectedWithSpace({ ...event, target: { matches: () => true } })
+  view.toggleSelectedWithSpace(event)
   assert.deepEqual(cells.map(cell => cell.checked), [false, false, false])
   view.toggleSelectedWithSpace(event)
   assert.deepEqual(cells.map(cell => cell.checked), [true, true, true], 'Space checks an entirely unchecked selection')
@@ -116,4 +117,75 @@ test('Space checks mixed selections, unchecks fully checked selections, and igno
   view.clear()
   view.toggleSelectedWithSpace(event)
   assert.equal(prevented, 4, 'Space without a selection keeps its normal behavior')
+})
+
+test('Space on an unselected checkbox keeps native behavior', () => {
+  const cells = [checkbox(), checkbox()]
+  const { view } = table(cells)
+  view.start(cells.map(cell => [cell]), 0, 0)
+  view.extend(0, 0)
+  const root = Object.freeze({})
+  view.tableElement.value = root
+  const target = row => ({ matches: () => true, closest: () => ({
+    dataset: { row, column: 0 }, closest: () => root,
+  }) })
+  let prevented = 0
+  const event = { target: target(1), preventDefault: () => { prevented++ } }
+  view.toggleSelectedWithSpace(event)
+  assert.equal(prevented, 0)
+  assert.deepEqual(cells.map(cell => cell.checked), [false, false])
+  view.toggleSelectedWithSpace({ ...event, target: target(0) })
+  assert.equal(prevented, 1)
+  assert.deepEqual(cells.map(cell => cell.checked), [true, false])
+})
+
+test('in-place row removal clears selection before another bulk action', async () => {
+  const cells = [checkbox(), checkbox()]
+  const { view, props, events } = table(cells)
+  // Vue makes table data reactive in the real parent component.
+  props.tableContent = ref(props.tableContent).value
+  await nextTick()
+  view.start(view.rows.value, 0, 0)
+  view.extend(1, 0)
+  props.tableContent.splice(0, 1)
+  await nextTick()
+  assert.equal(view.selected.value.size, 0)
+  view.setSelected(true)
+  assert.equal(events.length, 0)
+})
+
+test('cancelled drags do not steal focus, and an outside release cannot swallow keyboard clicks', () => {
+  const { view } = table([checkbox(), checkbox()])
+  const listeners = new Map()
+  let focuses = 0
+  let prevented = 0
+  const root = Object.freeze({ focus: () => { focuses++ } })
+  view.tableElement.value = root
+  const target = { closest: () => ({ dataset: { row: 0, column: 0 }, closest: () => root }) }
+  globalThis.window = {
+    addEventListener: (name, handler) => listeners.set(name, handler),
+    removeEventListener: name => listeners.delete(name),
+  }
+  globalThis.document = { elementFromPoint: () => target }
+  const event = { button: 0, buttons: 1, pointerType: 'mouse', pointerId: 1, clientX: 0, clientY: 0, target }
+  const click = { detail: 0, preventDefault: () => { prevented++ }, stopPropagation() {} }
+  try {
+    view.beginSelection(event)
+    listeners.get('pointermove')({ ...event, clientY: 40, preventDefault() {} })
+    listeners.get('blur')()
+    assert.equal(focuses, 0)
+    assert.equal(view.selected.value.size, 0)
+    assert.equal(listeners.size, 0)
+    view.preventDragClick(click)
+    assert.equal(prevented, 0)
+    view.beginSelection(event)
+    listeners.get('pointermove')({ ...event, clientY: 40, preventDefault() {} })
+    listeners.get('pointerup')(event)
+    assert.equal(focuses, 1)
+    view.preventDragClick(click)
+    assert.equal(prevented, 0, 'a keyboard click after releasing outside the table is not suppressed')
+  } finally {
+    delete globalThis.window
+    delete globalThis.document
+  }
 })
