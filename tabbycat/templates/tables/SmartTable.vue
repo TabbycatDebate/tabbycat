@@ -1,12 +1,14 @@
 <script setup>
 import _ from 'lodash'
 import { mkConfig, generateCsv, download } from 'export-to-csv'
-import { computed, defineAsyncComponent, toRef } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, ref, toRef, watch } from 'vue'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import CheckCell from '../tables/CheckCell.vue'
 import AjaxSelectCell from '../tables/AjaxSelectCell.vue'
 import BallotsCell from '../../results/templates/BallotsCell.vue'
+import { useCheckboxSelection } from '../composables/useCheckboxSelection.js'
+import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 import { useSortableTable } from '../composables/useSortableTable.js'
 
 const FeedbackTrend = defineAsyncComponent(() => import('../graphs/FeedbackTrend.vue'))
@@ -90,21 +92,112 @@ const {
   externalFilterKey: toRef(props, 'externalFilterKey'),
 })
 
-const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
-  if (props.highlightColumn != null && rowIndex > 0) {
-    const currentRow = dataFilteredByKey.value[rowIndex]
-    const previousRow = dataFilteredByKey.value[rowIndex - 1]
-    const currentValue = getSortableProperty(currentRow, props.highlightColumn)
-    const previousValue = getSortableProperty(previousRow, props.highlightColumn)
-    if (currentValue !== previousValue) {
-      const modifiedCellData = { ...cellData }
-      const existingClass = modifiedCellData.class || ''
-      modifiedCellData.class = existingClass ? `${existingClass} highlight-row` : 'highlight-row'
-      return modifiedCellData
-    }
-  }
-  return cellData
+const { gettext } = useDjangoI18n()
+const { selected, start, extend, stop, clear } = useCheckboxSelection()
+const tableElement = ref(null)
+const cellRefs = new Map()
+const dragging = ref(false)
+let gesture = null
+let suppressClick = false
+
+const hasCheckboxes = computed(() => rows.value.some(row => row.some(cell => cell.component === 'check-cell')))
+
+const isHighlightedRow = (rowIndex) => props.highlightColumn != null && rowIndex > 0 &&
+  getSortableProperty(dataFilteredByKey.value[rowIndex], props.highlightColumn) !==
+  getSortableProperty(dataFilteredByKey.value[rowIndex - 1], props.highlightColumn)
+
+const setCellRef = (cell, instance) => {
+  if (instance) cellRefs.set(cell, instance)
+  else cellRefs.delete(cell)
 }
+
+const getPosition = (target) => {
+  const cell = target?.closest('td[data-row]')
+  if (!cell || cell.closest('table') !== tableElement.value) return null
+  return { row: Number(cell.dataset.row), column: Number(cell.dataset.column) }
+}
+
+const moveSelection = (event) => {
+  if (!gesture || event.pointerId !== gesture.id) return
+  if (!dragging.value && Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y) < 5) return
+  dragging.value = true
+  event.preventDefault()
+  const position = getPosition(document.elementFromPoint(event.clientX, event.clientY))
+  if (position) extend(position.row, position.column)
+}
+
+const finishSelection = (event, focusTable = true) => {
+  if (!gesture || (event && event.pointerId !== gesture.id)) return
+  suppressClick = dragging.value
+  if (dragging.value && focusTable) tableElement.value?.focus({ preventScroll: true })
+  dragging.value = false
+  gesture = null
+  stop()
+  window.removeEventListener('pointermove', moveSelection)
+  window.removeEventListener('pointerup', finishSelection)
+  window.removeEventListener('pointercancel', cancelSelection)
+  window.removeEventListener('blur', cancelSelection)
+}
+
+const cancelSelection = () => {
+  finishSelection(undefined, false)
+  suppressClick = false
+  clear()
+}
+
+const beginSelection = (event) => {
+  if (event.button !== 0 || event.pointerType !== 'mouse') return
+  suppressClick = false
+  const position = getPosition(event.target)
+  if (!position) return
+  const cell = dataFilteredByKey.value[position.row][position.column]
+  if (cell.component !== 'check-cell' || cell.disabled) return
+  start(dataFilteredByKey.value, position.row, position.column)
+  gesture = { id: event.pointerId, x: event.clientX, y: event.clientY }
+  window.addEventListener('pointermove', moveSelection, { passive: false })
+  window.addEventListener('pointerup', finishSelection)
+  window.addEventListener('pointercancel', cancelSelection)
+  window.addEventListener('blur', cancelSelection)
+}
+
+const preventDragClick = (event) => {
+  if (!suppressClick) return
+  suppressClick = false
+  if (event.detail !== 0) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+}
+
+const setSelected = (checked, keepSelection = false) => {
+  const changedTypes = new Map()
+  for (const cell of selected.value) {
+    const instance = cellRefs.get(cell)
+    if (!instance || cell.checked === checked || cell.disabled) continue
+    instance.checkUpdate(checked, false)
+    if (!cell.noSave && cell.saveURL === undefined) changedTypes.set(cell.type, cell)
+  }
+  for (const cell of changedTypes.values()) emit('toggle-checked', cell)
+  if (!keepSelection) clear()
+}
+
+const toggleSelectedWithSpace = (event) => {
+  if (!selected.value.size) return
+  if (event.target !== tableElement.value) {
+    if (!event.target.matches('input[type="checkbox"]')) return
+    const position = getPosition(event.target)
+    const cell = position && dataFilteredByKey.value[position.row]?.[position.column]
+    if (!selected.value.has(cell)) return
+  }
+  event.preventDefault()
+  if (!event.repeat) {
+    const checkAll = [...selected.value].some(cell => !cell.disabled && !cell.checked)
+    setSelected(checkAll, true)
+  }
+}
+
+watch(() => [props.externalFilterKey, sortHistory.value, rows.value], cancelSelection)
+onBeforeUnmount(cancelSelection)
 
 const copyTableData = async () => {
   // Reuse one detached element while decoding the table's cells.
@@ -145,45 +238,119 @@ const resolveCellComponent = (cellData) => {
 </script>
 
 <template>
-  <div class="table-responsive-md">
-    <table
-      class="table"
-      :class="tableClass"
+  <div
+    @keydown.space.capture="toggleSelectedWithSpace"
+    @keydown.esc="cancelSelection"
+  >
+    <div
+      v-if="hasCheckboxes"
+      class="checkbox-selection-tools mb-2 d-print-none"
     >
-      <thead>
-        <tr>
-          <smart-header
-            v-for="header in headers"
-            :key="header.key"
-            :header="header"
-            :sort-key="sortKey"
-            :sort-order="sortOrder"
-            :sort-history="sortHistory"
-            @resort="updateSorting"
-          />
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
-          <td class="empty-cell text-center text-muted">
-            {{ emptyTitle }}
-          </td>
-        </tr>
-        <tr
-          v-for="(row, rowIndex) in dataFilteredByKey"
-          :key="getRowKey(row)"
+      <small
+        v-if="!selected.size"
+        class="text-muted"
+      >
+        {{ gettext('Drag across checkbox cells to select a range.') }}
+      </small>
+      <div
+        v-else
+        class="d-flex align-items-center"
+        role="group"
+        :aria-label="gettext('Selected checkboxes')"
+      >
+        <span
+          class="mr-2"
+          aria-live="polite"
+        >{{ selected.size }} {{ gettext('selected') }} — {{ gettext('Space to toggle') }}</span>
+        <button
+          type="button"
+          class="btn btn-sm btn-primary mr-2"
+          @click="setSelected(true)"
         >
-          <component
-            :is="resolveCellComponent(cellData)"
-            v-for="(cellData, cellIndex) in row"
-            :key="cellIndex"
-            :cell-data="getCellDataWithHighlight(cellData, cellIndex, rowIndex)"
-            @saved="emit('saved', $event)"
-            @toggle-checked="emit('toggle-checked', $event)"
-          />
-        </tr>
-      </tbody>
-    </table>
+          {{ gettext('Check selected') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-primary mr-2"
+          @click="setSelected(false)"
+        >
+          {{ gettext('Uncheck selected') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-light"
+          @click="clear"
+        >
+          {{ gettext('Clear selection') }}
+        </button>
+      </div>
+    </div>
+    <div class="table-responsive-md">
+      <table
+        ref="tableElement"
+        tabindex="-1"
+        class="table"
+        :class="[tableClass, { 'checkbox-dragging': dragging, 'has-checkbox-selection': selected.size > 0 }]"
+        @pointerdown="beginSelection"
+        @click.capture="preventDragClick"
+      >
+        <thead>
+          <tr>
+            <smart-header
+              v-for="header in headers"
+              :key="header.key"
+              :header="header"
+              :sort-key="sortKey"
+              :sort-order="sortOrder"
+              :sort-history="sortHistory"
+              @resort="updateSorting"
+            />
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
+            <td class="empty-cell text-center text-muted">
+              {{ emptyTitle }}
+            </td>
+          </tr>
+          <tr
+            v-for="(row, rowIndex) in dataFilteredByKey"
+            :key="getRowKey(row)"
+          >
+            <component
+              :is="resolveCellComponent(cellData)"
+              v-for="(cellData, cellIndex) in row"
+              :key="cellIndex"
+              :ref="instance => setCellRef(cellData, instance)"
+              :cell-data="cellData"
+              :data-row="rowIndex"
+              :data-column="cellIndex"
+              :class="{ 'highlight-row': isHighlightedRow(rowIndex), 'checkbox-selected': selected.has(cellData) }"
+              @saved="emit('saved', $event)"
+              @toggle-checked="emit('toggle-checked', $event)"
+            />
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.checkbox-selection-tools {
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+}
+.checkbox-dragging {
+  user-select: none;
+}
+.table.has-checkbox-selection:focus {
+  outline: none;
+}
+.table :deep(td.checkbox-selected input[type="checkbox"]) {
+  outline: 3px auto #005fcc;
+  outline-offset: 3px;
+}
+</style>
