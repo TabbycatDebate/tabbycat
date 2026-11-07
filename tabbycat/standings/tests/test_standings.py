@@ -224,6 +224,17 @@ class TestTrivialStandings(TestCase):
     def test_npullups(self):
         self._base_metric_test({'npullups': [2, 0]})
 
+    def test_npullups_counts_debate_team_once_across_ballots(self):
+        debate = Debate.objects.get(round__tournament=self.tournament, round__seq=1)
+        debate_team = DebateTeam.objects.get(debate=debate, team=self.team1)
+        ballot = BallotSubmission.objects.create(debate=debate, confirmed=True)
+        TeamScore.objects.create(
+            debate_team=debate_team, ballot_submission=ballot,
+            margin=2, points=1, score=101, win=True, votes_given=1, votes_possible=1,
+        )
+
+        self._base_metric_test({'npullups': [2, 0]})
+
     def test_pullup_debates(self):
         self._base_metric_test({'pullup_debates': [2, 2]})
 

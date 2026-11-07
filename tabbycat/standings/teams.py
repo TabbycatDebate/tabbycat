@@ -107,7 +107,13 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         return annotation_filter
 
     def get_annotation(self, round=None):
-        annotation = self.function(self.get_field(), filter=self.get_annotation_filter(round), output_field=self.output_field)
+        kwargs = {
+            'filter': self.get_annotation_filter(round),
+            'output_field': self.output_field,
+        }
+        if getattr(self, 'distinct', False):
+            kwargs['distinct'] = True
+        annotation = self.function(self.get_field(), **kwargs)
         if self.round_value:
             return RoundScore(annotation, precision=SCORE_PRECISION)
         return annotation
@@ -344,6 +350,7 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("PU")
 
     function = Count
+    distinct = True
     where_value = ['pullup']
     exclude_unconfirmed = False
 
