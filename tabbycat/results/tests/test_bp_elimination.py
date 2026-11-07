@@ -131,13 +131,15 @@ class TestBPScoredElimination(TestCase):
         forfeit.save()
         unranked = self.make_ballot(self.teams[:4])
         unranked.teamscore_set.update(points=None, score=None)
+        missing_score = self.make_ballot(self.teams[:4])
+        missing_score.teamscore_set.filter(debate_team__side=DebateSide.OG).update(score=None)
+        missing_points = self.make_ballot(self.teams[:4])
+        missing_points.teamscore_set.filter(debate_team__side=DebateSide.OG).update(points=None)
         incomplete = self.make_ballot(self.teams[:4])
         incomplete.teamscore_set.filter(debate_team__side=DebateSide.CO).delete()
-        tied = self.make_ballot(self.teams[:4])
-        tied.teamscore_set.update(points=2)
         two_team = self.make_ballot(self.teams[:4])
         two_team.debate.debateteam_set.filter(side__in=[DebateSide.CG, DebateSide.CO]).delete()
-        ballots = [prelim_ballot, forfeit, unranked, incomplete, tied, two_team]
+        ballots = [prelim_ballot, forfeit, unranked, missing_score, missing_points, incomplete, two_team]
         for ballot in ballots:
             ballot.teamscore_set.update(win=False)
         scores = list(TeamScore.objects.order_by('pk').values())

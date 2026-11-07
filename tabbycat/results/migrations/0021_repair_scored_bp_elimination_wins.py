@@ -24,9 +24,8 @@ class Migration(migrations.Migration):
                 JOIN tournaments_round r ON r.id = d.round_id
                 WHERE r.stage = 'E' AND NOT bs.forfeit
                 GROUP BY ts.ballot_submission_id, r.id
-                HAVING COUNT(*) = 4 AND COUNT(DISTINCT ts.points) = 4
-                    AND MIN(ts.points) = 0 AND MAX(ts.points) = 3
-                    AND COUNT(ts.score) = 4 AND BOOL_AND(ts.win IS FALSE)
+                HAVING COUNT(ts.ballot_submission_id) = 4
+                    AND BOOL_AND(ts.score IS NOT NULL AND ts.points IS NOT NULL AND ts.win IS FALSE)
             )
             UPDATE results_teamscore ts
             SET win = TRUE
