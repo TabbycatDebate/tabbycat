@@ -13,6 +13,13 @@
 
   <ul class="list-group mt-3">
 
+    {% trans "CSV Importer" as text %}
+    {% tournamenturl 'importer-csv-upload' as url %}
+    {% include "components/item-action.html" with emoji="📄" %}
+
+  </ul>
+  <ul class="list-group mt-3">
+
     {% trans "Add Institutions" as text %}
     {% tournamenturl 'importer-simple-institutions' as url %}
     {% include "components/item-action.html" with emoji="🏫"%}

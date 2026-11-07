@@ -1,0 +1,16 @@
+{% extends "csv_base.html" %}
+{% load i18n debate_tags %}
+
+{% block csv_content %}
+  <csv-import-results :initial-rows="csvImportData.rows" csrf-token="{{ csrf_token }}"></csv-import-results>
+
+  <a class="btn btn-outline-secondary" href="{% tournamenturl 'importer-csv-errors' import_id=view.kwargs.import_id %}">
+    {% trans "Download results CSV" %}
+  </a>
+  <a class="btn btn-outline-secondary" href="{% tournamenturl 'participants-list' %}">
+    {% trans "View participants" %}
+  </a>
+  <a class="btn btn-outline-secondary" href="{% tournamenturl 'importer-csv-upload' %}">
+    {% trans "New CSV import" %}
+  </a>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "csv_base.html" %}
+{% load i18n add_field_css %}
+
+{% block csv_content %}
+<form method="post" id="csv-wizard" {% if wizard.steps.current == 'preview' %}novalidate{% endif %}>
+  {% csrf_token %}
+  {{ wizard.management_form }}
+
+  {% if wizard.steps.prev or wizard.steps.current == 'types' %}
+    <div class="mb-3">
+      <button class="btn btn-outline-primary" type="submit" name="wizard_goto_step"
+              value="{{ wizard.steps.prev|default:'upload' }}" formnovalidate>
+        <i data-feather="chevron-left"></i>{% trans "Previous Step" %}
+      </button>
+    </div>
+  {% endif %}
+
+  {% if wizard.steps.current == 'types' %}
+    <p class="text-muted">
+      {% trans "We suggest a type from each filename. Confirm or change it before mapping columns." %}
+    </p>
+    <div v-pre>{{ wizard.form.non_field_errors }}</div>
+    <section class="card" v-pre>
+      <div class="card-header">
+        {% blocktrans count count=file_groups|length %}{{ count }} file{% plural %}{{ count }} files{% endblocktrans %}
+        · {% blocktrans count count=row_count %}{{ count }} row detected{% plural %}{{ count }} rows detected{% endblocktrans %}
+      </div>
+      <div class="list-group list-group-flush">
+        {% for file in file_groups %}
+          <div class="list-group-item row mx-0 align-items-center">
+            <div class="col-md-7 pl-0">
+              <i data-feather="file-text" class="mr-2"></i><strong>{{ file.name }}</strong>
+              <span class="text-muted ml-2">
+                {% blocktrans count count=file.row_count %}{{ count }} row{% plural %}{{ count }} rows{% endblocktrans %}
+              </span>
+            </div>
+            <div class="col-md-5 pt-2 pt-md-0">
+              {{ file.type_field.label_tag }}
+              {{ file.type_field|addcss:"form-control" }}
+              {{ file.type_field.errors }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+  {% elif wizard.steps.current == 'mapping' or wizard.steps.current == 'preview' %}
+    <p class="text-muted">
+      {% if wizard.steps.current == 'mapping' %}
+        {% trans "Review each file’s suggested mappings. You can change any mapping or ignore a column." %}
+      {% else %}
+        {% trans "Choose a file to review its rows. Expand a row to edit it, resolve a reference, or check Skip. Errors open automatically." %}
+      {% endif %}
+    </p>
+    {% if wizard.steps.current == 'preview' %}
+      {% trans "Referenced records are imported first, regardless of file order. References are checked here against existing records and all uploaded files. No records are created until you confirm and start the import." as text %}
+      {% include "components/explainer-card.html" with type="info" icon="info" %}
+      {{ wizard.form.management_form }}
+      <div v-pre>{{ wizard.form.non_form_errors }}</div>
+    {% else %}
+      <div v-pre>{{ wizard.form.non_field_errors }}</div>
+    {% endif %}
+
+    <csv-import-workspace :files="csvImportData.files" {% if wizard.steps.current == 'preview' %}preview{% endif %}>
+      {% for file in file_groups %}
+        <template v-slot:file-{{ file.index }}>
+          {% if wizard.steps.current == 'mapping' %}
+            <div class="table-responsive" data-csv-mapping-file v-pre>
+              <table class="table mb-0 csv-mapping-table">
+                <thead class="thead-light">
+                  <tr>
+                    <th>{% trans "CSV column" %}</th>
+                    <th>{% trans "Tabbycat field" %}</th>
+                    <th>{% trans "Example value" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for field in file.fields %}
+                    <tr>
+                      <th scope="row"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                      <td>{{ field|addcss:"form-control" }}{{ field.errors }}</td>
+                      <td class="csv-example text-muted">{{ field.help_text }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="csv-preview-list" data-csv-panel="{{ file.index }}">
+              {% for row in file.rows %}
+                <csv-preview-row :row-index="{{ row.index }}" :file-index="{{ file.index }}">
+                  <div v-pre>
+                    {{ row.form.non_field_errors }}
+                    <div class="row">
+                      {% for field in row.form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                          <div class="col-md-6 col-xl-4">
+                            {% include "csv_mapping_field.html" %}
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </csv-preview-row>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </template>
+      {% endfor %}
+    </csv-import-workspace>
+
+  {% elif wizard.steps.current == 'confirm' %}
+    <p class="text-muted">{% trans "Check the totals below. Existing records will be kept." %}</p>
+    <section class="card mb-3" v-pre>
+      <div class="card-header">{{ tournament.name }}</div>
+      <div class="card-body">
+        <div class="row">
+          {% for item in object_counts %}
+            <div class="col-sm-4 mb-3">
+              <strong class="h2 d-block">{{ item.count }}</strong>{{ item.label }}
+            </div>
+          {% endfor %}
+          <div class="col-sm-4 mb-3">
+            <strong class="h2 d-block">{{ skip_count }}</strong>{% trans "Skipped rows" %}
+          </div>
+        </div>
+        <p class="text-muted small mb-0">
+          {% blocktrans %}{{ import_count }} source rows will import. A row may create more than one object.{% endblocktrans %}
+        </p>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for file in file_groups %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span><strong>{{ file.name }}</strong><small class="text-muted d-block">{{ file.type_label }}</small></span>
+            <span>
+              {% blocktrans count count=file.row_count %}{{ count }} row{% plural %}{{ count }} rows{% endblocktrans %}
+              · {{ file.skip_count }} {% trans "skipped" %}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <p class="small text-muted">
+      {% trans "The results page shows progress and errors for each row. Adjudicator conflicts are linked after all referenced adjudicators have been created." %}
+    </p>
+    <div class="card card-body" v-pre>
+      <div v-pre>{{ wizard.form.non_field_errors }}</div>
+      {% for field in wizard.form %}
+        {% include "csv_mapping_field.html" %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="card mt-3">
+    {% if wizard.steps.current == 'confirm' %}
+      {% trans "Confirm Import" as title %}
+    {% else %}
+      {% trans "Next Step" context "button" as title %}
+    {% endif %}
+    {% include "components/form-submit.html" %}
+  </div>
+</form>
+{% endblock %}
