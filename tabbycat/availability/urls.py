@@ -3,6 +3,10 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
+    path('', views.AvailabilitySetupIndexView.as_view(), name='availability-setup-index'),
+    path('teams/', views.AvailabilityMatrixTeamView.as_view(), name='availability-matrix-teams'),
+    path('adjudicators/', views.AvailabilityMatrixAdjudicatorView.as_view(), name='availability-matrix-adjudicators'),
+    path('rooms/', views.AvailabilityMatrixVenueView.as_view(), name='availability-matrix-venues'),
     path('round/<int:round_seq>/', include([
         # Overview
         path('',

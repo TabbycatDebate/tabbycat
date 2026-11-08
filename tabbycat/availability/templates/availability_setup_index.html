@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block page-subnav-sections %}
+  {% include "availability_subnav.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-body">
+      <p>{% trans "Set availability across all rounds. Select a participant type to get started." %}</p>
+      <div class="list-group">
+        <a class="list-group-item list-group-item-action" href="{% tournamenturl 'availability-matrix-teams' %}">{% trans "Teams" %}</a>
+        <a class="list-group-item list-group-item-action" href="{% tournamenturl 'availability-matrix-adjudicators' %}">{% trans "Adjudicators" %}</a>
+        <a class="list-group-item list-group-item-action" href="{% tournamenturl 'availability-matrix-venues' %}">{% trans "Rooms" %}</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
