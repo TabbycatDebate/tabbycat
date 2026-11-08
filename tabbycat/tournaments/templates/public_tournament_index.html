@@ -101,7 +101,7 @@
           {% include "components/item-action.html" with icon="shuffle" %}
         {% endif %}
 
-        {% if pref.public_draw == 'current' and not pref.team_tab_released %}
+        {% if pref.public_draw == 'current' %}
           {% tournamenturl 'draw-public-current-rounds' as url %}
           {% if tournament.public_draws_available %}
             {% if tournament.current_rounds|length == 1 %}
