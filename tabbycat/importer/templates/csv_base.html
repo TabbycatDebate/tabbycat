@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div id="vueMount">
+  <csv-importer>
+    <wizard-steps :steps="csvImportData.steps" form-id="csv-wizard"></wizard-steps>
+    {% block csv_content %}{% endblock %}
+  </csv-importer>
+</div>
+{% endblock %}
+{% block js %}
+  {{ csv_vue_data|json_script:"csv-import-data" }}
+  <script>
+    window.vueData = {
+      csvImportData: JSON.parse(document.getElementById('csv-import-data').textContent),
+    }
+  </script>
+  {{ block.super }}
+{% endblock %}
