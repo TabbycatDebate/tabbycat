@@ -275,6 +275,44 @@ class SpeakerSerializerTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(response.data['categories'], [])
 
 
+class PrivateUrlUpdateTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_clear_private_urls(self):
+        self.client.login(username="admin", password="admin")
+        for model, endpoint in ((Speaker, 'api-speaker-detail'), (Adjudicator, 'api-adjudicator-detail')):
+            people = list(model.objects.all()[:2])
+            for person in people:
+                person.url_key = f'private-{person.pk}'
+                person.save()
+                url = reverse_tournament(endpoint, self.tournament, kwargs={'pk': person.pk})
+                with self.subTest(model=model.__name__, person=person.pk):
+                    response = self.client.patch(url, {'name': person.name})
+                    self.assertEqual(response.status_code, 200, response.data)
+                    person.refresh_from_db()
+                    self.assertEqual(person.url_key, f'private-{person.pk}')
+                    response = self.client.patch(url, {'url_key': ''})
+                    self.assertEqual(response.status_code, 200, response.data)
+                    person.refresh_from_db()
+                    self.assertIsNone(person.url_key)
+
+    def test_list_and_generate_legacy_empty_key(self):
+        self.client.login(username="admin", password="admin")
+        speaker = Speaker.objects.first()
+        speaker.url_key = ''
+        speaker.save()
+        other = Speaker.objects.exclude(pk=speaker.pk).first()
+        other.url_key = 'keep-this-private-key'
+        other.save()
+        response = self.client.get(reverse_tournament('privateurls-list', self.tournament))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse_tournament('privateurls-generate', self.tournament))
+        self.assertEqual(response.status_code, 302)
+        speaker.refresh_from_db()
+        self.assertTrue(speaker.url_key)
+        other.refresh_from_db()
+        self.assertEqual(other.url_key, 'keep-this-private-key')
+
+
 class VenueSerializerTests(CompletedTournamentTestMixin, APITestCase):
 
     def test_create_room_without_categories(self):

@@ -41,8 +41,8 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         # These are used to choose the nav display
         tournament = self.tournament
-        kwargs['exists'] = tournament.participants.filter(url_key__isnull=False).exists()
-        kwargs['blank_exists'] = tournament.participants.filter(url_key__isnull=True).exists()
+        kwargs['exists'] = tournament.participants.exclude(Q(url_key__isnull=True) | Q(url_key='')).exists()
+        kwargs['blank_exists'] = tournament.participants.filter(Q(url_key__isnull=True) | Q(url_key='')).exists()
         kwargs['to_email_exists'] = self.get_participants_to_email().exists()
         return super().get_context_data(**kwargs)
 
@@ -52,9 +52,9 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
             notification__tournament=self.tournament, email=OuterRef('email'),
         )
         people = self.tournament.participants.filter(
-            url_key__isnull=False, email__isnull=False,
+            email__isnull=False,
         ).exclude(
-            email__exact="",
+            Q(url_key__isnull=True) | Q(url_key='') | Q(email=""),
         ).annotate(
             already_sent=Exists(subquery),
         ).filter(already_sent=already_sent)
@@ -69,14 +69,14 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
     def add_url_columns(self, table: TabbycatTableBuilder, people: 'QuerySet[Person]', request: 'HttpRequest') -> TabbycatTableBuilder:
         def build_url(person):
-            if person.url_key is None:
+            if not person.url_key:
                 return {'text': _("no URL"), 'class': 'text-warning'}
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
             return {'text': request.build_absolute_uri(path), 'class': 'small mixed-text'}
 
         def build_link(person):
-            if person.url_key is None:
+            if not person.url_key:
                 return ''
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
@@ -126,8 +126,8 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
     def post(self, request: 'HttpRequest', *args, **kwargs) -> 'HttpResponseRedirect':
         tournament = self.tournament
 
-        nexisting_people = tournament.participants.filter(url_key__isnull=False).count()
-        blank_people = tournament.participants.filter(url_key__isnull=True)
+        nexisting_people = tournament.participants.exclude(Q(url_key__isnull=True) | Q(url_key='')).count()
+        blank_people = tournament.participants.filter(Q(url_key__isnull=True) | Q(url_key=''))
         nblank_people = blank_people.count()
 
         if nblank_people == 0:

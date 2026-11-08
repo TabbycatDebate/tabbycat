@@ -651,6 +651,8 @@ class SpeakerSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         save_related(AnswerSerializer, validated_data.pop('answers', []), self.context, {'content_object': instance})
         handle_update_barcode(instance, validated_data)
+        if validated_data.get('url_key') == '':
+            validated_data['url_key'] = None
         return super().update(instance, validated_data)
 
 
@@ -782,6 +784,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
         save_related(VenueConstraintSerializer, validated_data.pop('venue_constraints', []), self.context, {'subject': instance})
         save_related(AnswerSerializer, validated_data.pop('answers', []), self.context, {'content_object': instance})
         handle_update_barcode(instance, validated_data)
+        if validated_data.get('url_key') == '':
+            validated_data['url_key'] = None
 
         if 'base_score' in validated_data and validated_data['base_score'] != instance.base_score:
             AdjudicatorBaseScoreHistory.objects.create(
