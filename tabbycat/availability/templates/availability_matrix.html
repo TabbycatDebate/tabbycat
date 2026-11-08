@@ -1,0 +1,13 @@
+{% extends "tables/base_vue_table.html" %}
+{% load i18n %}
+
+{% block page-subnav-sections %}
+  {% include "availability_subnav.html" %}
+{% endblock %}
+
+{% block content %}
+  <p>{% trans "Check a box to mark a participant as available for that round. Click and drag across boxes to select or deselect several. Changes are saved automatically." %}</p>
+  <div id="vueMount">
+    <availability-matrix-container :tables-data="tablesData"></availability-matrix-container>
+  </div>
+{% endblock %}

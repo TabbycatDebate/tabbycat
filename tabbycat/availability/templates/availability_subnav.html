@@ -1,0 +1,12 @@
+{% load debate_tags i18n %}
+
+<div class="btn-group">
+  <a class="btn btn-outline-primary {% if request.resolver_match.url_name == 'availability-setup-index' %}active{% endif %}"
+     href="{% tournamenturl 'availability-setup-index' %}">{% trans "Overview" %}</a>
+  <a class="btn btn-outline-primary {% if request.resolver_match.url_name == 'availability-matrix-teams' %}active{% endif %}"
+     href="{% tournamenturl 'availability-matrix-teams' %}">{% trans "Teams" %}</a>
+  <a class="btn btn-outline-primary {% if request.resolver_match.url_name == 'availability-matrix-adjudicators' %}active{% endif %}"
+     href="{% tournamenturl 'availability-matrix-adjudicators' %}">{% trans "Adjudicators" %}</a>
+  <a class="btn btn-outline-primary {% if request.resolver_match.url_name == 'availability-matrix-venues' %}active{% endif %}"
+     href="{% tournamenturl 'availability-matrix-venues' %}">{% trans "Rooms" %}</a>
+</div>

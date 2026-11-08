@@ -8,6 +8,7 @@ const $ = window.jQuery
 
 // Generic Templates
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
+import AvailabilityMatrixContainer from '../../availability/templates/AvailabilityMatrixContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
 import EliminationBracketContainer from '../../breakqual/templates/EliminationBracketContainer.vue'
@@ -177,6 +178,7 @@ $(document).ready(() => {
 // Table-based Views
 vueComponents.TablesContainer = TablesContainer
 vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
+vueComponents.AvailabilityMatrixContainer = AvailabilityMatrixContainer
 vueComponents.ResultsTablesContainer = ResultsTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
