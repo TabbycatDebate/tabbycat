@@ -265,10 +265,15 @@ LOGGING = {
             'formatter': 'standard',
         },
     },
+    'root': {
+        'handlers': ['console'],
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+    },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
         },
         'sentry.errors': {
             'level': 'INFO',
@@ -287,6 +292,7 @@ for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
         'handlers': ['console'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        'propagate': False,
     }
 
 # ==============================================================================
