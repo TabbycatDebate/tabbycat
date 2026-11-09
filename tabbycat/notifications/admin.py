@@ -23,7 +23,7 @@ def precise_timestamp_isoformat(model: Type['Model'], field_name: str) -> Callab
 class SentMessageAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('recipient', 'email', 'precise_timestamp', 'notification')
     list_filter = ('notification__round', 'method', 'notification__event')
-    search_fields = ('message_id', 'recipient__name', 'email', 'recipient__email')
+    search_fields = ('message_id', 'esp_message_id', 'recipient__name', 'email', 'recipient__email')
     ordering = ('-notification',)
 
     def get_queryset(self, request: 'HttpRequest') -> 'QuerySet[SentMessage]':

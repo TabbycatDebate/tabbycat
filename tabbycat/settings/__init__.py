@@ -19,6 +19,7 @@ root.addHandler(ch)
 
 base_settings = [
     'core.py',
+    'email.py',
 ]
 
 if os.environ.get('GITHUB_CI', '') and bool(os.environ['GITHUB_CI']):
