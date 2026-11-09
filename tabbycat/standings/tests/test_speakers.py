@@ -1,4 +1,6 @@
+from django.db import connection
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 
 from draw.models import Debate, DebateTeam
 from draw.types import DebateSide
@@ -7,6 +9,7 @@ from results.models import BallotSubmission, SpeakerScore
 from tournaments.models import Round, Tournament
 
 from ..speakers import SpeakerStandingsGenerator
+from ..views import BaseReplyStandingsView
 
 
 class TestSpeakerScoreRounding(TestCase):
@@ -69,3 +72,82 @@ class TestSpeakerScoreRounding(TestCase):
         self.add_scores([[70, 75 + 1/3, 76 + 1/3, 80], [70, 75, 76, 80]])
         standings = self.standings('trimmed_mean')
         self.assertEqual(standings[0].metrics['trimmed_mean'], 75.833333)
+
+
+class TestReplyStandingsQueries(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.tournament = Tournament.objects.create(slug='reply-queries', name='Reply queries')
+        cls.speakers = []
+        for name in ('Replies', 'Ghost', 'Substantive', 'Future'):
+            team = Team.objects.create(tournament=cls.tournament, reference=name)
+            cls.speakers.append(Speaker.objects.create(team=team, name=name))
+        cls.rounds = [Round.objects.create(tournament=cls.tournament, seq=seq, schedule_group=seq)
+                      for seq in range(1, 5)]
+        cls.rounds[3].stage = Round.Stage.ELIMINATION
+        cls.rounds[3].save()
+        for rd in cls.rounds:
+            debate = Debate.objects.create(round=rd)
+            ballot = BallotSubmission.objects.create(debate=debate, confirmed=True)
+            for speaker in cls.speakers:
+                DebateTeam.objects.create(debate=debate, team=speaker.team, side=DebateSide.AFF)
+            cls.add_score(cls.speakers[0], ballot, 99, position=1)
+            cls.add_score(cls.speakers[0], ballot, 40 + 2 * (rd.seq - 1))
+        cls.add_score(cls.speakers[1], BallotSubmission.objects.get(debate__round=cls.rounds[0]), 49, ghost=True)
+        cls.add_score(cls.speakers[2], BallotSubmission.objects.get(debate__round=cls.rounds[0]), 75, position=1)
+        cls.add_score(cls.speakers[3], BallotSubmission.objects.get(debate__round=cls.rounds[2]), 48)
+        unconfirmed = BallotSubmission.objects.create(
+            debate=Debate.objects.get(round=cls.rounds[0]), confirmed=False, version=2)
+        cls.add_score(cls.speakers[0], unconfirmed, 50)
+
+    @classmethod
+    def add_score(cls, speaker, ballot, score, position=None, **kwargs):
+        return SpeakerScore.objects.create(
+            speaker=speaker, ballot_submission=ballot,
+            debate_team=DebateTeam.objects.get(debate=ballot.debate, team=speaker.team),
+            score=score, position=cls.tournament.reply_position if position is None else position,
+            **kwargs,
+        )
+
+    def reply_speakers(self):
+        view = BaseReplyStandingsView()
+        view._tournament_from_url = self.tournament
+        return view.get_speakers()
+
+    def test_reply_metrics_execute_once_and_keep_speakers_without_qualifying_scores(self):
+        generator = SpeakerStandingsGenerator(
+            ('replies_avg',), ('rank',), ('replies_stddev', 'replies_count'),
+            rank_filter=('replies_count', 2),
+        )
+        with CaptureQueriesContext(connection) as queries:
+            standings = generator.generate(self.reply_speakers(), tournament=self.tournament, round=self.rounds[1])
+        ranking_queries = [q['sql'] for q in queries if 'RANK() OVER' in q['sql']]
+        self.assertEqual(len(ranking_queries), 1)
+        self.assertNotIn('SELECT DISTINCT', ranking_queries[0])
+        self.assertEqual(set(standings.infos), {self.speakers[i] for i in (0, 1, 3)})
+        first = standings.get_standing(self.speakers[0])
+        self.assertEqual(first.metrics, {'replies_avg': 41, 'replies_stddev': 1, 'replies_count': 2})
+        self.assertEqual(first.rankings['rank'], (1, False))
+        for speaker in (self.speakers[1], self.speakers[3]):
+            self.assertEqual(standings.get_standing(speaker).metrics,
+                             {'replies_avg': None, 'replies_stddev': None, 'replies_count': 0})
+
+    def test_mixed_metrics_share_scores_without_multiplying_rows(self):
+        generator = SpeakerStandingsGenerator(
+            ('average',), ('rank',), ('count', 'replies_avg', 'replies_count', 'trimmed_mean', 'srank'),
+        )
+        standings = generator.generate(self.reply_speakers(), tournament=self.tournament, round=self.rounds[3])
+        metrics = standings.get_standing(self.speakers[0]).metrics
+        self.assertEqual(metrics['average'], 99)
+        self.assertEqual(metrics['trimmed_mean'], 99)
+        self.assertEqual(metrics['count'], 3)
+        self.assertEqual(metrics['replies_avg'], 42)
+        self.assertEqual(metrics['replies_count'], 3)
+
+    def test_selection_by_round_does_not_restrict_metric_rounds(self):
+        speakers = self.reply_speakers().filter(speakerscore__debate_team__debate__round=self.rounds[1])
+        generator = SpeakerStandingsGenerator(('replies_avg',), ('rank',), ('replies_count',))
+        standings = generator.generate(speakers, tournament=self.tournament, round=self.rounds[1])
+        self.assertEqual(standings.get_standing(self.speakers[0]).metrics,
+                         {'replies_avg': 41, 'replies_count': 2})
