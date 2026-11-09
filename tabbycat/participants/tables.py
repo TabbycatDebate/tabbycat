@@ -6,7 +6,7 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
 from results.models import SpeakerScore, TeamScore
-from results.prefetch import populate_confirmed_ballots, populate_wins
+from results.prefetch import populate_confirmed_ballots, populate_wins, populate_wins_for_debateteams
 from standings.templatetags.standingsformat import metricformat
 from tournaments.models import Round
 from users.permissions import has_permission, Permission
@@ -122,6 +122,8 @@ class TeamDebateTable:
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
+        populate_wins_for_debateteams(
+            [dt for ts in teamscores for dt in ts.debate_team.debate.debateteam_set.all()])
 
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)

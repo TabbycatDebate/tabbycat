@@ -5,6 +5,7 @@ from django.db.models import F, Prefetch
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
 from results.models import SpeakerScore, TeamScore
+from results.prefetch import populate_wins_for_debateteams
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +39,10 @@ def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_a
     if opponents:
         populate_opponents([ts.debate_team for ts in teamscores])
     else:
-        teamscores = teamscores.prefetch_related(
-            Prefetch('debate_team__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
+        teamscores = list(teamscores.prefetch_related(
+            Prefetch('debate_team__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team'))))
+        populate_wins_for_debateteams(
+            [dt for ts in teamscores for dt in ts.debate_team.debate.debateteam_set.all()])
 
     for info in standings:
         info.round_results = [None] * len(rounds)

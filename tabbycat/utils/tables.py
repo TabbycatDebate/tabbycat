@@ -486,7 +486,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
             return {'text': self.BLANK_TEXT}
 
         other_teams = {dt.side: self._team_short_name(dt.team) for dt in ts.debate_team.debate.debateteam_set.all()}
+        team_points = {dt.side: getattr(dt, '_points', None) for dt in ts.debate_team.debate.debateteam_set.all()}
         n_teams = max(other_teams.keys()) + 1
+        places = [ordinal(n) for n in reversed(range(1, 5))]
         other_team_strs = [_("Teams in debate:")]
         for side in range(n_teams):
             if ts.debate_team.debate.sides_confirmed:
@@ -496,6 +498,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 }
             else:
                 line = other_teams.get(side, _("??"))
+            points = team_points.get(side)
+            if points is not None and not ts.debate_team.debate.round.is_break_round:
+                place = places[points] if points < 4 else _("??")
+                line = _("%(team)s · %(place)s") % {'team': line, 'place': place}
             if side == ts.debate_team.side:
                 line = "<strong>" + line + "</strong>"
             other_team_strs.append(line)
