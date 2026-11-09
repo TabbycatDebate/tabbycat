@@ -911,8 +911,11 @@ class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
         ("CONTACT", gettext_lazy("recipient contact name")),
         ("TEAMS_REQUESTED", gettext_lazy("teams requested by the recipient institution")),
         ("TEAMS_ALLOCATED", gettext_lazy("teams allocated to the recipient institution")),
+        ("TEAMS_REGISTERED", gettext_lazy("teams registered by the recipient institution")),
         ("ADJUDICATORS_REQUESTED", gettext_lazy("adjudicators requested by the recipient institution")),
         ("ADJUDICATORS_ALLOCATED", gettext_lazy("adjudicators allocated to the recipient institution")),
+        ("ADJUDICATORS_REGISTERED", gettext_lazy("adjudicators registered by the recipient institution")),
+        ("PRIVATE_URL", gettext_lazy("private institution registration link")),
     ]
     template_math_examples = [
         '{% calc "TEAMS_ALLOCATED * 80" %}',
@@ -936,6 +939,13 @@ class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
 
     def default_send(self, p, default_send_queryset):
         return False
+
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['private_url'] = self.request.build_absolute_uri(
+            reverse_tournament('reg-inst-landing', self.tournament, kwargs={'url_key': '0'}),
+        )[:-2]
+        return extra
 
     def get_table(self):
         table = super().get_table()
