@@ -491,17 +491,16 @@ class TabbycatTableBuilder(BaseTableBuilder):
         places = [ordinal(n) for n in reversed(range(1, 5))]
         other_team_strs = [_("Teams in debate:")]
         for side in range(n_teams):
-            if ts.debate_team.debate.sides_confirmed:
-                line = _("%(team)s (%(side)s)") % {
-                    'team': other_teams.get(side, _("??")),
-                    'side': get_side_name(self.tournament, side, 'abbr'),
-                }
-            else:
-                line = other_teams.get(side, _("??"))
+            line = other_teams.get(side, _("??"))
             points = team_points.get(side)
             if points is not None and not ts.debate_team.debate.round.is_break_round:
                 place = places[points] if points < 4 else _("??")
-                line = _("%(team)s · %(place)s") % {'team': line, 'place': place}
+                line = _("%(team)s (%(place)s)") % {'team': line, 'place': place}
+            if ts.debate_team.debate.sides_confirmed:
+                line = _("%(side)s: %(team)s") % {
+                    'side': get_side_name(self.tournament, side, 'abbr'),
+                    'team': line,
+                }
             if side == ts.debate_team.side:
                 line = "<strong>" + line + "</strong>"
             other_team_strs.append(line)
