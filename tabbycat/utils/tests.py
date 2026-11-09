@@ -1,7 +1,8 @@
 import json
 import logging
 from contextlib import contextmanager
-from unittest import expectedFailure
+from types import SimpleNamespace
+from unittest import expectedFailure, mock
 
 from django.conf import settings
 from django.contrib.auth import get_user, get_user_model
@@ -16,7 +17,7 @@ from draw.models import DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from tournaments.models import Tournament
 from utils.misc import add_query_string_parameter, reverse_tournament
-from utils.tables import BaseTableBuilder
+from utils.tables import BaseTableBuilder, TabbycatTableBuilder
 from venues.models import Venue
 
 V1_ROOT_URL = "http://testserver/api/v1"
@@ -252,6 +253,56 @@ class BaseTableBuilderTests(SimpleTestCase):
     def test_initial_sort_rejects_invalid_directions(self):
         with self.assertRaisesMessage(ValueError, "sort_history order must be 'asc' or 'desc'"):
             BaseTableBuilder(sort_history=[('name', 'sideways')])
+
+
+class ResultCellBPTests(SimpleTestCase):
+    """Tests the placements shown in the BP result cell popover. SimpleTestCase
+    fails on any database query, so these also check no per-team queries run."""
+
+    def make_cell(self, points=None, focal_side=2, is_break_round=False):
+        dts = []
+        for side, name in enumerate(["OG Team", "OO Team", "CG Team", "CO Team"]):
+            dt = DebateTeam(side=side)
+            dt.team = Team(reference=name)
+            if points is not None:
+                dt._points = points[side]  # as populate_wins_for_debateteams would
+            dts.append(dt)
+
+        debate = SimpleNamespace(
+            debateteam_set=SimpleNamespace(all=lambda: dts),
+            sides_confirmed=True,
+            round=SimpleNamespace(is_break_round=is_break_round),
+        )
+        ts = SimpleNamespace(
+            debate_team=SimpleNamespace(debate=debate, side=focal_side),
+            points=points[focal_side] if points is not None else None,
+            win=None,
+            score=None,
+        )
+
+        builder = TabbycatTableBuilder.__new__(TabbycatTableBuilder)
+        builder.tournament = None
+        builder._team_short_name = lambda team: team.reference
+        with mock.patch('utils.tables.get_side_name', lambda t, side, kind: "S%d" % side):
+            return builder._result_cell_bp(ts)
+
+    def popover_text(self, cell):
+        return cell['popover']['content'][0]['text']
+
+    def test_shows_placement_for_every_team(self):
+        text = self.popover_text(self.make_cell(points=[2, 1, 0, 3]))
+        self.assertIn("OG Team (S0) · 2nd", text)
+        self.assertIn("OO Team (S1) · 3rd", text)
+        self.assertIn("<strong>CG Team (S2) · 4th</strong>", text)
+        self.assertIn("CO Team (S3) · 1st", text)
+
+    def test_no_placements_when_points_not_populated(self):
+        text = self.popover_text(self.make_cell(points=None))
+        self.assertNotIn("·", text)
+
+    def test_no_placements_in_break_rounds(self):
+        text = self.popover_text(self.make_cell(points=[2, 1, 0, 3], is_break_round=True))
+        self.assertNotIn("·", text)
 
 
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
