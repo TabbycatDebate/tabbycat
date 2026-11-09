@@ -291,18 +291,18 @@ class ResultCellBPTests(SimpleTestCase):
 
     def test_shows_placement_for_every_team(self):
         text = self.popover_text(self.make_cell(points=[2, 1, 0, 3]))
-        self.assertIn("OG Team (S0) · 2nd", text)
-        self.assertIn("OO Team (S1) · 3rd", text)
-        self.assertIn("<strong>CG Team (S2) · 4th</strong>", text)
-        self.assertIn("CO Team (S3) · 1st", text)
+        self.assertIn("S0: OG Team (2nd)", text)
+        self.assertIn("S1: OO Team (3rd)", text)
+        self.assertIn("<strong>S2: CG Team (4th)</strong>", text)
+        self.assertIn("S3: CO Team (1st)", text)
 
     def test_no_placements_when_points_not_populated(self):
         text = self.popover_text(self.make_cell(points=None))
-        self.assertNotIn("·", text)
+        self.assertIn("S0: OG Team<br />", text)
 
     def test_no_placements_in_break_rounds(self):
         text = self.popover_text(self.make_cell(points=[2, 1, 0, 3], is_break_round=True))
-        self.assertNotIn("·", text)
+        self.assertIn("S0: OG Team<br />", text)
 
 
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
