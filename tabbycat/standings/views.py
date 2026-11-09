@@ -3,7 +3,7 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Avg, Count, Prefetch
+from django.db.models import Avg, Count, Exists, OuterRef, Prefetch
 from django.utils.html import escape, mark_safe
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic.base import TemplateView
@@ -440,9 +440,9 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
         if self.tournament.reply_position is None:
             raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
         return Speaker.objects.filter(
+            Exists(SpeakerScore.objects.filter(speaker_id=OuterRef('pk'), position=self.tournament.reply_position)),
             team__tournament=self.tournament,
-            speakerscore__position=self.tournament.reply_position,
-        ).distinct()
+        )
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
