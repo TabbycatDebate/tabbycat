@@ -48,6 +48,7 @@ class TournamentSerializerTests(CompletedTournamentTestMixin, APITestCase):
                 "feedback_questions": tournament_url + "/feedback-questions",
                 "preferences": tournament_url + "/preferences",
                 "schedule_events": tournament_url + "/schedule-events",
+                "action_log": tournament_url + "/action-log",
             },
             "name": self.tournament.name,
             "short_name": self.tournament.short_name,

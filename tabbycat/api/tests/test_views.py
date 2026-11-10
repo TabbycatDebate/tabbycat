@@ -2,19 +2,26 @@ import json
 from unittest.mock import AsyncMock, patch
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import connection
 from django.test import Client
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
+from rest_framework.fields import DateTimeField
 from rest_framework.test import APITestCase
 
 from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
+from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from availability.models import RoundAvailability
+from breakqual.models import BreakingTeam
 from checkins.models import Event
-from participants.models import Speaker, Team
+from options.models import TournamentPreferenceModel
+from participants.models import Institution, Speaker, Team, TournamentInstitution
 from results.models import BallotSubmission, SpeakerScore
-from tournaments.models import Round
+from tournaments.models import Round, Tournament
+from users.models import UserPermission
+from users.permissions import Permission
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
 
@@ -599,3 +606,167 @@ class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):
             {int(url.rsplit('/', 1)[-1]) for url in availabilities},
             {self.objects['teams'].pk, self.objects['venues'].pk},
         )
+
+
+class ActionLogEntryViewSetTests(CompletedTournamentTestMixin, APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.user = get_user_model().objects.get(username="admin")
+        self.client.login(username="admin", password="admin")
+
+    def log(self, content_object=None, type=ActionLogEntry.ActionType.TOURNAMENT_EDIT, **kwargs):
+        kwargs.setdefault('tournament', self.tournament)
+        return ActionLogEntry.objects.log(type=type, user=self.user, content_object=content_object, **kwargs)
+
+    def get_entries(self, params=None):
+        response = self.client.get(self.reverse_url('api-actionlogentry-list'), params or {})
+        self.assertEqual(response.status_code, 200)
+        return response.data
+
+    def test_list_entries(self):
+        round = self.tournament.round_set.get(seq=2)
+        first = self.log(round, ActionLogEntry.ActionType.DRAW_CREATE, round=round, agent=ActionLogEntry.Agent.API)
+        second = self.log(ip_address='127.0.0.1')
+
+        entries = self.get_entries()
+
+        self.assertEqual([entry['id'] for entry in entries], [first.id, second.id])
+        tournament_url = V1_ROOT_URL + "/tournaments/" + self.tournament.slug
+        self.assertEqual(entries[0], {
+            'id': first.id,
+            'url': tournament_url + "/action-log/%d" % first.id,
+            'type': 'dr.crea',
+            'timestamp': DateTimeField().to_representation(first.timestamp),
+            'user': self.user.id,
+            'ip_address': None,
+            'agent': 'a',
+            'round': tournament_url + "/rounds/2",
+            'object': tournament_url + "/rounds/2",
+        })
+        self.assertIsNone(entries[1]['round'])
+        self.assertIsNone(entries[1]['object'])
+        self.assertEqual(entries[1]['ip_address'], '127.0.0.1')
+
+    def test_get_entry_detail(self):
+        entry = self.log(self.tournament)
+        response = self.client.get(self.reverse_url('api-actionlogentry-detail', pk=entry.pk))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['id'], entry.id)
+        self.assertEqual(response.data['object'], V1_ROOT_URL + "/tournaments/" + self.tournament.slug)
+
+    def test_object_urls_link_to_endpoints(self):
+        round = self.tournament.round_set.get(seq=1)
+        debate = round.debate_set.first()
+        ballot = debate.ballotsubmission_set.first()
+        panel = PreformedPanel.objects.create(round=round, room_rank=1)
+        self.tournament.preferences.all()  # Populate preferences
+        preference = TournamentPreferenceModel.objects.get(instance=self.tournament, section='ui_options', name='team_code_names')
+        adjudicator = self.tournament.adjudicator_set.first()
+        feedback = AdjudicatorFeedback.objects.create(adjudicator=adjudicator, source_team=debate.debateteam_set.first(), score=3)
+        question = AdjudicatorFeedbackQuestion.objects.filter(tournament=self.tournament).first()
+        team = self.tournament.team_set.first()
+        speaker = team.speaker_set.first()
+        motion = self.tournament.motion_set.first()
+        venue = self.tournament.venue_set.first()
+        break_category = self.tournament.breakcategory_set.first()
+        institution = Institution.objects.first()
+
+        tournament_path = "/tournaments/" + self.tournament.slug
+        debate_path = tournament_path + "/rounds/1/pairings/%d" % debate.pk
+        objects = [
+            (self.tournament, tournament_path),
+            (round, tournament_path + "/rounds/1"),
+            (debate, debate_path),
+            (ballot, debate_path + "/ballots/%d" % ballot.pk),
+            (panel, tournament_path + "/rounds/1/preformed-panels/%d" % panel.pk),
+            (preference, tournament_path + "/preferences/ui_options__team_code_names"),
+            (adjudicator, tournament_path + "/adjudicators/%d" % adjudicator.pk),
+            (adjudicator.adjudicatorbasescorehistory_set.first(), tournament_path + "/adjudicators/%d" % adjudicator.pk),
+            (feedback, tournament_path + "/feedback/%d" % feedback.pk),
+            (question, tournament_path + "/feedback-questions/%d" % question.pk),
+            (team, tournament_path + "/teams/%d" % team.pk),
+            (speaker, tournament_path + "/speakers/%d" % speaker.pk),
+            (motion, tournament_path + "/motions/%d" % motion.pk),
+            (venue, tournament_path + "/venues/%d" % venue.pk),
+            (break_category, tournament_path + "/break-categories/%d" % break_category.pk),
+            (institution, "/institutions/%d" % institution.pk),
+            (TournamentInstitution.objects.create(tournament=self.tournament, institution=institution),
+                "/institutions/%d" % institution.pk),
+        ]
+
+        for obj, path in objects:
+            with self.subTest(model=type(obj).__name__):
+                entry = self.log(obj)
+                response = self.client.get(self.reverse_url('api-actionlogentry-detail', pk=entry.pk))
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.data['object'], V1_ROOT_URL + path)
+                self.assertEqual(self.client.get(response.data['object']).status_code, 200)
+
+    def test_object_null_if_deleted_or_without_endpoint(self):
+        speaker = Speaker.objects.filter(team__tournament=self.tournament).first()
+        deleted_entry = self.log(speaker, ActionLogEntry.ActionType.SPEAKER_DELETE)
+        speaker.delete()
+        breaking_team = BreakingTeam.objects.filter(break_category__tournament=self.tournament).first()
+        self.log(breaking_team, ActionLogEntry.ActionType.BREAK_EDIT_REMARKS)
+
+        entries = self.get_entries()
+
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(entries[0]['id'], deleted_entry.id)
+        self.assertEqual([entry['object'] for entry in entries], [None, None])
+
+    def test_excludes_entries_of_other_tournaments(self):
+        other = Tournament.objects.create(slug='other', name='Other')
+        own_entry = self.log(self.tournament)
+        other_entry = self.log(other, tournament=other)
+        self.log(tournament=None)
+
+        self.assertEqual([entry['id'] for entry in self.get_entries()], [own_entry.id])
+        response = self.client.get(self.reverse_url('api-actionlogentry-detail', pk=other_entry.pk))
+        self.assertEqual(response.status_code, 404)
+
+    def test_constant_queries_for_objects(self):
+        def count_list_queries():
+            with CaptureQueriesContext(connection) as queries:
+                self.get_entries()
+            return len(queries)
+
+        round = self.tournament.round_set.get(seq=1)
+        for debate in round.debate_set.all()[:2]:
+            self.log(debate, ActionLogEntry.ActionType.DEBATE_EDIT, round=round)
+            self.log(debate.ballotsubmission_set.first(), ActionLogEntry.ActionType.BALLOT_CONFIRM, round=round)
+        self.get_entries()  # Populate the content type cache
+        expected_queries = count_list_queries()
+
+        for debate in round.debate_set.all()[2:]:
+            self.log(debate, ActionLogEntry.ActionType.DEBATE_EDIT, round=round)
+            self.log(debate.ballotsubmission_set.first(), ActionLogEntry.ActionType.BALLOT_CONFIRM, round=round)
+        self.assertEqual(count_list_queries(), expected_queries)
+
+    def test_read_only(self):
+        entry = self.log()
+        list_url = self.reverse_url('api-actionlogentry-list')
+        detail_url = self.reverse_url('api-actionlogentry-detail', pk=entry.pk)
+
+        self.assertEqual(self.client.post(list_url, {'type': 'to.edit'}).status_code, 405)
+        self.assertEqual(self.client.patch(detail_url, {'type': 'to.edit'}).status_code, 405)
+        self.assertEqual(self.client.delete(detail_url).status_code, 405)
+        self.assertTrue(ActionLogEntry.objects.filter(pk=entry.pk).exists())
+
+    def test_unauthenticated(self):
+        entry = self.log()
+        self.client.logout()
+        self.assertEqual(self.client.get(self.reverse_url('api-actionlogentry-list')).status_code, 401)
+        self.assertEqual(self.client.get(self.reverse_url('api-actionlogentry-detail', pk=entry.pk)).status_code, 401)
+
+    def test_requires_view_permission(self):
+        entry = self.log()
+        user = get_user_model().objects.create_user('log-viewer', password='log-viewer')
+        self.client.login(username='log-viewer', password='log-viewer')
+        self.assertEqual(self.client.get(self.reverse_url('api-actionlogentry-list')).status_code, 403)
+
+        UserPermission.objects.create(user=user, tournament=self.tournament, permission=Permission.VIEW_ACTIONLOGENTRIES)
+        self.assertEqual([listed['id'] for listed in self.get_entries()], [entry.id])
+        response = self.client.get(self.reverse_url('api-actionlogentry-detail', pk=entry.pk))
+        self.assertEqual(response.status_code, 200)
