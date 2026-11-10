@@ -18,6 +18,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.fields import get_error_detail, SkipField
 from rest_framework.settings import api_settings
 
+from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
@@ -216,6 +217,9 @@ class TournamentSerializer(serializers.ModelSerializer):
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
         schedule_events = serializers.HyperlinkedIdentityField(
             view_name='api-scheduleevent-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        action_log = serializers.HyperlinkedIdentityField(
+            view_name='api-actionlogentry-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     _links = TournamentLinksSerializer(source='*', read_only=True)
@@ -1102,6 +1106,18 @@ class ScheduleEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleEvent
         exclude = ('tournament',)
+
+
+class ActionLogEntrySerializer(serializers.ModelSerializer):
+    url = fields.TournamentHyperlinkedIdentityField(view_name='api-actionlogentry-detail')
+    round = fields.TournamentHyperlinkedRelatedField(
+        view_name='api-round-detail', lookup_field='seq', lookup_url_kwarg='round_seq', read_only=True, allow_null=True)
+    object = fields.ActionLogContentObjectField(source='content_object')
+
+    class Meta:
+        model = ActionLogEntry
+        fields = ('id', 'url', 'type', 'timestamp', 'user', 'ip_address', 'agent', 'round', 'object')
+        read_only_fields = fields
 
 
 def get_metrics_field_type(generator):

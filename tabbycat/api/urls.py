@@ -264,6 +264,15 @@ urlpatterns = [
                         name='api-scheduleevent-detail'),
                 ])),
 
+                path('/action-log', include([
+                    path('',
+                        views.ActionLogEntryViewSet.as_view({'get': 'list'}),
+                        name='api-actionlogentry-list'),
+                    path('/<int:pk>',
+                        views.ActionLogEntryViewSet.as_view({'get': 'retrieve'}),
+                        name='api-actionlogentry-detail'),
+                ])),
+
                 path('/user-groups', include([
                     path('',
                         views.GroupViewSet.as_view(list_methods),

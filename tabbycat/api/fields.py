@@ -11,10 +11,19 @@ from rest_framework.reverse import reverse
 from rest_framework.serializers import CharField, Field, IntegerField, ListField
 from rest_framework.utils import html
 
+from adjallocation.models import PreformedPanel
+from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from breakqual.models import BreakCategory
+from draw.models import Debate
 from draw.types import DebateSide
-from participants.models import Adjudicator, Speaker, Team
+from motions.models import Motion
+from options.models import TournamentPreferenceModel
+from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team, TournamentInstitution
+from registration.models import Question
+from results.models import BallotSubmission
+from tournaments.models import Round, ScheduleEvent, Tournament
 from users.permissions import has_permission, Permission
-from venues.models import Venue
+from venues.models import Venue, VenueCategory
 
 
 class TournamentRelatedFieldMixin:
@@ -311,6 +320,74 @@ class ParticipantSourceField(BaseSourceField):
             obj = getattr(value.participant_submitter, model.__name__.lower(), None)
             if obj is not None:
                 return self.get_url(obj, view_name, self.context['request'], format)
+
+
+@extend_schema_field({'type': 'string', 'format': 'uri', 'nullable': True})
+class ActionLogContentObjectField(Field):
+    """Read-only hyperlink to the object affected by an action log entry.
+
+    As the object is a generic foreign key, the endpoint depends on its model.
+    Objects without an endpoint of their own link to that of their closest
+    related object. Deleted objects and objects of models without a related
+    endpoint are represented as null."""
+
+    # Endpoints identified by the tournament and the object's primary key
+    view_names = {
+        Adjudicator: 'api-adjudicator-detail',
+        AdjudicatorFeedback: 'api-feedback-detail',
+        AdjudicatorFeedbackQuestion: 'api-feedbackquestion-detail',
+        BreakCategory: 'api-breakcategory-detail',
+        Motion: 'api-motion-detail',
+        Question: 'api-question-detail',
+        ScheduleEvent: 'api-scheduleevent-detail',
+        Speaker: 'api-speaker-detail',
+        SpeakerCategory: 'api-speakercategory-detail',
+        Team: 'api-team-detail',
+        Venue: 'api-venue-detail',
+        VenueCategory: 'api-venuecategory-detail',
+    }
+
+    def __init__(self, **kwargs):
+        kwargs['read_only'] = True
+        super().__init__(**kwargs)
+
+    def get_url_kwargs(self, obj):
+        """Returns the view name and URL keyword arguments of the endpoint of
+        the object, or `None` if there is no endpoint for the object."""
+        match obj:
+            case Tournament():
+                return 'api-tournament-detail', {'tournament_slug': obj.slug}
+            case Institution():
+                return 'api-global-institution-detail', {'pk': obj.pk}
+            case TournamentInstitution():
+                return 'api-global-institution-detail', {'pk': obj.institution_id}
+            case Round():
+                view_name, kwargs = 'api-round-detail', {'round_seq': obj.seq}
+            case Debate():
+                view_name, kwargs = 'api-pairing-detail', {'round_seq': obj.round.seq, 'debate_pk': obj.pk}
+            case BallotSubmission():
+                view_name, kwargs = 'api-ballot-detail', {'round_seq': obj.debate.round.seq, 'debate_pk': obj.debate_id, 'pk': obj.pk}
+            case PreformedPanel():
+                view_name, kwargs = 'api-preformedpanel-detail', {'round_seq': obj.round.seq, 'debate_pk': obj.pk}
+            case TournamentPreferenceModel():
+                view_name, kwargs = 'tournamentpreferencemodel-detail', {'pk': obj.preference.identifier()}
+            case AdjudicatorBaseScoreHistory():
+                view_name, kwargs = 'api-adjudicator-detail', {'pk': obj.adjudicator_id}
+            case _ if type(obj) in self.view_names:
+                view_name, kwargs = self.view_names[type(obj)], {'pk': obj.pk}
+            case _:
+                return None
+
+        # Other objects belong to the tournament whose action log is listed
+        kwargs['tournament_slug'] = self.context['tournament'].slug
+        return view_name, kwargs
+
+    def to_representation(self, value):
+        if (url_kwargs := self.get_url_kwargs(value)) is None:
+            return None
+
+        view_name, kwargs = url_kwargs
+        return reverse(view_name, kwargs=kwargs, request=self.context['request'], format=self.context.get('format'))
 
 
 @extend_schema_field({'anyOf': [{"type": "number"}, {"type": "boolean"}, {"type": "string"}, {"type": "array", "items": {"type": "string"}}]})
