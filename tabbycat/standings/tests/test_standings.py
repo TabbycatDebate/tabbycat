@@ -230,6 +230,46 @@ class TestTrivialStandings(TestCase):
     def test_pullup_debates_combinable(self):
         self._base_metric_test({'points': [2, 0], 'npullups': [2, 0], 'pullup_debates': [2, 2]})
 
+    def test_num_debates(self):
+        self._base_metric_test({'num_debates': [2, 2]})
+
+    def test_num_debates_combinable(self):
+        self._base_metric_test({'points': [2, 0], 'num_debates': [2, 2], 'speaks_sum': [203, 197]})
+
+    def test_num_debates_up_to_round(self):
+        generator = TeamStandingsGenerator(('num_debates',), ())
+        rd = Round.objects.get(tournament=self.tournament, seq=1)
+        with suppress_logs('standings.metrics', logging.INFO):
+            standings = generator.generate(self.tournament.team_set.all(), round=rd)
+        self.assertEqual(standings.get_standing(self.team1).metrics['num_debates'], 1)
+        self.assertEqual(standings.get_standing(self.team2).metrics['num_debates'], 1)
+
+    def test_num_debates_ignores_unconfirmed_ballot_submissions(self):
+        # A superseded ballot submission must not count as another debate
+        for debate in Debate.objects.filter(round__tournament=self.tournament):
+            ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=False, discarded=True)
+            for dt in debate.debateteam_set.all():
+                TeamScore.objects.create(debate_team=dt, ballot_submission=ballotsub,
+                    margin=0, points=0, score=100, win=False, votes_given=0, votes_possible=1)
+        self._base_metric_test({'num_debates': [2, 2]})
+
+    def test_num_debates_excludes_byes(self):
+        rd = Round.objects.create(tournament=self.tournament, seq=4, schedule_group=4)
+        debate = Debate.objects.create(round=rd)
+        dt = DebateTeam.objects.create(debate=debate, team=self.team1, side=DebateSide.BYE)
+        ballotsub = BallotSubmission.objects.create(debate=debate, confirmed=True,
+            submitter_type=BallotSubmission.Submitter.AUTOMATION)
+        TeamScore.objects.create(debate_team=dt, ballot_submission=ballotsub, points=1, win=True)
+        self._base_metric_test({'points': [3, 0], 'num_debates': [2, 2]})
+
+    def test_num_debates_with_extra_team(self):
+        team_extra = Team.objects.create(tournament=self.tournament, reference="extra", use_institution_prefix=False)
+        generator = TeamStandingsGenerator(('num_debates',), ('rank',))
+        standings = self.get_standings(generator)
+        self.assertEqual(standings.get_standing(team_extra).metrics['num_debates'], 0)
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(team_extra).rankings['rank'], (3, False))
+
     def test_points_ranked(self):
         generator = TeamStandingsGenerator(('points',), ('rank',))
         standings = self.get_standings(generator)

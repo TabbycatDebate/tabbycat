@@ -10,6 +10,7 @@ from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Pr
 from django.db.models.functions import Cast, NullIf, Round as RoundScore
 from django.utils.translation import gettext_lazy as _
 
+from draw.types import DebateSide
 from results.models import TeamScore
 from tournaments.models import Round
 
@@ -443,6 +444,22 @@ class IronsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     where_value = True
 
 
+class NumberOfDebatesMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for the number of debates the team has had a confirmed
+    result in. Byes are not counted, as the team did not debate in them."""
+    key = "num_debates"
+    name = _("number of debates")
+    abbr = _("Debates")
+
+    function = Count
+
+    def get_field(self):
+        return 'debateteam__teamscore'
+
+    def get_annotation_filter(self, round=None):
+        return super().get_annotation_filter(round) & ~Q(debateteam__side=DebateSide.BYE)
+
+
 class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     """Metric annotator for who-beat-whom. Use once for every who-beat-whom in
     the precedence."""
@@ -530,6 +547,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "seconds"             : NumberOfSecondsMetricAnnotator,
         "thirds"              : NumberOfThirdsMetricAnnotator,
         "num_iron"            : IronsMetricAnnotator,
+        "num_debates"         : NumberOfDebatesMetricAnnotator,
         "wbw"                 : WhoBeatWhomMetricAnnotator,
     }
 
