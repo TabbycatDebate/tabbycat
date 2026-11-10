@@ -148,6 +148,11 @@
               {% roundurl 'edit-debate-teams' as url %}
               {% include "components/item-action.html" with text="Allocate Sides" type="success" to_complete=True %}
 
+              {% trans "Confirm all sides as drawn" as text %}
+              <form id="confirmAllSidesForm" method="POST" action="{% roundurl 'draw-confirm-sides' %}">{% csrf_token %}
+                {% include "components/item-submit.html" with text=text type="success" icon="check" %}
+              </form>
+
             </div>
 
           </div>

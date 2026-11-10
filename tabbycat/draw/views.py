@@ -920,6 +920,25 @@ class DrawUnreleaseView(DrawStatusEdit):
         return super().post(request, *args, **kwargs)
 
 
+class ConfirmAllSidesView(DrawStatusEdit):
+    edit_permission = Permission.EDIT_ALLOCATESIDES
+    action_log_type = ActionLogEntry.ActionType.SIDES_SAVE
+
+    def post(self, request, *args, **kwargs):
+        nconfirmed = self.round.debate_set.filter(sides_confirmed=False).update(sides_confirmed=True)
+        if nconfirmed == 0:
+            messages.info(request, _("Sides were already confirmed in all debates."))
+            return super().post(request, *args, **kwargs)
+
+        self.log_action()
+        messages.success(request, ngettext(
+            "Confirmed sides in %(count)d debate.",
+            "Confirmed sides in %(count)d debates.",
+            nconfirmed,
+        ) % {'count': nconfirmed})
+        return super().post(request, *args, **kwargs)
+
+
 class SetRoundStartTimeView(DrawStatusEdit):
     edit_permission = Permission.EDIT_STARTTIME
     action_log_type = ActionLogEntry.ActionType.ROUND_START_TIME_SET
