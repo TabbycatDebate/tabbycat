@@ -2,6 +2,7 @@ import json
 from unittest.mock import AsyncMock, patch
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import connection
 from django.test import Client
 from django.test.utils import CaptureQueriesContext
@@ -12,9 +13,13 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
 from checkins.models import Event
+from draw.models import TeamSideAllocation
 from participants.models import Speaker, Team
 from results.models import BallotSubmission, SpeakerScore
-from tournaments.models import Round
+from tournaments.models import Round, Tournament
+from users.models import UserPermission
+from users.permissions import Permission
+from utils.misc import reverse_tournament
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 
 
@@ -599,3 +604,140 @@ class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):
             {int(url.rsplit('/', 1)[-1]) for url in availabilities},
             {self.objects['teams'].pk, self.objects['venues'].pk},
         )
+
+
+class SideAllocationsViewTests(CompletedTournamentTestMixin, APITestCase):
+    round_seq = 4
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+        self.tournament.preferences['public_features__public_side_allocations'] = False
+        self.teams = list(self.tournament.team_set.order_by('id')[:4])
+        self.url = self.reverse_url('api-sideallocation-list')
+
+    def team_url(self, team):
+        return 'http://testserver' + reverse_tournament('api-team-detail', self.tournament, kwargs={'pk': team.pk})
+
+    def allocate(self, team, side, round=None):
+        TeamSideAllocation.objects.create(round=round or self.round, team=team, side=side)
+
+    def get_allocations(self):
+        return dict(TeamSideAllocation.objects.filter(round=self.round).values_list('team_id', 'side'))
+
+    def test_get_side_allocations(self):
+        self.allocate(self.teams[1], 1)
+        self.allocate(self.teams[0], 0)
+        self.allocate(self.teams[2], 1, round=self.tournament.round_set.get(seq=3))
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [
+            {'team': self.team_url(self.teams[0]), 'side': 'aff'},
+            {'team': self.team_url(self.teams[1]), 'side': 'neg'},
+        ])
+
+    def test_put_replaces_side_allocations(self):
+        self.allocate(self.teams[0], 0)
+        self.allocate(self.teams[1], 0)
+
+        response = self.client.put(self.url, [
+            {'team': self.team_url(self.teams[1]), 'side': 'neg'},
+            {'team': self.team_url(self.teams[2]), 'side': 0},
+            {'team': self.team_url(self.teams[3]), 'side': None},
+        ], format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [
+            {'team': self.team_url(self.teams[1]), 'side': 'neg'},
+            {'team': self.team_url(self.teams[2]), 'side': 'aff'},
+        ])
+        self.assertEqual(self.get_allocations(), {self.teams[1].id: 1, self.teams[2].id: 0})
+
+    def test_patch_updates_included_teams(self):
+        self.allocate(self.teams[0], 0)
+        self.allocate(self.teams[1], 1)
+        self.allocate(self.teams[2], 1)
+
+        response = self.client.patch(self.url, [
+            {'team': self.team_url(self.teams[0]), 'side': 'neg'},
+            {'team': self.team_url(self.teams[1]), 'side': None},
+            {'team': self.team_url(self.teams[3]), 'side': 'aff'},
+        ], format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.get_allocations(), {self.teams[0].id: 1, self.teams[2].id: 1, self.teams[3].id: 0})
+        self.assertEqual(len(response.json()), 3)
+
+    def test_delete_side_allocations(self):
+        other_round = self.tournament.round_set.get(seq=3)
+        self.allocate(self.teams[0], 0)
+        self.allocate(self.teams[1], 1)
+        self.allocate(self.teams[0], 1, round=other_round)
+
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(self.get_allocations(), {})
+        self.assertTrue(TeamSideAllocation.objects.filter(round=other_round).exists())
+
+    def test_logs_action(self):
+        response = self.client.patch(self.url, [{'team': self.team_url(self.teams[0]), 'side': 'aff'}], format='json')
+        self.assertEqual(response.status_code, 200)
+        log = ActionLogEntry.objects.get(type=ActionLogEntry.ActionType.SIDE_PREALLOCATIONS_SAVE)
+        self.assertEqual(log.agent, ActionLogEntry.Agent.API)
+        self.assertEqual(log.round, self.round)
+
+    def test_rejects_invalid_allocations(self):
+        other_tournament = Tournament.objects.create(slug='other', name='Other')
+        other_team = other_tournament.team_set.create(reference='Other')
+        other_team_url = 'http://testserver' + reverse_tournament('api-team-detail', other_tournament, kwargs={'pk': other_team.pk})
+        self.allocate(self.teams[0], 0)
+
+        payloads = {
+            'duplicate team': [
+                {'team': self.team_url(self.teams[1]), 'side': 'aff'},
+                {'team': self.team_url(self.teams[1]), 'side': 'neg'},
+            ],
+            'side not in format': [{'team': self.team_url(self.teams[1]), 'side': 'co'}],
+            'bye': [{'team': self.team_url(self.teams[1]), 'side': 'bye'}],
+            'side out of range': [{'team': self.team_url(self.teams[1]), 'side': 2}],
+            'missing side': [{'team': self.team_url(self.teams[1])}],
+            'team in other tournament': [{'team': other_team_url, 'side': 'aff'}],
+            'not a list': {'team': self.team_url(self.teams[1]), 'side': 'aff'},
+        }
+        for method in ['put', 'patch']:
+            for name, payload in payloads.items():
+                with self.subTest(method=method, payload=name):
+                    response = getattr(self.client, method)(self.url, payload, format='json')
+                    self.assertEqual(response.status_code, 400)
+                    self.assertEqual(self.get_allocations(), {self.teams[0].id: 0})
+
+    def test_public_access(self):
+        self.client.logout()
+        self.allocate(self.teams[0], 0)
+        payload = [{'team': self.team_url(self.teams[1]), 'side': 'aff'}]
+
+        self.assertEqual(self.client.get(self.url).status_code, 401)
+
+        self.tournament.preferences['public_features__public_side_allocations'] = True
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [{'team': self.team_url(self.teams[0]), 'side': 'aff'}])
+
+        for method in ['put', 'patch', 'delete']:
+            with self.subTest(method=method):
+                response = getattr(self.client, method)(self.url, payload, format='json')
+                self.assertEqual(response.status_code, 401)
+        self.assertEqual(self.get_allocations(), {self.teams[0].id: 0})
+
+    def test_requires_permission(self):
+        user = get_user_model().objects.create_user(username='sides', password='sides')
+        self.client.force_authenticate(user=user)
+        payload = [{'team': self.team_url(self.teams[0]), 'side': 'aff'}]
+
+        self.assertEqual(self.client.get(self.url).status_code, 403)
+        self.assertEqual(self.client.patch(self.url, payload, format='json').status_code, 403)
+        self.assertEqual(self.get_allocations(), {})
+
+        UserPermission.objects.create(user=user, tournament=self.tournament, permission=Permission.EDIT_ALLOCATESIDES)
+        self.assertEqual(self.client.get(self.url).status_code, 200)
+        self.assertEqual(self.client.patch(self.url, payload, format='json').status_code, 200)
+        self.assertEqual(self.get_allocations(), {self.teams[0].id: 0})
