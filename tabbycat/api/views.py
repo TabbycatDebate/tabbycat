@@ -7,6 +7,7 @@ from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 from django.db.models import Avg, Count, Prefetch, Q
 from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
@@ -34,7 +35,7 @@ from breakqual.views import GenerateBreakMixin
 from checkins.consumers import CheckInEventConsumer
 from checkins.models import Event
 from checkins.utils import create_identifiers, get_unexpired_checkins
-from draw.models import Debate, DebateTeam
+from draw.models import Debate, DebateTeam, TeamSideAllocation
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
@@ -1595,6 +1596,67 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
         return self.get(request, *args, **kwargs)
 
     @extend_schema(summary="Delete class of availabilities", parameters=extra_params)
+    def delete(self, request, *args, **kwargs):
+        self.get_queryset().delete()
+        self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
+        return Response(status=204)
+
+
+@extend_schema(tags=['rounds'], parameters=round_parameters)
+class SideAllocationsView(RoundAPIMixin, TournamentPublicAPIMixin, GenericAPIView):
+    serializer_class = serializers.TeamSideAllocationSerializer
+    pagination_class = None
+    access_preference = 'public_side_allocations'
+    action_log_type_updated = ActionLogEntry.ActionType.SIDE_PREALLOCATIONS_SAVE
+    action_log_content_object_attr = None
+
+    list_permission = Permission.EDIT_ALLOCATESIDES
+    update_permission = Permission.EDIT_ALLOCATESIDES
+    destroy_permission = Permission.EDIT_ALLOCATESIDES
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('team__tournament').order_by('team_id')
+
+    def get_validated_allocations(self):
+        serializer = self.get_serializer(data=self.request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        return serializer.validated_data
+
+    def create_allocations(self, allocations):
+        TeamSideAllocation.objects.bulk_create([
+            TeamSideAllocation(round=self.round, team=allocation['team'], side=allocation['side'])
+            for allocation in allocations if allocation['side'] is not None
+        ])
+
+    @extend_schema(summary="Get side pre-allocations of the round",
+        responses=serializers.TeamSideAllocationSerializer(many=True))
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data)
+
+    @extend_schema(summary="Replace all side pre-allocations of the round",
+        request=serializers.TeamSideAllocationSerializer(many=True),
+        responses=serializers.TeamSideAllocationSerializer(many=True))
+    def put(self, request, *args, **kwargs):
+        allocations = self.get_validated_allocations()
+        with transaction.atomic():
+            self.get_queryset().delete()
+            self.create_allocations(allocations)
+        self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
+        return self.get(request, *args, **kwargs)
+
+    @extend_schema(summary="Set or remove side pre-allocations of the included teams",
+        request=serializers.TeamSideAllocationSerializer(many=True),
+        responses=serializers.TeamSideAllocationSerializer(many=True))
+    def patch(self, request, *args, **kwargs):
+        allocations = self.get_validated_allocations()
+        with transaction.atomic():
+            self.get_queryset().filter(team__in=[allocation['team'] for allocation in allocations]).delete()
+            self.create_allocations(allocations)
+        self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
+        return self.get(request, *args, **kwargs)
+
+    @extend_schema(summary="Delete all side pre-allocations of the round")
     def delete(self, request, *args, **kwargs):
         self.get_queryset().delete()
         self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)

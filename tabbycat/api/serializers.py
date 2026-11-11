@@ -22,7 +22,7 @@ from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
 from draw.manager import DrawManager
-from draw.models import Debate, DebateTeam
+from draw.models import Debate, DebateTeam, TeamSideAllocation
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from notifications.models import ParticipantWebPushDevice
 from options.preferences import (BPAssignmentMethod, BPPositionCost, BPPullupDistribution, DrawAvoidConflicts,
@@ -155,6 +155,30 @@ class AvailabilitiesSerializer(serializers.ListSerializer):
     child = fields.ParticipantAvailabilityForeignKeyField(view_name='api-availability-list')
 
 
+class TeamSideAllocationListSerializer(serializers.ListSerializer):
+    def validate(self, attrs):
+        teams = [allocation['team'] for allocation in attrs]
+        if len(set(teams)) != len(teams):
+            raise serializers.ValidationError("Each team can only be included once")
+        return attrs
+
+
+class TeamSideAllocationSerializer(serializers.ModelSerializer):
+    team = fields.TournamentHyperlinkedRelatedField(view_name='api-team-detail', queryset=Team.objects.all())
+    side = fields.SideChoiceField(allow_null=True,
+        help_text="The side the team is pre-allocated, or null for no pre-allocation")
+
+    class Meta:
+        model = TeamSideAllocation
+        fields = ('team', 'side')
+        list_serializer_class = TeamSideAllocationListSerializer
+
+    def validate_side(self, value):
+        if value is not None and value not in self.context['tournament'].sides:
+            raise serializers.ValidationError("Side is not valid for the tournament's format")
+        return value
+
+
 class VenueConstraintSerializer(serializers.ModelSerializer):
     category = fields.TournamentHyperlinkedRelatedField(view_name='api-venuecategory-detail', queryset=VenueCategory.objects.all())
 
@@ -261,6 +285,7 @@ class RoundSerializer(serializers.ModelSerializer):
             lookup_field='seq', lookup_url_kwarg='round_seq')
         availabilities = fields.TournamentHyperlinkedIdentityField(view_name='api-availability-list', lookup_field='seq', lookup_url_kwarg='round_seq')
         preformed_panels = fields.TournamentHyperlinkedIdentityField(view_name='api-preformedpanel-list', lookup_field='seq', lookup_url_kwarg='round_seq')
+        side_allocations = fields.TournamentHyperlinkedIdentityField(view_name='api-sideallocation-list', lookup_field='seq', lookup_url_kwarg='round_seq')
 
     class TimeOrDateTimeField(serializers.DateTimeField):
         def to_internal_value(self, value):

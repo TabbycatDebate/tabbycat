@@ -75,6 +75,7 @@ class RoundSerializerTests(CompletedTournamentTestMixin, APITestCase):
                 "pairing": round_url + "/pairings",
                 "availabilities": round_url + "/availabilities",
                 "preformed_panels": round_url + "/preformed-panels",
+                "side_allocations": round_url + "/side-allocations",
             },
             "seq": 1,
             "completed": True,
