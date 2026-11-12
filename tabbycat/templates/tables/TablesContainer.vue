@@ -1,7 +1,7 @@
 <script setup>
 import SmartTable from './SmartTable.vue'
 import SearchInput from '../components/SearchInput.vue'
-import { computed, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import AutoSaveCounter from '../allocations/AutoSaveCounter.vue'
 import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 
@@ -17,6 +17,11 @@ const filterKey = ref('')
 const lastSaved = ref(null)
 
 const tableRefs = ref({})
+const copiedTableIndex = ref(null)
+let copyTimeout
+onUnmounted(() => {
+  clearTimeout(copyTimeout)
+})
 
 const hasAjaxSelectCells = computed(() => props.tablesData.some(table =>
   table.data.some(row => row.some(cell => cell.component === 'ajax-select-cell')),
@@ -45,9 +50,16 @@ const tableClass = computed(() => {
 
 const getTableId = (i) => `tableContainer-${i}`
 
-const copyTableTrigger = (i) => {
+const copyTableTrigger = async (i) => {
   const child = tableRefs.value[i]
-  child?.copyTableData?.()
+  if (!child) return
+  await child.copyTableData()
+  if (tableRefs.value[i] !== child) return
+  clearTimeout(copyTimeout)
+  copiedTableIndex.value = i
+  copyTimeout = setTimeout(() => {
+    copiedTableIndex.value = null
+  }, 1500)
 }
 </script>
 
@@ -61,19 +73,6 @@ const copyTableTrigger = (i) => {
           :label="gettext('Find in Table')"
           :placeholder="gettext('Find in Table')"
         />
-        <div
-          v-for="(table, i) in tablesData"
-          :key="i"
-        >
-          <button
-            class="btn btn-light border ml-2"
-            data-toggle="tooltip"
-            title="Copy table data to clipboard in a CSV format"
-            @click.prevent="copyTableTrigger(i)"
-          >
-            <i data-feather="clipboard" />
-          </button>
-        </div>
         <auto-save-counter
           v-if="hasAjaxSelectCells"
           class="ml-2"
@@ -90,21 +89,45 @@ const copyTableTrigger = (i) => {
     >
       <div
         :id="getTableId(i)"
-        class="card table-container pl-1"
+        class="card table-container pl-1 pl-sm-0"
       >
-        <div class="card-body pl-3 pr-0 py-2">
-          <h4
-            v-if="table.title"
-            class="card-title mt-1 mb-2"
-          >
-            {{ table.title }}
-            <small
-              v-if="table.subtitle"
-              class="text-muted d-md-inline d-none"
+        <div class="card-body pl-3 pr-0 pr-sm-3 py-2">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4
+              v-if="table.title"
+              class="card-title my-0"
             >
-              {{ table.subtitle }}
-            </small>
-          </h4>
+              {{ table.title }}
+              <small
+                v-if="table.subtitle"
+                class="text-muted d-md-inline d-none"
+              >
+                {{ table.subtitle }}
+              </small>
+            </h4>
+            <div
+              class="d-flex align-items-center ml-auto mr-3 mr-sm-0 d-print-none"
+            >
+              <span
+                class="small text-success mr-2"
+                role="status"
+              >{{ copiedTableIndex === i ? gettext('Copied!') : '' }}</span>
+              <button
+                class="btn btn-light btn-sm border p-1"
+                type="button"
+                data-toggle="tooltip"
+                data-trigger="hover focus"
+                :title="gettext('Copy table data to clipboard in a CSV format')"
+                :aria-label="gettext('Copy table data to clipboard')"
+                @click="copyTableTrigger(i)"
+              >
+                <i
+                  data-feather="clipboard"
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+          </div>
           <smart-table
             :ref="setTableRef(i)"
             :table-headers="table.head"
