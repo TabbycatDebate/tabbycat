@@ -1,7 +1,6 @@
 import logging
 from decimal import Decimal
 from itertools import product
-from typing import TYPE_CHECKING
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -19,12 +18,10 @@ from participants.templatetags.team_name_for_data_entry import team_name_for_dat
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
+from .models import BallotSubmission
 from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
                      DebateResultByAdjudicator, DebateResultByAdjudicatorWithScores)
 from .utils import get_status_meta, side_and_position_names
-
-if TYPE_CHECKING:
-    from .models import BallotSubmission
 
 logger = logging.getLogger(__name__)
 
@@ -134,6 +131,16 @@ def broadcast_results(ballotsub: 'BallotSubmission', debate: Debate):
 # Result/ballot forms
 # ==============================================================================
 
+class BallotFlagForm(forms.ModelForm):
+    """Lets an adjudicator flag or unflag a ballot after it was submitted."""
+
+    class Meta:
+        model = BallotSubmission
+        fields = ['flagged']
+        labels = {'flagged': _("Flag error")}
+        help_texts = {'flagged': _("Signals to the tab room that there is a potential problem with this ballot")}
+
+
 class BaseResultForm(forms.Form):
     """Base class for forms that report results. Contains fields and methods
     common to absolutely everything (which isn't very much)."""
@@ -169,6 +176,13 @@ class BaseResultForm(forms.Form):
 
         if self.has_tournament_password:
             self.fields['password'] = TournamentPasswordField(tournament=self.tournament)
+
+        if not tabroom:
+            self.fields['flagged'] = forms.BooleanField(
+                required=False,
+                label=_("Flag error"),
+                help_text=_("Signals to the tab room that there is a potential problem with this ballot"),
+            )
 
     def _side_name(self, side):
         return get_side_name(self.tournament, side, 'full')
@@ -211,6 +225,8 @@ class BaseResultForm(forms.Form):
         # 4. Save ballot and result status
         self.ballotsub.discarded = self.cleaned_data['discarded']
         self.ballotsub.confirmed = self.cleaned_data['confirmed']
+        if 'flagged' in self.cleaned_data:
+            self.ballotsub.flagged = self.cleaned_data['flagged']
         self.ballotsub.save()
 
         new_status = self.cleaned_data['debate_result_status']
