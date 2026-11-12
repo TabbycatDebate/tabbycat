@@ -80,7 +80,7 @@ const { moveAdjudicator, swapPanels, showShard, showAllocate, showPrioritise } =
             :class="['btn', debatesOrPanelsCount > 0 ? 'btn-outline-primary' : 'btn-success']"
             @click="showCreatePanels"
           >
-            {{ gettext('Create Panels') }}
+            {{ debatesOrPanelsCount > 0 ? gettext('Refresh Brackets and Liveness') : gettext('Create Panels') }}
           </button>
         </template>
         <template #default-highlights>
@@ -152,7 +152,10 @@ const { moveAdjudicator, swapPanels, showShard, showAllocate, showPrioritise } =
     </template>
 
     <template #modals>
-      <modal-for-creating-preformed-panels :context-of-action="'create_preformed_panels'" />
+      <modal-for-creating-preformed-panels
+        :context-of-action="'create_preformed_panels'"
+        :panels-exist="debatesOrPanelsCount > 0"
+      />
       <modal-for-sharding :intro-text="gettext(shardIntro)" />
       <modal-for-allocating
         :intro-text="gettext(allocateIntro)"

@@ -25,8 +25,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from actionlog.models import ActionLogEntry
-from adjallocation.models import DebateAdjudicator, PreformedPanel
-from adjallocation.preformed.anticipated import calculate_anticipated_draw
+from adjallocation.models import DebateAdjudicator
+from adjallocation.preformed import update_or_create_preformed_panels
 from adjfeedback.models import AdjudicatorFeedback
 from availability.models import RoundAvailability
 from breakqual.models import BreakCategory
@@ -1645,13 +1645,9 @@ class PreformedPanelViewSet(RoundAPIMixin, AdministratorAPIMixin, ModelViewSet):
 
     @extend_schema(summary="Add blank preformed panels")
     def add_blank(self, request, *args, **kwargs):
-        """Adds new complete set of panels, with calculated bracket and liveness."""
-        for i, (bracket_min, bracket_max, liveness) in enumerate(calculate_anticipated_draw(self.round), start=1):
-            PreformedPanel.objects.update_or_create(round=self.round, room_rank=i, defaults={
-                'bracket_max': bracket_max,
-                'bracket_min': bracket_min,
-                'liveness': liveness,
-            })
+        """Adds a complete set of panels with calculated brackets and liveness.
+        Existing panels keep their adjudicators and have their brackets and liveness refreshed."""
+        update_or_create_preformed_panels(self.round)
         self.obj = self.round
         self.log_action(type=self.action_log_type_created, agent=ActionLogEntry.Agent.API)
 
