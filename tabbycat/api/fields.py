@@ -47,8 +47,11 @@ class TournamentRelatedFieldMixin:
 class TournamentHyperlinkedRelatedField(TournamentRelatedFieldMixin, HyperlinkedRelatedField):
     def get_url_kwargs(self, obj):
         lookup_value = getattr(obj, self.lookup_field)
+        tournament = self.get_tournament(obj)
+        if tournament is None:
+            tournament = self.context['tournament']
         kwargs = {
-            'tournament_slug': self.get_tournament(obj).slug,
+            'tournament_slug': tournament.slug,
             self.lookup_url_kwarg: lookup_value,
         }
         return kwargs
@@ -141,7 +144,7 @@ class AnonymisingParticipantNameField(CharField):
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
     default_tournament_field = 'team__tournament'
 
-    def __init__(self, view_name=None, queryset=Speaker.objects.all(), **kwargs):
+    def __init__(self, view_name=None, queryset=Speaker.objects, **kwargs):
         self.null_when = kwargs.pop('anonymous_source')
         super().__init__(view_name=view_name, queryset=queryset, **kwargs)
 

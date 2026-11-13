@@ -1026,6 +1026,8 @@ class ConsensusDebateResult(BaseDebateResult):
         return len(self.sides) - self.scoresheet.rank(side)
 
     def teamscore_field_win(self, side):
+        if len(self.sides) == 4 and self.debate.round.is_break_round:
+            return self.debateteams[side] in self.advancing_dt()
         return side in self.scoresheet.winners()
 
     def teamscore_field_score(self, side):

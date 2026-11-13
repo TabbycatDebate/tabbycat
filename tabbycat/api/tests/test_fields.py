@@ -1,13 +1,35 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from api.fields import AnonymisingParticipantNameField
+from api.fields import AnonymisingParticipantNameField, TournamentHyperlinkedRelatedField
 from django.contrib.auth.models import AnonymousUser
 from django.test import SimpleTestCase
 from rest_framework.serializers import Serializer
 
 from participants.models import Adjudicator, Speaker
+from tournaments.models import Tournament
 from users.permissions import Permission
+
+
+class TournamentHyperlinkedRelatedFieldTests(SimpleTestCase):
+
+    def test_adjudicator_url_tournament(self):
+        class AdjudicatorLinkSerializer(Serializer):
+            adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', read_only=True)
+
+        tournament = Tournament(slug='own-tournament')
+        context_tournament = Tournament(slug='context-tournament')
+        for object_tournament, context, expected_slug in (
+            (None, {'tournament': context_tournament}, 'context-tournament'),
+            (tournament, {'tournament': context_tournament}, 'own-tournament'),
+            (tournament, {}, 'own-tournament'),
+        ):
+            with self.subTest(object_tournament=object_tournament, context=context):
+                adjudicator = Adjudicator(pk=42, tournament=object_tournament)
+                data = AdjudicatorLinkSerializer(
+                    SimpleNamespace(adjudicator=adjudicator), context={'request': None, **context},
+                ).data
+                self.assertEqual(data['adjudicator'], f'/api/v1/tournaments/{expected_slug}/adjudicators/42')
 
 
 class ParticipantNameSerializer(Serializer):

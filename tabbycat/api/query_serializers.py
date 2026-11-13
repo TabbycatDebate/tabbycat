@@ -12,7 +12,7 @@ from . import fields
 
 class InstitutionParamsSerializer(serializers.Serializer):
     region = serializers.SlugRelatedField(
-        queryset=Region.objects.all(),
+        queryset=Region.objects,
         slug_field='name',
         required=False,
     )
@@ -24,7 +24,7 @@ class AdjudicatorParamsSerializer(serializers.Serializer):
 
 class StandingsParamsSerializer(serializers.Serializer):
     round = fields.TournamentSlugRelatedField(
-        slug_field='seq', queryset=Round.objects.all(), required=False,
+        slug_field='seq', queryset=Round.objects, required=False,
     )
 
 
@@ -35,7 +35,7 @@ class SpeakerStandingsParamsSerializer(serializers.Serializer):
     extra_metrics = fields.CharacterSeparatedField(
         separator=",",
         child=serializers.ChoiceField(choices=SpeakerStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)), required=False, allow_null=True)
-    category = fields.TournamentPrimaryKeyRelatedField(queryset=SpeakerCategory.objects.all(), required=False)
+    category = fields.TournamentPrimaryKeyRelatedField(queryset=SpeakerCategory.objects, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,7 +61,7 @@ class TeamStandingsParamsSerializer(serializers.Serializer):
     extra_metrics = fields.CharacterSeparatedField(
         separator=",",
         child=serializers.ChoiceField(choices=TeamStandingsGenerator.get_metric_choices(ranked_only=False, for_extra=True)), required=False, allow_null=True)
-    category = fields.TournamentPrimaryKeyRelatedField(queryset=BreakCategory.objects.all(), required=False)
+    category = fields.TournamentPrimaryKeyRelatedField(queryset=BreakCategory.objects, required=False)
 
 
 class SpeakerRoundStandingsRoundsParamsSerializer(serializers.Serializer):
@@ -87,9 +87,9 @@ class FeedbackParamsSerializer(serializers.Serializer):
     source_type = serializers.ChoiceField(choices=SourceType.choices, required=False)
     source = serializers.IntegerField(required=False)
     round = fields.TournamentSlugRelatedField(
-        slug_field='seq', queryset=Round.objects.all(), required=False,
+        slug_field='seq', queryset=Round.objects, required=False,
     )
-    target = fields.TournamentPrimaryKeyRelatedField(queryset=Adjudicator.objects.all(), required=False)
+    target = fields.TournamentPrimaryKeyRelatedField(queryset=Adjudicator.objects, required=False)
 
 
 class AvailabilitiesParamsSerializer(serializers.Serializer):

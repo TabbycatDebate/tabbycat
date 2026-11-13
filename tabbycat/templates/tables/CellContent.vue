@@ -1,7 +1,7 @@
 <script setup>
 import _ from 'lodash'
 import { computed } from 'vue'
-import { useFeatherIcon } from '../composables/useFeatherIcon.js'
+import SvgIcon from '../components/SvgIcon.vue'
 
 const props = defineProps({ cellData: Object })
 
@@ -19,16 +19,15 @@ const icon = computed(() => {
   return false
 })
 
-const { getFeatherIcon } = useFeatherIcon(icon)
 </script>
 
 <template>
   <div class="flex-vertical-center">
     <!-- Icons or Emoji -->
-    <i
+    <svg-icon
       v-if="icon"
       :class="cellData.iconClass"
-      v-html="getFeatherIcon"
+      :name="icon"
     />
     <i
       v-if="cellData.emoji"

@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 // Actionable elements (buttons, navs) should be distinct
-.btn .feather {
+.btn .svg-icon {
   margin-top: -2.5px;
 }
 
@@ -13,7 +13,7 @@
 }
 
 // Fix bad inheritance
-.list-group-item .btn:not(.btn-link) .feather {
+.list-group-item .btn:not(.btn-link) .svg-icon {
   margin-right: 0;
 }
 

@@ -4,21 +4,21 @@
 
   <a href="#rh{{ r.id }}" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
      class="{% if round == r %}active{% endif %}">
-    <i data-feather="circle" class="circle-icon
+    <i data-icon="circle" class="circle-icon
       {% if r.is_current %}circle-current
       {% elif r.completed %}circle-done
       {% else %}circle-later{% endif %}"></i>
     <span class="d-none d-md-inline">{{ r.abbreviation }}</span>
     <span class="d-md-none">{{ r.abbreviation|slice:":2" }}</span>
-    <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
-    <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+    <i data-icon="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+    <i data-icon="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
   </a>
 
   <div class="collapse {% if r == round and round_nav %}show{% endif %}" id="rh{{ r.id }}">
 
     <a href="{% roundurl 'availability-index' r %}" data-parent="#rh{{ r.id }}"
        class="list-group-item {% if availability_nav and round == r %}active{% endif %}">
-      <i data-feather="circle" class="circle-icon
+      <i data-icon="circle" class="circle-icon
         {% if r.completed %} circle-done
         {% elif r.is_current and r.draw_status == r.Status.NONE %} circle-todo
         {% elif r.draw_status == r.Status.DRAFT or r.draw_status == r.Status.CONFIRMED or r.draw_status == r.Status.TEAMS_RELEASED or r.draw_status == r.Status.RELEASED %} circle-done
@@ -27,7 +27,7 @@
 
     <a href="{% roundurl 'draw' r %}" data-parent="#rh{{ r.id }}"
        class="list-group-item {% if draw_nav and round == r %}active{% endif %}">
-      <i data-feather="circle" class="circle-icon
+      <i data-icon="circle" class="circle-icon
         {% if r.completed %} circle-done
         {% elif r.draw_status == r.Status.NONE %} circle-later
         {% elif r.draw_status == r.Status.CONFIRMED or r.draw_status == r.Status.TEAMS_RELEASED or r.draw_status == r.Status.RELEASED %} circle-done
@@ -36,7 +36,7 @@
 
     <a href="{% roundurl 'draw-display' r %}" data-parent="#rh{{ r.id }}"
       class="list-group-item {% if display_nav and round == r %}active{% endif %}">
-      <i data-feather="circle" class="circle-icon
+      <i data-icon="circle" class="circle-icon
         {% if r.completed %} circle-done
         {% elif r.draw_status == r.Status.NONE or r.draw_status == r.Status.DRAFT %} circle-later
         {% elif r.draw_status == r.Status.CONFIRMED or r.draw_status == r.Status.CONFIRMED or r.draw_status == r.Status.TEAMS_RELEASED %} circle-todo
@@ -46,7 +46,7 @@
 
     <a href="{% roundurl 'results-round-list' r %}" data-parent="#rh{{ r.id }}"
        class="list-group-item {% if results_nav and round == r %}active{% endif %}">
-      <i data-feather="circle" class="circle-icon
+      <i data-icon="circle" class="circle-icon
         {% if r.completed %} circle-done
         {% elif r.draw_status == r.Status.CONFIRMED or r.draw_status == r.Status.TEAMS_RELEASED or r.draw_status == r.Status.RELEASED %}circle-todo
         {% else %} circle-later{% endif %}"></i>{% trans "Results" %}

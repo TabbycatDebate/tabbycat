@@ -765,7 +765,7 @@ def handle_question_columns(table: TabbycatTableBuilder, objects, questions=None
     question_columns = {q: [] for q in questions}
 
     for obj in objects:
-        obj_answers = {answer.question: answer.answer for answer in obj.answers.all()}
+        obj_answers = {answer.question: answer.answer for answer in obj.answers.all()} if obj is not None else {}
         for question, answers in question_columns.items():
             answers.append(obj_answers.get(question, ''))
 
@@ -785,7 +785,10 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
     def get_table(self):
         t_institutions = self.tournament.tournamentinstitution_set.select_related('institution').prefetch_related(
             'answers__question',
+            Prefetch('coach_set', queryset=Coach.objects.order_by('pk').prefetch_related('answers__question')[:1], to_attr='coaches'),
         ).all()
+
+        coaches = [t_inst.coaches[0] if t_inst.coaches else None for t_inst in t_institutions]
 
         inst_team_count = {i.id: i.agg for i in self.tournament.tournamentinstitution_set.annotate(agg=Count('institution__team')).all()}
         inst_adj_count = {i.id: i.agg for i in self.tournament.tournamentinstitution_set.annotate(agg=Count('institution__adjudicator')).all()}
@@ -799,17 +802,17 @@ class InstitutionRegistrationTableView(TournamentMixin, AdministratorMixin, VueT
         ])
         table.add_column({'key': 'code', 'title': _("Code")}, [t_inst.institution.code for t_inst in t_institutions])
         table.add_column({'key': 'coach', 'title': _("Coach")}, [{
-            'text': (coach := t_inst.coach_set.first()).name,
-            'link': reverse_tournament('reg-inst-landing', self.tournament, kwargs={'url_key': coach.url_key}),
-        } for t_inst in t_institutions])
+            'text': coach.name,
+            'link': reverse_tournament('reg-inst-landing', self.tournament, kwargs={'url_key': coach.url_key}) if coach.url_key else None,
+        } if coach else '' for coach in coaches])
         table.add_column({'key': 'email', 'title': _("Email")}, [{
-            'text': (email := t_inst.coach_set.first().email),
-            'link': 'mailto:%s' % email,
-        } for t_inst in t_institutions])
+            'text': coach.email,
+            'link': 'mailto:%s' % coach.email,
+        } if coach and coach.email else '' for coach in coaches])
 
         handle_question_columns(
             table,
-            [t_inst.coach_set.first() for t_inst in t_institutions],
+            coaches,
             questions=self.tournament.question_set.filter(for_content_type=ContentType.objects.get_for_model(Coach)).order_by('seq'),
         )
 
@@ -911,8 +914,11 @@ class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
         ("CONTACT", gettext_lazy("recipient contact name")),
         ("TEAMS_REQUESTED", gettext_lazy("teams requested by the recipient institution")),
         ("TEAMS_ALLOCATED", gettext_lazy("teams allocated to the recipient institution")),
+        ("TEAMS_REGISTERED", gettext_lazy("teams registered by the recipient institution")),
         ("ADJUDICATORS_REQUESTED", gettext_lazy("adjudicators requested by the recipient institution")),
         ("ADJUDICATORS_ALLOCATED", gettext_lazy("adjudicators allocated to the recipient institution")),
+        ("ADJUDICATORS_REGISTERED", gettext_lazy("adjudicators registered by the recipient institution")),
+        ("PRIVATE_URL", gettext_lazy("private institution registration link")),
     ]
     template_math_examples = [
         '{% calc "TEAMS_ALLOCATED * 80" %}',
@@ -936,6 +942,13 @@ class EmailInstitutionCoachesView(TournamentTemplateEmailCreateView):
 
     def default_send(self, p, default_send_queryset):
         return False
+
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['private_url'] = self.request.build_absolute_uri(
+            reverse_tournament('reg-inst-landing', self.tournament, kwargs={'url_key': '0'}),
+        )[:-2]
+        return extra
 
     def get_table(self):
         table = super().get_table()
