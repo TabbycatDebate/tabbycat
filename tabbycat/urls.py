@@ -14,6 +14,8 @@ from users.views import BlankSiteStartView
 
 admin.autodiscover()
 
+handler500 = 'utils.views.server_error'
+
 # ==============================================================================
 # Base Patterns
 # ==============================================================================
