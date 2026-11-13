@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block page-alerts %}
-  {% if not pref.team_tab_released and not pref.motion_tab_released and pref.public_draw == 'off' and not pref.public_results and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and pref.participant_ballots == 'off' and pref.participant_feedback == 'off' %}
+  {% if not pref.team_tab_released and not pref.motion_tab_released and not pref.draw_details_released and pref.public_draw == 'off' and not pref.public_results and not pref.public_motions and not pref.public_team_standings and not pref.public_breaking_teams and not pref.public_breaking_adjs and not pref.public_participants and not pref.feedback_progress and pref.participant_ballots == 'off' and pref.participant_feedback == 'off' %}
     <div class="alert alert-info">
       <i data-icon="circle-alert"></i>
       {% trans "There is currently no public information available for this tournament." %}
@@ -93,6 +93,18 @@
           {% trans "Motions Tab" as text %}
           {% tournamenturl 'motions-public-statistics' as url %}
           {% include "components/item-action.html" with icon="file-text" %}
+        {% endif %}
+
+        {% if pref.draw_details_released %}
+          {% for r in tournament.round_set.all %}
+            {% if r.draw_released_for_public %}
+              {% blocktrans trimmed asvar text with round=r.name %}
+                Draw Details for {{ round }}
+              {% endblocktrans %}
+              {% roundurl 'draw-public-details' r as url %}
+              {% include "components/item-action.html" with icon="list" %}
+            {% endif %}
+          {% endfor %}
         {% endif %}
 
         {% if public_side_allocations %}

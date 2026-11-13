@@ -950,6 +950,18 @@ class MotionTabReleased(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class DrawDetailsReleased(BooleanPreference):
+    help_text = _("Enables public display of the details of each released draw, including brackets, "
+                  "team rankings and metrics before the round, side histories and draw flags. "
+                  "This reveals the results of all previous rounds, including silent rounds. "
+                  "Intended for use after the tournament.")
+    verbose_name = _("Release draw details to public")
+    section = tab_release
+    name = 'draw_details_released'
+    default = False
+
+
+@tournament_preferences_registry.register
 class AdjudicatorsTabRelease(BooleanPreference):
     help_text = _("Enables public display of the feedback scores of all adjudicators")
     verbose_name = _("Release adjudicator tab to public")
