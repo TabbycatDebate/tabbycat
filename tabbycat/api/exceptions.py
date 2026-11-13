@@ -5,6 +5,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import exception_handler as drf_exception_handler
 
+from utils.sentry import get_sentry_trace_id
+
 logger = logging.getLogger(__name__)
 
 
@@ -20,5 +22,8 @@ def api_exception_handler(exc, context):
     logger.exception("Unhandled exception in API request")
 
     data = {'detail': 'A server error occurred.'}
+    trace_id = get_sentry_trace_id()
+    if trace_id:
+        data['sentry_trace_id'] = trace_id
 
     return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
