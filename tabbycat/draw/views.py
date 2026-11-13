@@ -451,7 +451,70 @@ class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, VueTableTemplateView):
+class DrawDetailsTableMixin:
+    """Shared between the admin draw pages and the public draw details page.
+    Adds the columns that show how the draw was formed. Views using this mixin
+    must also use `RoundMixin`."""
+
+    def add_draw_details_columns(self, table, draw):
+        """Adds the team rankings, metrics and side histories as of the previous
+        round (or the team seeds in a seeded first round) to `table`, which
+        should be an `AdminDrawTableBuilder`. Returns the standings used, or
+        `None` if no standings were generated."""
+        r = self.round
+        standings = None
+
+        if r.prev:
+            teams = Team.objects.filter(debateteam__debate__round=r)
+            metrics = self.tournament.pref('team_standings_precedence')
+
+            if self.tournament.pref('teams_in_debate') == 2:
+                pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+            else:
+                pullup_metric = None
+
+            # subrank only makes sense if there's a second metric to rank on
+            rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
+            extra_metrics = []
+            if pullup_metric and pullup_metric not in metrics:
+                extra_metrics.append(pullup_metric)
+            if 'npullups' not in metrics and 'npullups' not in extra_metrics:
+                extra_metrics.append('npullups')
+            if (
+                self.tournament.pref('draw_odd_bracket') in ('pullup_lowest_ds_rank', 'pullup_lowest_ds_rank_npulls') and
+                'draw_strength_rank' not in extra_metrics
+            ):
+                extra_metrics.append('draw_strength_rank')
+            generator = TeamStandingsGenerator(metrics, rankings, extra_metrics=tuple(extra_metrics))
+            standings = generator.generate(teams, round=r.prev)
+            if not r.is_break_round:
+                table.add_debate_ranking_columns(draw, standings)
+            else:
+                self._add_break_rank_columns(table, draw, r.break_category)
+            table.add_debate_metric_columns(draw, standings)
+            table.add_debate_side_history_columns(draw, r.prev)
+        elif r.draw_type == Round.DrawType.SEEDED:
+            table.add_debate_seed_columns(draw)
+
+        return standings
+
+    def _add_break_rank_columns(self, table, draw, category):
+        for side in self.tournament.sides:
+            # Translators: e.g. "Affirmative: Break rank"
+            tooltip = _("%(side)s: Break rank") % {
+                'side': get_side_name(self.tournament, side, 'full'),
+            }
+            tooltip = tooltip.capitalize()
+            # Translators: "BR" stands for "Break rank"
+            key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("BR"))
+
+            table.add_column(
+                {'tooltip': tooltip, 'key': key, 'text': key},
+                [d.get_team(side).break_rank_for_category(category) for d in draw],
+            )
+
+
+class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, DrawDetailsTableMixin, VueTableTemplateView):
     detailed = False
 
     view_permission = Permission.VIEW_ADMIN_DRAW
@@ -515,37 +578,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
         # For draw details and draw draft pages
         standings = None
         if r.draw_status == Round.Status.DRAFT or self.detailed:
-            if r.prev:
-                teams = Team.objects.filter(debateteam__debate__round=r)
-                metrics = self.tournament.pref('team_standings_precedence')
-
-                if self.tournament.pref('teams_in_debate') == 2:
-                    pullup_metric = BasePowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
-                else:
-                    pullup_metric = None
-
-                # subrank only makes sense if there's a second metric to rank on
-                rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-                extra_metrics = []
-                if pullup_metric and pullup_metric not in metrics:
-                    extra_metrics.append(pullup_metric)
-                if 'npullups' not in metrics and 'npullups' not in extra_metrics:
-                    extra_metrics.append('npullups')
-                if (
-                    self.tournament.pref('draw_odd_bracket') in ('pullup_lowest_ds_rank', 'pullup_lowest_ds_rank_npulls') and
-                    'draw_strength_rank' not in extra_metrics
-                ):
-                    extra_metrics.append('draw_strength_rank')
-                generator = TeamStandingsGenerator(metrics, rankings, extra_metrics=tuple(extra_metrics))
-                standings = generator.generate(teams, round=r.prev)
-                if not r.is_break_round:
-                    table.add_debate_ranking_columns(draw, standings)
-                else:
-                    self._add_break_rank_columns(table, draw, r.break_category)
-                table.add_debate_metric_columns(draw, standings)
-                table.add_debate_side_history_columns(draw, r.prev)
-            elif r.draw_type == Round.DrawType.SEEDED:
-                table.add_debate_seed_columns(draw)
+            standings = self.add_draw_details_columns(table, draw)
         else:
             table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
@@ -566,21 +599,6 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtilitiesMixin, Vue
             return self.get_bp_position_balance_table()
         else:
             return self.get_standard_table()
-
-    def _add_break_rank_columns(self, table, draw, category):
-        for side in self.tournament.sides:
-            # Translators: e.g. "Affirmative: Break rank"
-            tooltip = _("%(side)s: Break rank") % {
-                'side': get_side_name(self.tournament, side, 'full'),
-            }
-            tooltip = tooltip.capitalize()
-            # Translators: "BR" stands for "Break rank"
-            key = format_html("{}<br>{}", get_side_name(self.tournament, side, 'abbr'), _("BR"))
-
-            table.add_column(
-                {'tooltip': tooltip, 'key': key, 'text': key},
-                [d.get_team(side).break_rank_for_category(category) for d in draw],
-            )
 
     def get_template_names(self):
         if self.round.draw_status == Round.Status.NONE:
@@ -604,6 +622,62 @@ class AdminDrawWithDetailsView(AdminDrawView):
 
     def get_template_names(self):
         return ["draw_subpage.html"]
+
+
+class PublicDrawWithDetailsView(DrawDetailsTableMixin, RoundMixin, PublicTournamentPageMixin, VueTableTemplateView):
+    """Public version of the draw details page, intended for release after the
+    tournament so that participants can see how each draw was formed. Only
+    released draws are shown, and adjudicator and venue conflicts are left
+    out."""
+
+    public_page_preference = 'draw_details_released'
+    page_emoji = '👀'
+    page_title = gettext_lazy("Draw with Details")
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
+
+    def get_template_names(self):
+        if not self.round.draw_released_for_public:
+            return ['draw_not_released.html']
+        return super().get_template_names()
+
+    def get_tables(self):
+        if not self.round.draw_released_for_public:
+            return []
+        return super().get_tables()
+
+    def get_table(self):
+        r = self.round
+
+        if r.is_break_round:
+            sort_key = "room-rank"
+            sort_order = 'asc'
+        else:
+            sort_key = "bracket"
+            sort_order = 'desc'
+
+        # AdminDrawTableBuilder provides the bracket and standings columns. As
+        # this isn't an admin view, team names are still shown as to the public.
+        table = AdminDrawTableBuilder(view=self, sort_key=sort_key, sort_order=sort_order,
+                                      empty_title=_("No debates in this round"))
+
+        draw = r.debate_set_with_prefetches(ordering=('room_rank',), institutions=True, venues=True)
+        populate_history(draw)
+
+        if r.is_break_round:
+            table.add_room_rank_columns(draw)
+        else:
+            table.add_debate_bracket_columns(draw)
+
+        table.add_debate_venue_columns(draw)
+        table.add_debate_scheduled_at_column_if_needed(draw)
+        table.add_debate_team_columns(draw)
+        standings = self.add_draw_details_columns(table, draw)
+        table.add_draw_conflicts_columns(draw, standings=standings)
+
+        if not r.is_break_round:
+            table.highlight_column = 0  # Highlight based on first column (bracket)
+
+        return table
 
 
 class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplateView):

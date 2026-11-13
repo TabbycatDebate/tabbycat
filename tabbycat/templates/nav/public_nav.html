@@ -74,6 +74,26 @@
     </li>
   {% endif %}
 {% endif%}
+{% if pref.draw_details_released %}
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="drawDetailsDrop"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {% trans "Draw Details" %}
+    </a>
+    <div class="dropdown-menu draw-dropdown-menu" aria-labelledby="drawDetailsDrop">
+      {% for r in tournament.round_set.all %}
+        {% if r.draw_released_for_public %}
+          <a class="dropdown-item" href="{% roundurl 'draw-public-details' r %}">
+            {{ r.name }}
+          </a>
+        {% endif %}
+      {% endfor %}
+      <div class="dropdown-item">
+        {% trans "No Draws Available" %}
+      </div>
+    </div>
+  </li>
+{% endif %}
 
 <!-- DRAW RELEASES -->
 {% if pref.public_draw == 'all-released' %}

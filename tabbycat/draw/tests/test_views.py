@@ -3,6 +3,7 @@ import json
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from adjallocation.models import AdjudicatorTeamConflict
 from draw.dbutils import delete_round_draw
 from draw.models import DebateTeam, TeamSideAllocation
 from draw.utils import opposite_side
@@ -201,6 +202,124 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
 
         response = self.get_response('draw-public-current-rounds')
         self.assertResponseTableRowCountsEqual(response, [4, 2, 1])
+
+
+class PublicDrawDetailsViewPermissionTest(ConditionalTableViewTestsMixin, TestCase):
+    """Checks the preference enabling/disabling the public draw details pages"""
+    view_name = 'draw-public-details'
+    view_toggle_preference = 'tab_release__draw_details_released'
+    round_seq = 2
+
+    def expected_row_counts(self):
+        return [self.round.debate_set.count()]
+
+
+class BasePublicDrawDetailsTest(CompletedTournamentTestMixin, TableViewTestsMixin, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.tournament.preferences['tab_release__draw_details_released'] = True
+
+    def get_header_keys(self, response):
+        return [str(header['key']) for header in self.get_table_data(response)[0]['head']]
+
+    def get_column_texts(self, response, key):
+        table = self.get_table_data(response)[0]
+        index = self.get_header_keys(response).index(key)
+        return [str(row[index]['text']) for row in table['data']]
+
+
+class PublicDrawDetailsTest(BasePublicDrawDetailsTest):
+    """Tests the public draw details page in preliminary rounds."""
+
+    round_seq = 2
+
+    def test_unreleased(self):
+        self.round.draw_status = Round.Status.CONFIRMED
+        self.round.save()
+
+        response = self.get_response('draw-public-details')
+        self.assertResponseOK(response)
+        self.assertTemplateUsed(response, 'draw_not_released.html')
+        self.assertNoTables(response)
+
+    def test_teams_released(self):
+        self.round.draw_status = Round.Status.TEAMS_RELEASED
+        self.round.save()
+
+        response = self.get_response('draw-public-details')
+        self.assertResponseTableRowCountsEqual(response, [self.round.debate_set.count()])
+
+    def test_details_columns(self):
+        response = self.get_response('draw-public-details')
+        keys = self.get_header_keys(response)
+
+        self.assertEqual(keys[0], 'bracket')
+        self.assertTrue(any(key.endswith('<br>SH') for key in keys))  # side history
+        self.assertIn('conflags', keys)
+        self.assertNotIn('adjudicators', keys)
+
+    def test_first_round(self):
+        response = self.get_response('draw-public-details', round_seq=1)
+        round1 = self.tournament.round_set.get(seq=1)
+        self.assertResponseTableRowCountsEqual(response, [round1.debate_set.count()])
+
+    def test_adjudicator_conflicts_not_shown(self):
+        debate = self.round.debate_set.filter(debateadjudicator__isnull=False).first()
+        adjudicator = debate.debateadjudicator_set.first().adjudicator
+        team = debate.debateteam_set.first().team
+        AdjudicatorTeamConflict.objects.create(adjudicator=adjudicator, team=team)
+
+        user, _ = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)
+        self.client.force_login(user)
+        admin_response = self.client.get(self.reverse_url('draw-details'))
+        self.assertTrue(any("Conflict:" in text for text in self.get_column_texts(admin_response, 'conflags')))
+
+        self.client.logout()
+        response = self.get_response('draw-public-details')
+        self.assertFalse(any("Conflict:" in text for text in self.get_column_texts(response, 'conflags')))
+
+    def test_institution_clash_hidden_by_code_names(self):
+        self.tournament.preferences['draw_rules__avoid_same_institution'] = True
+        debate = self.round.debate_set.first()
+        team1, team2 = [dt.team for dt in debate.debateteam_set.all()]
+        team2.institution = team1.institution
+        team2.save()
+
+        response = self.get_response('draw-public-details')
+        self.assertTrue(any("same institution" in text for text in self.get_column_texts(response, 'conflags')))
+
+        self.tournament.preferences['ui_options__team_code_names'] = 'everywhere'
+        response = self.get_response('draw-public-details')
+        self.assertFalse(any("same institution" in text for text in self.get_column_texts(response, 'conflags')))
+
+    def test_listed_on_public_index(self):
+        self.tournament.round_set.update(draw_status=Round.Status.CONFIRMED)
+        self.round.draw_status = Round.Status.RELEASED
+        self.round.save()
+
+        response = self.client.get(reverse_tournament('tournament-public-index', self.tournament))
+        self.assertContains(response, "Draw Details for {}".format(self.round.name))
+        # Once in the navigation bar and once in the index
+        self.assertContains(response, self.reverse_url('draw-public-details'), count=2)
+        self.assertNotContains(response, self.reverse_url('draw-public-details', round_seq=1))
+
+
+class PublicDrawDetailsEliminationTest(BasePublicDrawDetailsTest):
+    """Tests the public draw details page in elimination rounds."""
+
+    fixtures = ['before_oqf_ssf.json']
+
+    def test_break_rank_columns(self):
+        oqf = self.tournament.round_set.get(abbreviation='OQF')
+        oqf.draw_status = Round.Status.RELEASED
+        oqf.save()
+
+        response = self.get_response('draw-public-details', round_seq=oqf.seq)
+        self.assertResponseTableRowCountsEqual(response, [oqf.debate_set.count()])
+        keys = self.get_header_keys(response)
+        self.assertEqual(keys[0], 'room-rank')
+        self.assertTrue(any(key.endswith('<br>BR') for key in keys))  # break rank
 
 
 class EditDebateTeamsViewTest(AdminTournamentViewSimpleLoadTestMixin, TestCase):
