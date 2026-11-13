@@ -1097,6 +1097,16 @@ class CheckInParticipantSubmit(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class CheckInParticipantSubmitScheduled(BooleanPreference):
+    help_text = _("Whether participants can only check themselves in during check-in events in the tournament schedule. "
+                  "A check-in event without an end time closes when the next event in the schedule starts.")
+    verbose_name = _("Restrict participant self-checkin to the schedule")
+    section = data_entry
+    name = 'public_checkins_submit_scheduled'
+    default = False
+
+
+@tournament_preferences_registry.register
 class CheckInWindowPeople(FloatPreference):
     help_text = _("The amount of time (in hours) before a speaker or adjudicator's check-in event expires")
     section = data_entry

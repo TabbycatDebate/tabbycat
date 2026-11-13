@@ -4,9 +4,11 @@ import random
 import string
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Max, Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
+
+from tournaments.models import ScheduleEvent
 
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
@@ -40,6 +42,27 @@ def get_unexpired_checkins(tournament, window_preference_type):
         filters &= Q(time__gte=time_window)
 
     return Event.objects.filter(filters).select_related('identifier').order_by('time')
+
+
+def self_checkins_open(tournament):
+    """Returns whether participants can currently check themselves in through
+    their private URLs. If self-checkins are restricted to the schedule, they
+    are open only during check-in events: from an event's start time until its
+    end time or, if it has no end time, until the next event in the schedule
+    starts."""
+    if not tournament.pref('public_checkins_submit'):
+        return False
+    if not tournament.pref('public_checkins_submit_scheduled'):
+        return True
+
+    now = timezone.now()
+    started_events = tournament.scheduleevent_set.filter(start_time__lte=now)
+    started_checkins = started_events.filter(type=ScheduleEvent.Types.CHECK_IN)
+    if started_checkins.filter(end_time__gt=now).exists():
+        return True
+
+    latest_start = started_events.aggregate(latest=Max('start_time'))['latest']
+    return started_checkins.filter(end_time__isnull=True, start_time=latest_start).exists()
 
 
 def create_identifiers(model_to_make, items_to_check):
