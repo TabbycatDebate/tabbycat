@@ -1572,13 +1572,15 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
 
         return self.get(request, *args, **kwargs)
 
-    @extend_schema(summary="Mark objects as available")
+    @extend_schema(summary="Mark objects as available", description="Objects already marked as available are ignored.")
     def put(self, request, *args, **kwargs):
         objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
         for model, participants in groupby(objs, key=type):
             contenttype = ContentType.objects.get_for_model(model)
             RoundAvailability.objects.bulk_create(
-                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants],
+                ignore_conflicts=True,
+            )
         self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
         return self.get(request, *args, **kwargs)
 

@@ -599,3 +599,33 @@ class AvailabilitiesViewSetTests(CompletedTournamentTestMixin, APITestCase):
             {int(url.rsplit('/', 1)[-1]) for url in availabilities},
             {self.objects['teams'].pk, self.objects['venues'].pk},
         )
+
+    def test_marking_available_participants_is_idempotent(self):
+        params = {param: 'true' for param in self.objects}
+        expected = self.get_availabilities(params)
+        url = self.reverse_url('api-availability-list') + '?' + '&'.join('%s=true' % param for param in params)
+
+        for _ in range(2):
+            response = self.client.put(url, expected)
+
+            self.assertEqual(response.status_code, 200)
+            self.assertCountEqual(response.data, expected)
+            self.assertEqual(RoundAvailability.objects.filter(round=self.round).count(), len(expected))
+
+    def test_marking_available_ignores_duplicates_and_adds_new_participants(self):
+        params = {param: 'true' for param in self.objects}
+        existing = self.get_availabilities(params)
+        new_urls = []
+        for obj in self.objects.values():
+            participant = getattr(self.tournament, obj._meta.model_name + '_set').exclude(pk=obj.pk).first()
+            self.assertIsNotNone(participant)
+            new_urls.append('http://testserver' + reverse('api-%s-detail' % obj._meta.model_name, kwargs={
+                'tournament_slug': self.tournament.slug, 'pk': participant.pk,
+            }))
+        url = self.reverse_url('api-availability-list') + '?' + '&'.join('%s=true' % param for param in params)
+
+        response = self.client.put(url, existing + new_urls * 2)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(response.data, existing + new_urls)
+        self.assertEqual(RoundAvailability.objects.filter(round=self.round).count(), len(existing) + len(new_urls))
