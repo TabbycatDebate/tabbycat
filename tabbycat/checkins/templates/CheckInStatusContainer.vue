@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import _ from 'lodash'
 
 import { computed, ref, toRef } from 'vue'
@@ -55,11 +56,14 @@ const speakerGroupingNames = {
 
 const isForVenues = computed(() => Array.isArray(props.venues))
 const filterByType = computed(() => (isForVenues.value ? null : peopleFilterByType.value))
+const hasBreakingData = computed(() =>
+  [...(props.speakers ?? []), ...(props.adjudicators ?? [])].some(person => 'breaking' in person),
+)
 const filterByTypeOptions = computed(() => {
   const f = peopleFilterByType.value
   const options = []
   _.forEach(f, (state, key) => {
-    if (key === 'Breaking' && !props.prelimsCompleted) {
+    if (key === 'Breaking' && (!props.prelimsCompleted || !hasBreakingData.value)) {
       return
     }
     options.push({ key, state })
@@ -500,20 +504,20 @@ const forAdmin = toRef(props, 'forAdmin')
           @click="setListContext('filterByPresence', optionKey, !optionState)"
         >
           <span v-if="optionKey === 'All'">{{ gettext('All') }}</span>
-          <i
+          <svg-icon
             v-if="optionKey === 'Absent'"
-            data-feather="x"
+            name="x"
           />
-          <i
+          <svg-icon
             v-if="optionKey === 'Present'"
-            data-feather="check"
+            name="check"
           />
           {{ stats[optionKey] }}
         </button>
       </div>
 
       <div
-        v-if="!isForVenues"
+        v-if="!isForVenues && (forAdmin || hasBreakingData)"
         class="btn-group mb-md-0 mb-3"
       >
         <button

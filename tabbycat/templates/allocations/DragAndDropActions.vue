@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AutoSaveCounter from './AutoSaveCounter.vue'
@@ -43,7 +44,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
           data-placement="bottom"
           :title="extra.backLabel"
         >
-          <i data-feather="chevron-left" />
+          <svg-icon name="chevron-left" />
         </a>
         <auto-save-counter :last-saved="lastSaved" />
         <slot name="extra-actions" />
@@ -67,7 +68,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
                    shardingEnabled ? 'btn-primary' : 'btn-outline-primary']"
           @click="$emit('show-shard')"
         >
-          <i data-feather="server" />
+          <svg-icon name="server" />
         </button>
       </div>
       <div class="dropdown">
@@ -77,7 +78,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
           data-toggle="dropdown"
           title="Sort the draw"
         >
-          <i data-feather="list" />
+          <svg-icon name="list" />
         </button>
         <div
           class="dropdown-menu"
@@ -124,7 +125,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
         data-toggle="tooltip"
         :title="('Key for the color highlights.')"
       >
-        <i data-feather="help-circle" />
+        <svg-icon name="circle-question-mark" />
       </button>
       <template v-if="!currentHighlightKey">
         <slot name="default-highlights" />
@@ -152,7 +153,7 @@ const shardingEnabled = computed(() => sharding.value.index !== null)
         :class="['btn btn-outline-primary', highlight.active ? 'btn-primary active' : '']"
         @click="store.toggleHighlight(highlightKey)"
       >
-        <span><i :data-feather="highlight.active ? 'eye-off' : 'eye'" /></span>
+        <span><svg-icon :name="highlight.active ? 'eye-off' : 'eye'" /></span>
         <span class="pl-1">{{ gettext(titleCase(highlightKey)) }}</span>
       </button>
     </div>

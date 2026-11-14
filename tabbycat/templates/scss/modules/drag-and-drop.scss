@@ -105,7 +105,7 @@
       display: flex;
       background: #fff;
 
-      .feather {
+      .svg-icon {
         color: #000; // for the icon
       }
     }
@@ -123,7 +123,7 @@
     cursor: move;
     background: $purple;
 
-    .feather {
+    .svg-icon {
       color: #fff; // for the icon
     }
   }

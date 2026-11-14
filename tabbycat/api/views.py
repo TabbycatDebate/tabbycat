@@ -869,7 +869,10 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     def get_max_round(self):
         if self.params.get('round'):
             return self.params.get('round')
-        return Round.objects.filter(tournament=self.tournament, stage=Round.Stage.PRELIMINARY, completed=True).order_by('seq').last()
+        round = Round.objects.filter(tournament=self.tournament, stage=Round.Stage.PRELIMINARY, completed=True).order_by('seq').last()
+        if round is None:
+            raise ValidationError({'round': 'No completed preliminary rounds. Specify a round explicitly.'})
+        return round
 
     @property
     def generator_kwargs(self):
@@ -878,7 +881,7 @@ class BaseStandingsView(TournamentAPIMixin, TournamentPublicAPIMixin, GenericAPI
     @extend_schema(tags=['standings'], parameters=[
         tournament_parameter,
         OpenApiParameter('category', description='Only include participants in a category (ID)', required=False, type=int),
-        OpenApiParameter('round', description='Sequence of last round to take into account', required=False, type=int),
+        OpenApiParameter('round', description='Sequence of last round to take into account. Defaults to the last completed preliminary round; required if none exist.', required=False, type=int),
     ])
     def get(self, request, **kwargs):
         """Get current standings"""
@@ -1529,7 +1532,7 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
 
     def get_field(self):
         field = ParticipantAvailabilityForeignKeyField(many=True, view_name='api-availability-list')  # Dummy view name
-        field.root._context = {'request': self.request}
+        field.root._context = {'request': self.request, 'tournament': self.tournament}
         return field
 
     def get_filters(self):
@@ -1573,13 +1576,15 @@ class AvailabilitiesViewSet(RoundAPIMixin, AdministratorAPIMixin, APIView):
 
         return self.get(request, *args, **kwargs)
 
-    @extend_schema(summary="Mark objects as available")
+    @extend_schema(summary="Mark objects as available", description="Objects already marked as available are ignored.")
     def put(self, request, *args, **kwargs):
         objs = sorted(self.get_field().to_internal_value(request.data), key=lambda o: type(o).__name__)
         for model, participants in groupby(objs, key=type):
             contenttype = ContentType.objects.get_for_model(model)
             RoundAvailability.objects.bulk_create(
-                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants])
+                [RoundAvailability(content_type=contenttype, round=self.round, object_id=p.id) for p in participants],
+                ignore_conflicts=True,
+            )
         self.log_action(type=self.action_log_type_updated, agent=ActionLogEntry.Agent.API)
         return self.get(request, *args, **kwargs)
 

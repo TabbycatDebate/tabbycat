@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from '../components/SvgIcon.vue'
 import _ from 'lodash'
 import { computed, ref } from 'vue'
 import AutoSaveCounter from '../../templates/allocations/AutoSaveCounter.vue'
@@ -105,9 +106,9 @@ const massSelect = (state, type) => {
             :href="item.url"
             class="btn btn-outline-primary"
           >
-            <i
+            <svg-icon
               v-if="item.back"
-              data-feather="chevron-left"
+              name="chevron-left"
             />{{ item.title }}
           </a>
         </div>
@@ -128,14 +129,14 @@ const massSelect = (state, type) => {
             type="button"
             @click="massSelect(true, bc.id)"
           >
-            <i data-feather="check-circle" /> All
+            <svg-icon name="circle-check-big" /> All
           </button>
           <button
             class="btn btn-primary"
             type="button"
             @click="massSelect(false, bc.id)"
           >
-            <i data-feather="x-circle" /> None
+            <svg-icon name="circle-x" /> None
           </button>
         </div>
 
@@ -155,7 +156,7 @@ const massSelect = (state, type) => {
                 name="csrfmiddlewaretoken"
                 :value="csrftoken"
               >
-              <i data-feather="star" /> {{ gettext("Set Breaking") }}
+              <svg-icon name="star" /> {{ gettext("Set Breaking") }}
             </button>
           </form>
           <div class="btn-group">
@@ -168,7 +169,7 @@ const massSelect = (state, type) => {
                                      what they were in the previous round.`)"
               @click="copyFromPrevious"
             >
-              <i data-feather="repeat" /> {{ gettext("Match") }} {{ roundInfo.prev }}
+              <svg-icon name="repeat" /> {{ gettext("Match") }} {{ roundInfo.prev }}
             </button>
             <button
               class="btn btn-primary"
@@ -177,7 +178,7 @@ const massSelect = (state, type) => {
               :title="gettext('Set all availabilities to exactly match check-ins.')"
               @click="setFromCheckIns(true, true)"
             >
-              <i data-feather="repeat" /> {{ gettext("Match Check-Ins") }}
+              <svg-icon name="repeat" /> {{ gettext("Match Check-Ins") }}
             </button>
             <button
               class="btn btn-primary"
@@ -187,7 +188,7 @@ const massSelect = (state, type) => {
                                      (leave people not checked in unchanged)`)"
               @click="setFromCheckIns(true, false)"
             >
-              <i data-feather="corner-up-right" /> {{ gettext(" Set Checked-In as Available") }}
+              <svg-icon name="corner-up-right" /> {{ gettext(" Set Checked-In as Available") }}
             </button>
             <button
               class="btn btn-primary"
@@ -197,7 +198,7 @@ const massSelect = (state, type) => {
                                      (leave people who are checked in unchanged)`)"
               @click="setFromCheckIns(false, true)"
             >
-              <i data-feather="corner-down-left" /> {{ gettext(" Set Not Checked-In as Unavailable") }}
+              <svg-icon name="corner-down-left" /> {{ gettext(" Set Not Checked-In as Unavailable") }}
             </button>
           </div>
         </template>

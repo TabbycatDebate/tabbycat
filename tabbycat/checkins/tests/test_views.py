@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 
 from utils.tests import AdminTournamentViewSimpleLoadTestMixin, AssistantTournamentViewSimpleLoadTestMixin, ConditionalTournamentViewSimpleLoadTestMixin
@@ -68,6 +70,22 @@ class AssistantCheckInVenuesPrintablesView(AssistantTournamentViewSimpleLoadTest
 class PublicCheckInStatusViewTest(ConditionalTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'checkins-public-status'
     view_toggle_preference = 'public_features__public_checkins'
+
+    def test_breaking_fields_follow_public_break_preferences(self):
+        self.tournament.preferences[self.view_toggle_preference] = True
+        for teams_public, adjs_public in [(False, False), (True, False), (False, True), (True, True)]:
+            with self.subTest(teams_public=teams_public, adjs_public=adjs_public):
+                self.tournament.preferences['public_features__public_breaking_teams'] = teams_public
+                self.tournament.preferences['public_features__public_breaking_adjs'] = adjs_public
+                response = self.get_response()
+                self.assertResponseOK(response)
+                for context_key, is_public in [('speakers', teams_public), ('adjudicators', adjs_public)]:
+                    people = json.loads(response.context[context_key])
+                    self.assertTrue(people)
+                    for person in people:
+                        self.assertEqual('breaking' in person, is_public)
+                    if is_public:
+                        self.assertTrue(any(person['breaking'] for person in people))
 
 # These require the ability to test POST views
 # class AdminCheckInSpeakersGenerateView(AdminTournamentViewSimpleLoadTestMixin, TestCase):

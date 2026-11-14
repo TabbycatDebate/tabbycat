@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DjangoFormsetManagement from '../../templates/components/DjangoFormsetManagement.vue'
-import FeatherIcon from '../../templates/components/FeatherIcon.vue'
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 import ScheduleEditorEventRow from './ScheduleEditorEventRow.vue'
 import { useScheduleEditor } from './useScheduleEditor.js'
@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
         <div class="mb-2 mb-md-0">
           <strong>{{ eventCountLabel(visibleEvents.length) }}</strong>
           <span class="text-muted ml-2">
-            <feather-icon
+            <svg-icon
               class="mr-1"
               name="clock"
             />
@@ -161,7 +161,7 @@ onBeforeUnmount(() => {
             :disabled="!canAdd"
             @click="handleAddDay"
           >
-            <feather-icon
+            <svg-icon
               class="mr-1"
               name="calendar"
             />{{ gettext('Add day') }}
@@ -189,7 +189,7 @@ onBeforeUnmount(() => {
           type="button"
           @click="handleAddEvent(day.date)"
         >
-          <feather-icon
+          <svg-icon
             class="mr-1"
             name="plus"
           />{{ gettext('Add event') }}
@@ -226,7 +226,7 @@ onBeforeUnmount(() => {
       class="card text-center"
     >
       <div class="card-body py-5">
-        <feather-icon
+        <svg-icon
           class="schedule-empty-icon"
           name="calendar"
         />
@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
   flex: 0 0 96px;
 }
 
-.schedule-empty-icon :deep(.feather) {
+.schedule-empty-icon :deep(.svg-icon) {
   width: 34px;
   height: 34px;
   margin: 0;
@@ -316,7 +316,7 @@ onBeforeUnmount(() => {
     font-size: 0;
   }
 
-  .schedule-day-header .btn :deep(.feather) {
+  .schedule-day-header .btn :deep(.svg-icon) {
     margin: 0;
   }
 }

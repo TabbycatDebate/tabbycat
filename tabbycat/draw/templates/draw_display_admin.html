@@ -14,7 +14,7 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> {% trans "View Draw" %}
+    <i data-icon="chevron-left"></i> {% trans "View Draw" %}
   </a>
 
   <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
@@ -31,7 +31,7 @@
 
 {% block page-subnav-actions %}
   <a href="{% roundurl 'results-round-list' %}" class="btn btn-outline-success">
-    {% trans "Enter Results" %}<i data-feather="chevron-right"></i>
+    {% trans "Enter Results" %}<i data-icon="chevron-right"></i>
   </a>
 {% endblock %}
 

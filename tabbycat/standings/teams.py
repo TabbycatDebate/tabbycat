@@ -78,6 +78,7 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations
     of TeamScore instances."""
 
+    query_group = 'debateteam__teamscore'
     function = None  # must be set by subclasses
     field = None  # must be set by subclasses
     output_field = None
@@ -201,7 +202,7 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("AISS")
 
     function = Avg
-    combinable = False
+    query_group = 'debateteam__speakerscore'
     round_value = True
 
     def get_field(self):
@@ -343,6 +344,7 @@ class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("number of pullups")
     abbr = _("PU")
 
+    query_group = 'debateteam'
     function = Count
     where_value = ['pullup']
     exclude_unconfirmed = False

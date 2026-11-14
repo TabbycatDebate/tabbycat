@@ -13,12 +13,14 @@ thus the object itself cannot be passed.
 from dataclasses import dataclass
 from typing import Any, Dict, List, Set, Tuple, TYPE_CHECKING
 
+from django.db.models import Count
 from django.utils import formats
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from options.utils import use_team_code_names
+from participants.models import Adjudicator, Team
 from participants.prefetch import populate_win_counts
 from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
@@ -351,7 +353,7 @@ class SlotsAllocatedEmailGenerator(NotificationContextGenerator):
 class InstitutionCustomEmailGenerator(NotificationContextGenerator):
     """Variables for ad-hoc emails to an institution's contact (coach).
 
-    Exposes the institution name, contact name and the requested/allocated
+    Exposes the institution name, contact name and the requested/allocated/registered
     slot counts so organisers can write custom messages (e.g. invoices using
     arithmetic such as ``{% calc "TEAMS_ALLOCATED * 80" %}``).
     """
@@ -363,14 +365,23 @@ class InstitutionCustomEmailGenerator(NotificationContextGenerator):
         TOURN: str
         TEAMS_REQUESTED: int
         TEAMS_ALLOCATED: int
+        TEAMS_REGISTERED: int
         ADJUDICATORS_REQUESTED: int
         ADJUDICATORS_ALLOCATED: int
+        ADJUDICATORS_REGISTERED: int
+        PRIVATE_URL: str
 
     context_class = InstitutionCustomContext
 
     @classmethod
-    def generate(cls, to: 'QuerySet[Person]', tournament: 'Tournament') -> List[Tuple[EmailContextData, 'Person']]:
+    def generate(cls, to: 'QuerySet[Person]', tournament: 'Tournament', private_url: str = '') -> List[Tuple[EmailContextData, 'Person']]:
         tourn_str = str(tournament)
+        teams_registered = dict(Team.objects.all_with_unconfirmed.filter(
+            tournament=tournament,
+        ).values('institution_id').annotate(count=Count('pk')).values_list('institution_id', 'count'))
+        adjudicators_registered = dict(Adjudicator.objects.all_with_unconfirmed.filter(
+            tournament=tournament,
+        ).values('institution_id').annotate(count=Count('pk')).values_list('institution_id', 'count'))
         emails = []
         for person in to:
             t_inst = person.coach.tournament_institution
@@ -381,8 +392,11 @@ class InstitutionCustomEmailGenerator(NotificationContextGenerator):
                     TOURN=tourn_str,
                     TEAMS_REQUESTED=t_inst.teams_requested,
                     TEAMS_ALLOCATED=t_inst.teams_allocated,
+                    TEAMS_REGISTERED=teams_registered.get(t_inst.institution_id, 0),
                     ADJUDICATORS_REQUESTED=t_inst.adjudicators_requested,
                     ADJUDICATORS_ALLOCATED=t_inst.adjudicators_allocated,
+                    ADJUDICATORS_REGISTERED=adjudicators_registered.get(t_inst.institution_id, 0),
+                    PRIVATE_URL=_create_url(private_url + person.url_key + '/') if private_url else '',
                 ),
                 person,
             ))
