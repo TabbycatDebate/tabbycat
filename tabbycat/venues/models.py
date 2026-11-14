@@ -3,6 +3,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from adjallocation.models import DebateAdjudicator
+from draw.models import DebateTeam
+from participants.models import Adjudicator, Institution, Team
 from utils.fields import LabelByNameForeignKey
 
 
@@ -104,11 +107,25 @@ class VenueConstraintManager(models.Manager):
     def filter_for_debates(self, debates):
         """Convenience function. Filters for all constraints relevant to the
         given iterable of debates."""
-        return VenueConstraint.objects.filter(
-            models.Q(team__debateteam__debate__in=debates) |
-            models.Q(institution__team__debateteam__debate__in=debates) |
-            models.Q(adjudicator__debateadjudicator__debate__in=debates),
-        ).distinct()
+        content_types = ContentType.objects.get_for_models(Team, Institution, Adjudicator)
+        debate_teams = DebateTeam.objects.filter(debate__in=debates)
+        debate_adjudicators = DebateAdjudicator.objects.filter(debate__in=debates)
+
+        return self.filter(
+            models.Q(
+                subject_content_type_id=content_types[Team].pk,
+                subject_id__in=debate_teams.order_by().values('team_id'),
+            ) |
+            models.Q(
+                subject_content_type_id=content_types[Institution].pk,
+                # Institution constraints apply through teams only, not adjudicators.
+                subject_id__in=debate_teams.order_by().values('team__institution_id'),
+            ) |
+            models.Q(
+                subject_content_type_id=content_types[Adjudicator].pk,
+                subject_id__in=debate_adjudicators.order_by().values('adjudicator_id'),
+            ),
+        )
 
 
 class VenueConstraint(models.Model):
