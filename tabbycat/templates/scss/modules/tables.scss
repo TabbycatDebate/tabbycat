@@ -228,7 +228,12 @@ thead,
 }
 
 .table-check {
-  padding-left: 1.25rem;
+  display: flex;
+  align-items: center;
+
+  .form-check-input {
+    margin: 0;
+  }
 }
 
 //------------------------------------------------------------------------------
