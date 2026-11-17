@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import FeatherIcon from '../../templates/components/FeatherIcon.vue'
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import FormFieldErrors from '../../templates/components/FormFieldErrors.vue'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 import { useDraggable } from '../../templates/composables/useDraggable.js'
@@ -140,7 +140,7 @@ const onKeyboardReorder = event => {
       @dragend="dragEnd"
       @keydown="onKeyboardReorder"
     >
-      <feather-icon name="menu" />
+      <svg-icon name="menu" />
     </button>
     <span
       v-else
@@ -283,7 +283,7 @@ const onKeyboardReorder = event => {
           :aria-label="gettext('Move to another day')"
           @click="openDatePicker"
         >
-          <feather-icon name="calendar" />
+          <svg-icon name="calendar" />
         </button>
         <input
           ref="dateInput"
@@ -301,7 +301,7 @@ const onKeyboardReorder = event => {
         :aria-label="gettext('Duplicate event')"
         @click="duplicateEvent(event.formIndex)"
       >
-        <feather-icon name="copy" />
+        <svg-icon name="copy" />
       </button>
       <button
         class="btn btn-link text-danger p-1"
@@ -310,7 +310,7 @@ const onKeyboardReorder = event => {
         :aria-label="gettext('Delete event')"
         @click="deleteEvent(event.formIndex)"
       >
-        <feather-icon name="trash-2" />
+        <svg-icon name="trash" />
       </button>
     </div>
   </div>
@@ -398,7 +398,7 @@ const onKeyboardReorder = event => {
   outline: 0;
 }
 
-.schedule-drag-handle :deep(.feather) {
+.schedule-drag-handle :deep(.svg-icon) {
   margin: 0;
 }
 
@@ -434,7 +434,7 @@ const onKeyboardReorder = event => {
   padding-right: 0.5rem;
 }
 
-.schedule-row-actions :deep(.feather) {
+.schedule-row-actions :deep(.svg-icon) {
   width: 17px;
   height: 17px;
 }

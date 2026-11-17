@@ -24,6 +24,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     """Base class for annotators for metrics based on conditional aggregations
     of SpeakerScore instances."""
 
+    query_group = 'speakerscore'
     function = None
     replies = False
     field = 'speakerscore__score'
@@ -58,8 +59,11 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
 class TeamMetricQuerySetMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
-    combinable = False
+    query_group = 'team__debateteam__teamscore'
     round_value = False
+
+    def get_field(self):
+        return self.field
 
     def get_annotation(self, round):
         """Returns a QuerySet annotated with the metric."""
@@ -71,7 +75,7 @@ class TeamMetricQuerySetMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
         if self.where_value is not None:
             annotation_filter &= Q(**{self.field: self.where_value})
 
-        return self.function(self.field, filter=annotation_filter)
+        return self.function(self.get_field(), filter=annotation_filter)
 
 
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -286,9 +290,7 @@ class BaseCriterionMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name_format = None  # must be set by subclasses
     abbr_format = None  # must be set by subclasses
 
-    # The criterion join gives one row per criterion per speech, which would
-    # inflate other aggregations if combined into the shared query.
-    combinable = False
+    query_group = 'speakerscore__speakercriterionscore'
 
     # Set by views dedicated to a single criterion, where the criterion's name
     # is already in the page title and would just repeat in every column.

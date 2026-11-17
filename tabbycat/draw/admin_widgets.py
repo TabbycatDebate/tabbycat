@@ -6,8 +6,9 @@ from draw.models import DebateTeam
 
 
 class PrefetchedForeignKeyRawIdWidget(ForeignKeyRawIdWidget):
-    def __init__(self, rel, admin_site, attrs=None, using=None, queryset=None):
+    def __init__(self, rel, admin_site, attrs=None, using=None, queryset=None, objects=None):
         self.queryset = queryset
+        self.objects = objects
         super().__init__(rel, admin_site, attrs=attrs, using=using)
 
     def get_item_label(self, obj):
@@ -16,7 +17,9 @@ class PrefetchedForeignKeyRawIdWidget(ForeignKeyRawIdWidget):
     def label_and_url_for_value(self, value):
         key = self.rel.get_related_field().name
         try:
-            obj = self.queryset.get(**{key: value})
+            obj = None if self.objects is None else self.objects.get(self.rel.get_related_field().to_python(value))
+            if obj is None:
+                obj = self.queryset.get(**{key: value})
         except (ValueError, self.rel.model.DoesNotExist, ValidationError):
             return "", ""
 
@@ -52,6 +55,6 @@ class BallotSubmissionScoreInlineDebateTeamRawIdMixin:
                 db_field.remote_field,
                 self.admin_site,
                 using=kwargs.get('using'),
-                queryset=DebateTeam.objects.select_related('team', 'debate__round'),
+                queryset=kwargs.get('queryset', DebateTeam.objects.all()).select_related('team', 'debate__round'),
             )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)

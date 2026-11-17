@@ -56,8 +56,11 @@ class TournamentRelatedFieldMixin:
 class TournamentHyperlinkedRelatedField(TournamentRelatedFieldMixin, HyperlinkedRelatedField):
     def get_url_kwargs(self, obj):
         lookup_value = getattr(obj, self.lookup_field)
+        tournament = self.get_tournament(obj)
+        if tournament is None:
+            tournament = self.context['tournament']
         kwargs = {
-            'tournament_slug': self.get_tournament(obj).slug,
+            'tournament_slug': tournament.slug,
             self.lookup_url_kwarg: lookup_value,
         }
         return kwargs
@@ -150,7 +153,7 @@ class AnonymisingParticipantNameField(CharField):
 class AnonymisingHyperlinkedTournamentRelatedField(TournamentHyperlinkedRelatedField):
     default_tournament_field = 'team__tournament'
 
-    def __init__(self, view_name=None, queryset=Speaker.objects.all(), **kwargs):
+    def __init__(self, view_name=None, queryset=Speaker.objects, **kwargs):
         self.null_when = kwargs.pop('anonymous_source')
         super().__init__(view_name=view_name, queryset=queryset, **kwargs)
 
@@ -209,7 +212,9 @@ class ParticipantAvailabilityForeignKeyField(TournamentHyperlinkedRelatedField):
             'api-adjudicator-detail': Adjudicator,
             'api-team-detail': Team,
             'api-venue-detail': Venue,
-        }[view_name].objects.get(tournament__slug=view_kwargs['tournament_slug'], pk=view_kwargs['pk'])
+        }[view_name].objects.get(
+            tournament=self.context['tournament'],
+            tournament__slug=view_kwargs['tournament_slug'], pk=view_kwargs['pk'])
 
     def to_internal_value(self, data):
         try:
@@ -422,10 +427,10 @@ class SideChoiceField(IntegerField):
         if t.pref('side_names') != '1-2':
             if value == -1:
                 return 'bye'
-            if t.pref('teams_in_debate') == 2:
-                return ['aff', 'neg'][value]
-            if t.pref('teams_in_debate') == 4:
-                return ['og', 'oo', 'cg', 'co'][value]
+            sides = {2: ['aff', 'neg'], 4: ['og', 'oo', 'cg', 'co']}.get(t.pref('teams_in_debate'), [])
+            if 0 <= value < len(sides):
+                return sides[value]
+            # Preserve stored sides that no longer match the tournament's format.
         return int(value)
 
 

@@ -1,13 +1,56 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from api.fields import AnonymisingParticipantNameField
+from api.fields import AnonymisingParticipantNameField, SideChoiceField, TournamentHyperlinkedRelatedField
 from django.contrib.auth.models import AnonymousUser
 from django.test import SimpleTestCase
 from rest_framework.serializers import Serializer
 
 from participants.models import Adjudicator, Speaker
+from tournaments.models import Tournament
 from users.permissions import Permission
+
+
+class TournamentHyperlinkedRelatedFieldTests(SimpleTestCase):
+
+    def test_adjudicator_url_tournament(self):
+        class AdjudicatorLinkSerializer(Serializer):
+            adjudicator = TournamentHyperlinkedRelatedField(view_name='api-adjudicator-detail', read_only=True)
+
+        tournament = Tournament(slug='own-tournament')
+        context_tournament = Tournament(slug='context-tournament')
+        for object_tournament, context, expected_slug in (
+            (None, {'tournament': context_tournament}, 'context-tournament'),
+            (tournament, {'tournament': context_tournament}, 'own-tournament'),
+            (tournament, {}, 'own-tournament'),
+        ):
+            with self.subTest(object_tournament=object_tournament, context=context):
+                adjudicator = Adjudicator(pk=42, tournament=object_tournament)
+                data = AdjudicatorLinkSerializer(
+                    SimpleNamespace(adjudicator=adjudicator), context={'request': None, **context},
+                ).data
+                self.assertEqual(data['adjudicator'], f'/api/v1/tournaments/{expected_slug}/adjudicators/42')
+
+
+class SideSerializer(Serializer):
+    side = SideChoiceField()
+
+
+class SideChoiceFieldTests(SimpleTestCase):
+
+    def test_representation(self):
+        cases = [
+            (2, 'aff-neg', [(-1, 'bye'), (0, 'aff'), (1, 'neg'), (2, 2), (3, 3), (-2, -2)]),
+            (4, 'bp', [(-1, 'bye'), (0, 'og'), (1, 'oo'), (2, 'cg'), (3, 'co'), (4, 4), (-2, -2)]),
+            (2, '1-2', [(-1, -1), (0, 0), (1, 1), (2, 2)]),
+            (3, 'aff-neg', [(-1, 'bye'), (0, 0), (2, 2)]),
+        ]
+        for team_count, side_names, values in cases:
+            tournament = SimpleNamespace(pref={'teams_in_debate': team_count, 'side_names': side_names}.__getitem__)
+            for value, expected in values:
+                with self.subTest(team_count=team_count, side_names=side_names, value=value):
+                    data = SideSerializer({'side': value}, context={'tournament': tournament}).data
+                    self.assertEqual(data['side'], expected)
 
 
 class ParticipantNameSerializer(Serializer):

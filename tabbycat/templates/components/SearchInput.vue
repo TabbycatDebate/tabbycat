@@ -1,4 +1,5 @@
 <script setup>
+import SvgIcon from './SvgIcon.vue'
 import { computed, ref } from 'vue'
 import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 
@@ -40,7 +41,7 @@ const clear = () => {
         <label
           class="input-group-text justify-content-center search-input-icon"
           :for="id"
-        ><i data-feather="search" /></label>
+        ><svg-icon name="search" /></label>
       </div>
       <input
         :id="id"
@@ -87,7 +88,7 @@ input::-webkit-search-cancel-button {
   cursor: text;
 }
 
-.search-input-icon :deep(.feather) {
+.search-input-icon :deep(.svg-icon) {
   display: block;
   margin: 0;
 }

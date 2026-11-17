@@ -3,7 +3,9 @@ import logging
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.db import connection
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from adjallocation.models import DebateAdjudicator
@@ -128,6 +130,48 @@ class TestCriterionStandings(TestCase):
         self.assertEqual(
             choices[AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)],
             "Average for style")
+
+    def test_speaker_metric_query_groups(self):
+        style = AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)
+        style_total = TotalCriterionScoreMetricAnnotator.build_key(self.style.seq)
+        content_total = TotalCriterionScoreMetricAnnotator.build_key(self.content.seq)
+        groups = ((style, style_total, content_total), ('count', 'total'), ('team_points', 'team_wins', 'num_adjs'))
+        expected = {style: [31, 36], style_total: [62, 72], content_total: [78, 42],
+                    'count': [2, 2], 'total': [140, 114], 'team_points': [2, 0],
+                    'team_wins': [2, 0], 'num_adjs': [6, 0]}
+        for metrics in ((style,), (style, 'team_wins', 'total')):
+            with self.subTest(metrics=metrics):
+                extras = tuple(key for key in expected if key not in metrics)
+                with CaptureQueriesContext(connection) as queries:
+                    standings = self.get_standings(metrics, extras)
+                for key, values in expected.items():
+                    for speaker, value in zip((self.speaker1, self.speaker2), values):
+                        self.assertEqual(standings.get_standing(speaker).metrics[key], value)
+                self.assertEqual(standings.get_standing(self.speaker2).rankings['rank'], (1, False))
+                self.assertEqual(standings.get_standing(self.speaker1).rankings['rank'], (2, False))
+
+                metric_queries = [q['sql'] for q in queries if any(f' AS "{group[0]}"' in q['sql'] for group in groups)]
+                self.assertEqual(len(metric_queries), len(groups))
+                for group in groups:
+                    query, = [sql for sql in metric_queries if f' AS "{group[0]}"' in sql]
+                    for key in group:
+                        self.assertIn(f' AS "{key}"', query)
+                    self.assertNotIn('DISTINCT', query)
+
+    def test_rank_filter_from_another_query_group(self):
+        score = SpeakerScore.objects.filter(speaker=self.speaker1).first()
+        score.pk = None
+        score.position = 2
+        score.score = 50
+        score.save()
+        SpeakerCriterionScore.objects.create(speaker_score=score, criterion=self.style, score=20)
+        style = AverageCriterionScoreMetricAnnotator.build_key(self.style.seq)
+        generator = SpeakerStandingsGenerator((style,), ('rank',), ('count',),
+            tournament=self.tournament, rank_filter=('count', 3))
+        standings = generator.generate(Speaker.objects.filter(team__tournament=self.tournament),
+            round=self.tournament.round_set.get(seq=2))
+        self.assertEqual(standings.get_standing(self.speaker1).rankings['rank'], (1, False))
+        self.assertNotIn('rank', standings.get_standing(self.speaker2).rankings)
 
     def test_metric_choices_without_tournament_omit_criteria(self):
         choices = dict(SpeakerStandingsGenerator.get_metric_choices())

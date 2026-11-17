@@ -33,12 +33,12 @@
 {% block page-subnav-sections %}
   {% if private_url %}
     <a class="btn btn-outline-primary" href="{% tournamenturl 'privateurls-person-index' url_key %}">
-      <i data-feather="chevron-left"></i>
+      <i data-icon="chevron-left"></i>
       {% trans "Return to landing page" %}
     </a>
   {% else %}
     <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
-      <i data-feather="chevron-left"></i>
+      <i data-icon="chevron-left"></i>
       {% blocktrans trimmed with round=debate.round.name %}
         Return to Results for {{ round }}
       {% endblocktrans %}

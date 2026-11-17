@@ -16,7 +16,7 @@
       of this tournament's configuration</a>. In most
       tournaments, the first metric should be total or average.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+    {% include "components/alert.html" with type="warning" icon="circle-alert" %}
   {% endif %}
 
   {% if pref.speaker_standings_precedence.0 == 'average' %}
@@ -54,7 +54,7 @@
       <a href="{{ standings_config_url }}" class="alert-link">Standings section
       of this tournament's configuration</a>.
     {% endblocktrans %}
-    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+    {% include "components/alert.html" with type="warning" icon="circle-alert" %}
   {% endif %}
 
 {% endblock %}

@@ -2,7 +2,8 @@
 import { createApp, defineAsyncComponent } from 'vue'
 import { createPinia } from 'pinia'
 import * as Sentry from '@sentry/vue';
-import feather from 'feather-icons'
+import { createIcons } from 'lucide'
+import { icons } from '../icons.js'
 import 'bootstrap' // Import bootstrap javascript plugins
 const $ = window.jQuery
 
@@ -100,8 +101,8 @@ $(document).ready(() => {
     html: true,
   })
 
-  // Feather shim for icons
-  feather.replace()
+  // Render icons in server-generated templates as SVG.
+  createIcons({ icons, nameAttr: 'data-icon', attrs: { class: 'svg-icon' } })
 
   // Remove the pre-expanded sidebar states for mobile (they overlap)
   if ($(window).width() < 768) {

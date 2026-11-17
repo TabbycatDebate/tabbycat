@@ -36,7 +36,7 @@ confirm_html = """
     <input type="hidden" name="csrfmiddlewaretoken" value="{}"/>
     <button type="submit" class="btn btn-sm btn-success">
         <div class="d-flex justify-content-center align-items-center">
-            <i data-feather="check-circle" style="height: 16px;width: 16px;margin-bottom: -2.5px;"></i>
+            <i data-icon="circle-check-big" style="height: 16px;width: 16px;margin-bottom: -2.5px;"></i>
         </div>
     </button>
 </form>"""
