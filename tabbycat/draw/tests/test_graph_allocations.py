@@ -9,6 +9,9 @@ DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side=DebateSide.AFF), TestTeam(2, 'B',
 
 class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
 
+    fold_deviations = (16, 9, 4, 1, 0, 1, 4, 9)
+    adjacent_deviations = (2, 1, 0, -1, 0, 1, 2, 3)
+
     def test_pairings_slide_deviation_top(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
 
@@ -71,8 +74,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             D - G: 4
             D - H: 9"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_fold([teams[3].subrank, team.subrank], 8), abs(4-i) ** 2)
-        return [abs(4-i) ** 2 for i in range(8)]
+                self.assertEqual(GraphCostMixin._pairings_fold([teams[3].subrank, team.subrank], 8), self.fold_deviations[i])
 
     def test_pairings_random_deviation_zero(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
@@ -109,14 +111,12 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
             D - G: 2
             D - H: 3"""
             with self.subTest(i=i):
-                self.assertEqual(GraphCostMixin._pairings_adjacent([teams[3].subrank, team.subrank], 8), abs(i - 3) - 1)
-        return [abs(i - 3) - 1 for i in range(8)]
+                self.assertEqual(GraphCostMixin._pairings_adjacent([teams[3].subrank, team.subrank], 8), self.adjacent_deviations[i])
 
     def test_pairings_fold_adj_deviation(self):
         teams = [TestTeam(i+1, chr(ord('A') + i), subrank=i+1) for i in range(8)]
-        methods = [self.test_pairings_fold_deviation, self.test_pairings_adjacent_deviation]
-        for i, method in enumerate(methods):
-            for j, (team, expected) in enumerate(zip(teams, method())):
+        for i, deviations in enumerate((self.fold_deviations, self.adjacent_deviations)):
+            for team, expected in zip(teams, deviations):
                 self.assertEqual(GraphCostMixin._pairings_fold_top_adjacent_rest([teams[3].subrank, team.subrank], 8, bracket=i), expected)
 
     def test_add_pullup_penalty(self):

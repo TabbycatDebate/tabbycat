@@ -63,6 +63,23 @@ If you configure these config vars, Tabbycat will use them to send emails.
 - ``EMAIL_PORT`` (default ``587``): Port for server
 - ``EMAIL_USE_TLS`` (default ``true``): Whether to use `Transport Layer Security <https://en.wikipedia.org/wiki/Transport_Layer_Security>`_ (``true`` or ``false``)
 
+For local installations, configure Django's ``MAILERS`` setting in
+``settings/local.py`` instead of the deprecated ``EMAIL_HOST`` and related
+Django settings. Deployment environment variables listed above still work::
+
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'OPTIONS': {
+                'host': 'smtp.example.com',
+                'username': 'your-username',
+                'password': 'your-password',
+                'port': 587,
+                'use_tls': True,
+            },
+        },
+    }
+
 Events
 ======
 

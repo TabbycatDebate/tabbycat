@@ -26,16 +26,14 @@ def send_tracked_emails(messages: List[mail.EmailMultiAlternatives], records: Li
     if not messages:
         return
 
-    connection = mail.get_connection(fail_silently=False)
     failed_events = []
 
-    connection.open()
-    for message, record in zip(messages, records):
-        try:
-            message.extra_headers['X-RECORDID'] = record.id
-            connection.send_messages([message])
-        except Exception as e:
-            failed_events.append(EmailStatus(email=record, event=EmailStatus.EventType.FAILED, data={'error': str(e)}))
-    connection.close()
+    with mail.mailers['default'] as connection:
+        for message, record in zip(messages, records):
+            try:
+                message.extra_headers['X-RECORDID'] = str(record.id)
+                connection.send_messages([message])
+            except Exception as e:
+                failed_events.append(EmailStatus(email=record, event=EmailStatus.EventType.FAILED, data={'error': str(e)}))
 
     EmailStatus.objects.bulk_create(failed_events)

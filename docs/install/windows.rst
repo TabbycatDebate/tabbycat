@@ -43,29 +43,12 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install the latest version of Python from the `Python website <https://www.python.org/downloads/>`_.
-In the installer, check the box to add Python to your PATH (see box below).
+Install the Python install manager from the `Python website <https://www.python.org/downloads/windows/>`_ or the Microsoft Store. Open a new PowerShell window, then install Python 3.15 and check the version::
 
-.. hint:: Which file should I download?
+    > pymanager install 3.15
+    > py -V:3.15 --version
 
-    - Regardless of if you have 64-bit or 32-bit Windows, choose the "Windows x86 executable installer".
-
-.. attention:: **Please take note:** Just after you open the installer,
-  **check the "Add Python 3.x to PATH" box**:
-
-  .. image:: images/python-windows-path.png
-
-To check that Python is installed correctly, open Windows PowerShell, type ``python`` and press Enter. It should look something like this. If you installed the 32-bit version, it will say ``32 bit`` instead of ``64 bit``.
-
-.. image:: images/python-windows-installed.png
-
-(To exit Python, type ``exit()`` then press Enter.)
-
-.. note:: **If you already have Python**, great! Some things to double-check:
-
-  - You must have at least Python 3.11.
-  - Your installation path must not have any spaces in it.
-  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python38;C:\Python38\Scripts`` (or as appropriate for your Python version and installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
+If you already have Python 3.15, you can skip the install command. If PowerShell cannot find either command, see `Python's Windows troubleshooting guide <https://docs.python.org/3.15/using/windows.html#troubleshooting>`_ for help with app aliases and ``PATH``.
 
 .. _install-windows-postgresql:
 
@@ -176,8 +159,8 @@ b. Make a copy of **settings\\local.example** and rename it to **settings\\local
 
 c. Install Pipenv. Then install the Python packages specified in the Pipfile using `Pipenv <https://pipenv.pypa.io/en/latest/>`_ (this also creates a virtual environment), and install the Node.js packages specified in package.json using `npm`::
 
-    > pip install --user pipenv
-    > pipenv install --deploy
+    > py -V:3.15 -m pip install --user pipenv
+    > py -V:3.15 -m pipenv install --deploy
     > npm ci
 
   .. attention:: If you get an error message saying that the script isn't digitally signed, open a PowerShell with administrator privileges by right-clicking PowerShell in the Start meny and clicking "Run as administrator". Then run this command::
@@ -190,7 +173,7 @@ c. Install Pipenv. Then install the Python packages specified in the Pipfile usi
 
 d. Start a Pipenv shell::
 
-    > pipenv shell
+    > py -V:3.15 -m pipenv shell
 
   You'll notice a prefix that looks like ``(tabbycat-9BkbSRuB)`` (except the random characters for you will be different). That means you're inside the Pipenv shell. Everything from this point onwards will be inside the Pipenv shell.
 
