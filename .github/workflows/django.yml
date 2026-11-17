@@ -13,7 +13,7 @@ on:
 jobs:
   build-ubuntu:
 
-    runs-on: ubuntu-24.04 # Supports the Python version pinned in .python-version
+    runs-on: ubuntu-latest
 
     services:
       postgres:
