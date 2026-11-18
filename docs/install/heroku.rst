@@ -177,7 +177,7 @@ Email provider
 
   *Changed in version 2.6:* Tabbycat no longer automatically provisions SendGrid via Heroku.
 
-Tabbycat does not come with an email provider. Before Tabbycat will send emails, you will need to install a third-party email provider yourself. To do so, you may add/change the following config vars:
+Tabbycat does not come with an email provider. Before Tabbycat will send emails, you will need to install a third-party email provider yourself. To use a provider's API, set ``EMAIL_PROVIDER``, ``DEFAULT_FROM_EMAIL`` and the provider's ``ANYMAIL_*`` config vars, as described in :ref:`configuring-anymail`. Alternatively, to use SMTP, you may add/change the following config vars:
 
 - ``DEFAULT_FROM_EMAIL``: Email to send from
 - ``EMAIL_HOST``: Host server

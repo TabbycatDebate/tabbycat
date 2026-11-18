@@ -5,6 +5,7 @@ from email.utils import formataddr
 from smtplib import SMTPException, SMTPResponseException
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
+from anymail.exceptions import AnymailError
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
@@ -13,7 +14,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db.models import Prefetch, Q
 from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.urls import NoReverseMatch, reverse, reverse_lazy
 from django.utils import formats
 from django.utils.html import escape
 from django.utils.timezone import get_default_timezone
@@ -68,6 +69,11 @@ class TestEmailView(WarnAboutLegacySendgridConfigVarsMixin, AdministratorMixin, 
                 logger.warning("Suspected SendGrid sender identity verification error in test email", exc_info=True)
             else:
                 logger.warning("SMTP response exception in test email", exc_info=True)
+
+        except AnymailError as e:
+            messages.error(self.request,
+                _("The email provider returned an error sending the test email: %(error)s") % {'error': str(e)})
+            logger.warning("Email provider error in test email", exc_info=True)
 
         except (ConnectionError, SMTPException) as e:
             messages.error(self.request,
@@ -236,11 +242,22 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
+        context['anymail_webhook_url'] = self.get_anymail_webhook_url()
         context['template_variables'] = self.template_variables
         context['template_math_examples'] = self.template_math_examples
 
         context['categories'] = [{'id': 'spk', 'name': "Email"}]
         return context
+
+    def get_anymail_webhook_url(self) -> Optional[str]:
+        """The tracking webhook URL for the configured email provider, if using django-anymail"""
+        provider = getattr(settings, 'EMAIL_PROVIDER', None)
+        if provider is None:
+            return None
+        try:
+            return self.request.build_absolute_uri(reverse('anymail:%s_tracking_webhook' % provider))
+        except NoReverseMatch:
+            return None
 
     def get_default_send_queryset(self) -> 'QuerySet[Person]':
         return self.get_queryset().filter(email__isnull=False).exclude(email__exact="")

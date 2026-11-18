@@ -2,7 +2,7 @@
 Sending Notifications
 =====================
 
-Tabbycat offers integrations with email delivery services to send notifications to participants on certain enumerated events. Before you can use them, you will need to configure your app to use an external email provider, such as SendGrid, Mailgun or MailChimp.
+Tabbycat offers integrations with email delivery services to send notifications to participants on certain enumerated events. Before you can use them, you will need to configure your app to use an external email provider.
 
 .. _configuring-email-provider:
 
@@ -12,6 +12,40 @@ Configuring an email provider
   *Changed in version 2.6:* Tabbycat no longer automatically provisions SendGrid via Heroku.
 
 Tabbycat does not come with an email provider. You will need to configure your app to use a third-party email provider. Your Tabbycat site will not be able to send emails until you have done this. There are a number of options for this. The right one for you will depend on your tournament size and budget.
+
+There are two ways to connect Tabbycat to an email provider:
+
+- through the provider's **HTTP API**, using `django-anymail <https://anymail.dev/>`_, which works with `many providers <https://anymail.dev/en/stable/esps/>`_ and lets Tabbycat show whether emails were delivered; or
+- through **SMTP**, which almost every provider supports.
+
+When comparing providers, check the daily sending limit as well as the monthly one: a tournament can send hundreds of emails in a single round.
+
+.. _configuring-anymail:
+
+Email provider APIs (django-anymail)
+------------------------------------
+
+  *New in version 2.13.*
+
+1. Create an account with an email provider `supported by django-anymail <https://anymail.dev/en/stable/esps/>`_, verify the address or domain you want to send from, and create an API key.
+
+2. Set the following config vars in Heroku Dashboard (or as environment variables):
+
+  - ``EMAIL_PROVIDER``: the provider's name as used by django-anymail, *e.g.* ``amazon_ses``, ``brevo``, ``mailgun``, ``mailjet``, ``postmark``, ``resend`` or ``sendgrid``.
+  - ``DEFAULT_FROM_EMAIL``: the email address you want your emails to appear as coming from.
+  - The provider's settings, each prefixed with ``ANYMAIL_``. The settings each provider needs are listed on its page in the `django-anymail documentation <https://anymail.dev/en/stable/esps/>`_. For example, django-anymail's ``BREVO_API_KEY`` setting is set using the ``ANYMAIL_BREVO_API_KEY`` config var.
+
+    Amazon SES is the exception: it uses the standard AWS config vars ``AWS_ACCESS_KEY_ID``, ``AWS_SECRET_ACCESS_KEY`` and ``AWS_DEFAULT_REGION`` instead. The IAM user for these keys only needs permission for the ``ses:SendEmail`` and ``ses:SendRawEmail`` actions.
+
+3. Send a test email using the tool on your Tabbycat site's home page.
+
+If you're not using Heroku, set these as environment variables for both the web and worker processes, as emails are sent by the worker.
+
+.. note:: New accounts with some providers can only send to addresses you have verified until the provider approves your account (*e.g.* the Amazon SES "sandbox"). Request this approval well before your tournament.
+
+When ``EMAIL_PROVIDER`` is set, it takes precedence over the SMTP and SendGrid config vars described below.
+
+.. tip:: Some hosts, including Render's free plan, block outgoing SMTP connections. On those hosts, you'll need to use an email provider's API as described in this section.
 
 .. _configuring-sendgrid:
 
@@ -51,10 +85,10 @@ Once you have a SendGrid account:
 
   If the value of ``SENDGRID_USERNAME`` is anything other than ``apikey``, you'll need to convert your SendGrid configuration to use an API key instead. To do so, follow the instructions under :ref:`configuring-sendgrid` above. Then, delete the old ``SENDGRID_USERNAME`` and ``SENDGRID_PASSWORD`` config vars.
 
-Other email providers
----------------------
+SMTP
+----
 
-If you configure these config vars, Tabbycat will use them to send emails.
+To send email through any provider's SMTP server, set these config vars:
 
 - ``DEFAULT_FROM_EMAIL``: Email to send from
 - ``EMAIL_HOST``: Host server
@@ -150,7 +184,35 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
 Event Webhook
 =============
 
-With SendGrid, the status of sent emails can be sent to Tabbycat to be displayed, giving an indication of failures and whether participants have opened the messages. To activate this feature, setup must be done both in your SendGrid account and in Tabbycat.
+Email providers can send the status of sent emails to Tabbycat to be displayed, giving an indication of failures and whether participants have opened the messages.
+
+With django-anymail
+-------------------
+
+If you configured your email provider using ``EMAIL_PROVIDER`` (see :ref:`configuring-anymail`):
+
+1. Set the config var ``ANYMAIL_WEBHOOK_SECRET`` to two random strings separated by a colon. You can generate one with ``python3 -c "import secrets; print(secrets.token_urlsafe(18) + ':' + secrets.token_urlsafe(18))"``. Don't reuse your API key or ``DJANGO_SECRET_KEY``.
+2. Copy the webhook URL presented in a box at the top of the "email participants" page. It will look like ``https://yoursite.example.com/anymail/<provider>/tracking/``.
+3. In your email provider's settings, add a webhook for delivery events, using that URL with the webhook secret before the host, *e.g.* ``https://<secret>@yoursite.example.com/anymail/brevo/tracking/``. Some providers need extra settings to verify webhooks; see your provider's page in the `django-anymail documentation <https://anymail.dev/en/stable/esps/>`_.
+4. Select the events to keep track of (or all of them).
+
+.. warning:: Avoid enabling click tracking in your provider. It rewrites every link in your emails to go through the provider's servers, including participants' private URLs.
+
+.. admonition:: Amazon SES
+  :class: tip
+
+  Amazon SES reports events through Amazon SNS rather than calling the webhook directly:
+
+  1. Create an SNS topic, and an SES configuration set with an event destination that publishes to that topic.
+  2. Set the config var ``ANYMAIL_AMAZON_SES_CONFIGURATION_SET_NAME`` to the name of the configuration set.
+  3. Create an HTTPS subscription to the topic, using the webhook URL with the secret as above. Leave "raw message delivery" disabled.
+
+  Tabbycat confirms the subscription automatically if the IAM user also has permission for the ``sns:ConfirmSubscription`` action on the topic. Otherwise, the error in your app's logs includes a token you can use to confirm the subscription in the SNS console.
+
+With SendGrid over SMTP
+-----------------------
+
+If you configured SendGrid using ``SENDGRID_API_KEY``, setup must be done both in your SendGrid account and in Tabbycat.
 
 1. Set a secret key in the Email section of the tournament's preferences. This key must be alphanumeric without any spaces.
 2. Copy the "web-hook" link presented in a box at the top of the "email participants" page.

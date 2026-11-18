@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "632fe798a33e9d54a6c675604e302eee5da371c750d075ec2caf0060e99aeb3f"
+            "sha256": "9605c0200b4dfa263cd5a5bbf3879102ca69d77cfa867536c9ce6d177a8abec1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -228,6 +228,23 @@
             ],
             "markers": "python_version >= '3.10'",
             "version": "==6.3.0"
+        },
+        "boto3": {
+            "hashes": [
+                "sha256:6667a0c21d48dc125dbba88444bc8a601ce881a99341a0e6169f9333898e620d",
+                "sha256:c0f35e5f9cdf0edb365195e306d5586d3970b224660a11a87a4ec361ec3d7168"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.10'",
+            "version": "==1.43.115"
+        },
+        "botocore": {
+            "hashes": [
+                "sha256:9ceda640c868bc15f5399129e8cfdef8cbb4b350e8a99547c9b5f477cfb9619a",
+                "sha256:aa4d9c4e7ef99988b7347e0cd276ba84e1eb1625510557b0e36cd57ecb19bbf2"
+            ],
+            "markers": "python_version >= '3.10'",
+            "version": "==1.43.115"
         },
         "cbor2": {
             "hashes": [
@@ -645,6 +662,15 @@
             "markers": "python_version >= '3.10'",
             "version": "==5.2.12"
         },
+        "django-anymail": {
+            "hashes": [
+                "sha256:65b26b1c99e6a09051b71b012ac4dfdd75a33aeb057315944dd9fb872cae57cf",
+                "sha256:866ed547e9d3110210e6fad343a2311eead55dbd4d544195fb628d06ae25d737"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.10'",
+            "version": "==15.2"
+        },
         "django-appconf": {
             "hashes": [
                 "sha256:15a88d60dd942d6059f467412fe4581db632ef03018a3c183fb415d6fc9e5cec",
@@ -1015,6 +1041,14 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==0.19.2"
+        },
+        "jmespath": {
+            "hashes": [
+                "sha256:472c87d80f36026ae83c6ddd0f1d05d4e510134ed462851fd5f754c8c3cbb88d",
+                "sha256:a5663118de4908c91729bea0acadca56526eb2698e83de10cd116ae0f4e97c64"
+            ],
+            "markers": "python_version >= '3.9'",
+            "version": "==1.1.0"
         },
         "jsonschema": {
             "hashes": [
@@ -1585,6 +1619,14 @@
             "markers": "python_version >= '3.8'",
             "version": "==26.0.0"
         },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3",
+                "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"
+            ],
+            "markers": "python_version >= '2.7' and python_version != '3.0' and python_version != '3.1' and python_version != '3.2'",
+            "version": "==2.9.0.post0"
+        },
         "python-ipware": {
             "hashes": [
                 "sha256:9117b1c4dddcb5d5ca49e6a9617de2fc66aec2ef35394563ac4eecabdf58c062",
@@ -1835,6 +1877,14 @@
             "markers": "python_version >= '3.10'",
             "version": "==0.30.0"
         },
+        "s3transfer": {
+            "hashes": [
+                "sha256:24eb7535804306355e31c952a90022bf5b2f9d760f9a11062c7493a217c08553",
+                "sha256:8326acc3d056d7f7b8a37110c7d2aea41f67e83f6ae79cd3b5fbcca34c726406"
+            ],
+            "markers": "python_version >= '3.10'",
+            "version": "==0.19.3"
+        },
         "sentry-sdk": {
             "hashes": [
                 "sha256:5afafb744ceb91d22f4cc650c6bd048ac6af5f7412dcc6c59305a2e36f4dbc02",
@@ -1859,6 +1909,14 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==82.0.1"
+        },
+        "six": {
+            "hashes": [
+                "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274",
+                "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"
+            ],
+            "markers": "python_version >= '2.7' and python_version != '3.0' and python_version != '3.1' and python_version != '3.2'",
+            "version": "==1.17.0"
         },
         "sqlparse": {
             "hashes": [

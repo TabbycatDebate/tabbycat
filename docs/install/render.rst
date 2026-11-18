@@ -20,6 +20,7 @@ Please also note:
 
 - Although Tabbycat is setup to run within the free-tier of Render, you may need to add a credit card to your account in order to create your account
 - While Render might run faster for small tournaments, we are unclear how well it runs at a larger scale and how best to employ Render's scaling tools
+- Render's free plan blocks outgoing SMTP connections, so to send emails you'll need to use an email provider's API (see :ref:`configuring-anymail`)
 
 To deploy to Render, follow the instructions below.
 

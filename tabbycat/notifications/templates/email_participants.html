@@ -19,7 +19,12 @@
   {% include "components/explainer-card.html" with type="warning" %}
 {% endif %}
 
-{% if pref.email_hook_key != "" and not sg_webhook %}
+{% if anymail_webhook_url and not sg_webhook %}
+  {% blocktrans trimmed asvar p1 %}
+    To see whether emails were delivered, add a tracking webhook in your email provider's settings pointing to <code>{{ anymail_webhook_url }}</code>. Put the value of the <code>ANYMAIL_WEBHOOK_SECRET</code> config var before the host as credentials, e.g. <code>https://user:password@example.com/...</code>.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+{% elif pref.email_hook_key != "" and not sg_webhook %}
   {% tournament_absurl 'notifications-webhook' key=pref.email_hook_key as notifications_webhook_url %}
   {% blocktrans trimmed asvar p1 %}
     The webhook URL for use in SendGrid is <a href="{{ notifications_webhook_url }}">{{ notifications_webhook_url }}</a>. Please point the HTTP POST URL in <a href="https://app.sendgrid.com/settings/mail_settings">SendGrid</a> to that.

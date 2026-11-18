@@ -1,5 +1,3 @@
-import json
-
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import SetPasswordForm, UserCreationForm, UsernameField
@@ -136,9 +134,6 @@ class InviteUserForm(forms.Form):
             message = EmailMultiAlternatives(
                 subject, body, from_email, [user_email],
                 reply_to=reply_to,
-                headers={
-                    'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}}),
-                },
             )
             if html_email_template_name is not None:
                 html_email = loader.render_to_string(html_email_template_name, context)

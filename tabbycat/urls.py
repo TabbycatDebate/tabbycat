@@ -69,6 +69,10 @@ urlpatterns = [
     path('api',
         include('api.urls')),
 
+    # Email provider webhooks (django-anymail)
+    path('anymail/',
+        include('anymail.urls')),
+
     # Archive import/export
     path('archive/',
         include('importer.urls_archive')),
