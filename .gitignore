@@ -62,8 +62,7 @@ lib64
 # Installer logs
 pip-log.txt
 
-# Unit test / coverage reports
-.coverage
+.hypothesis/
 .tox
 nosetests.xml
 

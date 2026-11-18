@@ -41,8 +41,8 @@ daphne = "*"
 drf-link-header-pagination = "*"
 networkx = "*" # Avoid its dependencies (SciPy)
 django-push-notifications = {extras = ["wp"], version = "*"}
-
-[dev-packages]
+schemathesis = ">=4.30,<5"
+hypothesis = ">=6.130.12,<7"
 pre-commit = "*"
 selenium = "==3.141.*"
 django-debug-toolbar = "*"
