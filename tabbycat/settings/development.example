@@ -75,7 +75,7 @@ if ENABLE_DEBUG_TOOLBAR:
 # Email Backend (print all emails to STDOUT)
 # ==============================================================================
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+MAILERS = {'default': {'BACKEND': 'django.core.mail.backends.console.EmailBackend'}}
 
 # ==============================================================================
 # REST Framework (Browse through APIs)

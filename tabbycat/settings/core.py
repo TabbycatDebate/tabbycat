@@ -13,6 +13,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ADMINS = ['"Tabbycat Debate" <contact@tabbycat-debate.org>']
 MANAGERS = ADMINS
+
+MAILERS = {
+    'default': {
+        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+        'OPTIONS': {'host': 'localhost', 'port': 25},
+    },
+}
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
 DISABLE_SENTRY = True # Overriden in Heroku config
@@ -148,6 +155,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.postgres',
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
     'django.contrib.staticfiles',
