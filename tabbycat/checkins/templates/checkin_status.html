@@ -10,6 +10,7 @@
                                :speakers="speakers"
                                :venues="venues"
                                :team-codes="teamCodes"
+                               :show-adjudicator-institutions="showAdjudicatorInstitutions"
                                :for-admin="forAdmin"
                                :team-size="teamSize"
                                :prelims-completed="prelimsCompleted">
@@ -27,6 +28,7 @@
       'speakers': {% if speakers %}{{ speakers|safe }}{% else %}null{% endif %},
       'venues': {% if venues %}{{ venues|safe }}{% else %}null{% endif %},
       'teamCodes': {{ team_codes }},
+      'showAdjudicatorInstitutions': {{ pref.show_adjudicator_institutions|yesno:"true,false" }},
       'forAdmin': {% if for_admin %}true{% else %}false{% endif %},
       'teamSize': {{ team_size }},
       'prelimsCompleted': {% if prelims_completed %}true{% else %}false{% endif %},
