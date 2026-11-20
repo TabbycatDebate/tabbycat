@@ -43,7 +43,7 @@ from .consumers import BallotStatusConsumer
 from .forms import (broadcast_results, PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm,
                     SingleBallotSetForm, SingleEliminationBallotSetForm)
 from .models import BallotSubmission, ScoreCriterion, TeamScore
-from .prefetch import populate_confirmed_ballots, populate_results
+from .prefetch import populate_confirmed_ballots, populate_results, populate_wins_for_debateteams
 from .result import DebateResult, get_class_name
 from .tables import ResultsTableBuilder
 from .utils import get_status_meta, populate_identical_ballotsub_lists
@@ -210,6 +210,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
             populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True,
             results=self.round.ballots_per_debate == 'per-adj')
+        populate_wins_for_debateteams(
+            [dt for ts in teamscores for dt in ts.debate_team.debate.debateteam_set.all()])
 
         table = TabbycatTableBuilder(view=self, sort_key="team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
