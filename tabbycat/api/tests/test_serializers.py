@@ -279,13 +279,18 @@ class PrivateUrlUpdateTests(CompletedTournamentTestMixin, APITestCase):
 
     def test_clear_private_urls(self):
         self.client.login(username="admin", password="admin")
-        for model, endpoint in ((Speaker, 'api-speaker-detail'), (Adjudicator, 'api-adjudicator-detail')):
-            people = list(model.objects.all()[:2])
+        participants = (
+            (Speaker.objects.filter(team__tournament=self.tournament), 'api-speaker-detail'),
+            (Adjudicator.objects.filter(tournament=self.tournament), 'api-adjudicator-detail'),
+        )
+        for queryset, endpoint in participants:
+            people = list(queryset.order_by('pk')[:2])
+            self.assertEqual(len(people), 2)
             for person in people:
                 person.url_key = f'private-{person.pk}'
                 person.save()
                 url = reverse_tournament(endpoint, self.tournament, kwargs={'pk': person.pk})
-                with self.subTest(model=model.__name__, person=person.pk):
+                with self.subTest(model=type(person).__name__, person=person.pk):
                     response = self.client.patch(url, {'name': person.name})
                     self.assertEqual(response.status_code, 200, response.data)
                     person.refresh_from_db()
