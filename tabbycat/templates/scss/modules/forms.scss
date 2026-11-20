@@ -52,6 +52,76 @@ input[type=number] {
   text-align: center;
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: $input-border-width solid $input-border-color;
+  border-radius: $input-border-radius;
+  background-color: $input-bg;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 75%;
+  vertical-align: middle;
+
+  &.form-control {
+    width: $input-height;
+    height: $input-height;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  &:checked,
+  &[type="checkbox"]:indeterminate {
+    border-color: theme-color("primary");
+    background-color: theme-color("primary");
+  }
+
+  &:checked {
+    background-image: escape-svg($custom-checkbox-indicator-icon-checked);
+  }
+
+  &[type="checkbox"]:indeterminate {
+    background-image: escape-svg($custom-checkbox-indicator-icon-indeterminate);
+  }
+
+  &:focus {
+    border-color: $input-focus-border-color;
+    outline: 0;
+    box-shadow: $input-focus-box-shadow;
+  }
+
+  &:disabled {
+    background-color: $input-disabled-bg;
+    opacity: 0.65;
+  }
+
+  &:disabled:checked,
+  &[type="checkbox"]:disabled:indeterminate {
+    background-color: theme-color("primary");
+  }
+  @media (forced-colors: active) {
+    appearance: auto;
+  }
+}
+
+input[type="radio"] {
+  border-radius: 50%;
+  background-size: 100%;
+
+  &:checked {
+    border-color: $input-border-color;
+    background-color: $input-bg;
+    background-image: radial-gradient(circle, theme-color("primary") 0 50%, transparent 55%);
+
+    &:focus {
+      border-color: $input-focus-border-color;
+    }
+  }
+}
+
 input[type="range"] {
   min-width: 70px; // Fix for IE Edge; doesn't show otherwise
   width: 85%; // Fix for importance slider

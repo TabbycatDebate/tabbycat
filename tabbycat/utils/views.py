@@ -4,14 +4,24 @@ import logging
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.forms.models import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseServerError
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, View
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 
+from utils.sentry import get_sentry_trace_id
+
 logger = logging.getLogger(__name__)
+
+
+def server_error(request):
+    # Avoid request context processors, which may depend on the failing database.
+    return HttpResponseServerError(render_to_string('500.html', {
+        'sentry_trace_id': get_sentry_trace_id(),
+    }))
 
 
 class PostOnlyRedirectView(View):
