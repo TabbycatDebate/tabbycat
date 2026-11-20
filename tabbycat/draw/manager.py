@@ -48,9 +48,8 @@ OPTIONS_TO_CONFIG_MAPPING = {
 }
 
 
-def DrawManager(round: Round, active_only: bool = True, draw_type: Round.DrawType | str | None = None):  # noqa: N802 (factory function)
+def DrawManager(round: Round, active_only: bool = True):  # noqa: N802 (factory function)
     teams_in_debate = round.tournament.pref('teams_in_debate')
-    draw_type = draw_type or round.draw_type
     try:
         if teams_in_debate in [2, 4]:
             klass = DRAW_MANAGER_CLASSES[(teams_in_debate, round.draw_type)]

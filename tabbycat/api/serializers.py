@@ -21,12 +21,13 @@ from rest_framework.settings import api_settings
 from adjallocation.models import DebateAdjudicator, PreformedPanel
 from adjfeedback.models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory, BreakingTeam
+from draw.generator import DrawUserError
 from draw.manager import DrawManager
 from draw.models import Debate, DebateTeam
 from motions.models import DebateTeamMotionPreference, Motion, RoundMotion
 from notifications.models import ParticipantWebPushDevice
 from options.preferences import (BPAssignmentMethod, BPPositionCost, BPPullupDistribution, DrawAvoidConflicts,
-    DrawOddBracket, DrawPairingMethod, DrawPullupRestriction, DrawSideAllocations)
+    DrawBracketPenalty, DrawOddBracket, DrawPairingMethod, DrawPullupRestriction, DrawSideAllocations)
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Coach, Institution, Person, Region, Speaker, SpeakerCategory, Team
 from participants.utils import populate_code_names
@@ -1334,6 +1335,7 @@ class DrawGenerationSerializer(serializers.Serializer):
         exponent = serializers.FloatField(required=False)
         max_times_on_one_side = serializers.IntegerField(min_value=0, required=False)
         pullup_penalty = serializers.IntegerField(min_value=0, required=False)
+        bracket_penalty = serializers.IntegerField(min_value=0, required=False, help_text=DrawBracketPenalty.help_text)
 
     draw_type = serializers.ChoiceField(choices=Round.DrawType.choices, required=False, help_text=Round._meta.get_field('draw_type').help_text)
     options = OptionsSerializer(required=False, help_text="Options for draw generation; defaults to tournament preferences")
@@ -1341,12 +1343,26 @@ class DrawGenerationSerializer(serializers.Serializer):
     def save(self, **kwargs):
         try:
             with transaction.atomic():
-                round = Round.objects.select_for_update(nowait=True).get(pk=self.context['round'].pk)
-            if round.draw_status != Round.Status.NONE:
-                raise serializers.ValidationError("There is already a draw", code=409)
-            return DrawManager(round, draw_type=self.validated_data.get('draw_type')).create(self.validated_data.get('options', {}))
-        except DatabaseError:
-            raise serializers.ValidationError("Draw is already getting generated", code=409)
+                try:
+                    round = Round.objects.select_for_update(nowait=True).get(pk=self.context['round'].pk)
+                except DatabaseError as e:
+                    raise serializers.ValidationError("Draw is already getting generated", code=409) from e
+                if round.draw_status != Round.Status.NONE:
+                    raise serializers.ValidationError("There is already a draw", code=409)
+
+                draw_type = self.validated_data.get('draw_type', round.draw_type)
+                if draw_type != round.draw_type:
+                    round.draw_type = draw_type
+                    try:
+                        round.clean()
+                    except DjangoValidationError as e:
+                        raise serializers.ValidationError(get_error_detail(e)) from e
+                    # Round-robin generation queries rounds by their saved draw type.
+                    round.save(update_fields=['draw_type'])
+
+                return DrawManager(round).create(self.validated_data.get('options', {}))
+        except DrawUserError as e:
+            raise serializers.ValidationError(str(e)) from e
 
 
 class FeedbackQuestionSerializer(serializers.ModelSerializer):

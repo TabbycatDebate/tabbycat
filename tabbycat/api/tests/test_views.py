@@ -13,6 +13,7 @@ from rest_framework.test import APITestCase
 from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
+from availability.utils import set_availability
 from checkins.models import Event, PersonIdentifier
 from participants.models import Adjudicator, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore
@@ -261,6 +262,48 @@ class PairingViewsetTests(CompletedTournamentTestMixin, APITestCase):
         flagged = [debate for debate in response.data if debate['flags']]
         self.assertEqual(len(flagged), 1)
         self.assertEqual([team['flags'] for team in flagged[0]['teams']], [['pullup'], ['pullup']])
+
+
+class GeneratePairingTests(CompletedTournamentTestMixin, APITestCase):
+    fixtures = ['after_round_1.json']
+    round_seq = 2
+
+    def setUp(self):
+        super().setUp()
+        self.client.login(username="admin", password="admin")
+        self.tournament.preferences['standings__team_standings_precedence'] = ['wins', 'speaks_sum']
+        set_availability(self.tournament.team_set.all(), self.round)
+        self.round.draw_type = Round.DrawType.RANDOM
+        self.round.save(update_fields=['draw_type'])
+
+    def test_overrides_random_round_with_power_pairing_and_bracket_penalty(self):
+        response = self.client.post(self.reverse_url('api-generate-pairing'), {
+            'draw_type': Round.DrawType.POWERPAIRED,
+            'options': {
+                'avoid_conflicts': 'graph_one',
+                'odd_bracket': 'pullup_top',
+                'bracket_penalty': 10,
+            },
+        }, format='json')
+
+        self.assertEqual(response.status_code, 201, response.data)
+        self.round.refresh_from_db()
+        self.assertEqual(self.round.draw_type, Round.DrawType.POWERPAIRED)
+        self.assertEqual(self.round.draw_status, Round.Status.DRAFT)
+        self.assertEqual(len(response.data), self.round.debate_set.count())
+        self.assertEqual(self.round.debate_set.count(), self.round.active_teams.count() // 2)
+
+    def test_rejects_option_for_different_draw_format(self):
+        response = self.client.post(self.reverse_url('api-generate-pairing'),
+            {'draw_type': Round.DrawType.POWERPAIRED, 'options': {'position_cost': 'simple'}},
+            format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("position_cost", str(response.data))
+        self.round.refresh_from_db()
+        self.assertEqual(self.round.draw_type, Round.DrawType.RANDOM)
+        self.assertEqual(self.round.draw_status, Round.Status.NONE)
+        self.assertFalse(self.round.debate_set.exists())
 
 
 class InstitutionViewsetTests(CompletedTournamentTestMixin, APITestCase):

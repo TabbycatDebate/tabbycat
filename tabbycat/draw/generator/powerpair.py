@@ -646,11 +646,10 @@ class PowerPairedWithAllocatedSidesDrawGenerator(BasePowerPairedDrawGenerator):
     """
 
     DEFAULT_OPTIONS = {
+        **BasePowerPairedDrawGenerator.DEFAULT_OPTIONS,
         "odd_bracket"           : "intermediate1",
         "pairing_method"        : "fold",
         "avoid_conflicts"       : None,
-        "pullup_restriction"    : "none",
-        "pullup_penalty"        : 0,
     }
 
     def __init__(self, *args, **kwargs):

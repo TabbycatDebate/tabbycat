@@ -1259,7 +1259,7 @@ class GeneratePairingView(RoundAPIMixin, AdministratorAPIMixin, CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         draw = self.perform_create(serializer)
-        response_serializer = serializers.RoundPairingSerializer(draw, many=True)
+        response_serializer = serializers.RoundPairingSerializer(draw, many=True, context=self.get_serializer_context())
 
         headers = self.get_success_headers(serializer.data)
         return Response(response_serializer.data, status=201, headers=headers)

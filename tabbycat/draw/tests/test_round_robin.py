@@ -30,10 +30,13 @@ class TestBergerRoundRobin(unittest.TestCase):
             TestTeam(10, 'X', seed=1, side_history=[0, 0], hist=[]),
             TestTeam(20, 'Y', seed=2, side_history=[0, 0], hist=[]),
         ]
-        d = DrawGenerator(2, "round_robin", teams, rrseq=1, avoid_conflicts="off", side_allocations="random")
-        pairings = d.generate()
-        self.assertEqual(len(pairings), 1)
-        self.assertEqual(set(pairings[0].teams), {teams[0], teams[1]})
+        for avoid_conflicts in ("off", "graph", "graph_one"):
+            with self.subTest(avoid_conflicts=avoid_conflicts):
+                d = DrawGenerator(2, "round_robin", teams, rrseq=1,
+                    avoid_conflicts=avoid_conflicts, side_allocations="random")
+                pairings = d.generate()
+                self.assertEqual(len(pairings), 1)
+                self.assertEqual(set(pairings[0].teams), {teams[0], teams[1]})
 
 
 class TestBPRoundRobinTables(unittest.TestCase):

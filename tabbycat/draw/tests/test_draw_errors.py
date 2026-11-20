@@ -1,12 +1,17 @@
 import logging
+from html import unescape
 
 from django.contrib.messages import ERROR
 
 from availability.utils import set_availability
 from draw.generator import DrawUserError
+from draw.generator.common import DrawOptionError
+from draw.models import TeamSideAllocation
+from draw.types import DebateSide
 from options.models import TournamentPreferenceModel
 from options.serializers import MultiValueSerializer
 from standings.base import StandingsError
+from tournaments.models import Round
 from utils.misc import reverse_round
 from utils.tests import suppress_logs, TournamentTestCase
 
@@ -53,6 +58,37 @@ class TestCreateDrawViewErrors(TournamentTestCase):
         set_availability(self.tournament.team_set.all()[:23], self.round)
         self.run_test_for_error_response(logging.WARNING, DrawUserError)
 
+    def test_power_pairing_with_preallocated_sides_and_bracket_penalty(self):
+        self.tournament.preferences['draw_rules__draw_side_allocations'] = 'preallocated'
+        self.tournament.preferences['draw_rules__draw_avoid_conflicts'] = 'off'
+        self.tournament.preferences['draw_rules__draw_odd_bracket'] = 'intermediate1'
+        self.tournament.preferences['draw_rules__draw_bracket_penalty'] = 10
+        set_availability(self.tournament.team_set.all(), self.round)
+        teams = list(self.round.active_teams.order_by('pk'))
+        TeamSideAllocation.objects.bulk_create(
+            TeamSideAllocation(round=self.round, team=team, side=DebateSide.NEG if i % 2 else DebateSide.AFF)
+            for i, team in enumerate(teams)
+        )
+
+        response = self.client.post(self.reverse_round('draw-create'))
+
+        self.assertRedirects(response, self.reverse_round('draw'), fetch_redirect_response=False)
+        self.round.refresh_from_db()
+        self.assertEqual(self.round.draw_status, Round.Status.DRAFT)
+        self.assertEqual(self.round.debate_set.count(), len(teams) // 2)
+
+    def test_incompatible_odd_bracket_option(self):
+        self.tournament.preferences['draw_rules__draw_side_allocations'] = 'balance'
+        self.tournament.preferences['draw_rules__draw_avoid_conflicts'] = 'one_up_one_down'
+        self.tournament.preferences['draw_rules__draw_odd_bracket'] = 'intermediate1'
+        set_availability(self.tournament.team_set.all(), self.round)
+
+        message = self.run_test_for_error_response(logging.WARNING, DrawOptionError)
+        self.assertIn("does not support intermediate1 for odd_bracket", message)
+        self.assertIn("pullup_top", message)
+        self.assertIn("draw rules</a>", message)
+        self.assertFalse(self.round.debate_set.exists())
+
     def test_bad_standings(self):
         TournamentPreferenceModel.objects.update_or_create(instance=self.tournament, section='standings',
                 name='team_standings_precedence',
@@ -69,4 +105,4 @@ class TestCreateDrawViewErrors(TournamentTestCase):
 
         message = self.run_test_for_error_response(logging.WARNING, DrawUserError)
 
-        self.assertIn("Power-paired draws can't be generated when elimination", message)
+        self.assertIn("Power-paired draws can't be generated when elimination", unescape(message))
