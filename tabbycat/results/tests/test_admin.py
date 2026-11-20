@@ -4,13 +4,35 @@ from django.contrib.auth.models import Permission
 from django.db import connection
 from django.test import RequestFactory, TestCase
 from django.test.utils import CaptureQueriesContext
+from django.urls import reverse
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Speaker, Team
 from results.admin import BallotSubmissionAdmin
-from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
+from results.models import (
+    BallotSubmission, ScoreCriterion, SpeakerCriterionScore, SpeakerCriterionScoreByAdj, SpeakerScore,
+    SpeakerScoreByAdj, TeamScore, TeamScoreByAdj,
+)
 from tournaments.models import Round, Tournament
+
+
+class ScoreCriterionAdminTests(TestCase):
+    def test_search_by_criterion_and_tournament_names(self):
+        user = get_user_model().objects.create_superuser(username='criterion-admin')
+        tournament = Tournament.objects.create(name='Regional Championship', short_name='Reg Champs', slug='regional')
+        other_tournament = Tournament.objects.create(name='National Championship', slug='national')
+        criterion_fields = dict(seq=1, weight=1, min_score=0, max_score=10, step=1)
+        criterion = ScoreCriterion.objects.create(tournament=tournament, name='Delivery', **criterion_fields)
+        ScoreCriterion.objects.create(tournament=other_tournament, name='Content', **criterion_fields)
+
+        self.client.force_login(user)
+        url = reverse('admin:results_scorecriterion_changelist')
+        for search_term in ('deliv', 'regional', 'reg champs'):
+            with self.subTest(search_term=search_term):
+                response = self.client.get(url, {'q': search_term})
+                self.assertEqual(response.status_code, 200)
+                self.assertQuerySetEqual(response.context['cl'].result_list, [criterion])
 
 
 class BallotSubmissionAdminTests(TestCase):
@@ -86,6 +108,30 @@ class BallotSubmissionAdminTests(TestCase):
                 self.assertTrue(bound.is_valid(), bound.errors)
                 bound.save()
                 self.assertEqual(inline.model.objects.get(pk=formset.forms[0].instance.pk).score, 76)
+
+    def test_search_criterion_scores(self):
+        self.add_adjudicators(1)
+        criterion = ScoreCriterion.objects.create(
+            tournament=self.debate.round.tournament, name='Delivery', seq=1,
+            weight=1, min_score=0, max_score=100, step=1,
+        )
+        speaker_score = SpeakerScore.objects.filter(ballot_submission=self.ballot).first()
+        adj_score = SpeakerScoreByAdj.objects.filter(ballot_submission=self.ballot).first()
+        criterion_score = SpeakerCriterionScore.objects.create(
+            criterion=criterion, speaker_score=speaker_score, score=76,
+        )
+        adj_criterion_score = SpeakerCriterionScoreByAdj.objects.create(
+            criterion=criterion, speaker_score_by_adj=adj_score, score=76,
+        )
+
+        self.client.force_login(self.user)
+        for result, score_id in ((criterion_score, speaker_score.pk), (adj_criterion_score, adj_score.pk)):
+            url = reverse(f'admin:results_{result._meta.model_name}_changelist')
+            for search_term in ('deliv', '76', str(score_id)):
+                with self.subTest(url=url, search_term=search_term):
+                    response = self.client.get(url, {'q': search_term})
+                    self.assertEqual(response.status_code, 200)
+                    self.assertQuerySetEqual(response.context['cl'].result_list, [result])
 
     def test_view_only_user_can_render_score_inlines(self):
         self.add_adjudicators(1)
