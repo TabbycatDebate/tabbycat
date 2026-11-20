@@ -14,9 +14,10 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
 from checkins.models import Event, PersonIdentifier
-from participants.models import Adjudicator, Speaker, Team
+from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore
 from tournaments.models import Round, Tournament
+from users.permissions import Permission
 from utils.tests import CompletedTournamentTestMixin, V1_ROOT_URL
 from venues.models import Venue
 
@@ -99,6 +100,78 @@ class GlobalInstitutionViewsetTests(APITestCase):
             with self.subTest(expected_status=expected_status):
                 self.client.force_authenticate(user=user)
                 self.assertEqual(self.client.get(url).status_code, expected_status)
+
+    def test_global_institutions_exclude_venue_constraints(self):
+        self.client.force_authenticate(user=get_user_model()(is_staff=True))
+        institution = Institution.objects.create(name='Test University', code='Test')
+        tournament = Tournament.objects.create(slug='test-tournament')
+        category = tournament.venuecategory_set.create(name='Accessible')
+        constraint = institution.venue_constraints.create(category=category, priority=1)
+        detail_url = reverse('api-global-institution-detail', kwargs={'pk': institution.pk})
+
+        response = self.client.get(reverse('api-global-institution-list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn('venue_constraints', response.data[0])
+        response = self.client.patch(detail_url, {'venue_constraints': [{'priority': 2}]}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn('venue_constraints', response.data)
+        constraint.refresh_from_db()
+        self.assertEqual(constraint.priority, 1)
+
+
+class UserViewsetTests(APITestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.client.force_authenticate(user=get_user_model()(is_staff=True))
+        self.tournament = Tournament.objects.create(slug='test-tournament')
+        self.other_tournament = Tournament.objects.create(slug='other-tournament')
+        self.tournament_url = 'http://testserver' + reverse('api-tournament-detail', kwargs={'tournament_slug': self.tournament.slug})
+        self.other_tournament_url = 'http://testserver' + reverse('api-tournament-detail', kwargs={'tournament_slug': self.other_tournament.slug})
+        self.group = self.tournament.group_set.create(name='Tab team')
+        self.group_url = 'http://testserver' + reverse('api-group-detail', kwargs={'tournament_slug': self.tournament.slug, 'pk': self.group.pk})
+
+    def test_create_user_with_tournament_assignments(self):
+        response = self.client.post(reverse('api-user-list'), {
+            'username': 'new-user',
+            'password': 'test-password',
+            'tournaments': [
+                {'tournament': self.tournament_url, 'groups': [self.group_url]},
+                {'tournament': self.other_tournament_url, 'permissions': [Permission.VIEW_TEAMS]},
+            ],
+        }, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        user = get_user_model().objects.get(pk=response.data['id'])
+        self.assertEqual(list(user.group_set.all()), [self.group])
+        self.assertEqual(user.userpermission_set.get().tournament, self.other_tournament)
+        self.assertCountEqual(response.data['tournaments'], [
+            {'tournament': self.tournament_url, 'groups': [self.group_url], 'permissions': []},
+            {'tournament': self.other_tournament_url, 'groups': [], 'permissions': [Permission.VIEW_TEAMS]},
+        ])
+
+    def test_reject_group_outside_assigned_tournament(self):
+        wrong_slug_url = 'http://testserver' + reverse('api-group-detail', kwargs={
+            'tournament_slug': self.other_tournament.slug, 'pk': self.group.pk,
+        })
+        for tournament_url, group_url in ((self.other_tournament_url, self.group_url), (self.tournament_url, wrong_slug_url)):
+            with self.subTest(tournament=tournament_url, group=group_url):
+                response = self.client.post(reverse('api-user-list'), {
+                    'username': 'new-user',
+                    'password': 'test-password',
+                    'tournaments': [{'tournament': tournament_url, 'groups': [group_url]}],
+                }, format='json')
+                self.assertEqual(response.status_code, 400)
+                self.assertIn('groups', response.data['tournaments'][0])
+                self.assertFalse(get_user_model().objects.filter(username='new-user').exists())
+
+    def test_reject_tournament_assignments_on_user_update(self):
+        user = get_user_model().objects.create_user(username='existing-user')
+        response = self.client.patch(reverse('api-user-detail', kwargs={'pk': user.pk}), {
+            'tournaments': [{'groups': [self.group_url]}],
+        }, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('tournaments', response.data)
 
 
 class ParticipantNameValidationTests(CompletedTournamentTestMixin, APITestCase):
@@ -262,6 +335,23 @@ class PairingViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(len(flagged), 1)
         self.assertEqual([team['flags'] for team in flagged[0]['teams']], [['pullup'], ['pullup']])
 
+    def test_generate_draw_returns_pairing_urls(self):
+        self.client.login(username="admin", password="admin")
+        self.round.draw_status = Round.Status.NONE
+        self.round.save(update_fields=['draw_status'])
+        for team in self.tournament.team_set.order_by('pk')[:4]:
+            RoundAvailability.objects.create(round=self.round, content_object=team)
+
+        response = self.client.post(self.reverse_url('api-generate-pairing'), {}, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.data)
+        self.assertCountEqual(
+            [pairing['url'] for pairing in response.data],
+            ['http://testserver' + self.reverse_url('api-pairing-detail', debate_pk=pk)
+             for pk in self.round.debate_set.values_list('pk', flat=True)],
+        )
+
 
 class InstitutionViewsetTests(CompletedTournamentTestMixin, APITestCase):
 
@@ -291,6 +381,24 @@ class InstitutionViewsetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(len(coaches), 1)
         self.assertEqual(coaches[0]['email'], "coach@example.com")
         self.assertEqual(coaches[0]['url_key'], "coachkey")
+
+    def test_include_only_venue_constraints_for_current_tournament(self):
+        self.client.login(username="admin", password="admin")
+        institution = self.tournament.tournamentinstitution_set.get().institution
+        category = self.tournament.venuecategory_set.create(name='Accessible')
+        other_tournament = Tournament.objects.create(slug='other-tournament')
+        other_category = other_tournament.venuecategory_set.create(name='Accessible elsewhere')
+        institution.venue_constraints.create(category=category, priority=1)
+        institution.venue_constraints.create(category=other_category, priority=2)
+
+        response = self.client.get(self.reverse_url('api-institution-list'))
+
+        self.assertEqual(response.status_code, 200)
+        data = next(row for row in response.data if row['id'] == institution.pk)
+        self.assertEqual(data['venue_constraints'], [{
+            'category': 'http://testserver' + self.reverse_url('api-venuecategory-detail', pk=category.pk),
+            'priority': 1,
+        }])
 
 
 class TeamViewsetTests(CompletedTournamentTestMixin, APITestCase):

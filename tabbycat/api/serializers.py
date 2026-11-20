@@ -38,7 +38,7 @@ from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
 from tournaments.models import Round, ScheduleEvent, Tournament
 from users.models import Group, Membership, UserPermission
-from users.permissions import has_permission, Permission
+from users.permissions import get_permissions, has_permission, Permission
 from utils.misc import get_ip_address
 from venues.models import Venue, VenueCategory, VenueConstraint
 
@@ -948,35 +948,10 @@ class TeamSerializer(serializers.ModelSerializer):
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
     region = fields.CreatableSlugRelatedField(slug_field='name', queryset=Region.objects, required=False, allow_null=True)
-    venue_constraints = VenueConstraintSerializer(many=True, required=False)
 
     class Meta:
         model = Institution
         fields = '__all__'
-
-    def get_fields(self):
-        fields = super().get_fields()
-
-        # The global institutions endpoint has no tournament, and is closed to the public
-        if not is_staff(self.context) and 'tournament' in self.context:
-            with_permission = partial(has_permission, user=self.context['request'].user, tournament=self.context['tournament'])
-            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
-                fields.pop('venue_constraints')
-
-        return fields
-
-    def create(self, validated_data):
-        venue_constraints = validated_data.pop('venue_constraints', [])
-
-        institution = super().create(validated_data)
-
-        save_related(VenueConstraintSerializer, venue_constraints, self.context, {'subject': institution})
-
-        return institution
-
-    def update(self, instance, validated_data):
-        save_related(VenueConstraintSerializer, validated_data.pop('venue_constraints', []), self.context, {'subject': instance})
-        return super().update(instance, validated_data)
 
 
 class PerTournamentInstitutionSerializer(InstitutionSerializer):
@@ -1029,6 +1004,7 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
     teams_allocated = serializers.IntegerField(required=False, allow_null=True, source='tournament.teams_allocated')
     adjudicators_requested = serializers.IntegerField(required=False, allow_null=True, source='tournament.adjudicators_requested')
     adjudicators_allocated = serializers.IntegerField(required=False, allow_null=True, source='tournament.adjudicators_allocated')
+    venue_constraints = VenueConstraintSerializer(many=True, read_only=True)
 
     def get_fields(self):
         fields = super().get_fields()
@@ -1038,6 +1014,8 @@ class PerTournamentInstitutionSerializer(InstitutionSerializer):
             if not with_permission(permission=Permission.VIEW_PARTICIPANT_INST):
                 fields.pop('teams')
                 fields.pop('adjudicators')
+            if not with_permission(permission=Permission.VIEW_ROOMCONSTRAINTS):
+                fields.pop('venue_constraints')
 
         return fields
 
@@ -1860,9 +1838,30 @@ class TeamCurrentStandingsSerializer(TeamRoundScoresSerializer):
 class UserSerializer(serializers.ModelSerializer):
 
     class TournamentPermissionsSerializer(serializers.Serializer):
-        tournament = serializers.HyperlinkedIdentityField(view_name='api-tournament-detail', lookup_field='slug', lookup_url_kwarg='tournament_slug')
-        groups = fields.TournamentHyperlinkedRelatedField(many=True, view_name='api-group-detail', queryset=Group.objects, default=[])
+        class GroupLinkField(fields.TournamentHyperlinkedRelatedField):
+            def get_object(self, view_name, view_args, view_kwargs):
+                return self.queryset.select_related('tournament').get(
+                    pk=view_kwargs[self.lookup_url_kwarg], tournament__slug=view_kwargs['tournament_slug'],
+                )
+
+        tournament = serializers.HyperlinkedRelatedField(
+            view_name='api-tournament-detail', lookup_field='slug', lookup_url_kwarg='tournament_slug', queryset=Tournament.objects,
+        )
+        groups = GroupLinkField(many=True, view_name='api-group-detail', queryset=Group.objects, default=[])
         permissions = serializers.ListField(child=serializers.ChoiceField(choices=Permission.choices), required=False)
+
+        def to_representation(self, tournament):
+            return super().to_representation({
+                'tournament': tournament,
+                'groups': getattr(tournament, 'groups', []),
+                'permissions': tournament.permissions,
+            })
+
+        def validate(self, attrs):
+            tournament = attrs.get('tournament')
+            if tournament is not None and any(group.tournament_id != tournament.pk for group in attrs.get('groups', [])):
+                raise serializers.ValidationError({'groups': 'Group must be within the specified tournament'})
+            return attrs
 
     url = serializers.HyperlinkedIdentityField(view_name='api-user-detail')
     tournaments = TournamentPermissionsSerializer(many=True, required=False)
@@ -1875,24 +1874,25 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
+    def validate_tournaments(self, tournaments):
+        if self.instance is not None:
+            raise serializers.ValidationError('Tournament assignments can only be included when creating a user.')
+        return tournaments
+
+    @transaction.atomic
     def create(self, validated_data):
         tournaments = validated_data.pop('tournaments', [])
         user = self.Meta.model(**validated_data)
         user.set_password(validated_data['password'])
         user.save()
 
-        memberships = []
-        permissions = []
-        for tournament_permissions in tournaments:
-            for group in tournament_permissions['groups']:
-                if group.tournament != tournament_permissions['tournament']:
-                    raise serializers.ValidationError('Group must be within the specified tournament')
-                memberships.append(Membership(user=user, group=group))
-            permissions.extend([
-                UserPermission(user=user, permission=permission, tournament=tournament_permissions['tournament']) for permission in tournament_permissions['permissions']
-            ])
-        Membership.objects.bulk_create(memberships)
-        UserPermission.objects.bulk_create(permissions)
+        groups = {group for assignment in tournaments for group in assignment['groups']}
+        permissions = {(assignment['tournament'], permission) for assignment in tournaments for permission in assignment.get('permissions', [])}
+        Membership.objects.bulk_create([Membership(user=user, group=group) for group in groups])
+        UserPermission.objects.bulk_create([
+            UserPermission(user=user, permission=permission, tournament=tournament) for tournament, permission in permissions
+        ])
+        user.tournaments = get_permissions(user)
 
         return user
 

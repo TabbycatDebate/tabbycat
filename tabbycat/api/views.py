@@ -45,7 +45,7 @@ from tournaments.mixins import TournamentFromUrlMixin
 from tournaments.models import Round, Tournament
 from users.permissions import get_permissions, Permission
 from users.permissions import has_permission as user_has_permission
-from venues.models import Venue, VenueCategory
+from venues.models import Venue, VenueCategory, VenueConstraint
 
 from . import serializers
 from .fields import ParticipantAvailabilityForeignKeyField
@@ -398,7 +398,9 @@ class InstitutionViewSet(TournamentAPIMixin, TournamentPublicAPIMixin, ModelView
             Prefetch('tournamentinstitution_set',
                 queryset=self.tournament.tournamentinstitution_set.all().prefetch_related(
                     'coach_set__answers__question__tournament', 'answers__question__tournament')),
-            'venue_constraints__category__tournament',
+            Prefetch('venue_constraints', queryset=VenueConstraint.objects.filter(
+                category__tournament=self.tournament,
+            ).select_related('category__tournament')),
         )
         for inst in qs:
             inst.tournament = t[0] if len(t := inst.tournamentinstitution_set.all()) == 1 else None
@@ -514,7 +516,7 @@ class GlobalInstitutionViewSet(ModelViewSet):
         filters = Q()
         if region := params.validated_data.get('region'):
             filters &= Q(region__name=region.name)
-        return Institution.objects.filter(filters).select_related('region').prefetch_related('venue_constraints__category__tournament')
+        return Institution.objects.filter(filters).select_related('region')
 
 
 @extend_schema(tags=['teams'], parameters=[tournament_parameter])
@@ -1259,7 +1261,7 @@ class GeneratePairingView(RoundAPIMixin, AdministratorAPIMixin, CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         draw = self.perform_create(serializer)
-        response_serializer = serializers.RoundPairingSerializer(draw, many=True)
+        response_serializer = serializers.RoundPairingSerializer(draw, many=True, context=self.get_serializer_context())
 
         headers = self.get_success_headers(serializer.data)
         return Response(response_serializer.data, status=201, headers=headers)
