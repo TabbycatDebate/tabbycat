@@ -2,16 +2,18 @@ import json
 from unittest.mock import AsyncMock, patch
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import connection
 from django.test import Client
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
+from rest_framework.response import Response
 from rest_framework.test import APITestCase
 
 from actionlog.models import ActionLogEntry
 from adjallocation.models import PreformedPanel
 from availability.models import RoundAvailability
-from checkins.models import Event
+from checkins.models import Event, PersonIdentifier
 from participants.models import Adjudicator, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore
 from tournaments.models import Round, Tournament
@@ -69,6 +71,34 @@ class TournamentViewsetTests(CompletedTournamentTestMixin, APITestCase):
         response = self.client.get(self.reverse_url('api-tournament-detail'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["id"], self.tournament.id)
+
+    def test_tournament_writes_require_staff(self):
+        list_url = reverse('api-tournament-list')
+        detail_url = self.reverse_url('api-tournament-detail')
+        write_actions = (
+            (self.client.post, list_url, 'create'),
+            (self.client.post, detail_url, 'update'),
+            (self.client.patch, detail_url, 'partial_update'),
+            (self.client.delete, detail_url, 'destroy'),
+        )
+        user_model = get_user_model()
+        for user, expected_status in ((None, 401), (user_model(), 403), (user_model(is_staff=True), 204)):
+            self.client.force_authenticate(user=user)
+            for request, url, action in write_actions:
+                with self.subTest(action=action, expected_status=expected_status):
+                    with patch(f'api.views.TournamentViewSet.{action}', return_value=Response(status=204)):
+                        self.assertEqual(request(url).status_code, expected_status)
+
+
+class GlobalInstitutionViewsetTests(APITestCase):
+
+    def test_list_global_institutions_requires_staff(self):
+        url = reverse('api-global-institution-list')
+        user_model = get_user_model()
+        for user, expected_status in ((None, 401), (user_model(), 403), (user_model(is_staff=True), 200)):
+            with self.subTest(expected_status=expected_status):
+                self.client.force_authenticate(user=user)
+                self.assertEqual(self.client.get(url).status_code, expected_status)
 
 
 class ParticipantNameValidationTests(CompletedTournamentTestMixin, APITestCase):
@@ -538,8 +568,42 @@ class BallotViewSetTests(CompletedTournamentTestMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_access_with_private_url(self):
+        self.tournament.preferences['data_entry__participant_ballots'] = 'private-urls'
         response = self.client.get(reverse('api-ballot-list', kwargs={'tournament_slug': self.tournament.slug, 'round_seq': 1, 'debate_pk': 12}), headers={"Authorization": "Key urlkey"})
         self.assertEqual(response.status_code, 200)
+
+    def test_read_ballots_requires_explicit_release_or_private_url_access(self):
+        url = self.reverse_url('api-ballot-list', round_seq=1, debate_pk=12)
+        headers = {"Authorization": "Key urlkey"}
+        self.tournament.preferences['data_entry__participant_ballots'] = 'off'
+        self.tournament.preferences['tab_release__private_ballots_released'] = False
+        self.tournament.preferences['tab_release__ballots_released'] = False
+        self.tournament.preferences['tab_release__all_results_released'] = False
+        self.assertEqual(self.client.get(url, headers=headers).status_code, 403)
+
+        self.tournament.preferences['tab_release__private_ballots_released'] = True
+        self.assertEqual(self.client.get(url).status_code, 401)
+        self.assertEqual(self.client.get(url, headers=headers).status_code, 200)
+
+        self.tournament.preferences['tab_release__ballots_released'] = True
+        self.assertEqual(self.client.get(url).status_code, 200)
+
+
+class ParticipantCheckinTests(CompletedTournamentTestMixin, APITestCase):
+
+    def test_participant_self_checkin_requires_enabled_private_key(self):
+        adjudicator = Adjudicator.objects.create(tournament=self.tournament, name='Check-in adjudicator', url_key='checkin-test-key')
+        PersonIdentifier.objects.create(person=adjudicator)
+        url = self.reverse_url('api-adjudicator-checkin', pk=adjudicator.pk)
+        headers = {"Authorization": f"Key {adjudicator.url_key}"}
+
+        self.tournament.preferences['data_entry__public_checkins_submit'] = False
+        self.assertEqual(self.client.get(url, headers=headers).status_code, 403)
+
+        self.tournament.preferences['data_entry__public_checkins_submit'] = True
+        self.assertEqual(self.client.get(url).status_code, 401)
+        self.assertEqual(self.client.get(url, headers=headers).status_code, 200)
+        self.assertEqual(self.client.post(url, headers=headers).status_code, 403)
 
 
 class RoundActionTests(CompletedTournamentTestMixin, APITestCase):
