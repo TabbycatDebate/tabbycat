@@ -348,19 +348,7 @@ class BaseStandingsGenerator:
         rank_filter = self.get_rank_filter() if self.options["rank_filter"][0] is not None else None
         standings = Standings(queryset, rank_filter=rank_filter)
 
-        # The original queryset might have filtered out information relevant to
-        # calculating the metrics (e.g., if it filters teams by participation in
-        # a round), so make a new queryset to pass to the metric annotators that
-        # relies on a nested ID selection instead.
-        #
-        # We may re-add the tournament filter if available in order to use its index
-        # for faster querying.
-
-        tournament_q = Q()
-        if round or tournament:
-            tournament_q &= Q(**{self.tournament_field: tournament or round.tournament})
-
-        queryset_for_metrics = queryset.model.objects.filter(tournament_q, id__in=queryset.values_list('id', flat=True))
+        queryset_for_metrics = self.get_queryset_for_metrics(queryset, standings, tournament, round)
 
         ranking_metrics = set(self.precedence)
         if self.options["rank_filter"][0] is not None:
@@ -399,6 +387,15 @@ class BaseStandingsGenerator:
 
         standings.set_metric_display_order(self.ordered_metric_keys)
         return standings
+
+    def get_queryset_for_metrics(self, queryset, standings, tournament, round):
+        # Keep participant selection separate from the joins used for metrics.
+
+        tournament_q = Q()
+        if round or tournament:
+            tournament_q &= Q(**{self.tournament_field: tournament or round.tournament})
+
+        return queryset.model.objects.filter(tournament_q, id__in=queryset.values_list('id', flat=True))
 
     def generate_from_queryset(self, queryset, metric_annotators, standings, round, tournament=None):
         """Generates standings if rankings can be calculated through the
