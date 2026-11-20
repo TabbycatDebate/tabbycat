@@ -687,7 +687,7 @@ class BaseJsonAttributeSetView(AdministratorMixin, TournamentMixin, LogActionMix
         return JsonResponse(json.dumps(True), safe=False)
 
 
-class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
+class SetAdjudicatorBreakingStatusView(BaseJsonAttributeSetView):
 
     edit_permission = Permission.EDIT_ADJ_BREAK
     action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_BREAK_SET
@@ -695,7 +695,7 @@ class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogA
     adj_field = 'breaking'
 
 
-class SetAdjudicatorTesterStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
+class SetAdjudicatorTesterStatusView(BaseJsonAttributeSetView):
 
     edit_permission = Permission.EDIT_ADJ_TESTER
     action_log_type = ActionLogEntry.ActionType.ADJUDICATOR_TESTER_SET
