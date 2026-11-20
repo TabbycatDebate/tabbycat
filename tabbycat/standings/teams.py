@@ -6,11 +6,13 @@ from itertools import groupby
 from statistics import mean
 
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import Avg, Count, F, FloatField, PositiveIntegerField, Prefetch, Q, StdDev, Sum
+from django.db.models import Avg, Count, F, FilteredRelation, FloatField, PositiveIntegerField, Prefetch, Q, StdDev, Subquery, Sum, Value
 from django.db.models.functions import Cast, NullIf, Round as RoundScore
+from django.db.models.lookups import Exact, In
 from django.utils.translation import gettext_lazy as _
 
-from results.models import TeamScore
+from draw.models import Debate
+from results.models import BallotSubmission, TeamScore
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
@@ -79,6 +81,8 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     of TeamScore instances."""
 
     query_group = 'debateteam__teamscore'
+    score_relation = 'debateteam__teamscore'
+    scores_filtered = False
     function = None  # must be set by subclasses
     field = None  # must be set by subclasses
     output_field = None
@@ -90,12 +94,14 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
     def get_field(self):
         """Subclasses with complicated fields override this method."""
-        return 'debateteam__teamscore__' + self.field
+        return self.score_relation + '__' + self.field
 
     def get_where_field(self):
         return self.get_field()
 
     def get_annotation_filter(self, round=None):
+        if self.scores_filtered:
+            return Q(**{self.get_where_field(): self.where_value}) if self.where_value is not None else Q()
         annotation_filter = Q(
             debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
         )
@@ -203,12 +209,15 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     function = Avg
     query_group = 'debateteam__speakerscore'
+    score_relation = 'debateteam__speakerscore'
     round_value = True
 
     def get_field(self):
-        return 'debateteam__speakerscore__score'
+        return self.score_relation + '__score'
 
     def get_annotation_filter(self, round=None):
+        if self.scores_filtered:
+            return Q()
         annotation_filter = Q(
             debateteam__debate__round__stage=Round.Stage.PRELIMINARY,
             debateteam__speakerscore__ballot_submission__confirmed=True,
@@ -388,8 +397,8 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         self.adjs_per_debate = adjs_per_debate
 
     def get_field(self):
-        return (Cast('debateteam__teamscore__votes_given', FloatField()) /
-            NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
+        return (Cast(self.score_relation + '__votes_given', FloatField()) /
+            NullIf(self.score_relation + '__votes_possible', 0, output_field=FloatField()) *
             self.adjs_per_debate)
 
     def annotate_with_queryset(self, queryset, standings):
@@ -542,3 +551,40 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     }
 
     tournament_field = 'tournament'
+
+    def get_queryset_for_metric_group(self, queryset, annotators, standings, tournament, round):
+        group = annotators[0].query_group
+        if group == 'debateteam__teamscore':
+            alias = 'standings_team_scores'
+        elif group == 'debateteam__speakerscore':
+            if tournament is None:
+                first = next(iter(standings.infoview()), None)
+                tournament = first.instance.tournament if first is not None else None
+            alias = 'standings_individual_scores'
+        else:
+            # Pull-up counts include debates with no confirmed result.
+            return queryset
+
+        tournament_ids = {info.instance.tournament_id for info in standings.infoview()}
+        debates = Debate.objects.filter(round__stage=Round.Stage.PRELIMINARY, round__tournament_id__in=tournament_ids)
+        if round is not None:
+            debates = debates.filter(round__seq__lte=round.seq)
+        ballots = BallotSubmission.objects.filter(
+            confirmed=True, debate__round__tournament_id__in=tournament_ids,
+        ).order_by().values('pk')
+        condition = Q(debateteam__debate_id__in=Subquery(debates.order_by().values('pk')))
+        # Keep "= TRUE" in SQL so PostgreSQL can hash this subplan once instead
+        # of pulling IN into a repeated nested-loop join. Value(True) prevents
+        # Django from simplifying away the comparison.
+        condition &= Q(Exact(In(F(group + '__ballot_submission_id'), Subquery(ballots)), Value(True)))
+        if group == 'debateteam__speakerscore':
+            condition &= Q(**{group + '__ghost': False})
+            if tournament is not None:
+                condition &= Q(**{group + '__position__lte': tournament.last_substantive_position})
+
+        for annotator in annotators:
+            annotator.score_relation = alias
+            annotator.scores_filtered = True
+        return queryset.annotate(**{alias: FilteredRelation(
+            group, condition=condition,
+        )})

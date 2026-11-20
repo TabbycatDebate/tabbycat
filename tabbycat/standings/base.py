@@ -356,7 +356,7 @@ class BaseStandingsGenerator:
         ranking_queryset = None
         ranking_metric_annotators = None
         for annotators in self.queryset_metric_annotator_groups.values():
-            group_queryset = queryset_for_metrics
+            group_queryset = self.get_queryset_for_metric_group(queryset_for_metrics, annotators, standings, tournament, round)
             for annotator in annotators:
                 group_queryset = annotator.get_annotated_queryset(group_queryset, round)
 
@@ -397,6 +397,9 @@ class BaseStandingsGenerator:
             tournament_q &= Q(**{self.tournament_field: tournament or round.tournament})
 
         return queryset.model.objects.filter(tournament_q, id__in=[info.instance_id for info in standings.infoview()])
+
+    def get_queryset_for_metric_group(self, queryset, annotators, standings, tournament, round):
+        return queryset
 
     def generate_from_queryset(self, queryset, metric_annotators, standings, round, tournament=None):
         """Generates standings if rankings can be calculated through the

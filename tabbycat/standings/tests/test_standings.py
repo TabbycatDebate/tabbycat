@@ -537,3 +537,86 @@ class TestMissingStandings(TestCase):
         standings = self.get_standings(generator)
         self.assertEqual(standings.get_standing(self.team1).metrics['num_adjs'], 0)
         self.assertEqual(standings.get_standing(self.team2).metrics['num_adjs'], 0)
+
+
+class TestTeamScoreFiltering(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.tournament = Tournament.objects.create(slug='team-score-filtering', name='Team score filtering')
+        cls.active, cls.unconfirmed, cls.empty = [
+            Team.objects.create(tournament=cls.tournament, reference=name)
+            for name in ('Active', 'Unconfirmed', 'Empty')
+        ]
+        speaker = Speaker.objects.create(team=cls.active, name='Speaker')
+        cls.rounds = []
+        for seq in range(1, 5):
+            rd = Round.objects.create(tournament=cls.tournament, seq=seq, schedule_group=seq,
+                stage=Round.Stage.ELIMINATION if seq == 4 else Round.Stage.PRELIMINARY,
+                weight=2 if seq == 1 else 1)
+            cls.rounds.append(rd)
+            debate = Debate.objects.create(round=rd, flags=['pullup'])
+            dt = DebateTeam.objects.create(debate=debate, team=cls.active, side=DebateSide.AFF, flags=['pullup'])
+            ballot = BallotSubmission.objects.create(debate=debate, confirmed=seq != 2)
+            TeamScore.objects.create(debate_team=dt, ballot_submission=ballot,
+                points=1, win=True, score=150, margin=4, votes_given=1, votes_possible=1, has_ghost=True)
+            for position, score, ghost in ((1, 75, False), (2, 200, True), (cls.tournament.reply_position, 50, False)):
+                SpeakerScore.objects.create(debate_team=dt, ballot_submission=ballot,
+                    speaker=speaker, position=position, score=score, ghost=ghost)
+            if seq == 2:
+                other = DebateTeam.objects.create(debate=debate, team=cls.unconfirmed,
+                    side=DebateSide.NEG, flags=['pullup'])
+                TeamScore.objects.create(debate_team=other, ballot_submission=ballot, points=3, score=999)
+            if seq == 1:
+                draft = BallotSubmission.objects.create(debate=debate, confirmed=False)
+                TeamScore.objects.create(debate_team=dt, ballot_submission=draft, points=3, score=999)
+                SpeakerScore.objects.create(debate_team=dt, ballot_submission=draft,
+                    speaker=speaker, position=1, score=999)
+
+    def test_score_groups_preserve_pullups_and_teams_without_results(self):
+        expected = {
+            'points': 2, 'wins': 1, 'speaks_sum': 150, 'speaks_avg': 150, 'speaks_stddev': 0,
+            'margin_sum': 4, 'margin_avg': 4, 'num_adjs': 3, 'num_iron': 1,
+            'speaks_ind_avg': 75, 'npullups': 2, 'pullup_debates': 2,
+        }
+        for precedence in (('points',), ('speaks_ind_avg',), ('npullups',), ('points', 'speaks_ind_avg')):
+            with self.subTest(precedence=precedence):
+                extras = tuple(key for key in expected if key not in precedence)
+                generator = TeamStandingsGenerator(precedence, ('rank',), extras)
+                standings = generator.generate(self.tournament.team_set.all(), round=self.rounds[1])
+                self.assertEqual(standings.get_standing(self.active).metrics, expected)
+                self.assertEqual(set(standings.infos), {self.active, self.unconfirmed, self.empty})
+                for team in (self.unconfirmed, self.empty):
+                    metrics = standings.get_standing(team).metrics
+                    self.assertEqual(metrics['wins'], 0)
+                    self.assertIsNone(metrics['points'])
+                    self.assertIsNone(metrics['speaks_avg'])
+                    self.assertIsNone(metrics['speaks_ind_avg'])
+                    self.assertEqual(metrics['npullups'], int(team == self.unconfirmed))
+                self.assertEqual(standings.get_standing(self.active).rankings['rank'], (1, False))
+
+    def test_without_round_or_explicit_tournament(self):
+        generator = TeamStandingsGenerator(('points',), ('rank',), ('speaks_ind_avg', 'npullups'))
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.active).metrics,
+                         {'points': 3, 'speaks_ind_avg': 75, 'npullups': 3})
+
+    def test_empty_selection(self):
+        generator = TeamStandingsGenerator(('points',), ('rank',), ('speaks_ind_avg', 'npullups'))
+        self.assertEqual(len(generator.generate(self.tournament.team_set.none())), 0)
+
+    def test_ballot_scope_includes_every_selected_tournament(self):
+        tournament = Tournament.objects.create(slug='other-score-filtering', name='Other score filtering')
+        team = Team.objects.create(tournament=tournament, reference='Other')
+        rd = Round.objects.create(tournament=tournament, seq=1, schedule_group=1)
+        debate = Debate.objects.create(round=rd)
+        dt = DebateTeam.objects.create(debate=debate, team=team, side=DebateSide.AFF)
+        ballot = BallotSubmission.objects.create(debate=debate, confirmed=True)
+        TeamScore.objects.create(debate_team=dt, ballot_submission=ballot, points=3)
+
+        generator = TeamStandingsGenerator(('points',), ('rank',))
+        standings = generator.generate(Team.objects.filter(pk__in=[self.active.pk, team.pk]))
+        for participant in (self.active, team):
+            standing = standings.get_standing(participant)
+            self.assertEqual(standing.metrics['points'], 3)
+            self.assertEqual(standing.rankings['rank'], (1, True))
