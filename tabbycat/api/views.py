@@ -7,6 +7,7 @@ from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.prefetch import GenericPrefetch
 from django.db.models import Avg, Count, Prefetch, Q
 from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
@@ -22,7 +23,7 @@ from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator, PreformedPanel
@@ -37,7 +38,7 @@ from checkins.utils import create_identifiers, get_unexpired_checkins
 from draw.models import Debate, DebateTeam
 from options.models import TournamentPreferenceModel
 from participants.models import Adjudicator, Institution, Person, Speaker, SpeakerCategory, Team
-from results.models import SpeakerScore, TeamScore
+from results.models import BallotSubmission, SpeakerScore, TeamScore
 from standings.base import StandingsError
 from standings.speakers import SpeakerStandingsGenerator
 from standings.teams import TeamStandingsGenerator
@@ -623,6 +624,27 @@ class ScheduleEventViewSet(TournamentAPIMixin, PublicAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         return super().get_queryset().select_related('tournament', 'round').order_by('start_time')
+
+
+@extend_schema(tags=['action-log'], parameters=[tournament_parameter])
+@extend_schema_view(
+    list=extend_schema(summary="List action log entries of the tournament"),
+    retrieve=extend_schema(summary="Get action log entry", parameters=[id_parameter]),
+)
+class ActionLogEntryViewSet(TournamentAPIMixin, AdministratorAPIMixin, ReadOnlyModelViewSet):
+    serializer_class = serializers.ActionLogEntrySerializer
+
+    list_permission = Permission.VIEW_ACTIONLOGENTRIES
+
+    def get_queryset(self):
+        # The URLs of affected debates, ballots and panels include their round
+        return super().get_queryset().select_related('round__tournament').prefetch_related(
+            GenericPrefetch('content_object', [
+                BallotSubmission.objects.select_related('debate__round'),
+                Debate.objects.select_related('round'),
+                PreformedPanel.objects.select_related('round'),
+            ]),
+        ).order_by('timestamp', 'id')
 
 
 @extend_schema(tags=['checkins'], parameters=[tournament_parameter, id_parameter])
