@@ -389,13 +389,14 @@ class BaseStandingsGenerator:
         return standings
 
     def get_queryset_for_metrics(self, queryset, standings, tournament, round):
-        # Keep participant selection separate from the joins used for metrics.
+        # Keep participant selection separate from metric joins, using the
+        # instances already loaded by Standings rather than repeating selection.
 
         tournament_q = Q()
         if round or tournament:
             tournament_q &= Q(**{self.tournament_field: tournament or round.tournament})
 
-        return queryset.model.objects.filter(tournament_q, id__in=queryset.values_list('id', flat=True))
+        return queryset.model.objects.filter(tournament_q, id__in=[info.instance_id for info in standings.infoview()])
 
     def generate_from_queryset(self, queryset, metric_annotators, standings, round, tournament=None):
         """Generates standings if rankings can be calculated through the
