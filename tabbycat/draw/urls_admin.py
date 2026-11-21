@@ -37,6 +37,9 @@ urlpatterns = [
         path('edit/',
             views.EditDebateTeamsView.as_view(),
             name='edit-debate-teams'),
+        path('confirm-sides/',
+            views.ConfirmAllSidesView.as_view(),
+            name='draw-confirm-sides'),
 
         # Display
         path('display/',

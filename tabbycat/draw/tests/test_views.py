@@ -1,12 +1,17 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
+from django.core.cache import cache
 from django.test import TestCase
 
+from actionlog.models import ActionLogEntry
 from draw.dbutils import delete_round_draw
 from draw.models import DebateTeam, TeamSideAllocation
 from draw.utils import opposite_side
 from tournaments.models import Round
+from users.models import UserPermission
+from users.permissions import Permission
 from utils.misc import reverse_tournament
 from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
 
@@ -206,6 +211,67 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
 class EditDebateTeamsViewTest(AdminTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'edit-debate-teams'
     round_seq = 1
+
+
+class ConfirmAllSidesViewTest(CompletedTournamentTestMixin, TestCase):
+    round_seq = 4
+
+    def setUp(self):
+        super().setUp()
+        cache.clear()  # permissions are cached per user ID, which recurs between tests
+        self.debates = self.round.debate_set.order_by('id')
+        self.debates.filter(id__in=[d.id for d in self.debates[:2]]).update(sides_confirmed=False)
+        self.other_round_debate = self.tournament.round_set.get(seq=3).debate_set.first()
+        self.other_round_debate.sides_confirmed = False
+        self.other_round_debate.save()
+
+        self.user = get_user_model().objects.create_user('sides_confirmer')
+        UserPermission.objects.create(user=self.user, tournament=self.tournament,
+            permission=Permission.EDIT_ALLOCATESIDES)
+        self.client.force_login(self.user)
+
+    def post(self):
+        return self.client.post(self.reverse_url('draw-confirm-sides'))
+
+    def test_confirms_unconfirmed_sides_in_round(self):
+        response = self.post()
+        self.assertRedirects(response, self.reverse_url('draw'), fetch_redirect_response=False)
+        self.assertFalse(self.round.debate_set.filter(sides_confirmed=False).exists())
+        self.other_round_debate.refresh_from_db()
+        self.assertFalse(self.other_round_debate.sides_confirmed)
+
+        self.assertEqual([str(m) for m in get_messages(response.wsgi_request)], ["Confirmed sides in 2 debates."])
+        log = ActionLogEntry.objects.get(type=ActionLogEntry.ActionType.SIDES_SAVE)
+        self.assertEqual(log.round, self.round)
+        self.assertEqual(log.user, self.user)
+
+    def test_all_sides_already_confirmed(self):
+        self.round.debate_set.update(sides_confirmed=True)
+        response = self.post()
+        self.assertRedirects(response, self.reverse_url('draw'), fetch_redirect_response=False)
+        self.assertEqual([str(m) for m in get_messages(response.wsgi_request)], ["Sides were already confirmed in all debates."])
+        self.assertFalse(ActionLogEntry.objects.filter(type=ActionLogEntry.ActionType.SIDES_SAVE).exists())
+
+    def test_requires_allocate_sides_permission(self):
+        UserPermission.objects.get(user=self.user).delete()  # through the model, to clear the permission cache
+        UserPermission.objects.create(user=self.user, tournament=self.tournament,
+            permission=Permission.GENERATE_DEBATE)
+        response = self.post()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(self.round.debate_set.filter(sides_confirmed=False).count(), 2)
+
+    def test_get_does_not_confirm(self):
+        self.client.get(self.reverse_url('draw-confirm-sides'))
+        self.assertEqual(self.round.debate_set.filter(sides_confirmed=False).count(), 2)
+
+    def test_draw_page_offers_confirmation(self):
+        self.client.force_login(get_user_model().objects.create(username='sides_admin', is_superuser=True))
+        response = self.client.get(self.reverse_url('draw'))
+        self.assertContains(response, self.reverse_url('draw-confirm-sides'))
+
+        self.round.debate_set.update(sides_confirmed=True)
+        response = self.client.get(self.reverse_url('draw'))
+        self.assertNotContains(response, self.reverse_url('draw-confirm-sides'))
 
 
 class SideAllocationsEditingTest(CompletedTournamentTestMixin, TestCase):
