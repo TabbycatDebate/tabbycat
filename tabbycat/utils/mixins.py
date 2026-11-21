@@ -5,7 +5,7 @@ from typing import Optional, TYPE_CHECKING
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import connection
-from django.utils.decorators import method_decorator
+from django.utils.cache import add_never_cache_headers
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin
 
@@ -167,6 +167,25 @@ class CacheMixin:
 
     cache_timeout = settings.PUBLIC_FAST_CACHE_TIMEOUT
 
-    @method_decorator(cache_page(cache_timeout))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        dispatch = super().dispatch
+        user = getattr(request, 'user', None)
+        personalized = (
+            getattr(user, 'is_authenticated', False) or
+            settings.SESSION_COOKIE_NAME in request.COOKIES or
+            'Authorization' in request.headers
+        )
+        if not personalized:
+            # Version the namespace to avoid reading old, potentially personalized entries.
+            dispatch = cache_page(self.cache_timeout, key_prefix='public-page-v2')(dispatch)
+        response = dispatch(request, *args, **kwargs)
+
+        def prevent_browser_cache(response):
+            # Keep server caching, but recheck page permissions on every browser visit.
+            add_never_cache_headers(response)
+            return response
+
+        if hasattr(response, 'add_post_render_callback'):
+            response.add_post_render_callback(prevent_browser_cache)
+            return response
+        return prevent_browser_cache(response)
