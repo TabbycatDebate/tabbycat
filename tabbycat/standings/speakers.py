@@ -3,10 +3,13 @@
 import logging
 from functools import partialmethod
 
-from django.db.models import Avg, Case, Count, F, FloatField, Max, Min, Q, StdDev, Sum, When
+from django.db.models import Avg, Case, Count, F, FilteredRelation, FloatField, Max, Min, Q, StdDev, Subquery, Sum, Value, When
 from django.db.models.functions import Cast, NullIf, Round as RoundScore
+from django.db.models.lookups import Exact, In
 from django.utils.translation import gettext_lazy as _
 
+from draw.models import DebateTeam
+from results.models import BallotSubmission
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator, StandingsError
@@ -27,22 +30,19 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     query_group = 'speakerscore'
     function = None
     replies = False
-    field = 'speakerscore__score'
+    filter_positions = True
+    field = 'standings_speakerscore__score'
     where_value = None
     round_value = True
 
     def get_annotation_filter(self, round):
         """Returns the Q object restricting which speeches the metric counts."""
-        annotation_filter = Q(
-            speakerscore__ballot_submission__confirmed=True,
-            speakerscore__debate_team__debate__round__seq__lte=round.seq,
-            speakerscore__debate_team__debate__round__stage=Round.Stage.PRELIMINARY,
-            speakerscore__ghost=False,
-        )
+        if not self.filter_positions:
+            return Q()
         if self.replies:
-            annotation_filter &= Q(speakerscore__position=round.tournament.reply_position)
+            annotation_filter = Q(standings_speakerscore__position=round.tournament.reply_position)
         else:
-            annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
+            annotation_filter = Q(standings_speakerscore__position__lte=round.tournament.last_substantive_position)
 
         return annotation_filter
 
@@ -250,13 +250,16 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
         # that the main annotation will know what 'count' means. We can't do
         # this inline in get_annotation() because Django doesn't support the
         # syntax F('count') > 2, and we're forced to use count__gt=2 instead.
-        queryset = self.SpeechCount().get_annotated_queryset(queryset, round=round)
+        count = self.SpeechCount()
+        count.filter_positions = self.filter_positions
+        queryset = count.get_annotated_queryset(queryset, round=round)
         return super().get_annotated_queryset(queryset, round=round)
 
     def get_annotation(self, round=None):
-        total = TotalSpeakerScoreMetricAnnotator().get_aggregation(round)
-        highest = self.MaximumScore().get_aggregation(round)
-        lowest = self.MinimumScore().get_aggregation(round)
+        annotators = (TotalSpeakerScoreMetricAnnotator(), self.MaximumScore(), self.MinimumScore())
+        for annotator in annotators:
+            annotator.filter_positions = self.filter_positions
+        total, highest, lowest = (annotator.get_aggregation(round) for annotator in annotators)
 
         return RoundScore(Case(
             When(speech_count__gt=2, then=(total - highest - lowest) / (F('speech_count') - 2)),
@@ -272,7 +275,7 @@ class SpeakerScoreRankingsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     abbr = _("SRank")
     function = Sum
     ascending = True
-    field = 'speakerscore__rank'
+    field = 'standings_speakerscore__rank'
     round_value = False
 
 
@@ -285,7 +288,7 @@ class BaseCriterionMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     the criterion's seq, so use criterion_metric_annotator_classes() to build
     them for a tournament rather than instantiating these directly."""
 
-    field = 'speakerscore__speakercriterionscore__score'
+    field = 'standings_speakerscore__speakercriterionscore__score'
     key_prefix = None  # must be set by subclasses
     name_format = None  # must be set by subclasses
     abbr_format = None  # must be set by subclasses
@@ -318,7 +321,7 @@ class BaseCriterionMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
         # speeches it applies to, and one scored only on replies has no
         # standings of its own.
         return super().get_annotation_filter(round) & Q(
-            speakerscore__speakercriterionscore__criterion=self.criterion)
+            standings_speakerscore__speakercriterionscore__criterion=self.criterion)
 
 
 class TotalCriterionScoreMetricAnnotator(BaseCriterionMetricAnnotator):
@@ -418,6 +421,43 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     }
 
     tournament_field = 'team__tournament'
+
+    def get_queryset_for_metrics(self, queryset, standings, tournament, round):
+        queryset = super().get_queryset_for_metrics(queryset, standings, tournament, round)
+        score_annotators = [a for a in self.metric_annotators
+            if isinstance(a, SpeakerScoreQuerySetMetricAnnotator) and not isinstance(a, TeamMetricQuerySetMetricAnnotator)]
+        if not score_annotators:
+            return queryset
+
+        # The join already restricts positions unless substantive and reply
+        # metrics share it. Current views and API endpoints request them
+        # separately; only mixed queries need per-aggregate filters.
+        mixed_positions = len({a.replies for a in score_annotators}) > 1
+        for annotator in score_annotators:
+            annotator.filter_positions = mixed_positions
+
+        positions = Q()
+        if any(a.replies for a in score_annotators):
+            positions |= Q(speakerscore__position=round.tournament.reply_position)
+        if any(not a.replies for a in score_annotators):
+            positions |= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
+
+        debate_teams = DebateTeam.objects.filter(
+            debate__round__tournament=tournament,
+            debate__round__seq__lte=round.seq,
+            debate__round__stage=Round.Stage.PRELIMINARY,
+        ).order_by().values('pk')
+        ballots = BallotSubmission.objects.filter(
+            confirmed=True, debate__round__tournament=tournament,
+        ).order_by().values('pk')
+        condition = positions & Q(speakerscore__ghost=False)
+        # Explicit comparisons retain hashed membership subplans, avoiding
+        # repeated joins for every score. Value(True) keeps "= TRUE" in SQL.
+        condition &= Q(Exact(In(F('speakerscore__debate_team_id'), Subquery(debate_teams)), Value(True)))
+        condition &= Q(Exact(In(F('speakerscore__ballot_submission_id'), Subquery(ballots)), Value(True)))
+        return queryset.annotate(standings_speakerscore=FilteredRelation(
+            'speakerscore', condition=condition,
+        ))
 
     def __init__(self, metrics, rankings, extra_metrics=(), tournament=None,
             standalone_criterion=None, **options):
