@@ -53,6 +53,7 @@ from venues.utils import venue_conflicts_display
 from .dbutils import delete_round_draw
 from .forms import ConfirmDrawDeletionForm
 from .generator import DrawFatalError, DrawUserError
+from .generator.common import DrawOptionError
 from .manager import DrawManager
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
@@ -708,11 +709,19 @@ class CreateDrawView(DrawStatusEdit):
                 manager.create()
 
         except DrawUserError as e:
-            messages.error(request, mark_safe(_(
+            message = mark_safe(_(
                 "<p>The draw could not be created, for the following reason: "
-                "<em>%(message)s</em></p>\n"
-                "<p>Please fix this issue before attempting to create the draw.</p>",
-            ) % {'message': str(e)}))
+                "<em>%(message)s</em></p>",
+            ) % {'message': escape(str(e))})
+            if isinstance(e, DrawOptionError):
+                draw_options_url = reverse_tournament('options-tournament-section', self.tournament, kwargs={'section': 'draw_rules'})
+                message += format_html(
+                    _('<p>Review the <a href="{}">draw rules</a> before trying again.</p>'),
+                    draw_options_url,
+                )
+            else:
+                message += mark_safe(_("<p>Please fix this issue before attempting to create the draw.</p>"))
+            messages.error(request, message)
             logger.warning("User error creating draw: " + str(e), exc_info=True)
             return HttpResponseRedirect(reverse_round('availability-index', self.round))
         except DrawFatalError as e:

@@ -34,6 +34,8 @@ def get_two_team_generator(draw_type, avoid_conflicts='australs', side_allocatio
         return FirstEliminationDrawGenerator
     elif draw_type == "elimination":
         return SubsequentEliminationDrawGenerator
+    elif draw_type == "round_robin":
+        return TwoTeamRoundRobinDrawGenerator
     elif avoid_conflicts.startswith('graph'):
         if draw_type == "random":
             if side_allocations == "preallocated":
@@ -54,8 +56,6 @@ def get_two_team_generator(draw_type, avoid_conflicts='australs', side_allocatio
             if side_allocations == "preallocated":
                 return AustralsPowerPairedWithAllocatedSidesDrawGenerator
             return AustralsPowerPairedDrawGenerator
-        elif draw_type == "round_robin":
-            return TwoTeamRoundRobinDrawGenerator
     raise ValueError("Unrecognised draw type for two-team draw: {}".format(draw_type))
 
 

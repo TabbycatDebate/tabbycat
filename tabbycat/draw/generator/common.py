@@ -30,6 +30,10 @@ class DrawFatalError(BaseDrawError):
     pass
 
 
+class DrawOptionError(DrawUserError, ValueError):
+    """An option is incompatible with the selected draw generator."""
+
+
 class BaseDrawGenerator:
     """Base class for generators for all draw types, for both two-team and BP.
     """
@@ -72,7 +76,9 @@ class BaseDrawGenerator:
         self.options.update(self.DEFAULT_OPTIONS)
         unrecognised = [key for key in kwargs if key not in self.options]
         if unrecognised:
-            raise ValueError("Unrecognised options: " + ", ".join(unrecognised))
+            raise DrawOptionError(_("The selected draw generator does not support these options: %(options)s.") % {
+                'options': ", ".join(sorted(unrecognised)),
+            })
         self.options.update(kwargs)
 
     def generate(self):
@@ -84,9 +90,13 @@ class BaseDrawGenerator:
         if callable(option):
             return option
         try:
-            return getattr(self, option_dict[option])
-        except KeyError:
-            raise ValueError("Invalid option for {1}: {0}".format(option, option_name))
+            method_name = option_dict[option]
+        except (KeyError, TypeError):
+            raise DrawOptionError(_(
+                "The selected draw generator does not support %(value)s for %(option)s. "
+                "Supported values are %(choices)s.",
+            ) % {'value': option, 'option': option_name, 'choices': ", ".join(option_dict)}) from None
+        return getattr(self, method_name)
 
     def add_team_flag(self, team, flag):
         """Attaches a flag to a team.
@@ -200,7 +210,9 @@ class BasePairDrawGenerator(BaseDrawGenerator):
             for pairing in pairings:
                 pairing.shuffle_sides()
         elif self.options["side_allocations"] not in ["none", "preallocated"]:
-            raise ValueError("side_allocations setting not recognized: {0!r}".format(self.options["side_allocations"]))
+            raise DrawOptionError(_("Invalid side allocation method: %(method)s.") % {
+                'method': self.options["side_allocations"],
+            })
 
 
 class BaseBPDrawGenerator(BaseDrawGenerator):
