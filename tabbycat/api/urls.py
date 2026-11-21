@@ -97,6 +97,10 @@ urlpatterns = [
                             views.AvailabilitiesViewSet.as_view(),
                             name='api-availability-list'),
 
+                        path('/side-allocations',
+                            views.SideAllocationsView.as_view(),
+                            name='api-sideallocation-list'),
+
                         path('/pairings', include([
                             path('',
                                 views.PairingViewSet.as_view({'get': 'list', 'post': 'create', 'delete': 'delete_all'}),

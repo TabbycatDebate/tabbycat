@@ -140,19 +140,27 @@ There are four methods:
 
 Pre-allocated sides
 ^^^^^^^^^^^^^^^^^^^
-There isn't currently any way to edit side allocations from the front end. To do so from the back end, you need to create one ``TeamPositionAllocation`` entry for each team in each round. All teams must have an allocation for every round. There are a few ways to do this, take your pick:
+When sides are pre-allocated, each team needs a side allocation for each preliminary round. There are a few ways to enter them, take your pick:
 
 .. rst-class:: spaced-list
 
+* On the **Sides** page, which appears in the admin menu when the *Side allocations method* draw rule is set to *Pre-allocated*. You can choose each team's side for the next round that doesn't have a draw yet, or copy the sides teams had in a finished round (either the same sides or the opposite ones) to an upcoming round all at once.
 * If you're using the :ref:`importtournament command <importtournament-command>`, it reads sides from the file sides.csv.
-* You can do this from the Django admin interface (under Setup > Edit Database) by going to the relevant team and adding a **team position allocation** entry. That is:
+* Through the :ref:`API <api>`, at ``/api/v1/tournaments/<slug>/rounds/<seq>/side-allocations``. Each allocation is given as an object with the team's URL and side, for example ``{"team": "https://example.com/api/v1/tournaments/demo/teams/1", "side": "aff"}``:
+
+  - ``GET`` lists the round's side allocations;
+  - ``PUT`` replaces all of the round's side allocations with the given list;
+  - ``PATCH`` only sets the sides of the teams in the given list, and removes a team's allocation if its side is ``null``;
+  - ``DELETE`` removes all of the round's side allocations.
+
+* You can do this from the Django admin interface (under Setup > Edit Database) by going to the relevant team and adding a **team side allocation** entry. That is:
 
   #. Click **Admin** on the bottom right of any page after logging into an account with :ref:`superuser access <user-accounts>`.
   #. Next to **Teams**, click **Change**.
   #. Click on the name of the team you want to edit side allocations for.
-  #. Add or edit the entry or entries in the **Team position allocations** table at the bottom.
+  #. Add or edit the entry or entries in the **Team side allocations** table at the bottom.
 
-* You can also do this by writing a script that creates ``TeamPositionAllocation`` objects and saves them. Have a look at `draw/management/commands/generatesideallocations.py <https://github.com/TabbycatDebate/tabbycat/blob/master/tabbycat/draw/management/commands/generatesideallocations.py>`_ for an example.
+* You can also do this by writing a script that creates ``TeamSideAllocation`` objects and saves them. Have a look at `draw/management/commands/generatesideallocations.py <https://github.com/TabbycatDebate/tabbycat/blob/master/tabbycat/draw/management/commands/generatesideallocations.py>`_ for an example.
 
 .. _draw-pairing-method:
 
