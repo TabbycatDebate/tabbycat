@@ -99,6 +99,13 @@ metrics that will be shown in the team standings, but not used to rank teams.
     - The number of debates in which the team came third. Only makes sense for
       British Parliamentary with variable round weights.
 
+  * - Number of debates
+    - The number of preliminary debates in which the team has a confirmed
+      result. Byes are not counted. You probably wouldn't use this as a metric
+      to rank teams, but you may wish to display it as an "extra metric", for
+      example to check which teams have debated enough rounds to be eligible to
+      break.
+
   * - Number of pullups before this round
     - The number of times the team has been pulled up as part of
       :ref:`draw generation <draw-generation>`. You probably wouldn't use this
