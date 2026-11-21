@@ -1,0 +1,61 @@
+{% extends "csv_base.html" %}
+{% load i18n debate_tags %}
+
+{% block csv_content %}
+<div class="mb-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between">
+    <h2 class="h3 mr-3">{% trans "Import tournament data from CSVs" %}</h2>
+    <div class="dropdown mb-2">
+      <button type="button" class="btn btn-outline-primary dropdown-toggle" id="csv-template-menu"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i data-feather="download" class="mr-1"></i>{% trans "CSV templates" %}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="csv-template-menu">
+        {% for template in csv_templates %}
+          <a class="dropdown-item" href="{% tournamenturl 'importer-csv-template' template_key=template.key %}">
+            {{ template.label }}
+          </a>
+        {% endfor %}
+        <div class="dropdown-divider"></div>
+        <span class="dropdown-item-text small text-muted">{% trans "Fill in your data below the headers." %}</span>
+      </div>
+    </div>
+  </div>
+  <p class="text-muted">
+    {% trans "Upload related files together, map their columns, and review the rows before importing anything." %}
+  </p>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="csv-upload">
+  {% csrf_token %}
+  <div v-pre>{{ form.non_field_errors }}</div>
+  <csv-file-upload input-name="{{ form.files.html_name }}" :retained-files="csvImportData.retained_files"></csv-file-upload>
+  <noscript v-if="false">{{ form.files.label_tag }} {{ form.files }}{{ form.retained_files }}</noscript>
+  <div v-pre>{{ form.files.errors }}</div>
+  <p class="text-muted small">
+    {% blocktrans with files=csv_limits.files size=csv_limits.size rows=csv_limits.rows %}Up to {{ files }} files, {{ size }} MiB per file and {{ rows }} rows in total. For Google Sheets, download each tab as a CSV.{% endblocktrans %}
+  </p>
+  <details v-pre class="card mb-3" {% if form.errors %}open{% endif %}>
+    <summary class="card-header">{% trans "CSV format options" %}</summary>
+    {% if csv_vue_data.retained_files %}
+      <p class="text-muted small px-3 pt-3 mb-0">{% trans "These options apply to newly added files. Existing files keep their parsed data." %}</p>
+    {% endif %}
+    <div class="card-body row">
+      {% for field in form %}
+        {% if field.name != 'files' and field.name != 'retained_files' %}
+          <div class="col-md-4">
+            {% include "csv_mapping_field.html" %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </details>
+
+  {% trans "Upload institutions, teams, speakers, adjudicators, rooms, rounds, categories, motions, and related files together. References can link to existing records or other uploaded files." as text %}
+  {% include "components/explainer-card.html" with type="info" icon="info" %}
+  <div class="card mt-3">
+    {% trans "Next Step" context "button" as title %}
+    {% include "components/form-submit.html" %}
+  </div>
+</form>
+{% endblock %}

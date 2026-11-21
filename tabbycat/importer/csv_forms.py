@@ -1,0 +1,246 @@
+"""Forms for uploading, mapping and reviewing CSV files."""
+
+from __future__ import annotations
+
+import csv
+import io
+import uuid
+from collections.abc import Mapping, Sequence
+
+from django import forms
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
+from django.utils.translation import gettext_lazy as _
+
+from .csv_row_forms import CSVTeamForm
+from .csv_types import CSV_TYPES, guess_file_type
+from .csv_typing import CSVRow, CSVSource
+from .references import ImportReferences
+
+
+# Bound session storage and the number of controls rendered in a preview.
+CSV_MAX_FILES = 20
+CSV_MAX_FILE_SIZE_MIB = 2
+CSV_MAX_FILE_SIZE = CSV_MAX_FILE_SIZE_MIB * 1024 * 1024
+CSV_MAX_ROWS = 1000
+CSV_MAX_COLUMNS = 100
+CSV_MAX_HEADER_ROW = 100
+CSV_SNIFFER_SAMPLE_SIZE = 8192
+
+
+def validate_csv_file_size(upload):
+    if upload.size > CSV_MAX_FILE_SIZE:
+        raise ValidationError(_('Each CSV must be at most %(size)d MiB.'),
+            code='file_too_large', params={'size': CSV_MAX_FILE_SIZE_MIB})
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    widget = MultipleFileInput
+
+    def __init__(self, *args, list_validators=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.list_validators = list_validators
+
+    def clean(self, data, initial=None):
+        clean = super().clean
+        if not data:
+            return clean(None, initial)
+        selection = data if isinstance(data, (list, tuple)) else [data]
+        for validator in self.list_validators:
+            validator(selection)
+        return [clean(item, initial) for item in selection]
+
+
+class CSVUploadForm(forms.Form):
+    files = MultipleFileField(label=_("CSV files"), widget=MultipleFileInput(attrs={'accept': '.csv,text/csv'}),
+        validators=[validate_csv_file_size], list_validators=[MaxLengthValidator(CSV_MAX_FILES,
+            message=_("Upload at most %(limit_value)d CSV files at a time."))])
+    encoding = forms.ChoiceField(choices=[('utf-8-sig', 'UTF-8'), ('cp1252', 'Windows-1252')])
+    delimiter = forms.ChoiceField(required=False, choices=[('', _('Detect automatically')), (',', _('Comma')),
+        (';', _('Semicolon')), ('\t', _('Tab'))])
+    header_row = forms.IntegerField(min_value=1, max_value=CSV_MAX_HEADER_ROW, initial=1, label=_("Header row"))
+
+    def __init__(self, *args, retained_files=(), **kwargs):
+        super().__init__(*args, **kwargs)
+        self.retained_files = {source['id']: source for source in retained_files}
+        if retained_files:
+            self.fields['files'].required = False
+            self.fields['retained_files'] = forms.MultipleChoiceField(required=False,
+                choices=[(source['id'], source['name']) for source in retained_files], widget=forms.MultipleHiddenInput,
+                initial=list(self.retained_files))
+
+    def clean(self):
+        data = super().clean()
+        if self.errors:
+            return data
+        files = data.get('files') or []
+        parsed = [self.retained_files[key] for key in dict.fromkeys(data.get('retained_files', []))]
+        if not files and not parsed:
+            self.add_error('files', _('Upload at least one CSV file.'))
+            return data
+        if len(files) + len(parsed) > CSV_MAX_FILES:
+            self.add_error('files', _('Upload at most %(limit)d CSV files at a time.') % {'limit': CSV_MAX_FILES})
+            return data
+        total = sum(len(source['rows']) for source in parsed)
+        for upload in files:
+            try:
+                text = upload.read().decode(data['encoding'])
+                delimiter = data['delimiter']
+                if not delimiter:
+                    try:
+                        delimiter = csv.Sniffer().sniff(text[:CSV_SNIFFER_SAMPLE_SIZE], delimiters=',;\t').delimiter
+                    except csv.Error:
+                        delimiter = ','
+                reader = csv.reader(io.StringIO(text, newline=''), delimiter=delimiter, strict=True)
+                for unused in range(data['header_row'] - 1):
+                    next(reader)
+                headers = next(reader)
+                if not headers or len(headers) > CSV_MAX_COLUMNS:
+                    raise ValidationError(_("Choose a header row containing between 1 and %(limit)d columns.") % {'limit': CSV_MAX_COLUMNS})
+                rows = []
+                for values in reader:
+                    if not any(value.strip() for value in values):
+                        continue
+                    if len(values) != len(headers):
+                        raise ValidationError(_("%(file)s, line %(line)s: the number of cells does not match the headers.") % {
+                            'file': upload.name, 'line': reader.line_num})
+                    rows.append({'line': reader.line_num, 'values': [value.strip() for value in values]})
+                    total += 1
+                    if total > CSV_MAX_ROWS:
+                        raise ValidationError(_("Upload at most %(limit)s rows in total.") % {'limit': f'{CSV_MAX_ROWS:,}'})
+                if not rows:
+                    raise ValidationError(_("%(file)s contains no data rows.") % {'file': upload.name})
+                parsed.append({'id': str(uuid.uuid4()), 'name': upload.name, 'size': upload.size, 'headers': headers, 'rows': rows})
+            except UnicodeDecodeError:
+                raise ValidationError(_("Unable to decode %(file)s. Try another encoding.") % {'file': upload.name})
+            except (csv.Error, StopIteration):
+                raise ValidationError(_("Unable to read %(file)s. Check the delimiter and header row.") % {'file': upload.name})
+        data['parsed'] = parsed
+        return data
+
+
+class CSVTypesForm(forms.Form):
+    def __init__(self, *args, sources, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [('', _('Choose a file type'))] + [(kind.key, kind.label) for kind in CSV_TYPES.values()]
+        for index, source in enumerate(sources):
+            self.fields[f'file_{index}'] = forms.ChoiceField(initial=guess_file_type(source['name']),
+                label=source['name'], choices=choices)
+
+
+class CSVMappingForm(forms.Form):
+    def __init__(self, *args, sources, types, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sources = sources
+        self.types = types
+        self.file_groups = []
+        for index, source in enumerate(sources):
+            kind = CSV_TYPES[types[f'file_{index}']]
+            choices = [('', _('Ignore this column'))] + kind.mapping_choices(source)
+            used = set()
+            field_names = []
+            for column, header in enumerate(source['headers']):
+                guess = kind.guess_column(header)
+                if guess not in dict(choices) or guess in used:
+                    guess = ''
+                used.add(guess)
+                name = f'column_{index}_{column}'
+                self.fields[name] = forms.ChoiceField(required=False, choices=choices, initial=guess,
+                    label=_('Column %(number)d: %(header)s') % {'number': column + 1, 'header': header},
+                    help_text=_('Example: %(value)s') % {'value': source['rows'][0]['values'][column]})
+                field_names.append(name)
+            self.file_groups.append({'name': source['name'], 'type_label': kind.label,
+                'fields': [self[name] for name in field_names]})
+
+    def clean(self):
+        data = super().clean()
+        field_count = 10
+        for index, source in enumerate(self.sources):
+            kind = CSV_TYPES[self.types[f'file_{index}']]
+            targets = [data.get(f'column_{index}_{column}') for column in range(len(source['headers']))]
+            selected = [target for target in targets if target]
+            missing = set(kind.required_targets) - set(selected)
+            if missing:
+                labels = dict(kind.mapping_choices(source))
+                raise ValidationError(_('Map the required columns in %(file)s: %(fields)s.') % {
+                    'file': source['name'], 'fields': ', '.join(str(labels[field]) for field in sorted(missing))})
+            if len(selected) != len(set(selected)):
+                raise ValidationError(_('Map each target field only once in %(file)s.') % {'file': source['name']})
+            field_count += len(source['rows']) * kind.preview_field_count(selected)
+        limit = settings.DATA_UPLOAD_MAX_NUMBER_FIELDS
+        if limit is not None and field_count > limit:
+            raise ValidationError(_('This preview has too many fields. Split the CSV into smaller files and import separately.'))
+        return data
+
+
+def mapped_rows(files: Sequence[CSVSource], mapping: Mapping[str, str], types: Mapping[str, str] | None = None) -> list[CSVRow]:
+    rows = []
+    for index, source in enumerate(files):
+        for row_index, row in enumerate(source['rows']):
+            values = {mapping[f'column_{index}_{column}']: value for column, value in enumerate(row['values'])
+                if mapping.get(f'column_{index}_{column}')}
+            kind = (types or {}).get(f'file_{index}', 'team')
+            rows.append({'file': source['name'], 'file_index': index, 'line': row['line'], 'row_index': row_index, 'values': values, 'kind': kind})
+    return rows
+
+
+class CSVPreviewFormSet(forms.BaseFormSet):
+    deletion_widget = forms.CheckboxInput
+
+    def _construct_form(self, i, **kwargs):
+        original = self.form
+        if i < len(self.initial):
+            self.form = CSV_TYPES[self.initial[i].get('_kind', 'team')].form_class
+        try:
+            return super()._construct_form(i, **kwargs)
+        finally:
+            self.form = original
+
+    def get_form_kwargs(self, index):
+        kwargs = super().get_form_kwargs(index)
+        if index is not None and index < len(self.initial):
+            row = self.initial[index]
+            kwargs.update(CSV_TYPES[row.get('_kind', 'team')].form_options(row))
+        return kwargs
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form_kwargs.setdefault('references', ImportReferences(self.form_kwargs['tournament']))
+        for form in self.forms:
+            form.fields['DELETE'].label = _('Skip')
+            form.fields['DELETE'].widget.attrs['aria-label'] = _('Skip this row')
+
+    def clean(self):
+        super().clean()
+        if self.total_form_count() != len(self.initial) or self.initial_form_count() != len(self.initial):
+            raise ValidationError(_('The number of preview rows changed. Reload the preview.'))
+        seen = set()
+        for index, form in enumerate(self.forms):
+            if self._should_delete_form(form) or form.errors:
+                continue
+            kind = CSV_TYPES[self.initial[index].get('_kind', 'team')]
+            kind.resolve_preview(form, self.forms)
+            if form.errors:
+                continue
+            for dependency in kind.preview_dependencies(form.cleaned_data):
+                parent = self.forms[dependency]
+                if parent.cleaned_data.get('DELETE') or parent.errors:
+                    form.add_error(None, _('The linked row is skipped or has errors. Select another reference, correct the linked row, or skip this row.'))
+            if form.errors:
+                continue
+            keys = kind.duplicate_keys(form.cleaned_data)
+            if any(key in seen for key in keys):
+                form.add_error(kind.name_field, _('This record appears more than once in the uploaded files. Skip or correct this row.'))
+            seen.update(keys)
+
+
+CSVPreviewFormSet = forms.formset_factory(CSVTeamForm, formset=CSVPreviewFormSet, extra=0, can_delete=True)
+
+
+class CSVConfirmForm(forms.Form):
+    confirm = forms.BooleanField(label=_("Import the reviewed rows, excluding rows marked Skip."))
