@@ -92,7 +92,7 @@ const copyTableTrigger = async (i) => {
         :id="getTableId(i)"
         class="card table-container pl-1 pl-sm-0"
       >
-        <div class="card-body pl-3 pr-0 pr-sm-3 py-2">
+        <div class="card-body pl-3 pr-0 pr-sm-3 pt-2 pb-0">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h4
               v-if="table.title"
