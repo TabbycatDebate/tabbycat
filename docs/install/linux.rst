@@ -28,7 +28,7 @@ Short version
 ::
 
   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3.11 python3-distutils pipenv postgresql libpq-dev nodejs gcc g++ make redis-server
+  sudo apt install python3.15 pipenv postgresql libpq-dev nodejs gcc g++ make redis-server
   git clone https://github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
   git checkout master
@@ -57,22 +57,22 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu, and are targeted at Ubuntu 18.04. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions use Ubuntu package names. Package availability varies by distribution and release; install Python 3.15 using your distribution's packages or the instructions on the Python website.
 
 .. _install-linux-python:
 
 1(a). Python
 ------------
-Tabbycat uses Python 3.11.  You probably already have Python 3, but you'll also need the development package in order to install Psycopg2 later.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
+Tabbycat uses Python 3.15. Make sure this version is installed even if your system already has an older Python 3.  You'll also want `Pipenv <https://pipenv.pypa.io/en/latest/>`_, if you don't already have it. Install::
 
-    $ sudo apt install python3.11 python3-distutils pipenv
+    $ sudo apt install python3.15 pipenv
 
 Check the version::
 
     $ python3 --version
-    Python 3.11.10
+    Python 3.15.2
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.11.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.15.
 
 .. admonition:: Advanced users
    :class: tip

@@ -47,6 +47,8 @@ class IsAdminOrReadOnly(BasePermission):
 
 
 class PerTournamentPermissionRequired(BasePermission):
+    """Check permissions for a view that provides its tournament."""
+
     def get_required_permission(self, view):
         """
         Given a model and an HTTP method, return the list of permission
@@ -69,7 +71,5 @@ class PerTournamentPermissionRequired(BasePermission):
         }).get(getattr(view, 'action', view.request.method), False)
 
     def has_permission(self, request, view):
-        if not hasattr(view, 'tournament') or not request.user:
-            return True
-        perm = self.get_required_permission(view)
-        return has_permission(request.user, perm, view.tournament)
+        tournament = view.tournament
+        return request.user is not None and has_permission(request.user, self.get_required_permission(view), tournament)

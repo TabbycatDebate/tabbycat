@@ -11,7 +11,7 @@ from .models import TournamentPreferenceModel
 
 @admin.register(TournamentPreferenceModel)
 class TournamentPreferenceAdmin(PerInstancePreferenceAdmin):
-    pass
+    list_select_related = ('instance',)
 
 
 # We don't use the attachment model; so hide it in the admin area

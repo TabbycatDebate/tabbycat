@@ -101,7 +101,7 @@ class AnswerSerializer(serializers.ModelSerializer):
                 data['answer'] = datetime.fromisoformat(data['answer'])
             except ValueError:
                 raise serializers.ValidationError({'answer': 'The answer must be an ISO 8601 timestamp'})
-        if type(data['answer']) != typ:
+        if type(data['answer']) is not typ:
             raise serializers.ValidationError({'answer': 'The answer must be of type %s' % typ.__name__})
 
         if typ is not datetime:

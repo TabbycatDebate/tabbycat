@@ -1,7 +1,7 @@
 """Draw generators for randomly drawn rounds, both two-team and BP."""
 
 import random
-from itertools import islice
+from itertools import batched
 
 from django.utils.translation import gettext as _
 
@@ -9,15 +9,6 @@ from .common import BaseBPDrawGenerator, BaseDrawGenerator, BasePairDrawGenerato
 from .graph import GraphAllocatedSidesMixin, GraphGeneratorMixin
 from .pairing import Pairing, PolyPairing
 from ..types import DebateSide
-
-
-def batched(iterable, n):
-    # Polyfill for Python 3.12
-    if n < 1:
-        raise ValueError('n must be at least one')
-    iterator = iter(iterable)
-    while batch := tuple(islice(iterator, n)):
-        yield batch
 
 
 class RandomPairingsMixin:

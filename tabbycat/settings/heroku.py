@@ -106,20 +106,34 @@ CHANNEL_LAYERS = {
 if environ.get('EMAIL_HOST', ''):
     SERVER_EMAIL = environ['DEFAULT_FROM_EMAIL']
     DEFAULT_FROM_EMAIL = environ['DEFAULT_FROM_EMAIL']
-    EMAIL_HOST = environ['EMAIL_HOST']
-    EMAIL_HOST_USER = environ['EMAIL_HOST_USER']
-    EMAIL_HOST_PASSWORD = environ['EMAIL_HOST_PASSWORD']
-    EMAIL_PORT = int(environ.get('EMAIL_PORT', 587))
-    EMAIL_USE_TLS = environ.get('EMAIL_USE_TLS', 'true').lower() == 'true'
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'OPTIONS': {
+                'host': environ['EMAIL_HOST'],
+                'username': environ['EMAIL_HOST_USER'],
+                'password': environ['EMAIL_HOST_PASSWORD'],
+                'port': int(environ.get('EMAIL_PORT', 587)),
+                'use_tls': environ.get('EMAIL_USE_TLS', 'true').lower() == 'true',
+            },
+        },
+    }
 
 elif environ.get('SENDGRID_API_KEY', ''):
     SERVER_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'root@localhost')
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', 'notconfigured@tabbycatsite')
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = 'apikey'
-    EMAIL_HOST_PASSWORD = environ['SENDGRID_API_KEY']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'OPTIONS': {
+                'host': 'smtp.sendgrid.net',
+                'username': 'apikey',
+                'password': environ['SENDGRID_API_KEY'],
+                'port': 587,
+                'use_tls': True,
+            },
+        },
+    }
 
 elif environ.get('SENDGRID_USERNAME', ''):
     # These settings are deprecated as of Tabbycat 2.6.0 (Ocicat).
@@ -128,11 +142,18 @@ elif environ.get('SENDGRID_USERNAME', ''):
     USING_LEGACY_SENDGRID_CONFIG_VARS = True
     SERVER_EMAIL = environ['SENDGRID_USERNAME']
     DEFAULT_FROM_EMAIL = environ.get('DEFAULT_FROM_EMAIL', environ['SENDGRID_USERNAME'])
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = environ['SENDGRID_USERNAME']
-    EMAIL_HOST_PASSWORD = environ['SENDGRID_PASSWORD']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
+    MAILERS = {
+        'default': {
+            'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'OPTIONS': {
+                'host': 'smtp.sendgrid.net',
+                'username': environ['SENDGRID_USERNAME'],
+                'password': environ['SENDGRID_PASSWORD'],
+                'port': 587,
+                'use_tls': True,
+            },
+        },
+    }
 
 # ==============================================================================
 # Sentry
