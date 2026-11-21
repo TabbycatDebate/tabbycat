@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from checkins.models import PersonIdentifier
-from checkins.utils import get_unexpired_checkins
+from checkins.utils import get_unexpired_checkins, self_checkins_open
 from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker, SpeakerCategory
@@ -233,6 +233,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
                 kwargs['event'] = False
         except ObjectDoesNotExist:
             kwargs['checkins_used'] = False
+        kwargs['self_checkins_open'] = self_checkins_open(t)
 
         if hasattr(self.object, 'adjudicator'):
             kwargs['debateadjudications'] = BaseRecordView.allocations_set(self.object.adjudicator, False, self.tournament)

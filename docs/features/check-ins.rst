@@ -40,6 +40,18 @@ On the *Scanning* section of Check-ins you can record a particular check-in. Thi
 
 4. The Check-in status page (described below) allows assistants and administrators to manually check-in particular people or entire institutions without needing to know their identifiers.
 
+Participant Self-Check-Ins
+==========================
+
+Speakers and adjudicators can also check themselves in (and revoke their check-ins) from their :ref:`private URL <private-urls>` landing pages. To allow this, enable *Participant self-checkin* in *Setup* > *Configuration* > *Data Entry*. Participants need an identifier to check themselves in.
+
+By default, self-check-ins are open whenever this setting is enabled. To only allow participants to check themselves in at certain times, also enable *Restrict participant self-checkin to the schedule* in the same section. Self-check-ins are then only open during the *Check-in* events of the tournament's schedule, which can be set in *Setup* > *Schedule*:
+
+- A check-in event with an end time is open from its start time until its end time.
+- A check-in event without an end time is open from its start time until the next event in the schedule starts. If there is no later event, it stays open.
+
+Outside of these times, participants can still see whether they are checked in on their private URL pages, but cannot check themselves in or revoke their check-ins. Check-ins recorded by tab staff (by scanning identifiers or on the status pages) are not affected.
+
 The Check-In 'Window'
 =====================
 

@@ -24,7 +24,7 @@ from venues.serializers import VenueSerializer
 
 from .consumers import CheckInEventConsumer
 from .models import Event, PersonIdentifier, VenueIdentifier
-from .utils import create_identifiers, get_unexpired_checkins
+from .utils import create_identifiers, get_unexpired_checkins, self_checkins_open
 
 
 class CheckInPreScanView(TournamentMixin, TemplateView):
@@ -308,6 +308,10 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         except PersonIdentifier.DoesNotExist:
             messages.error(request, _("Could not check you in as you do not have an identifying code — "
                 "your tab director may need to make you an identifier."))
+            return super().post(request, *args, **kwargs)
+
+        if not self_checkins_open(t):
+            messages.error(request, _("Self check-in is currently closed."))
             return super().post(request, *args, **kwargs)
 
         existing_checkin = get_unexpired_checkins(t, 'checkin_window_people').filter(identifier=identifier)
