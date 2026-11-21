@@ -10,8 +10,8 @@ const emit = defineEmits(['toggle-checked', 'update-sort'])
 
 const { ajaxSave } = useAjax()
 
-const checkUpdate = (newChecked) => {
-  if (props.cellData.noSave || props.cellData.disabled) {
+const checkUpdate = (newChecked, notify = true) => {
+  if (props.cellData.disabled) {
     return
   }
   const cd = props.cellData
@@ -23,7 +23,7 @@ const checkUpdate = (newChecked) => {
   }
 
   if (_.isUndefined(props.cellData.saveURL)) {
-    emit('toggle-checked', cd)
+    if (notify) emit('toggle-checked', cd)
   } else {
     const message = `${cd.id}'s ${cd.type} status as ${newChecked}`
     const payload = { id: cd.id }
@@ -32,6 +32,7 @@ const checkUpdate = (newChecked) => {
   }
   emit('update-sort', { id: cd.id, sort: newChecked })
 }
+defineExpose({ checkUpdate })
 </script>
 
 <template>
