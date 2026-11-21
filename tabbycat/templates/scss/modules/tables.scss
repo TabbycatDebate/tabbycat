@@ -121,7 +121,8 @@ thead,
 //------------------------------------------------------------------------------
 
 .table > thead > tr > th,
-.table > tbody > tr > td {
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
   padding: 8px 8px 8px 4px;
 }
 
@@ -256,7 +257,8 @@ thead,
     }
 
     .table > thead > tr > th:first-child,
-    .table > tbody > tr > td:first-child {
+    .table > tbody > tr > td:first-child,
+    .table > tfoot > tr > td:first-child {
       padding-left: 8px; // Double padding to compensate for smushed borders
     }
   }

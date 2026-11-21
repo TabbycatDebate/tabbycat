@@ -7,6 +7,7 @@ import SmartCell from './SmartCell.vue'
 import CheckCell from '../tables/CheckCell.vue'
 import AjaxSelectCell from '../tables/AjaxSelectCell.vue'
 import BallotsCell from '../../results/templates/BallotsCell.vue'
+import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 import { useSortableTable } from '../composables/useSortableTable.js'
 
 const FeedbackTrend = defineAsyncComponent(() => import('../graphs/FeedbackTrend.vue'))
@@ -33,6 +34,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['saved', 'toggle-checked'])
+const { ngettext } = useDjangoI18n()
 
 const rows = computed(() => {
   const rows = []
@@ -88,6 +90,15 @@ const {
   defaultSortOrder: props.defaultSortOrder,
   defaultSortHistory: props.defaultSortHistory,
   externalFilterKey: toRef(props, 'externalFilterKey'),
+})
+
+const itemCount = computed(() => {
+  const total = rows.value.length
+  const visible = dataFilteredByKey.value.length
+  if (visible < total) {
+    return window.interpolate(ngettext('%s of %s item', '%s of %s items', total), [visible, total])
+  }
+  return window.interpolate(ngettext('%s item', '%s items', total), [total])
 })
 
 const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
@@ -194,6 +205,16 @@ const resolveCellComponent = (cellData) => {
           />
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td
+            :colspan="Math.max(1, headers.length)"
+            class="text-muted"
+          >
+            <span role="status">{{ itemCount }}</span>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
