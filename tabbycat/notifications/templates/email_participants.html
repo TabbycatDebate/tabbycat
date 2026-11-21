@@ -27,6 +27,11 @@
   {% include "components/explainer-card.html" with type="info" %}
 {% endif %}
 
+{% blocktrans trimmed asvar p1 %}
+  You have not selected any recipients.
+{% endblocktrans %}
+{% include "components/explainer-card.html" with type="danger" id="emailDisableWarning" %}
+
 {% if template_variables %}
   <div class="card mt-3 mb-3">
     <div class="card-body">
@@ -80,7 +85,8 @@
                                  :urls=urls
                                  :navigation=navigation
                                  :hide-auto-save=hideAutoSave
-                                 orientation={{ tables_orientation|safe }} >
+                                 orientation={{ tables_orientation|safe }}
+                                 @toggle-checked-saveapathetic="onTogglesChanged($event)" >
       </checkbox-tables-container>
     </div>
 
@@ -88,7 +94,8 @@
     {% for field in form.visible_fields %}
       {% include "components/form-field.html" %}
     {% endfor %}
-    <button type="submit" class="btn btn-block btn-success">
+
+    <button type="submit" class="btn btn-block btn-success" id="emailSendButton">
       {% trans "Send Message(s)" %}
     </button>
   </form>
@@ -96,6 +103,38 @@
 {% endblock content %}
 
 {% block js %}
+
+  <script>
+    let sendButton = document.getElementById('emailSendButton');
+    let emailWarning = document.getElementById('emailDisableWarning');
+
+    function activateSendButton() {
+      sendButton.removeAttribute('disabled');
+      emailWarning.style.display = 'none';
+    }
+
+    function deactivateSendButton() {
+      sendButton.setAttribute('disabled', 'disabled');
+      emailWarning.style.display = 'block';
+    }
+
+    function onTogglesChanged(newChecked) {
+        if (window.vueData.tablesData == null || (newChecked && window.vueData.tablesData[0].data.length != 0)) {
+          activateSendButton();
+          return;
+        }
+
+        let rows = window.vueData.tablesData[0].data;
+        for (let i = 0; i < rows.length; i++) {
+          if (rows[i][0].checked) {
+            activateSendButton();
+            return;
+          }
+        }
+
+        deactivateSendButton();
+      }
+  </script>
 
   <script>
     window.vueData = {
@@ -106,7 +145,10 @@
       translations: null,
       urls: null,
       navigation: null,
-    }
+      onTogglesChanged: onTogglesChanged
+    };
+
+    onTogglesChanged();
   </script>
   {{ block.super }}
 

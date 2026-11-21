@@ -18,6 +18,8 @@ const props = defineProps({
   hideAutoSave: Boolean,
 })
 
+const emit = defineEmits(['toggle-checked-saveapathetic'])
+
 const { gettext } = useDjangoI18n()
 const { getCookie } = useCookie()
 
@@ -48,6 +50,10 @@ const checked = computed(() => {
 
 const csrftoken = computed(() => getCookie('csrftoken'))
 
+const togglesChanged = (newChecked) => {
+  emit('toggle-checked-saveapathetic', newChecked)
+}
+
 const saveChecks = (type) => {
   const payload = checked.value[type]
   const message = `Checks for ${payload?.id} as ${payload?.checked}`
@@ -63,6 +69,7 @@ const copyFromPrevious = () => {
     row[0].checked = row[0].prev
     row[0].sort = row[0].prev
   })
+  togglesChanged(false)
   saveChecks(0)
 }
 
@@ -76,6 +83,7 @@ const setFromCheckIns = (set, unset) => {
       row[0].sort = false
     }
   })
+  togglesChanged(set)
   saveChecks(0)
 }
 
@@ -88,6 +96,7 @@ const massSelect = (state, type) => {
       }
     })
   })
+  togglesChanged(state)
   if (!props.hideAutoSave) {
     saveChecks(type)
   }
@@ -216,6 +225,7 @@ const massSelect = (state, type) => {
         <tables-container
           :tables-data="tablesData"
           @toggle-checked="toggleChecked"
+          @toggle-checked-saveapathetic="togglesChanged($event)"
         />
       </div>
     </div>
