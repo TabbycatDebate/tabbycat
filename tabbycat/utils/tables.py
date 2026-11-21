@@ -834,7 +834,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
         }
         self.add_column(header, cells)
 
-    def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts, standings=None):
+    def add_draw_conflicts_columns(self, debates, venue_conflicts=None, adjudicator_conflicts=None, standings=None):
+        """Adds a column listing the draw flags and conflicts of each debate.
+        `venue_conflicts` and `adjudicator_conflicts` map debates to lists of
+        (level, message) tuples; if they are None, those conflicts are omitted."""
+
+        # Don't reveal institutions that team code names are hiding
+        show_institution_clashes = self.tournament.pref('avoid_same_institution') and \
+            (self.admin or not self._use_team_code_names)
 
         conflicts_by_debate = []
         for debate in debates:
@@ -859,13 +866,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     conflicts.append(("warning", ngettext("Teams have met once",
                             "Teams have met %(count)d times", history) % {'count': history}))
 
-            if self.tournament.pref('avoid_same_institution'):
+            if show_institution_clashes:
                 institutions = [t.institution_id for t in debate.teams if t.institution_id is not None]
                 if len(set(institutions)) != len(institutions):
                     conflicts.append(("warning", _("Teams are from the same institution")))
 
-            conflicts.extend(adjudicator_conflicts[debate])  # Escaped in adjallocation.utils
-            conflicts.extend(venue_conflicts[debate])  # Escaped in venues.utils
+            if adjudicator_conflicts is not None:
+                conflicts.extend(adjudicator_conflicts[debate])  # Escaped in adjallocation.utils
+            if venue_conflicts is not None:
+                conflicts.extend(venue_conflicts[debate])  # Escaped in venues.utils
             conflicts_by_debate.append(conflicts)
 
         conflicts_header = {'title': _("Conflicts/Flags"), 'key': 'conflags'}

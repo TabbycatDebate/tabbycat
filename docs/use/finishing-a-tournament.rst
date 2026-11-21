@@ -22,6 +22,8 @@ If you defined any speaker categories (for example, Novice, ESL or EFL), a tab f
 
 You can also redact individual speaker's identifying details (name, team, and institution) from the public individual tabs. You can do so by going into the **Edit Database** area, going to *Participants > Speakers*, finding the speaker and clicking the **Anonymous** box (and saving).
 
+To show participants how each draw was formed, you can also check **Release draw details to public**. This adds a public page for each round with a released draw, showing the same information as the **Draw Details** page in the admin area: the bracket of each debate (or its room rank in elimination rounds), each team's rankings and metrics before the round, their side histories, and draw flags such as pull-ups. Adjudicator and room conflicts are not shown. As the team standings before each round are shown, this reveals the results of all earlier rounds, including silent rounds.
+
 Silent and non-completed rounds aren't released unless the **Release all round results to public** option is checked, so once your tournament has concluded, you probably want to change this setting.
 
 .. note:: Public tab pages are cached for performance reasons. This means that any changes that affect a tab page (say redacting a speaker or changing a speaker score) may not show up on the public site for up to an hour.
