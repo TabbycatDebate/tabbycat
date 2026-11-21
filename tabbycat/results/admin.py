@@ -249,7 +249,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 @admin.register(SpeakerCriterionScore)
 class SpeakerCriterionScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'criterion', 'speaker_score', 'score')
-    search_fields = ('criterion', 'score', 'speaker_score')
+    search_fields = ('criterion__name', 'score', 'speaker_score__id__exact')
 
 
 # ==============================================================================
@@ -259,7 +259,7 @@ class SpeakerCriterionScoreAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
 @admin.register(SpeakerCriterionScoreByAdj)
 class SpeakerCriterionScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'criterion', 'speaker_score_by_adj', 'score')
-    search_fields = ('criterion', 'score', 'speaker_score_by_adj')
+    search_fields = ('criterion__name', 'score', 'speaker_score_by_adj__id__exact')
 
 
 # ==============================================================================
@@ -269,4 +269,4 @@ class SpeakerCriterionScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin)
 @admin.register(ScoreCriterion)
 class ScoreCriterionAdmin(TabbycatModelAdminFieldsMixin, ModelAdmin):
     list_display = ('id', 'tournament', 'name', 'seq', 'speech_type')
-    search_fields = ('tournament', 'name')
+    search_fields = ('tournament__name', 'tournament__short_name', 'name')
