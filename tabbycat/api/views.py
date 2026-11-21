@@ -830,13 +830,12 @@ class DebateCheckinsView(BaseCheckinsView):
 
 
 def get_metrics_params(generator):
-    metrics = {
-        'type': 'array',
-        'items': {
-            'type': 'string',
-            'enum': list(generator.metric_annotator_classes.keys()),
-        },
-    }
+    def metric_type(ranked_only=True, for_extra=False):
+        choices = generator.get_metric_choices(ranked_only=ranked_only, for_extra=for_extra)
+        return {
+            'type': 'array',
+            'items': {'type': 'string', 'enum': [key for key, _ in choices]},
+        }
     desc_default = '; default is tournament settings'
     if generator is SpeakerStandingsGenerator:
         # Score criteria are per-tournament, so their metric keys can't be
@@ -847,10 +846,10 @@ def get_metrics_params(generator):
     return [
         OpenApiParameter('metrics',
             description='Rank participants with these metrics' + desc_default,
-            required=False, type=metrics, explode=False),
+            required=False, type=metric_type(), explode=False),
         OpenApiParameter('extra_metrics',
             description='Include these unranked metrics for participants' + desc_default,
-            required=False, type=metrics, explode=False),
+            required=False, type=metric_type(ranked_only=False, for_extra=True), explode=False),
     ]
 
 
