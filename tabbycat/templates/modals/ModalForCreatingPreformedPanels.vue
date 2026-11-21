@@ -1,11 +1,12 @@
 <script setup>
-import { ref, toRef } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { useModalAction } from '../composables/useModalAction.js'
 import { useDjangoI18n } from '../composables/useDjangoI18n.js'
 
 const props = defineProps({
   introText: String,
   contextOfAction: String,
+  panelsExist: Boolean,
 })
 
 const { gettext } = useDjangoI18n()
@@ -16,6 +17,9 @@ const { loading, performWSAction } = useModalAction({
 })
 
 const id = 'confirmCreatePreformedPanelsModal'
+const actionLabel = computed(() => (props.panelsExist
+  ? gettext('Refresh Brackets and Liveness')
+  : gettext('Create Preformed Panels')))
 </script>
 
 <template>
@@ -31,9 +35,14 @@ const id = 'confirmCreatePreformedPanelsModal'
       <div class="modal-content">
         <div class="modal-body text-center p-4">
           <p class="lead">
-            {{ gettext(`Create Preformed Panels`) }}
+            {{ actionLabel }}
           </p>
-          <p>
+          <p v-if="panelsExist">
+            {{ gettext(`Re-estimate the general brackets and liveness of the existing preformed
+                              panels using the latest results. Panels keep their adjudicators and
+                              priorities, and new panels are added if more debates are expected.`) }}
+          </p>
+          <p v-else>
             {{ gettext(`Create preformed panels by estimating the general brackets that will
                               occur during this round.`) }}
           </p>
@@ -42,7 +51,7 @@ const id = 'confirmCreatePreformedPanelsModal'
             :class="['btn btn-block btn-success', loading ? 'disabled': '']"
             @click="performWSAction()"
           >
-            {{ loading ? gettext('Loading...') : gettext('Create Preformed Panels') }}
+            {{ loading ? gettext('Loading...') : actionLabel }}
           </button>
         </div>
       </div>

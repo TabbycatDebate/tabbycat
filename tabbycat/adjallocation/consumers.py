@@ -16,8 +16,7 @@ from users.permissions import Permission
 from .allocators.base import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import PreformedPanel
-from .preformed import copy_panels_to_debates
-from .preformed.anticipated import calculate_anticipated_draw
+from .preformed import copy_panels_to_debates, update_or_create_preformed_panels
 from .preformed.direct import DirectPreformedPanelAllocator
 from .preformed.hungarian import HungarianPreformedPanelAllocator
 from .serializers import (EditPanelAdjsPanelSerializer,
@@ -254,14 +253,8 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
     def create_preformed_panels(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
-        for i, (bracket_min, bracket_max, liveness) in enumerate(
-                calculate_anticipated_draw(round), start=1):
-            PreformedPanel.objects.update_or_create(round=round, room_rank=i,
-                defaults={
-                    'bracket_max': bracket_max,
-                    'bracket_min': bracket_min,
-                    'liveness': liveness,
-                })
+        refreshing = round.preformedpanel_set.exists()
+        ncreated = update_or_create_preformed_panels(round)
 
         self.log_action(event['extra'], round, ActionLogEntry.ActionType.PREFORMED_PANELS_CREATE)
         content = self.reserialize_panels(EditPanelAdjsPanelSerializer, round)
@@ -272,6 +265,14 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         elif not round.prev.debate_set.exists():
             msg, level = _("The previous round's draw doesn't exist, so preformed panels can't be "
                     "annotated with brackets and liveness."), 'warning'
+        elif refreshing:
+            msg, level = _("Successfully refreshed the brackets and liveness of the preformed "
+                    "panels for this round."), 'success'
+            if ncreated > 0:
+                msg += " " + ngettext(
+                    "%(count)d new preformed panel was also created.",
+                    "%(count)d new preformed panels were also created.",
+                    ncreated) % {'count': ncreated}
         else:
             msg, level = _("Succesfully created new preformed panels for this round."), 'success'
 

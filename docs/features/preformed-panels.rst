@@ -26,6 +26,8 @@ Initially, the preformed panels page will have no panels. Click the **Create Pan
 
 .. image:: images/preformeds-create.png
 
+The brackets and liveness are based on the draws and results that exist when the panels are created. If these change afterwards (for example, if you created panels before the previous round was drawn or before earlier results were confirmed), click the **Refresh Brackets and Liveness** button, which replaces **Create Panels** once there are panels. This recalculates the bracket and liveness ranges of the existing panels without changing their adjudicators or priorities, and adds panels if more debates are now expected. Since priorities aren't changed, you may want to run **Prioritise** again afterwards.
+
 .. note:: Like the normal adjudicator allocation interface, the preformed panel interfaces will indicate when an adjudicator has not been marked as available. If using preformed panels, you may want to set adjudicator availability earlier than you would otherwise.
 
 .. note:: Liveness in the anticipated draw only pertains to the open category (the first break category that is marked as a "general" category). It's not possible to meaningfully predict where teams open-dead but live in other categories will end up.
