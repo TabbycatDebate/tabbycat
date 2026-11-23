@@ -14,10 +14,11 @@ from draw.models import Debate, DebateTeam
 from importer.forms import ImportValidationError
 from participants.models import Adjudicator, Speaker, Team
 from registration.form_utils import CustomQuestionsFormMixin
+from registration.question_editor import QuestionEditorForm
 from results.forms import TournamentPasswordField
 from tournaments.models import Round
 
-from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .utils import expected_feedback_targets, feedback_stages, team_feedback_allowed_targets
 
 logger = logging.getLogger(__name__)
@@ -383,3 +384,13 @@ class UpdateAdjudicatorScoresForm(forms.Form):
         logger.info("UpdateAdjudicatorScoresForm: Saving base score histories to database done (5 of 5)")
 
         return len(records)
+
+
+class FeedbackQuestionEditorForm(QuestionEditorForm):
+    class Meta(QuestionEditorForm.Meta):
+        model = AdjudicatorFeedbackQuestion
+        fields = (*QuestionEditorForm.Meta.fields, 'reference', 'from_adj', 'from_team')
+        labels = {
+            'from_adj': gettext_lazy("Ask adjudicators"),
+            'from_team': gettext_lazy("Ask teams"),
+        }
