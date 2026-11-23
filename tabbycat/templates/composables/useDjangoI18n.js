@@ -19,13 +19,10 @@ export function useDjangoI18n () {
   const npgettext = (...args) => (typeof npgettextImpl === 'function' ? npgettextImpl(...args) : undefined)
   const pluralidx = (...args) => (typeof pluralidxImpl === 'function' ? pluralidxImpl(...args) : undefined)
 
-  const tct = (text, variables) => {
-    const fmt = gettext(text)
-    if (typeof interpolateImpl === 'function') {
-      return interpolateImpl(fmt, variables)
-    }
-    return fmt
-  }
+  const interpolate = (fmt, variables, named = false) =>
+    (typeof interpolateImpl === 'function' ? interpolateImpl(fmt, variables, named) : fmt)
+
+  const tct = (text, variables) => interpolate(gettext(text), variables)
 
   return {
     gettext,
@@ -34,5 +31,6 @@ export function useDjangoI18n () {
     npgettext,
     pluralidx,
     tct,
+    interpolate,
   }
 }

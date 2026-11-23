@@ -207,6 +207,9 @@ class EditDebateTeamsViewTest(AdminTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'edit-debate-teams'
     round_seq = 1
 
+    def test_authenticated_response(self):
+        super().test_authenticated_response()
+
 
 class SideAllocationsEditingTest(CompletedTournamentTestMixin, TestCase):
     """Tests the editable side pre-allocation matrix and its two update

@@ -202,6 +202,17 @@ def has_permission(user: 'settings.AUTH_USER_MODEL', permission: permission_type
     return perm
 
 
+def get_tournament_permissions(user: 'settings.AUTH_USER_MODEL', tournament: 'Tournament') -> set[str]:
+    if user.is_anonymous:
+        return set()
+    if user.is_superuser:
+        return set(Permission)
+    permissions = set(user.userpermission_set.filter(tournament=tournament).values_list('permission', flat=True))
+    for group_permissions in user.membership_set.filter(group__tournament=tournament).values_list('group__permissions', flat=True):
+        permissions.update(group_permissions)
+    return permissions
+
+
 def get_permissions(user: 'settings.AUTH_USER_MODEL') -> List['Tournament']:
     user_perms = {}
     for t, groups in groupby(user.membership_set.select_related('group', 'group__tournament').order_by('group__tournament').all(), key=lambda m: m.group.tournament):

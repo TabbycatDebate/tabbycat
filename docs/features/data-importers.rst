@@ -10,6 +10,27 @@ The **tournament data importer** is the class that imports data from one or more
 
 .. todo:: This page is incomplete. If you're finding this information insufficient, please contact Chuan-Zheng using the contact details in the :ref:`authors` section.
 
+Adding a type to the CSV wizard
+==============================
+
+Subclass ``CSVObjectType`` (or ``ModelCSVType`` for model-backed rows) and
+register an instance with ``register_csv_type()`` in ``importer/csv_types.py``.
+Each type defines its translated labels, mapping fields, preview validation,
+references, permissions and transactional save hooks. Set ``permission`` for
+the primary action and use ``write_permissions()`` for any additional writes
+that depend on the row's values. See ``TeamCSVType``, ``SpeakerCSVType``
+and the subclasses in ``csv_model_types.py`` for examples.
+
+Use ``CSVReference('team')`` for one reference or
+``CSVReference('adjudicator', multiple=True)`` for a list. Shared reference caches
+resolve existing and uploaded records without querying once per preview row.
+Declare dependencies so the executor imports referenced rows first. Preview
+must not save records.
+
+Django renders editable formset fields into Vue slots with ``v-pre``; preserve
+this to prevent uploaded text being interpreted as Vue expressions. The
+management-command importer below keeps its existing interface.
+
 Why write your own?
 ===================
 

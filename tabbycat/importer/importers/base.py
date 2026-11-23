@@ -8,21 +8,14 @@ from types import GeneratorType
 
 from django.core.exceptions import FieldError, MultipleObjectsReturned, ObjectDoesNotExist, ValidationError
 
+from adjallocation.models import TeamInstitutionConflict
+
+from ..csv_values import convert_bool
+from ..participant_services import initialize_teams
+
 NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19  # Logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
-
-TRUE_VALUES = ('true', 'yes', 't', 'y', '1')
-FALSE_VALUES = ('false', 'no', 'f', 'n', '0')
-
-
-def convert_bool(value):
-    if value.lower() in TRUE_VALUES:
-        return True
-    elif value.lower() in FALSE_VALUES:
-        return False
-    else:
-        raise ValueError('Invalid boolean value: %s' % (value,))
 
 
 def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
@@ -165,6 +158,11 @@ class BaseTournamentDataImporter(object):
     def reset_counts(self):
         self.counts = Counter()
         self.errors = TournamentDataImporterError()
+
+    def _initialize_teams(self, teams):
+        conflicts = initialize_teams(teams, self.tournament)
+        self.counts[TeamInstitutionConflict] += len(conflicts)
+        self.logger.info("Imported %d team institution conflicts", len(conflicts))
 
     def _import(self, csvfile, model, interpreter=make_interpreter(), expect_unique=None):
         """Parses the object given in f, using the callable interpreter to parse

@@ -1,0 +1,6 @@
+{% load add_field_css %}
+<div class="form-group">
+  {{ field.label_tag }}
+  {% if field.field.widget.input_type == 'checkbox' %}{{ field }}{% else %}{{ field|addcss:"form-control" }}{% endif %}
+  {{ field.errors }}{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+</div>
