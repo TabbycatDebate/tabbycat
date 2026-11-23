@@ -34,7 +34,10 @@ if bool(int(os.environ['DOCKER_REDIS'])) if 'DOCKER_REDIS' in os.environ else Fa
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [("redis", 6379)],
+                "hosts": [{
+                    "address": "redis://redis:6379",
+                    "socket_timeout": 10,
+                }],
                 "group_expiry": 10800,
             },
         },
