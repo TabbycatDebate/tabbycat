@@ -51,6 +51,7 @@ const checkUpdate = (newChecked) => {
         class="form-check-input position-static"
         :name="cellData.name"
         :value="cellData.value"
+        :aria-label="cellData.label"
         @change="checkUpdate($event.target.checked)"
       >
     </div>

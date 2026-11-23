@@ -2,12 +2,28 @@ import logging
 
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch
+from django.utils.translation import gettext_lazy as _
 
 from availability.models import RoundAvailability
 from participants.models import Adjudicator, Team
+from users.permissions import has_permission, Permission
 from venues.models import Venue
 
 logger = logging.getLogger(__name__)
+
+MATRIX_PAGES = (
+    ('availability-matrix-adjudicators', _("Adjudicators"), Permission.VIEW_ROUNDAVAILABILITIES_ADJ),
+    ('availability-matrix-teams', _("Teams"), Permission.VIEW_ROUNDAVAILABILITIES_TEAM),
+    ('availability-matrix-venues', _("Rooms"), Permission.VIEW_ROUNDAVAILABILITIES_VENUE),
+)
+
+
+def get_matrix_pages(user, tournament):
+    can_edit = has_permission(user, Permission.EDIT_ROUNDAVAILABILITIES, tournament)
+    return [
+        (url_name, label) for url_name, label, permission in MATRIX_PAGES
+        if can_edit or has_permission(user, permission, tournament)
+    ]
 
 
 def annotate_availability(queryset, round):

@@ -8,6 +8,7 @@ from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
 
+from availability.utils import get_matrix_pages
 from draw.types import DebateSide
 from options.utils import use_team_code_names
 from tournaments.utils import get_side_name
@@ -256,6 +257,11 @@ def prep_time():
 def haspermission(context, permission):
     # If returned directly from the object it will have to lookup tournament
     return has_permission(context['user'], permission, context['tournament'])
+
+
+@register.simple_tag(takes_context=True)
+def has_availability_setup_access(context):
+    return context.get('availability_setup_nav') or bool(get_matrix_pages(context['user'], context['tournament']))
 
 
 @register.simple_tag(takes_context=True)

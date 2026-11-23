@@ -1,0 +1,17 @@
+{% extends "tables/base_vue_table.html" %}
+{% load i18n %}
+
+{% block page-subnav-sections %}
+  {% include "availability_subnav.html" %}
+{% endblock %}
+
+{% block content %}
+  {% if can_edit %}
+    <p>{% trans "Check a box to mark a participant as available for that round." %}</p>
+  {% else %}
+    <p>{% trans "Checked boxes show who is available for each round. You have read-only access." %}</p>
+  {% endif %}
+  <div id="vueMount">
+    <availability-matrix-container :tables-data="tablesData" :can-edit="{{ can_edit|yesno:'true,false' }}"></availability-matrix-container>
+  </div>
+{% endblock %}

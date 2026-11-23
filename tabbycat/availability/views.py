@@ -1,14 +1,17 @@
 import json
 import logging
 from collections import OrderedDict
+from html import unescape
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
-from django.utils.html import escape
+from django.shortcuts import redirect
+from django.utils.functional import cached_property
+from django.utils.html import escape, strip_tags
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
@@ -20,10 +23,10 @@ from checkins.utils import get_checkins
 from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
-from tournaments.mixins import RoundMixin
+from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Round
-from users.permissions import Permission
-from utils.misc import reverse_round
+from users.permissions import has_permission, Permission
+from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
@@ -295,6 +298,99 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         return get_checkins(queryset, t, 'checkin_window_venues')
 
 
+class AvailabilitySetupMixin(TournamentMixin, AdministratorMixin):
+    page_emoji = '📍'
+
+    def get_context_data(self, **kwargs):
+        kwargs['availability_setup_nav'] = True
+        kwargs['availability_matrix_pages'] = utils.get_matrix_pages(self.request.user, self.tournament)
+        return super().get_context_data(**kwargs)
+
+
+class AvailabilitySetupIndexView(TournamentMixin, AdministratorMixin, View):
+    @cached_property
+    def matrix_pages(self):
+        return utils.get_matrix_pages(self.request.user, self.tournament)
+
+    def test_func(self):
+        return bool(self.matrix_pages)
+
+    def get(self, request, *args, **kwargs):
+        url_name, _label = self.matrix_pages[0]
+        return redirect(reverse_tournament(url_name, self.tournament))
+
+
+class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):
+    template_name = 'availability_matrix.html'
+    edit_permission = Permission.EDIT_ROUNDAVAILABILITIES
+
+    def get_table(self):
+        table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
+        queryset = self.model.objects.filter(tournament=self.tournament)
+        if self.model != Venue:
+            queryset = queryset.select_related('institution')
+        participants = list(queryset)
+        self.add_description_columns(table, participants)
+        # Use the displayed name so code names and redactions also apply to checkbox labels.
+        names = [unescape(strip_tags(row[0]['text'])) for row in table.data]
+
+        content_type = ContentType.objects.get_for_model(self.model)
+        available = set(RoundAvailability.objects.filter(
+            content_type=content_type, round__tournament=self.tournament,
+        ).values_list('object_id', 'round_id'))
+        can_edit = has_permission(self.request.user, self.edit_permission, self.tournament)
+
+        for round in self.tournament.round_set.order_by('seq'):
+            update_url = reverse_round(self.update_view, round)
+            table.add_column({
+                'key': 'round-%s' % round.pk,
+                'title': escape(round.abbreviation),
+                'tooltip': escape(round.name),
+            }, [{
+                'component': 'check-cell',
+                'id': participant.pk,
+                'round': round.pk,
+                'checked': (participant.pk, round.pk) in available,
+                'disabled': not can_edit,
+                'label': _("%(participant)s available in %(round)s") % {'participant': name, 'round': round.name},
+                'updateURL': update_url,
+            } for participant, name in zip(participants, names)])
+        return table
+
+
+class AvailabilityMatrixTeamView(AvailabilityMatrixView):
+    page_title = gettext_lazy("Team Availabilities")
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES_TEAM
+    model = Team
+    sort_key = 'team'
+    update_view = 'availability-update-teams'
+    add_description_columns = staticmethod(AvailabilityTypeTeamView.add_description_columns)
+
+
+class AvailabilityMatrixAdjudicatorView(AvailabilityMatrixView):
+    page_title = gettext_lazy("Adjudicator Availabilities")
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES_ADJ
+    model = Adjudicator
+    sort_key = 'name'
+    update_view = 'availability-update-adjudicators'
+
+    @staticmethod
+    def add_description_columns(table, adjudicators):
+        table.add_adjudicator_columns(adjudicators, show_metadata=False)
+
+
+class AvailabilityMatrixVenueView(AvailabilityMatrixView):
+    page_title = gettext_lazy("Room Availabilities")
+    view_permission = Permission.VIEW_ROUNDAVAILABILITIES_VENUE
+    model = Venue
+    sort_key = 'venue'
+    update_view = 'availability-update-venues'
+
+    @staticmethod
+    def add_description_columns(table, venues):
+        table.add_column({'key': 'venue', 'title': _("Room")}, [escape(v.name) for v in venues])
+
+
 # ==============================================================================
 # Bulk Activations
 # ==============================================================================
@@ -358,8 +454,15 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
     edit_permission = Permission.EDIT_ROUNDAVAILABILITIES
 
     def post(self, request, *args, **kwargs):
-        body = self.request.body.decode('utf-8')
-        posted_info = json.loads(body)
+        # Matrix edits send only changed cells, preserving the rest of the round.
+        try:
+            posted_info = json.loads(self.request.body)
+        except (ValueError, UnicodeDecodeError):
+            return JsonResponse({'message': _("Invalid availability update.")}, status=400)
+        if not isinstance(posted_info, dict):
+            return JsonResponse({'message': _("Invalid availability update.")}, status=400)
+        if 'changes' in posted_info:
+            return self.update_changes(posted_info['changes'])
 
         active_ids = [] # Unlike other checks; we just pass IDs on not the bool
         for key, value in posted_info.items():
@@ -380,6 +483,32 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 
         return JsonResponse(json.dumps(True), safe=False)
+
+    def update_changes(self, changes):
+        if not isinstance(changes, dict) or any(type(value) is not bool for value in changes.values()):
+            return JsonResponse({'message': _("Invalid availability update.")}, status=400)
+        try:
+            changes = {int(pk): checked for pk, checked in changes.items()}
+        except (ValueError, TypeError):
+            return JsonResponse({'message': _("Invalid participant ID.")}, status=400)
+        valid_ids = set(self.model.objects.filter(
+            tournament=self.tournament, pk__in=changes,
+        ).values_list('pk', flat=True))
+        if valid_ids != set(changes):
+            return JsonResponse({'message': _("Invalid participant ID.")}, status=400)
+
+        content_type = ContentType.objects.get_for_model(self.model)
+        with transaction.atomic():
+            RoundAvailability.objects.filter(
+                round=self.round, content_type=content_type,
+                object_id__in=[pk for pk, checked in changes.items() if not checked],
+            ).delete()
+            RoundAvailability.objects.bulk_create([
+                RoundAvailability(round=self.round, content_type=content_type, object_id=pk)
+                for pk, checked in changes.items() if checked
+            ], ignore_conflicts=True)
+            self.log_action()
+        return JsonResponse({'status': 'success'})
 
 
 class UpdateAdjudicatorsAvailabilityView(BaseAvailabilityUpdateView):

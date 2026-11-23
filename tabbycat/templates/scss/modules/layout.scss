@@ -46,6 +46,26 @@
   @extend .mb-4; // Need to do here so they don't blow out on button-less pages
 }
 
+.availability-subnav > .btn {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@include media-breakpoint-down(xs) {
+
+  .availability-subnav {
+    display: flex;
+
+    > .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding-inline: 0.125rem;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
 //------------------------------------------------------------------------------
 // Alerts
 //------------------------------------------------------------------------------

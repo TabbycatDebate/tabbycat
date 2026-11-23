@@ -1,0 +1,11 @@
+{% load debate_tags i18n %}
+
+<nav class="btn-group availability-subnav mw-100" aria-label="{% trans 'Availabilities' %}">
+  {% with current=request.resolver_match.url_name %}
+    {% for url_name, label in availability_matrix_pages %}
+      <a class="btn btn-outline-primary {% if current == url_name %}active{% endif %}"
+         {% if current == url_name %}aria-current="page"{% endif %}
+         href="{% tournamenturl url_name %}">{{ label }}</a>
+    {% endfor %}
+  {% endwith %}
+</nav>
