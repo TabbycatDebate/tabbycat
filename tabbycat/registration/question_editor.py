@@ -1,6 +1,8 @@
 """Forms for the registration question editor."""
+import hashlib
+import json
+
 from django import forms
-from django.contrib.postgres.forms import SimpleArrayField
 from django.forms import BaseModelFormSet
 from django.utils.translation import gettext_lazy as _
 
@@ -15,11 +17,8 @@ from .models import Question
 
 
 class QuestionEditorForm(forms.ModelForm):
-    choices = SimpleArrayField(
-        forms.CharField(), delimiter='\n', required=False,
-        label=_("Options"), help_text=_("Enter one option per line."),
-        widget=forms.Textarea(attrs={'rows': 4}),
-    )
+    choices = forms.JSONField(required=False, widget=forms.HiddenInput(), label=_("Options"),
+        help_text=_("Paste multiple lines into an empty option to add them together. Blank lines are skipped."))
 
     class Meta:
         model = Question
@@ -35,11 +34,19 @@ class QuestionEditorForm(forms.ModelForm):
         self.fields['name'].label = _("Short name for tables")
         self.fields['name'].help_text = _("Optional; defaults to the first 30 characters of the question.")
 
+    def clean_choices(self):
+        options = self.cleaned_data['choices']
+        if options is None:
+            return []
+        if not isinstance(options, list) or any(not isinstance(option, str) for option in options):
+            raise forms.ValidationError(_("Enter a list of text options."))
+        return options
+
     def clean(self):
         data = super().clean()
         if not data.get('name') and data.get('text'):
             data['name'] = data['text'][:30]
-        if data.get('answer_type') in ('ss', 'ms') and not data.get('choices'):
+        if data.get('answer_type') in ('ss', 'ms') and 'choices' in data and not any(option.strip() for option in data['choices']):
             self.add_error('choices', _("Add at least one option."))
         minimum, maximum = data.get('min_value'), data.get('max_value')
         if data.get('answer_type') in ('i', 'is', 'f') and minimum is not None and maximum is not None and minimum > maximum:
@@ -76,7 +83,13 @@ def system_questions(tournament, model, data=None, editable=False):
     if model is TournamentInstitution and tournament.pref('reg_institution_slots'):
         fixed_names.extend(('teams_requested', 'adjudicators_requested'))
     system_form = forms.Form(data=data, prefix=f'{model._meta.model_name}-system')
-    selected = tournament.pref(preference.name) if preference else []
+    selected = []
+    if preference:
+        manager = tournament.preferences
+        stored = manager.get_db_pref(section=preference.section.name, name=preference.name)
+        if editable and data is not None:
+            stored.refresh_from_db(from_queryset=manager.queryset.select_for_update())
+        selected = stored.value
     questions = []
     for name, label in [(name, fields[name].label) for name in fixed_names] + list(preference.choices if preference else []):
         field = fields[name]
@@ -113,6 +126,14 @@ def system_questions(tournament, model, data=None, editable=False):
     return system_form, questions, preference
 
 
+def question_section_revision(formset, system_form):
+    fields = ('pk', 'seq', *formset.form._meta.fields)
+    questions = [[getattr(question, field) for field in fields] for question in formset.get_queryset()]
+    settings = {name: field.initial for name, field in system_form.fields.items() if not field.disabled}
+    snapshot = json.dumps([questions, settings], sort_keys=True)
+    return hashlib.sha256(snapshot.encode()).hexdigest()
+
+
 def serialize_question_section(section):
     """Keep bound values (including invalid input) and form indices on a failed POST."""
     formset = section['formset']
@@ -120,11 +141,14 @@ def serialize_question_section(section):
     def serialize_form(form, index):
         values = {}
         for name in form.fields:
+            if name == 'choices':
+                field = form.fields[name]
+                options = field.bound_data(form[name].data, None) if form.is_bound else form.initial.get(name)
+                values[name] = [option for option in options if isinstance(option, str)] if isinstance(options, list) else []
+                continue
             value = form[name].value()
             if isinstance(form.fields[name], forms.BooleanField):
                 value = form.fields[name].to_python(value)
-            elif name == 'choices':
-                value = form.fields[name].prepare_value(value)
             values[name] = '' if value is None else value
         return {
             'formIndex': index, 'values': values, 'deleted': values['DELETE'],
@@ -141,7 +165,8 @@ def serialize_question_section(section):
             'maxLength': getattr(field, 'max_length', None),
             'choices': list(getattr(field, 'choices', [])),
             'kind': 'checkbox' if isinstance(field, forms.BooleanField) else 'select' if name == 'answer_type' else
-                    'textarea' if name in ('choices', 'help_text') else 'number' if name in ('min_value', 'max_value') else 'text',
+                    'options' if name == 'choices' else 'textarea' if name == 'help_text' else
+                    'number' if name in ('min_value', 'max_value') else 'text',
         }
     systems = []
     for question in section['system_questions']:
@@ -154,6 +179,7 @@ def serialize_question_section(section):
         })
     return {
         'title': section['title'], 'prefix': section['prefix'], 'fields': fields,
+        'revision': formset.data.get(f'{formset.prefix}-revision', '') if formset.is_bound else section['revision'],
         'primaryKey': formset.model._meta.pk.name,
         'systemQuestions': systems,
         'questions': [serialize_form(form, index) for index, form in enumerate(formset.forms)],

@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
@@ -30,13 +32,17 @@ class FeedbackQuestionEditorTests(TestCase):
 
     def payload(self, rows):
         prefix = 'adjudicatorfeedback'
+        section = self.client.get(self.url).context['question_editor_data']['sections'][0]
         data = {
+            f'{prefix}-revision': section['revision'],
             f'{prefix}-TOTAL_FORMS': str(len(rows)),
             f'{prefix}-INITIAL_FORMS': str(sum(bool(row.get('question_ptr')) for row in rows)),
             f'{prefix}-MIN_NUM_FORMS': '0', f'{prefix}-MAX_NUM_FORMS': '1000',
         }
         for i, row in enumerate(rows):
             values = {'text': 'Was the explanation clear?', 'name': 'Clarity', 'answer_type': 't', 'reference': f'clarity_{i}', 'ORDER': str(i), **row}
+            if 'choices' in values:
+                values['choices'] = json.dumps(values['choices'])
             data.update({f'{prefix}-{i}-{name}': value for name, value in values.items()})
         return data
 
@@ -56,7 +62,7 @@ class FeedbackQuestionEditorTests(TestCase):
 
     def test_creates_feedback_subclass_with_audience_and_choices(self):
         response = self.client.post(self.url, self.payload([{
-            'from_adj': 'on', 'from_team': 'on', 'answer_type': 'ss', 'choices': 'Yes\nNo',
+            'from_adj': 'on', 'from_team': 'on', 'answer_type': 'ss', 'choices': ['Yes', 'No'],
         }]))
         self.assertRedirects(response, self.url)
         question = AdjudicatorFeedbackQuestion.objects.get(tournament=self.tournament)

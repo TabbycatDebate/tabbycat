@@ -2,7 +2,7 @@ import { computed, reactive, ref } from 'vue'
 import { useDjangoFormset } from '../../templates/composables/useDjangoFormset.js'
 
 export function useQuestionEditor (initialData) {
-  const dirty = ref(false)
+  const dirty = ref(Boolean(initialData.saveFailed))
   const normalize = question => ({
     ...question,
     values: { ...question.values },

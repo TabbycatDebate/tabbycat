@@ -5,7 +5,7 @@ from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from django.db.models import Count, F, Max, Prefetch, Sum
+from django.db.models import Count, F, Prefetch, Sum
 from django.forms import modelformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -47,7 +47,7 @@ from .forms import (
     TournamentInstitutionForm,
 )
 from .models import Invitation, Question, SlotTransferRequest
-from .question_editor import QuestionEditorForm, QuestionEditorFormSet, serialize_question_section, system_questions
+from .question_editor import question_section_revision, QuestionEditorForm, QuestionEditorFormSet, serialize_question_section, system_questions
 from .utils import add_confirm_button_column, add_slot_transfer_status_column, populate_invitation_url_keys
 
 
@@ -1037,7 +1037,7 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
     question_form_class = QuestionEditorForm
     success_message = gettext_lazy("Registration questions were successfully saved.")
     editor_help = gettext_lazy(
-        "Build each section in registration order. Use + to add a question, then drag its handle or use the arrow buttons to reorder it within its section. "
+        "Use Add question to add a custom question, then drag its handle or use the arrow buttons to reorder it within its section. "
         "Built-in questions appear first; optional built-in questions can be included or removed using their checkboxes.")
 
     def get_system_questions(self, model, data, editable):
@@ -1059,17 +1059,21 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
         for model in models:
             content_type = ContentType.objects.get_for_model(model)
             queryset = self.formset_model.objects.filter(tournament=self.tournament, for_content_type=content_type).order_by('seq', 'pk')
+            if data is not None:
+                queryset = queryset.select_for_update()
             system_form, questions, preference = self.get_system_questions(model, data, can_edit_system)
+            formset = factory(data=data, queryset=queryset, prefix=model._meta.model_name)
             sections.append({
                 'title': _("Primary contact") if model is Coach else model._meta.verbose_name_plural.capitalize(),
                 'prefix': model._meta.model_name,
                 'content_type': content_type,
-                'formset': factory(data=data, queryset=queryset, prefix=model._meta.model_name),
+                'formset': formset,
+                'revision': question_section_revision(formset, system_form),
                 'system_form': system_form, 'system_questions': questions, 'preference': preference,
             })
         return sections
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, conflict_sections=(), **kwargs):
         if 'sections' not in kwargs:
             kwargs['sections'] = self.get_sections()
         kwargs['can_edit_system'] = has_permission(self.request.user, Permission.EDIT_SETTINGS, self.tournament)
@@ -1077,6 +1081,8 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
         context['editor_help'] = self.editor_help
         context['question_editor_data'] = {
             'canEdit': context['can_edit'], 'canEditSystem': context['can_edit_system'],
+            'saveFailed': self.request.method == 'POST', 'conflictSections': list(conflict_sections),
+            'latestUrl': reverse_tournament(self.request.resolver_match.view_name, self.tournament),
             'sections': [serialize_question_section(section) for section in context['sections']],
         }
         return context
@@ -1084,8 +1090,12 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
     def post(self, request, *args, **kwargs):
         with transaction.atomic():
             # Bind after locking so a waiting editor sees earlier saves and deletions.
-            type(self.tournament).objects.select_for_update().get(pk=self.tournament.pk)
+            type(self.tournament).objects.select_for_update(no_key=True).get(pk=self.tournament.pk)
             sections = self.get_sections(request.POST)
+            conflicts = [section['title'] for section in sections
+                         if request.POST.get(f"{section['prefix']}-revision") != section['revision']]
+            if conflicts:
+                return self.render_to_response(self.get_context_data(sections=sections, conflict_sections=conflicts), status=409)
             valid = all([section['formset'].is_valid() and section['system_form'].is_valid() for section in sections])
             if not valid:
                 return self.render_to_response(self.get_context_data(sections=sections))
@@ -1093,7 +1103,7 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
                 formset = section['formset']
                 queryset = formset.get_queryset()
                 # Move sequences above their maximum so swaps stay unique.
-                maximum = queryset.aggregate(value=Max('seq'))['value'] or 0
+                maximum = max((question.seq for question in queryset), default=0)
                 for index, question in enumerate(queryset, start=max(maximum, len(formset.forms)) + 1):
                     Question.objects.filter(pk=question.pk).update(seq=index)
                 for form in formset.deleted_forms:
@@ -1105,7 +1115,8 @@ class CustomQuestionFormsetView(TournamentMixin, AdministratorMixin, TemplateVie
                     question.for_content_type = section['content_type']
                     question.seq = seq
                     question.save()
-                if section['preference'] and has_permission(request.user, Permission.EDIT_SETTINGS, self.tournament):
+            for section in sections:
+                if section['preference'] and section['system_form'].has_changed():
                     self.tournament.preferences['registration__' + section['preference'].name] = [
                         name for name, enabled in section['system_form'].cleaned_data.items() if enabled
                     ]

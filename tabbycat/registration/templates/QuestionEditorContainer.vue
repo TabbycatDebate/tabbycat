@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import DjangoFormsetManagement from '../../templates/components/DjangoFormsetManagement.vue'
 import FormFieldErrors from '../../templates/components/FormFieldErrors.vue'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
@@ -11,6 +11,36 @@ const { gettext } = useDjangoI18n()
 const editor = useQuestionEditor(initialData)
 const { sections, dirty } = editor
 const submitting = ref(false)
+const errorSummary = ref(null)
+const conflictSections = initialData.conflictSections
+const errorLinks = computed(() => {
+  const links = []
+  for (const section of sections) {
+    if (section.nonFormErrors.length) {
+      links.push({ target: `heading-${section.prefix}`, label: section.title, messages: section.nonFormErrors })
+    }
+    for (const question of section.visibleForms) {
+      const label = question.values.text || gettext('New question')
+      const heading = `id_${section.fieldName(question.formIndex, 'heading')}`
+      const questionLabel = `${section.title} · ${label}`
+      const generalErrors = [...question.nonFieldErrors]
+      for (const [field, messages] of Object.entries(question.errors)) {
+        if (section.fields[field]) {
+          links.push({
+            target: `id_${section.fieldName(question.formIndex, field)}`,
+            label: `${questionLabel} · ${section.fields[field].label}`,
+            messages,
+          })
+        } else {
+          generalErrors.push(...messages)
+        }
+      }
+      if (generalErrors.length) links.push({ target: heading, label: questionLabel, messages: generalErrors })
+    }
+  }
+  return links
+})
+
 let form = null
 const add = section => {
   const question = editor.addQuestion(section)
@@ -21,11 +51,24 @@ const beforeUnload = event => {
   event.preventDefault()
   event.returnValue = ''
 }
-const submit = () => { submitting.value = true }
+const submit = event => {
+  if (conflictSections.length) {
+    event.preventDefault()
+    errorSummary.value?.focus()
+    return
+  }
+  submitting.value = true
+}
+const goToError = target => {
+  const field = document.getElementById(target)
+  field?.scrollIntoView({ block: 'center' })
+  field?.focus({ preventScroll: true })
+}
 onMounted(() => {
   form = document.getElementById('question-editor')
   form?.addEventListener('submit', submit)
   window.addEventListener('beforeunload', beforeUnload)
+  errorSummary.value?.focus()
 })
 onBeforeUnmount(() => {
   form?.removeEventListener('submit', submit)
@@ -35,15 +78,78 @@ onBeforeUnmount(() => {
 
 <template>
   <fieldset :disabled="!initialData.canEdit">
+    <div
+      v-if="initialData.saveFailed"
+      ref="errorSummary"
+      class="alert alert-danger"
+      role="region"
+      aria-labelledby="question-editor-error-title"
+      tabindex="-1"
+    >
+      <h2
+        id="question-editor-error-title"
+        class="h5"
+      >
+        {{ gettext('Changes were not saved') }}
+      </h2>
+      <template v-if="conflictSections.length">
+        <p>{{ gettext('These sections changed while you were editing. Your draft is still on this page.') }}</p>
+        <ul>
+          <li
+            v-for="title in conflictSections"
+            :key="title"
+          >
+            {{ title }}
+          </li>
+        </ul>
+        <a
+          class="alert-link"
+          :href="initialData.latestUrl"
+          target="_blank"
+          rel="noopener"
+        >{{ gettext('Open the latest version in a new tab to compare changes') }}</a>
+      </template>
+      <ul
+        v-else
+        class="mb-0"
+      >
+        <li
+          v-for="error in errorLinks"
+          :key="error.target"
+          class="mb-1"
+        >
+          <a
+            class="alert-link"
+            :href="`#${error.target}`"
+            @click.prevent="goToError(error.target)"
+          >{{ error.label }}</a>
+          <span> · {{ error.messages.join(' ') }}</span>
+        </li>
+      </ul>
+    </div>
     <section
-      v-for="(section, index) in sections"
+      v-for="section in sections"
       :key="section.prefix"
       class="mb-4 question-section"
       :aria-labelledby="`heading-${section.prefix}`"
     >
-      <h3 :id="`heading-${section.prefix}`">
-        {{ index + 1 }}. {{ section.title }}
-      </h3>
+      <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+        <h3
+          :id="`heading-${section.prefix}`"
+          class="mb-1 mr-2"
+          tabindex="-1"
+        >
+          {{ section.title }}
+        </h3>
+        <button
+          type="button"
+          class="btn btn-outline-primary mb-1"
+          :disabled="!section.canAdd"
+          @click="add(section)"
+        >
+          + {{ gettext('Add question') }}
+        </button>
+      </div>
       <div class="card mb-3">
         <div class="card-header">
           {{ gettext('Built-in questions') }}
@@ -100,6 +206,11 @@ onBeforeUnmount(() => {
         :management="section.management"
         :total-forms="section.nextFormIndex"
       />
+      <input
+        type="hidden"
+        :name="`${section.prefix}-revision`"
+        :value="section.revision"
+      >
       <form-field-errors :errors="section.nonFormErrors" />
       <question-editor-card
         v-for="question in section.forms"
@@ -109,20 +220,26 @@ onBeforeUnmount(() => {
         :editor="editor"
         :can-edit="initialData.canEdit"
       />
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        :disabled="!section.canAdd"
-        @click="add(section)"
-      >
-        + {{ gettext('Add question') }}
-      </button>
     </section>
-    <button
-      type="submit"
-      class="btn btn-success btn-block"
+    <div
+      v-if="initialData.canEdit"
+      class="question-editor-actions d-flex justify-content-end bg-white border-top p-2"
     >
-      {{ gettext('Save Questions') }}
-    </button>
+      <button
+        type="submit"
+        class="btn btn-success"
+        :disabled="!!conflictSections.length"
+      >
+        {{ gettext('Save Questions') }}
+      </button>
+    </div>
   </fieldset>
 </template>
+
+<style scoped>
+.question-editor-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+</style>

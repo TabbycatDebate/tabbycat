@@ -4,7 +4,7 @@ import { useQuestionEditor } from './useQuestionEditor.js'
 
 const question = (formIndex, order = formIndex, deleted = false) => ({
   formIndex, deleted,
-  values: { id: formIndex + 1, ORDER: order, text: `Question ${formIndex}`, answer_type: 't', choices: '', required: true },
+  values: { id: formIndex + 1, ORDER: order, text: `Question ${formIndex}`, answer_type: 't', choices: [], required: true },
   errors: {}, nonFieldErrors: [],
 })
 const initialData = (canEdit = true) => ({
@@ -33,15 +33,20 @@ test('add, remove and undo preserve values and monotonically increasing indices'
   const team = editor.sections[0]
   const added = editor.addQuestion(team)
   assert.equal(added.formIndex, 2)
-  editor.updateQuestion(team, 2, 'choices', 'Vegan\nVegetarian, with dairy')
+  editor.updateQuestion(team, 2, 'choices', ['Vegan', 'Vegetarian, with dairy'])
   editor.setDeleted(team, 2, true)
   assert.equal(team.visibleForms.length, 2)
   const next = editor.addQuestion(team)
   assert.equal(next.formIndex, 3)
   editor.setDeleted(team, 2, false)
-  assert.equal(team.findForm(2).values.choices, 'Vegan\nVegetarian, with dairy')
+  assert.deepEqual(team.findForm(2).values.choices, ['Vegan', 'Vegetarian, with dairy'])
   assert.equal(team.nextFormIndex, 4)
   assert.notEqual(team.findForm(2).values, team.findForm(3).values)
+})
+
+test('a draft restored after a failed save starts unsaved', () => {
+  const editor = useQuestionEditor({ ...initialData(), saveFailed: true })
+  assert.equal(editor.dirty.value, true)
 })
 
 test('reordering ignores deleted, missing and same-row targets', () => {

@@ -1,15 +1,22 @@
 <script setup>
 import { computed, ref } from 'vue'
-import FeatherIcon from '../../templates/components/FeatherIcon.vue'
 import FormFieldErrors from '../../templates/components/FormFieldErrors.vue'
+import SvgIcon from '../../templates/components/SvgIcon.vue'
 import { useDjangoI18n } from '../../templates/composables/useDjangoI18n.js'
 import { useDraggable } from '../../templates/composables/useDraggable.js'
+import QuestionEditorOptions from './QuestionEditorOptions.vue'
 
 const props = defineProps({ question: Object, section: Object, editor: Object, canEdit: Boolean })
 const { gettext } = useDjangoI18n()
 const name = field => props.section.fieldName(props.question.formIndex, field)
 const id = field => `id_${name(field)}`
 const errors = field => props.question.errors[field] || []
+const describedBy = field => [
+  props.section.fields[field].helpText && `${id(field)}-help`,
+  errors(field).length && `${id(field)}-errors`,
+].filter(Boolean).join(' ') || undefined
+const optionsForPost = computed(() => JSON.stringify(props.question.values.choices.filter(option => option !== null)))
+const inactive = computed(() => 'from_adj' in props.section.fields && !props.question.values.from_adj && !props.question.values.from_team)
 const position = computed(() => props.section.visibleForms.indexOf(props.question))
 const update = (field, value) => props.editor.updateQuestion(props.section, props.question.formIndex, field, value)
 const visible = field => {
@@ -67,16 +74,25 @@ const move = direction => props.editor.move(props.section, props.question.formIn
       :name="name('DELETE')"
       :value="question.deleted ? 'on' : ''"
     >
+    <input
+      type="hidden"
+      :name="name('choices')"
+      :value="optionsForPost"
+    >
     <template v-if="question.deleted">
       <input
-        v-for="field in fieldOrder"
+        v-for="field in fieldOrder.filter(field => field !== 'choices')"
         :key="field"
         type="hidden"
         :name="name(field)"
         :value="section.fields[field].kind === 'checkbox' ? (question.values[field] ? 'on' : '') : question.values[field]"
       >
     </template>
-    <div class="card-header d-flex align-items-center justify-content-between flex-wrap">
+    <div
+      :id="id('heading')"
+      class="card-header d-flex align-items-center justify-content-between flex-wrap"
+      tabindex="-1"
+    >
       <div class="d-flex align-items-center">
         <button
           v-if="!question.deleted"
@@ -90,9 +106,14 @@ const move = direction => props.editor.move(props.section, props.question.formIn
           @keydown.up.prevent="move(-1)"
           @keydown.down.prevent="move(1)"
         >
-          <feather-icon name="move" />
+          <svg-icon name="move" />
         </button>
-        <strong>{{ question.values.text || gettext('New question') }}</strong>
+        <div>
+          <strong>{{ question.values.text || gettext('New question') }}</strong>
+          <div v-if="inactive && !question.deleted">
+            <span class="badge badge-warning">{{ gettext('Inactive · no audience') }}</span>
+          </div>
+        </div>
       </div>
       <div class="btn-group">
         <template v-if="!question.deleted">
@@ -165,6 +186,8 @@ const move = direction => props.editor.move(props.section, props.question.formIn
                 :name="name(field)"
                 :checked="question.values[field]"
                 :disabled="!canEdit"
+                :aria-describedby="describedBy(field)"
+                :aria-invalid="!!errors(field).length || undefined"
                 @change="update(field, $event.target.checked)"
               >
               {{ section.fields[field].label }}
@@ -176,6 +199,8 @@ const move = direction => props.editor.move(props.section, props.question.formIn
               :name="name(field)"
               :value="question.values[field]"
               :disabled="!canEdit"
+              :aria-describedby="describedBy(field)"
+              :aria-invalid="!!errors(field).length || undefined"
               @change="update(field, $event.target.value)"
             >
               <option
@@ -186,14 +211,25 @@ const move = direction => props.editor.move(props.section, props.question.formIn
                 {{ choice[1] }}
               </option>
             </select>
+            <question-editor-options
+              v-else-if="section.fields[field].kind === 'options'"
+              :id="id(field)"
+              :options="question.values[field]"
+              :disabled="!canEdit"
+              :described-by="describedBy(field)"
+              :invalid="!!errors(field).length"
+              @update="update(field, $event)"
+            />
             <textarea
               v-else-if="section.fields[field].kind === 'textarea'"
               :id="id(field)"
               class="form-control"
               :name="name(field)"
-              :rows="field === 'choices' ? 4 : 2"
+              rows="2"
               :value="question.values[field]"
               :disabled="!canEdit"
+              :aria-describedby="describedBy(field)"
+              :aria-invalid="!!errors(field).length || undefined"
               @input="update(field, $event.target.value)"
             />
             <input
@@ -206,13 +242,19 @@ const move = direction => props.editor.move(props.section, props.question.formIn
               :maxlength="section.fields[field].maxLength"
               :value="question.values[field]"
               :disabled="!canEdit"
+              :aria-describedby="describedBy(field)"
+              :aria-invalid="!!errors(field).length || undefined"
               @input="update(field, $event.target.value)"
             >
             <small
               v-if="section.fields[field].helpText"
+              :id="`${id(field)}-help`"
               class="form-text text-muted"
             >{{ section.fields[field].helpText }}</small>
-            <form-field-errors :errors="errors(field)" />
+            <form-field-errors
+              :id="`${id(field)}-errors`"
+              :errors="errors(field)"
+            />
           </div>
         </template>
       </div>

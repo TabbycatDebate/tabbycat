@@ -883,8 +883,8 @@ class AdjFeedbackQuestionsFormset(CustomQuestionFormsetView):
 
     success_message = gettext_lazy("Feedback questions were successfully saved.")
     editor_help = gettext_lazy(
-        "Use + to add a feedback question, then drag its handle or use the arrow buttons to reorder it. "
-        "Choose whether each question is asked of adjudicators, teams, or both. The overall score is controlled by feedback settings.")
+        "Use Add question to add a feedback question, then drag its handle or use the arrow buttons to reorder it. "
+        "Questions with neither audience selected are inactive. The overall score is controlled by feedback settings.")
 
     def get_system_questions(self, model, data, editable):
         return Form(data=data), [{

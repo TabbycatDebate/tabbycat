@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -31,7 +32,8 @@ class QuestionEditorTests(TestCase):
         )
 
     def payload(self, rows=(), speakers=()):
-        data = {}
+        editor = self.client.get(self.url).context['question_editor_data']
+        data = {f"{section['prefix']}-revision": section['revision'] for section in editor['sections']}
         for prefix, questions in [('team', rows), ('speaker', speakers)]:
             data.update({
                 f'{prefix}-TOTAL_FORMS': str(len(questions)),
@@ -40,11 +42,13 @@ class QuestionEditorTests(TestCase):
             })
             for i, question in enumerate(questions):
                 values = {'name': 'Question', 'text': 'Your question?', 'answer_type': 't', 'ORDER': str(i), **question}
+                if 'choices' in values:
+                    values['choices'] = json.dumps(values['choices'])
                 data.update({f'{prefix}-{i}-{key}': value for key, value in values.items()})
         return data
 
     def test_creates_questions_in_both_sections_and_updates_system_fields(self):
-        data = self.payload([{'answer_type': 'ss', 'choices': 'Vegan\nVegetarian, with dairy'}], [{}])
+        data = self.payload([{'answer_type': 'ss', 'choices': ['Vegan', 'Vegetarian, with dairy']}], [{}])
         data['speaker-system-phone'] = 'on'
         response = self.client.post(self.url, data)
         self.assertRedirects(response, self.url)
@@ -75,6 +79,37 @@ class QuestionEditorTests(TestCase):
     def test_invalid_second_section_saves_nothing(self):
         response = self.client.post(self.url, self.payload([{}], [{'text': '', 'name': 'Invalid'}]))
         self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['question_editor_data']['saveFailed'])
+        self.assertFalse(Question.objects.filter(tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Team)).exists())
+
+    def test_stale_editor_cannot_overwrite_another_edit(self):
+        first, second = self.question(), self.question(seq=1)
+        current = self.payload([{'id': first.pk, 'text': 'First edit'}, {'id': second.pk}])
+        stale = self.payload([{'id': first.pk}, {'id': second.pk, 'text': 'Second edit'}])
+        for name in ('team-system-emoji', 'team-system-use_institution_prefix', 'speaker-system-email'):
+            current[name] = stale[name] = 'on'
+        self.assertRedirects(self.client.post(self.url, current), self.url)
+
+        response = self.client.post(self.url, stale)
+        self.assertEqual(response.status_code, 409)
+        editor = response.context['question_editor_data']
+        self.assertEqual(editor['conflictSections'], ['Teams'])
+        self.assertTrue(editor['saveFailed'])
+        section = editor['sections'][0]
+        self.assertEqual(section['revision'], stale['team-revision'])
+        self.assertEqual(section['questions'][1]['values']['text'], 'Second edit')
+        self.assertEqual(self.client.post(self.url, stale).status_code, 409)
+        first.refresh_from_db()
+        second.refresh_from_db()
+        self.assertEqual((first.text, second.text), ('First edit', 'Your question?'))
+
+    def test_stale_editor_cannot_overwrite_a_registration_setting(self):
+        stale = self.payload([{}])
+        self.tournament.preferences['registration__reg_speaker_fields'] = ['phone']
+        response = self.client.post(self.url, stale)
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.context['question_editor_data']['conflictSections'], ['Speakers'])
+        self.assertEqual(self.tournament.preferences['registration__reg_speaker_fields'], ['phone'])
         self.assertFalse(Question.objects.filter(tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Team)).exists())
 
     def test_cannot_edit_question_from_another_section(self):
@@ -105,6 +140,23 @@ class QuestionEditorTests(TestCase):
         response = self.client.post(self.url, self.payload([{'answer_type': 'ss'}]))
         self.assertIn('choices', response.context['question_editor_data']['sections'][0]['questions'][0]['errors'])
         self.assertFalse(Question.objects.filter(tournament=self.tournament, for_content_type=ContentType.objects.get_for_model(Team)).exists())
+
+    def test_existing_options_with_line_breaks_round_trip(self):
+        question = self.question()
+        question.answer_type = Question.AnswerType.SINGLE_SELECT
+        question.choices = ['Vegetarian\r\nwith eggs', '  Vegan  ']
+        question.save()
+        team = Team.objects.filter(tournament=self.tournament).first()
+        answer = Answer.objects.create(question=question, content_object=team, answer=question.choices[0])
+        section = self.client.get(self.url).context['question_editor_data']['sections'][0]
+        options = section['questions'][0]['values']['choices']
+        self.assertEqual(options, question.choices)
+        data = self.payload([{'id': question.pk, 'answer_type': 'ss', 'choices': options, 'required': 'on'}])
+        self.assertRedirects(self.client.post(self.url, data), self.url)
+        question.refresh_from_db()
+        answer.refresh_from_db()
+        self.assertEqual(question.choices, options)
+        self.assertIn(answer.answer, question.choices)
 
     def test_question_editor_cannot_change_settings_without_permission(self):
         self.user.is_superuser = False
@@ -147,8 +199,8 @@ class QuestionEditorTests(TestCase):
     def test_bound_editor_data_preserves_values_order_deletion_and_errors(self):
         first, second = self.question(), self.question(seq=1)
         data = self.payload([
-            {'id': first.pk, 'ORDER': '1', 'DELETE': 'on', 'choices': 'One\nTwo'},
-            {'id': second.pk, 'ORDER': '0', 'answer_type': 'ss', 'choices': ''},
+            {'id': first.pk, 'ORDER': '1', 'DELETE': 'on', 'choices': ['One', 'Two']},
+            {'id': second.pk, 'ORDER': '0', 'answer_type': 'ss', 'choices': []},
         ])
         data['speaker-system-phone'] = 'on'
         response = self.client.post(self.url, data)
@@ -157,7 +209,7 @@ class QuestionEditorTests(TestCase):
         self.assertEqual(team['management']['initialForms'], 2)
         self.assertEqual(team['questions'][0]['formIndex'], 0)
         self.assertEqual(team['questions'][0]['values']['ORDER'], '1')
-        self.assertEqual(team['questions'][0]['values']['choices'], 'One\nTwo')
+        self.assertEqual(team['questions'][0]['values']['choices'], ['One', 'Two'])
         self.assertTrue(team['questions'][0]['deleted'])
         self.assertIn('choices', team['questions'][1]['errors'])
         phone = next(q for q in speaker['systemQuestions'] if q['name'] == 'speaker-system-phone')
@@ -185,6 +237,7 @@ class QuestionEditorTests(TestCase):
     def test_question_deleted_before_lock_is_not_recreated(self):
         question = self.question()
         question_id = question.pk
+        data = self.payload([{'id': question_id}])
         get = QuerySet.get
 
         def acquire_lock(queryset, *args, **kwargs):
@@ -193,6 +246,6 @@ class QuestionEditorTests(TestCase):
             return get(queryset, *args, **kwargs)
 
         with patch.object(QuerySet, 'get', acquire_lock):
-            response = self.client.post(self.url, self.payload([{'id': question_id}]))
-        self.assertEqual(response.status_code, 200)
+            response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 409)
         self.assertFalse(Question.objects.filter(pk=question_id).exists())
