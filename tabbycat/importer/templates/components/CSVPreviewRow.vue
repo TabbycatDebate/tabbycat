@@ -69,6 +69,7 @@ const label = computed(() => {
       <div
         class="pt-3"
         :inert="row.skipped ? '' : null"
+        @input="row.edited = true"
         @change="row.edited = true"
       >
         <slot />

@@ -125,12 +125,14 @@ class CSVUploadForm(forms.Form):
 
 
 class CSVTypesForm(forms.Form):
-    def __init__(self, *args, sources, **kwargs):
+    def __init__(self, *args, sources, allowed_types=CSV_TYPES, **kwargs):
         super().__init__(*args, **kwargs)
-        choices = [('', _('Choose a file type'))] + [(kind.key, kind.label) for kind in CSV_TYPES.values()]
+        choices = [('', _('Choose a file type'))] + [(kind.key, kind.label) for kind in allowed_types.values()]
         for index, source in enumerate(sources):
-            self.fields[f'file_{index}'] = forms.ChoiceField(initial=guess_file_type(source['name']),
-                label=source['name'], choices=choices)
+            guess = guess_file_type(source['name'])
+            self.fields[f'file_{index}'] = forms.ChoiceField(initial=guess if guess in allowed_types else '',
+                label=source['name'], choices=choices,
+                error_messages={'invalid_choice': _('Choose a file type you have permission to import.')})
 
 
 class CSVMappingForm(forms.Form):
@@ -208,8 +210,9 @@ class CSVPreviewFormSet(forms.BaseFormSet):
             kwargs.update(CSV_TYPES[row.get('_kind', 'team')].form_options(row))
         return kwargs
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, check_permissions=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.check_permissions = check_permissions
         self.form_kwargs.setdefault('references', ImportReferences(self.form_kwargs['tournament']))
         for form in self.forms:
             form.fields['DELETE'].label = _('Skip')
@@ -233,6 +236,11 @@ class CSVPreviewFormSet(forms.BaseFormSet):
                     form.add_error(None, _('The linked row is skipped or has errors. Select another reference, correct the linked row, or skip this row.'))
             if form.errors:
                 continue
+            if self.check_permissions is not None:
+                error = self.check_permissions(kind, kind.serialize(form.cleaned_data))
+                if error:
+                    form.add_error(None, error)
+                    continue
             keys = kind.duplicate_keys(form.cleaned_data)
             if any(key in seen for key in keys):
                 form.add_error(kind.name_field, _('This record appears more than once in the uploaded files. Skip or correct this row.'))

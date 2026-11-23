@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db import connection
+from django.db import connection, IntegrityError
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 
@@ -13,10 +13,14 @@ from importer.csv_forms import CSV_MAX_FILE_SIZE, CSV_MAX_FILES, CSV_MAX_ROWS, C
 from importer.csv_pipeline import CSVImportContext, process_csv_row
 from importer.csv_row_forms import CSVSpeakerForm
 from importer.csv_types import CSV_TYPES, guess_file_type, register_csv_type, SpeakerCSVType
+from importer.models import CSVImportRun
 from importer.references import ImportReferences
 from participants.models import Institution, Speaker, Team
 from tournaments.models import Round, Tournament
+from users.models import Group
+from users.permissions import Permission
 from utils.misc import reverse_tournament
+from venues.models import Venue, VenueCategory
 
 
 class CSVWizardTests(TestCase):
@@ -93,6 +97,32 @@ class CSVWizardTests(TestCase):
         self.assertEqual(Speaker.objects.count(), 1)
         self.assertEqual(self.client.get(url.replace('results/', 'errors/')).status_code, 200)
 
+    def test_row_and_progress_commit_together(self):
+        self.preview()
+        url = self.finish([self.row()])
+        with patch.object(CSVImportRun, 'save', side_effect=IntegrityError('Progress write failed')):
+            with self.assertRaises(IntegrityError):
+                self.client.post(url, {'row': 0})
+        self.assertFalse(Team.objects.exists())
+        self.assertFalse(Speaker.objects.exists())
+        self.assertEqual(self.client.get(url).context['rows'][0]['status'], 'pending')
+        self.assertEqual(self.client.post(url, {'row': 0}).json()['status'], 'imported')
+        self.assertEqual(Team.objects.count(), 1)
+
+    def test_results_survive_a_stale_session_save(self):
+        self.preview()
+        first_url = self.finish([self.row()])
+        self.preview(text='Team,Institution,Speaker 1 name,Speaker 1 email\nB,EU,Bob,bob@example.com\n')
+        second_url = self.finish([self.row(reference='B', speaker_1_name='Bob', speaker_1_email='bob@example.com')])
+        stale_session = self.client.session
+        self.assertEqual(self.client.post(first_url, {'row': 0}).json()['status'], 'imported')
+        self.assertEqual(self.client.post(second_url, {'row': 0}).json()['status'], 'imported')
+        stale_session['other_update'] = True
+        stale_session.save()
+        for url in (first_url, second_url):
+            self.assertEqual(self.client.get(url).context['rows'][0]['status'], 'imported')
+        self.assertEqual(Team.objects.count(), 2)
+
     def test_teams_without_speakers(self):
         self.preview(speakers=0)
         url = self.finish([self.row(speaker_1_name='', speaker_1_email='')])
@@ -156,6 +186,45 @@ class CSVWizardTests(TestCase):
         for endpoint, url in endpoints:
             with self.subTest(endpoint=endpoint):
                 self.assertEqual(self.client.get(url).status_code, 403)
+
+    def test_file_types_and_templates_follow_import_permissions(self):
+        self.user.is_superuser = False
+        self.user.save(update_fields=['is_superuser'])
+        group = Group.objects.create(tournament=self.tournament, name='Team registration', permissions=[Permission.ADD_TEAMS])
+        group.users.add(self.user)
+        types = self.upload().context['wizard']['form']
+        self.assertEqual([key for key, label in types['file_0'].field.choices], ['', 'team', 'speaker'])
+        response = self.step('types', {'types-file_0': 'venue'})
+        self.assertEqual(response.context['wizard']['steps'].current, 'types')
+        self.assertTrue(response.context['wizard']['form']['file_0'].errors)
+        rooms_template = reverse_tournament('importer-csv-template', self.tournament, kwargs={'template_key': 'venues'})
+        self.assertEqual(self.client.get(rooms_template).status_code, 404)
+
+    def test_room_category_permission_is_rechecked_at_execution(self):
+        self.user.is_superuser = False
+        self.user.save(update_fields=['is_superuser'])
+        self.user.userpermission_set.create(tournament=self.tournament, permission=Permission.ADD_ROOMS)
+        category = VenueCategory.objects.create(tournament=self.tournament, name='Main')
+        response = self.client.post(reverse_tournament('importer-csv-upload', self.tournament), {
+            'files': SimpleUploadedFile('venues.csv', b'name,category,priority\nRoom A,Main,10\n'), 'encoding': 'utf-8-sig',
+            'delimiter': ',', 'header_row': 1,
+        })
+        self.assertEqual(response.status_code, 302)
+        self.url = response.url
+        self.prefix = self.client.get(self.url).context['wizard']['management_form'].prefix
+        self.step('types', {'types-file_0': 'venue'})
+        response = self.step('mapping', {'mapping-column_0_0': 'name', 'mapping-column_0_1': 'category',
+            'mapping-column_0_2': 'priority'})
+        self.assertEqual(response.context['wizard']['steps'].current, 'preview')
+        self.assertContains(response, 'This row requires permission to edit room categories.')
+        permission = self.user.userpermission_set.create(tournament=self.tournament, permission=Permission.EDIT_ROOMCATEGORIES)
+        url = self.finish([{'name': 'Room A', 'category': category.pk, 'priority': 10}])
+        permission.delete()
+        response = self.client.post(url, {'row': 0})
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('edit room categories', response.json()['error'])
+        self.assertFalse(Venue.objects.exists())
+        self.assertEqual(self.client.get(url).context['rows'][0]['status'], 'pending')
 
     def test_upload_parses_bom_semicolon_multiline_and_rejects_ragged_rows(self):
         form = CSVUploadForm(data={'encoding': 'utf-8-sig', 'delimiter': ';', 'header_row': 1}, files={
@@ -238,6 +307,29 @@ class CSVWizardTests(TestCase):
         response = self.preview(text='Team,Institution,Speaker 1 name,Speaker 1 email\nA,EU,,bad-email\n')
         form = response.context['wizard']['form'].forms[0]
         self.assertIn('speaker_1_email', form.errors)
+
+    def test_bulk_skip_validates_current_edits_in_the_selected_file(self):
+        self.separate_speaker_preview()
+        speaker = {'name': 'Bob', 'email': 'bad', 'team': self.speaker_token}
+        response = self.step('preview', self.preview_data([speaker, self.row()]))
+        self.assertEqual(response.context['wizard']['steps'].current, 'preview')
+        speaker['email'] = 'bob@example.com'
+        response = self.step('preview', {**self.preview_data([speaker, self.row()]),
+            'csv_skip_invalid': '0'})
+        self.assertEqual(response.context['wizard']['steps'].current, 'preview')
+        first, second = response.context['wizard']['form'].forms
+        self.assertFalse(first['DELETE'].value())
+        self.assertFalse(second['DELETE'].value())
+        self.assertFalse(first.errors)
+        self.assertEqual(response.context['csv_vue_data']['active_file'], 0)
+
+        speaker['email'] = 'bad'
+        response = self.step('preview', {**self.preview_data([speaker, self.row(seed='bad')]),
+            'csv_skip_invalid': '1'})
+        self.assertFalse(response.context['wizard']['form'].forms[0]['DELETE'].value())
+        self.assertTrue(response.context['wizard']['form'].forms[1]['DELETE'].value())
+        self.assertTrue(self.client.get(self.url).context['wizard']['form'].forms[1]['DELETE'].value())
+        self.assertFalse(Team.objects.exists())
 
     def test_back_navigation_keeps_preview_edits(self):
         self.preview()

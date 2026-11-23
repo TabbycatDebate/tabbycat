@@ -6,6 +6,7 @@ import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 const props = defineProps({
   files: Array,
   preview: Boolean,
+  activeFile: Number,
 })
 const { gettext, ngettext, interpolate } = useDjangoI18n()
 const storageKey = 'csv-active-file:' + window.location.pathname
@@ -17,12 +18,13 @@ const filters = reactive(Object.fromEntries(props.files.map(file => [file.index,
 const firstInvalid = props.files.findIndex(file => file.attention_count || file.rows.some(row => row.invalid && !row.skipped))
 const saved = sessionStorage.getItem(storageKey)
 const savedIndex = props.files.findIndex(file => String(file.id) === saved)
-const active = ref(firstInvalid >= 0 ? firstInvalid : savedIndex >= 0 ? savedIndex : 0)
+const active = ref(props.activeFile ?? (firstInvalid >= 0 ? firstInvalid : Math.max(savedIndex, 0)))
 
 const rowCount = computed(() => props.files.reduce((sum, file) => sum + file.row_count, 0))
 const rowStatus = row => row.skipped ? 'skipped' : row.invalid ? 'attention' : 'ready'
 const fileRows = file => file.rows.map(row => rows[row.index])
 const attentionCount = file => fileRows(file).filter(row => rowStatus(row) === 'attention').length
+const canSkipInvalid = file => fileRows(file).some(row => !row.skipped && (row.invalid || row.edited))
 const skippedCount = file => fileRows(file).filter(row => row.skipped).length
 const visibleRows = file => fileRows(file).filter(row =>
   filters[file.index] === 'all' || rowStatus(row) === filters[file.index])
@@ -35,10 +37,6 @@ const countLabel = count => interpolate(ngettext('%s row', '%s rows', count), [c
 
 provide('csvPreviewState', { rows, filters, rowStatus })
 watch(active, value => sessionStorage.setItem(storageKey, String(props.files[value].id)), { immediate: true })
-
-function skipInvalid (file) {
-  fileRows(file).filter(row => row.invalid).forEach(row => { row.skipped = true })
-}
 </script>
 
 <template>
@@ -118,12 +116,13 @@ function skipInvalid (file) {
           class="card-body py-3 d-flex flex-wrap align-items-center justify-content-between"
         >
           <span class="small text-muted">{{ attentionLabel(attentionCount(file)) }} · {{ skippedLabel(skippedCount(file)) }}</span>
-          <div class="d-flex align-items-center mt-2 mt-md-0">
+          <div class="csv-preview-controls d-flex flex-wrap align-items-center mt-2 mt-md-0">
             <button
-              type="button"
-              class="btn btn-outline-secondary btn-sm mr-2 text-nowrap"
-              :disabled="!attentionCount(file)"
-              @click="skipInvalid(file)"
+              type="submit"
+              name="csv_skip_invalid"
+              :value="file.index"
+              class="btn btn-outline-secondary btn-sm"
+              :disabled="!canSkipInvalid(file)"
             >
               {{ gettext('Skip invalid rows') }}
             </button>
@@ -206,6 +205,13 @@ function skipInvalid (file) {
 }
 .csv-file-panels {
   min-width: 0;
+}
+.csv-preview-controls {
+  gap: .5rem;
+  max-width: 100%;
+}
+.csv-preview-controls > .form-control {
+  max-width: 100%;
 }
 :deep(.csv-mapping-table th), :deep(.csv-mapping-table td) {
   vertical-align: middle;

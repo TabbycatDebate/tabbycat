@@ -12,8 +12,8 @@ const rows = ref(props.initialRows.map((row, index) => ({ ...row, index })))
 const selectedFile = ref('')
 const processing = ref(false)
 
-const storageKey = 'csv-in-flight:' + window.location.pathname
-const interrupted = ref(!!sessionStorage.getItem(storageKey))
+const importError = ref('')
+const interruptedMessage = gettext('Import interrupted. Reload the page to see saved progress, then import the pending rows.')
 
 const files = computed(() => [...new Set(rows.value.map(row => row.file))])
 const visibleRows = computed(() => rows.value.filter(row =>
@@ -46,20 +46,20 @@ async function startImport () {
     const row = pending[0] || rows.value.find(row => row.status === 'created' && ready(row))
     if (!row) break
     try {
-      // Keep the marker until the session confirms this row; uncertain requests cannot be retried.
-      sessionStorage.setItem(storageKey, String(row.index))
       const response = await fetch(window.location.href, {
         method: 'POST',
         credentials: 'same-origin',
-        body: new URLSearchParams({ row: row.index, csrfmiddlewaretoken: props.csrfToken }),
+        body: new URLSearchParams({ row: row.index, status: row.status, csrfmiddlewaretoken: props.csrfToken }),
       })
-      if (!response.ok) throw new Error('Import request failed')
       const result = await response.json()
+      if (!response.ok) {
+        importError.value = result.error || interruptedMessage
+        break
+      }
       row.status = result.status
       row.errors = result.errors
-      sessionStorage.removeItem(storageKey)
     } catch {
-      interrupted.value = true
+      importError.value = interruptedMessage
       break
     }
   }
@@ -85,12 +85,12 @@ async function startImport () {
       </div>
     </div>
     <p>
-      {{ gettext('Keep this page open while importing. If a request is interrupted, check the affected records before starting another import. Requests are not retried automatically.') }}
+      {{ gettext('Keep this page open while importing. You can reload the page and continue with the pending rows.') }}
     </p>
     <button
       type="button"
       class="btn btn-primary mb-3"
-      :disabled="processing || interrupted || !counts.pending"
+      :disabled="processing || importError || !counts.pending"
       @click="startImport"
     >
       {{ gettext('Import pending rows') }}
@@ -108,10 +108,11 @@ async function startImport () {
       :aria-label="gettext('Completed import rows')"
     />
     <p
-      v-if="interrupted"
+      v-if="importError"
+      role="alert"
       class="alert alert-warning"
     >
-      {{ gettext('Import interrupted. The last row may have been saved. Check the affected records before starting another import; do not retry this request.') }}
+      {{ importError }}
     </p>
     <div class="d-flex justify-content-end mb-3">
       <label

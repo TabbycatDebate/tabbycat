@@ -18,6 +18,7 @@ from participants.models import Speaker, Team
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
 from tournaments.models import Tournament
+from users.permissions import Permission
 
 from .csv_base_types import CSVObjectType, DependencyBlockedError, reference_dependencies
 from .csv_model_types import model_csv_types
@@ -39,6 +40,8 @@ if TYPE_CHECKING:
 class TeamCSVType(CSVObjectType[CSVTeamForm, Team]):
     count_label = ngettext_lazy('Team', 'Teams', 'count')
     key = 'team'
+    permission = Permission.ADD_TEAMS
+    field_permissions = {'break_categories': Permission.EDIT_BREAK_ELIGIBILITY}
     label = _('Teams')
     filename_words = ('team', 'teams')
     templates = (
@@ -102,6 +105,12 @@ class TeamCSVType(CSVObjectType[CSVTeamForm, Team]):
         return {name: [reference_value(item) for item in value] if isinstance(value, (list, tuple)) else
             reference_value(value) if hasattr(value, '_meta') else value for name, value in data.items()}
 
+    def write_permissions(self, data: SerializedRowData) -> set[Permission]:
+        permissions = super().write_permissions(data)
+        if any(value and name.endswith('_category') for name, value in data.items()):
+            permissions.add(Permission.EDIT_SPEAKER_ELIGIBILITY)
+        return permissions
+
     def duplicate_key(self, data: RowData) -> DuplicateKey:
         return self.key, reference_value(data.get('institution')), data.get('reference')
 
@@ -146,6 +155,8 @@ class TeamCSVType(CSVObjectType[CSVTeamForm, Team]):
 class SpeakerCSVType(CSVObjectType[CSVSpeakerForm, Speaker]):
     count_label = ngettext_lazy('Speaker', 'Speakers', 'count')
     key = 'speaker'
+    permission = Permission.ADD_TEAMS
+    field_permissions = {'categories': Permission.EDIT_SPEAKER_ELIGIBILITY}
     label = _('Speakers')
     filename_words = ('speaker', 'speakers')
     templates = (('speakers', _('Separate speakers'), ('name', 'email', 'team_name', 'institution', 'use_institution_prefix')),)

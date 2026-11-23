@@ -57,8 +57,9 @@ CSV importer
 
 Open **Setup → Import Data → Simple Importer**, then select **CSV Importer**.
 Upload related CSV files together, choose each file's type, map its columns, and
-review the rows before importing. The upload screen provides CSV templates;
-you can also use your own column headings.
+review the rows before importing. The upload screen provides CSV templates for
+the file types your tournament permissions allow. You can also use your own
+column headings.
 
 The wizard supports all file types from ``importtournament``, including teams,
 speakers, institutions, adjudicators, rooms, rounds, categories, motions and
@@ -67,14 +68,16 @@ have their own file. References match existing records or other uploaded rows
 by name or code. Speaker files can also create missing teams.
 
 In **Preview and edit rows**, correct values and references or mark rows **Skip**.
-Going back preserves edits for unchanged files. After reviewing the totals,
-confirm the import and click **Import pending rows**. Keep the results page open
-to see progress and download row errors. If a request is interrupted, check the
-affected records before starting another import: uncertain requests are not
-retried automatically.
+**Skip invalid rows** validates the current edits and skips only rows that still
+have errors in the selected file. Going back preserves edits for unchanged
+files. After reviewing the totals, confirm the import and click
+**Import pending rows**. Keep the results page open to see progress and download
+row errors. If the import is interrupted, reload the results page and click
+**Import pending rows** to continue.
 
-Drafts are stored in your session. Upload up to 20 files of 2 MiB each, with
-1,000 rows in total; wide previews may need smaller files. Encoding, delimiter
+Drafts stay in your session until confirmation. After confirmation, Tabbycat
+saves each row's progress with its imported records. Upload up to 20 files of
+2 MiB each, with 1,000 rows in total. Wide previews may need smaller files. Encoding, delimiter
 and header-row options are available. For Google Sheets, download each tab as
 CSV first. Direct Sheets access and custom-question mappings are not supported.
 

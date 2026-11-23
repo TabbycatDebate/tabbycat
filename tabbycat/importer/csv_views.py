@@ -1,11 +1,12 @@
-"""Session-backed CSV wizard and per-row import execution."""
+"""Session-backed CSV wizard and transactional import execution."""
 
 import csv
 import uuid
 
-from django.core.cache import cache
+from django.db import transaction
 from django.http import Http404, HttpResponse, JsonResponse, QueryDict
 from django.shortcuts import redirect
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import FormView, TemplateView, View
@@ -13,7 +14,7 @@ from formtools.wizard.storage.session import SessionStorage
 from formtools.wizard.views import SessionWizardView
 
 from tournaments.mixins import TournamentMixin
-from users.permissions import Permission
+from users.permissions import get_tournament_permissions
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, TabbycatPageTitlesMixin
 
@@ -24,6 +25,7 @@ from .csv_forms import (CSV_MAX_FILE_SIZE_MIB, CSV_MAX_FILES, CSV_MAX_ROWS,
 from .csv_pipeline import CSVImportContext, process_csv_row
 from .csv_state import invalidate_file_previews, update_wizard_files
 from .csv_types import CSV_TYPES
+from .models import CSVImportRun
 
 
 CSV_STEP_TITLES = {
@@ -38,7 +40,47 @@ CSV_STEP_TITLES = {
 class CSVAccessMixin(AdministratorMixin, TournamentMixin, TabbycatPageTitlesMixin):
     page_title = gettext_lazy('CSV Importer')
     page_emoji = '📄'
-    edit_permission = Permission.ADD_TEAMS
+
+    @cached_property
+    def import_permissions(self):
+        return get_tournament_permissions(self.request.user, self.tournament)
+
+    @cached_property
+    def allowed_types(self):
+        return {kind.key: kind for kind in CSV_TYPES.values() if kind.permission in self.import_permissions}
+
+    def get_edit_permission(self):
+        return bool(self.allowed_types)
+
+    def permission_error(self, kind, data):
+        missing = sorted(str(permission.label) for permission in kind.write_permissions(data)
+            if permission not in self.import_permissions)
+        if missing:
+            return _('This row requires permission to %(permissions)s.') % {'permissions': ', '.join(missing)}
+
+    def execution_runs(self):
+        return CSVImportRun.objects.filter(tournament=self.tournament, owner=self.request.user,
+            pk=self.kwargs['import_id'])
+
+    def execution_started(self):
+        return self.execution_runs().exists() or self.draft.get('started', False)
+
+    def get_execution_run(self, *, lock=False):
+        runs = self.execution_runs()
+        if lock:
+            runs = runs.select_for_update()
+        run = runs.first()
+        if run is None:
+            # Imports confirmed before progress moved out of the session.
+            draft = self.draft
+            if not draft.get('started'):
+                raise Http404
+            run, unused = runs.get_or_create(tournament=self.tournament, owner=self.request.user, pk=self.kwargs['import_id'],
+                defaults={'state': {'rows': draft['rows'], 'team_choices': draft['team_choices']},
+                    'expires_at': self.request.session.get_expiry_date()})
+        if run.expires_at <= timezone.now():
+            raise Http404(_('This import has expired. Upload the CSV files again.'))
+        return run
 
     @property
     def draft_key(self):
@@ -60,12 +102,12 @@ class CSVUploadView(CSVAccessMixin, FormView):
     form_class = CSVUploadForm
 
     def get(self, request, *args, **kwargs):
-        if 'import_id' in kwargs and self.draft['started']:
+        if 'import_id' in kwargs and self.execution_started():
             return redirect(self.draft_url('importer-csv-results'))
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        if 'import_id' in kwargs and self.draft['started']:
+        if 'import_id' in kwargs and self.execution_started():
             return redirect(self.draft_url('importer-csv-results'))
         return super().post(request, *args, **kwargs)
 
@@ -84,7 +126,7 @@ class CSVUploadView(CSVAccessMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['csv_limits'] = {'files': CSV_MAX_FILES, 'size': CSV_MAX_FILE_SIZE_MIB, 'rows': CSV_MAX_ROWS}
         context['csv_templates'] = [{'key': key, 'label': label}
-            for kind in CSV_TYPES.values() for key, label, columns in kind.templates]
+            for kind in self.allowed_types.values() for key, label, columns in kind.templates]
         context['csv_vue_data'] = {'steps': [{'key': key, 'label': label,
             'state': 'current' if key == 'upload' else 'upcoming'} for key, label in CSV_STEP_TITLES.items()]}
         form = context['form']
@@ -105,7 +147,7 @@ class CSVUploadView(CSVAccessMixin, FormView):
         import_id = uuid.uuid4()
         self.request.session['csv_import_' + str(import_id)] = {
             'tournament': self.tournament.pk, 'user': self.request.user.pk,
-            'files': form.cleaned_data['parsed'], 'started': False,
+            'files': form.cleaned_data['parsed'],
             'format_options': {key: form.cleaned_data[key] for key in ('encoding', 'delimiter', 'header_row')},
         }
         return redirect(reverse_tournament('importer-csv-wizard', self.tournament, kwargs={'import_id': import_id}))
@@ -114,7 +156,7 @@ class CSVUploadView(CSVAccessMixin, FormView):
 class CSVTemplateView(CSVAccessMixin, View):
     def get(self, request, *args, **kwargs):
         key = kwargs['template_key']
-        columns = next((columns for kind in CSV_TYPES.values() for name, label, columns in kind.templates if name == key), None)
+        columns = next((columns for kind in self.allowed_types.values() for name, label, columns in kind.templates if name == key), None)
         if columns is None:
             raise Http404
         response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -138,27 +180,57 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         return 'csv_' + str(self.kwargs['import_id'])
 
     def get(self, request, *args, **kwargs):
-        if self.draft['started']:
+        if self.execution_started():
             return redirect(self.draft_url('importer-csv-results'))
         if self.storage.current_step not in self.get_form_list():
             self.storage.current_step = self.steps.first
+        if self.steps.current != 'types' and not self.get_cleaned_data_for_step('types'):
+            return self.render_types()
         return self.render(self.get_form(data=self.storage.get_step_data(self.steps.current)))
 
     def post(self, *args, **kwargs):
-        if self.draft['started']:
+        if self.execution_started():
             return redirect(self.draft_url('importer-csv-results'))
         if self.request.POST.get('wizard_goto_step') == 'upload':
             return self.render_goto_step('upload')
+        posted_step = self.request.POST.get(f'{self.prefix}-current_step')
+        if (self.steps.current != 'types' or posted_step in ('mapping', 'preview', 'confirm')) and not self.get_cleaned_data_for_step('types'):
+            return self.render_types()
+        if self.steps.current == posted_step == 'preview' and 'csv_skip_invalid' in self.request.POST:
+            return self.skip_invalid_rows()
         return super().post(*args, **kwargs)
+
+    def render_types(self):
+        self.storage.current_step = 'types'
+        return self.render(self.get_form(data=self.storage.get_step_data('types')))
+
+    def skip_invalid_rows(self):
+        data = self.request.POST.copy()
+        try:
+            file_index = int(data['csv_skip_invalid'])
+        except ValueError:
+            file_index = -1
+        if not 0 <= file_index < len(self.draft['files']):
+            return HttpResponse(status=400)
+        preview = self.get_form('preview', data=data)
+        preview.is_valid()
+        for source, row in zip(self.source_rows(), preview.forms):
+            if source['file_index'] == file_index and row.errors:
+                data[row.add_prefix('DELETE')] = 'on'
+        data.pop('csv_skip_invalid')
+        self.storage.set_step_data('preview', data)
+        self.active_file = file_index
+        return self.render(self.get_form('preview', data=data))
 
     def get_form_kwargs(self, step=None):
         files = self.draft['files']
         if step == 'types':
-            return {'sources': files}
+            return {'sources': files, 'allowed_types': self.allowed_types}
         if step == 'mapping':
-            return {'sources': files, 'types': self.get_cleaned_data_for_step('types') or {f'file_{i}': 'team' for i in range(len(files))}}
+            return {'sources': files, 'types': self.get_cleaned_data_for_step('types')}
         if step == 'preview':
-            return {'form_kwargs': {'tournament': self.tournament, 'team_choices': self.csv_context.team_options[0], 'references': self.csv_context.references}}
+            return {'form_kwargs': {'tournament': self.tournament, 'team_choices': self.csv_context.team_options[0],
+                'references': self.csv_context.references}, 'check_permissions': self.permission_error}
         return {}
 
     def get_form(self, step=None, data=None, files=None):
@@ -328,7 +400,8 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             context['attention_count'] = sum(group['attention_count'] for group in groups)
             context['import_count'] = context['row_count'] - context['skip_count']
 
-        context['csv_vue_data'] = {'files': [self.vue_file_data(group) for group in groups]}
+        context['csv_vue_data'] = {'files': [self.vue_file_data(group) for group in groups],
+            'active_file': getattr(self, 'active_file', None)}
         context['file_groups'] = groups
         context['step_list'] = [{
             'key': 'upload',
@@ -364,7 +437,6 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
         return data
 
     def done(self, form_list, form_dict, **kwargs):
-        draft = self.draft
         results = []
         for source, form in zip(self.source_rows(), form_dict['preview'].forms):
             data = form.cleaned_data.copy()
@@ -375,9 +447,11 @@ class CSVWizardView(CSVAccessMixin, SessionWizardView):
             results.append({'file': source['file'], 'line': source['line'],
                 'display_name': kind.preview_summary(form)['name'],
                 'kind': source['kind'], 'status': 'skipped' if skipped else 'pending', 'data': {} if skipped else data, 'errors': ''})
-        draft.update(started=True, rows=results, team_choices=self.csv_context.team_options[0])
-        draft.pop('files', None)
-        self.request.session[self.draft_key] = draft
+        CSVImportRun.objects.filter(expires_at__lte=timezone.now()).delete()
+        CSVImportRun.objects.get_or_create(pk=self.kwargs['import_id'], tournament=self.tournament, owner=self.request.user,
+            defaults={'state': {'rows': results, 'team_choices': self.csv_context.team_options[0]},
+                'expires_at': self.request.session.get_expiry_date()})
+        self.request.session.pop(self.draft_key, None)
         return redirect(self.draft_url('importer-csv-results'))
 
 
@@ -387,13 +461,12 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if not self.draft['started']:
-            raise Http404
         context['rows'] = []
-        for row in self.draft['rows']:
+        for row in self.get_execution_run().state['rows']:
             kind = CSV_TYPES[row['kind']]
             primary = {name: value for name, value in row['data'].items() if name not in kind.deferred_fields}
-            context['rows'].append({**row, 'priority': kind.priority,
+            context['rows'].append({key: row[key] for key in ('file', 'line', 'status', 'errors')} | {
+                'priority': kind.priority,
                 'dependencies': kind.preview_dependencies(primary), 'link_dependencies': kind.preview_dependencies(row['data']),
                 'display_name': row.get('display_name', row['data'].get(kind.name_field, ''))})
         context['step_list'] = [{'label': label, 'state': 'complete'} for label in
@@ -402,36 +475,32 @@ class CSVResultsView(CSVAccessMixin, TemplateView):
         context['csv_vue_data'] = {'rows': context['rows'], 'steps': context['step_list']}
         return context
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
-        # A cache lock serializes tabs; refresh the session only after acquiring it.
-        lock = self.draft_key + '_lock'
-        if not cache.add(lock, True, timeout=120):
-            return JsonResponse({'error': _('This import is already processing a row.')}, status=409)
+        run = self.get_execution_run(lock=True)
+        draft = run.state
         try:
-            request.session._session_cache = request.session.load()
-            draft = self.draft
-            if not draft['started']:
-                raise Http404
+            index = int(request.POST['row'])
+            if index < 0:
+                raise ValueError
+            row = draft['rows'][index]
+        except (KeyError, ValueError, IndexError):
+            return JsonResponse({'error': _('Invalid import row.')}, status=400)
+        if row['status'] in ('pending', 'created') and request.POST.get('status', row['status']) == row['status']:
+            if error := self.permission_error(CSV_TYPES[row['kind']], row['data']):
+                return JsonResponse({'error': error}, status=403)
             try:
-                index = int(request.POST['row'])
-                if index < 0:
-                    raise ValueError
-                row = draft['rows'][index]
-            except (KeyError, ValueError, IndexError):
-                return JsonResponse({'error': _('Invalid import row.')}, status=400)
-            if row['status'] in ('pending', 'created'):
-                try:
-                    process_csv_row(self.tournament, request.user, draft, row)
-                except DependencyPendingError:
-                    return JsonResponse({'error': _('Import the referenced rows first.')}, status=409)
-                draft['rows'][index] = row
-                request.session[self.draft_key] = draft
-                request.session.save()
-            labels = {'pending': _('Pending'), 'imported': _('Imported'), 'skipped': _('Skipped'), 'created': _('Created — linking references'),
-                'failed': _('Failed'), 'blocked': _('Blocked')}
-            return JsonResponse({'status': row['status'], 'label': labels[row['status']], 'errors': row['errors']})
-        finally:
-            cache.delete(lock)
+                process_csv_row(self.tournament, request.user, draft, row)
+            except DependencyPendingError:
+                return JsonResponse({'error': _('Import the referenced rows first.')}, status=409)
+            if all(result['status'] not in ('pending', 'created') for result in draft['rows']):
+                for result in draft['rows']:
+                    result['data'] = {}
+                draft['team_choices'] = []
+            run.save(update_fields=['state'])
+        labels = {'pending': _('Pending'), 'imported': _('Imported'), 'skipped': _('Skipped'), 'created': _('Created — linking references'),
+            'failed': _('Failed'), 'blocked': _('Blocked')}
+        return JsonResponse({'status': row['status'], 'label': labels[row['status']], 'errors': row['errors']})
 
 
 class CSVErrorsView(CSVAccessMixin, TemplateView):
@@ -440,7 +509,7 @@ class CSVErrorsView(CSVAccessMixin, TemplateView):
         response['Content-Disposition'] = 'attachment; filename="csv-import-results.csv"'
         writer = csv.writer(response)
         writer.writerow([_('File'), _('Row'), _('Status'), _('Errors')])
-        for row in self.draft.get('rows', []):
+        for row in self.get_execution_run().state['rows']:
             # Prevent spreadsheet formula evaluation in an exported report.
             values = [str(row[key]) for key in ('file', 'line', 'status', 'errors')]
             writer.writerow(["'" + value if value.startswith(('=', '+', '-', '@', '\t', '\r')) else value for value in values])

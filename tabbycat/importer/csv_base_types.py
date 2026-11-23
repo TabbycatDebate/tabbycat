@@ -9,6 +9,8 @@ from typing import Generic, TYPE_CHECKING, TypeVar
 from django.db.models import Model
 from django.forms import BaseForm
 
+from users.permissions import Permission
+
 from .csv_typing import AdditionalObject, CSVResultRow, CSVRow, CSVSource, DisplayLabel, DuplicateKey, ExecutionDependencies, FormOptions, PreviewSummary, RowData, SerializedRowData
 
 if TYPE_CHECKING:
@@ -52,6 +54,11 @@ class CSVObjectType(Generic[FormT, SavedT]):
     reference_fields = ()
     deferred_fields = ()
     count_label: DisplayLabel | None = None
+    permission: Permission
+    field_permissions: dict[str, Permission] = {}
+
+    def write_permissions(self, data: SerializedRowData) -> set[Permission]:
+        return {self.permission, *(permission for name, permission in self.field_permissions.items() if data.get(name))}
 
     def review_label(self, count: int) -> DisplayLabel:
         return self.count_label % {'count': count} if self.count_label is not None else self.label

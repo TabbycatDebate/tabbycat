@@ -24,6 +24,7 @@ from draw.types import DebateSide
 from motions.models import RoundMotion
 from participants.utils import populate_code_names
 from privateurls.utils import populate_url_keys
+from users.permissions import Permission
 
 from .csv_base_types import CSVObjectType, reference_dependencies
 from .csv_model_forms import boolean_field, CSVModelForm
@@ -264,6 +265,7 @@ class ModelCSVType(CSVObjectType[CSVModelForm, Model]):
 
 
 class AvailabilityCSVType(ModelCSVType):
+    availability_permission: Permission
     dynamic_converters = {'available': convert_boolean}
     dynamic_fields = {'available': partial(boolean_field, empty_value=False)}
 
@@ -271,6 +273,12 @@ class AvailabilityCSVType(ModelCSVType):
         if name.startswith('available:'):
             return _('Available in %(round)s') % {'round': name.split(':', 1)[1]}
         return super().field_label(name)
+
+    def write_permissions(self, data: SerializedRowData) -> set[Permission]:
+        permissions = super().write_permissions(data)
+        if any(value and name.startswith('available:') for name, value in data.items()):
+            permissions.add(self.availability_permission)
+        return permissions
 
     def after_save(self, form: CSVModelForm, obj: Model) -> None:
         save_availability(form, obj)
@@ -283,8 +291,15 @@ class ConflictCSVType(ModelCSVType):
 
 
 class VenueConstraintCSVType(ModelCSVType):
+    permission = Permission.EDIT_ROOMCONSTRAINTS
     fields = ('category', 'priority')
     subject_field = None
+
+    def write_permissions(self, data: SerializedRowData) -> set[Permission]:
+        permissions = super().write_permissions(data)
+        if str(data.get('category')).startswith('new:'):
+            permissions.add(Permission.EDIT_ROOMCATEGORIES)
+        return permissions
 
     def prepare_instance(self, instance: Model, data: RowData) -> None:
         subject = data.get(self.subject_field)
@@ -299,6 +314,7 @@ class VenueConstraintCSVType(ModelCSVType):
 
 class RegionCSVType(ModelCSVType):
     key = 'region'
+    permission = Permission.ADD_INSTITUTIONS
     label = _('Regions')
     count_label = ngettext_lazy('Region', 'Regions', 'count')
     filename = 'regions'
@@ -307,6 +323,7 @@ class RegionCSVType(ModelCSVType):
 
 class InstitutionCSVType(ModelCSVType):
     key = 'institution'
+    permission = Permission.ADD_INSTITUTIONS
     label = _('Institutions')
     count_label = ngettext_lazy('Institution', 'Institutions', 'count')
     filename = 'institutions'
@@ -320,6 +337,7 @@ class InstitutionCSVType(ModelCSVType):
 
 class VenueCategoryCSVType(ModelCSVType):
     key = 'venue_category'
+    permission = Permission.EDIT_ROOMCATEGORIES
     label = _('Room categories')
     count_label = ngettext_lazy('Room category', 'Room categories', 'count')
     filename = 'venue_categories'
@@ -335,6 +353,7 @@ class VenueCategoryCSVType(ModelCSVType):
 
 class BreakCategoryCSVType(ModelCSVType):
     key = 'break_category'
+    permission = Permission.EDIT_BREAK_CATEGORIES
     label = _('Break categories')
     count_label = ngettext_lazy('Break category', 'Break categories', 'count')
     filename = 'break_categories'
@@ -345,6 +364,7 @@ class BreakCategoryCSVType(ModelCSVType):
 
 class SpeakerCategoryCSVType(ModelCSVType):
     key = 'speaker_category'
+    permission = Permission.EDIT_SPEAKER_CATEGORIES
     label = _('Speaker categories')
     count_label = ngettext_lazy('Speaker category', 'Speaker categories', 'count')
     filename = 'speaker_categories'
@@ -355,6 +375,8 @@ class SpeakerCategoryCSVType(ModelCSVType):
 
 class RoundCSVType(ModelCSVType):
     key = 'round'
+    permission = Permission.CREATE_ROUND
+    field_permissions = {'silent': Permission.SILENCE_ROUND, 'completed': Permission.CONFIRM_ROUND}
     label = _('Rounds')
     count_label = ngettext_lazy('Round', 'Rounds', 'count')
     filename = 'rounds'
@@ -381,6 +403,9 @@ class RoundCSVType(ModelCSVType):
 
 class VenueCSVType(AvailabilityCSVType):
     key = 'venue'
+    permission = Permission.ADD_ROOMS
+    availability_permission = Permission.EDIT_ROUNDAVAILABILITIES_VENUE
+    field_permissions = {'category': Permission.EDIT_ROOMCATEGORIES}
     label = _('Rooms')
     count_label = ngettext_lazy('Room', 'Rooms', 'count')
     filename = 'venues'
@@ -403,6 +428,13 @@ class VenueCSVType(AvailabilityCSVType):
 
 class AdjudicatorCSVType(AvailabilityCSVType):
     key = 'adjudicator'
+    permission = Permission.ADD_ADJUDICATORS
+    availability_permission = Permission.EDIT_ROUNDAVAILABILITIES_ADJ
+    field_permissions = {
+        'institution_conflicts': Permission.EDIT_ADJ_INST_CONFLICTS,
+        'team_conflicts': Permission.EDIT_ADJ_TEAM_CONFLICTS,
+        'adj_conflicts': Permission.EDIT_ADJ_ADJ_CONFLICTS,
+    }
     label = _('Adjudicators')
     count_label = ngettext_lazy('Adjudicator', 'Adjudicators', 'count')
     filename = 'adjudicators'
@@ -466,6 +498,7 @@ class AdjudicatorCSVType(AvailabilityCSVType):
 
 class MotionCSVType(ModelCSVType):
     key = 'motion'
+    permission = Permission.EDIT_MOTION
     label = _('Motions')
     count_label = ngettext_lazy('Motion', 'Motions', 'count')
     filename = 'motions'
@@ -494,6 +527,7 @@ class MotionCSVType(ModelCSVType):
 
 class ScoreCSVType(ModelCSVType):
     key = 'score'
+    permission = Permission.EDIT_BASEJUDGESCORES_IND
     label = _('Adjudicator scores')
     count_label = ngettext_lazy('Adjudicator score', 'Adjudicator scores', 'count')
     filename = 'scores'
@@ -513,6 +547,7 @@ class ScoreCSVType(ModelCSVType):
 
 class TeamConflictCSVType(ConflictCSVType):
     key = 'team_conflict'
+    permission = Permission.EDIT_ADJ_TEAM_CONFLICTS
     label = _('Adjudicator–team conflicts')
     count_label = ngettext_lazy('Adjudicator–team conflict', 'Adjudicator–team conflicts', 'count')
     filename = 'team_conflicts'
@@ -527,6 +562,7 @@ class TeamConflictCSVType(ConflictCSVType):
 
 class InstitutionConflictCSVType(ConflictCSVType):
     key = 'institution_conflict'
+    permission = Permission.EDIT_ADJ_INST_CONFLICTS
     label = _('Adjudicator–institution conflicts')
     count_label = ngettext_lazy('Adjudicator–institution conflict', 'Adjudicator–institution conflicts', 'count')
     filename = 'institution_conflicts'
@@ -541,6 +577,7 @@ class InstitutionConflictCSVType(ConflictCSVType):
 
 class AdjudicatorConflictCSVType(ConflictCSVType):
     key = 'adjudicator_conflict'
+    permission = Permission.EDIT_ADJ_ADJ_CONFLICTS
     label = _('Adjudicator conflicts')
     count_label = ngettext_lazy('Adjudicator conflict', 'Adjudicator conflicts', 'count')
     filename = 'adjudicator_conflicts'
@@ -558,6 +595,7 @@ class AdjudicatorConflictCSVType(ConflictCSVType):
 
 class TeamInstitutionConflictCSVType(ConflictCSVType):
     key = 'team_institution_conflict'
+    permission = Permission.EDIT_TEAM_INST_CONFLICTS
     label = _('Team–institution conflicts')
     count_label = ngettext_lazy('Team–institution conflict', 'Team–institution conflicts', 'count')
     filename = 'team_institution_conflicts'
@@ -572,6 +610,7 @@ class TeamInstitutionConflictCSVType(ConflictCSVType):
 
 class SideCSVType(ModelCSVType):
     key = 'side'
+    permission = Permission.EDIT_ALLOCATESIDES
     label = _('Side allocations')
     count_label = ngettext_lazy('Side allocation', 'Side allocations', 'count')
     filename = 'sides'
@@ -630,6 +669,7 @@ class SideCSVType(ModelCSVType):
 
 class AdjFeedbackQuestionCSVType(ModelCSVType):
     key = 'adj_feedback_question'
+    permission = Permission.EDIT_FEEDBACKQUESTION
     label = _('Adjudicator feedback questions')
     count_label = ngettext_lazy('Adjudicator feedback question', 'Adjudicator feedback questions', 'count')
     filename = 'adj_feedback_questions'

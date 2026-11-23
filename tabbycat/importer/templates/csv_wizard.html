@@ -61,7 +61,7 @@
       <div v-pre>{{ wizard.form.non_field_errors }}</div>
     {% endif %}
 
-    <csv-import-workspace :files="csvImportData.files" {% if wizard.steps.current == 'preview' %}preview{% endif %}>
+    <csv-import-workspace :files="csvImportData.files" :active-file="csvImportData.active_file" {% if wizard.steps.current == 'preview' %}preview{% endif %}>
       {% for file in file_groups %}
         <template v-slot:file-{{ file.index }}>
           {% if wizard.steps.current == 'mapping' %}

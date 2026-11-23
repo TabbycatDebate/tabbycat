@@ -16,7 +16,9 @@ Adding a type to the CSV wizard
 Subclass ``CSVObjectType`` (or ``ModelCSVType`` for model-backed rows) and
 register an instance with ``register_csv_type()`` in ``importer/csv_types.py``.
 Each type defines its translated labels, mapping fields, preview validation,
-references and transactional save hooks. See ``TeamCSVType``, ``SpeakerCSVType``
+references, permissions and transactional save hooks. Set ``permission`` for
+the primary action and use ``write_permissions()`` for any additional writes
+that depend on the row's values. See ``TeamCSVType``, ``SpeakerCSVType``
 and the subclasses in ``csv_model_types.py`` for examples.
 
 Use ``CSVReference('team')`` for one reference or

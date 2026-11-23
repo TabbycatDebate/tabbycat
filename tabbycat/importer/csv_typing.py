@@ -1,4 +1,4 @@
-"""CSV row and draft contracts: mapped fields stay dynamic, session values must be JSON-compatible."""
+"""CSV row and draft contracts: mapped fields stay dynamic, stored values must be JSON-compatible."""
 
 from __future__ import annotations
 
@@ -73,12 +73,10 @@ class CSVImportDraft(TypedDict):
 
 
 class CSVUploadDraft(CSVImportDraft):
-    started: Literal[False]
     files: list[CSVSource]
     format_options: SerializedRowData
 
 
-class CSVExecutionDraft(CSVImportDraft):
-    started: Literal[True]
+class CSVExecutionDraft(TypedDict):
     rows: list[CSVResultRow]
     team_choices: list[CSVChoice]
