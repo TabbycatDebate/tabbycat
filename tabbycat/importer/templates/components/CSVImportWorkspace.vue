@@ -1,6 +1,6 @@
 <script setup>
 import { computed, provide, reactive, ref, watch } from 'vue'
-import FeatherIcon from '../../../templates/components/FeatherIcon.vue'
+import SvgIcon from '../../../templates/components/SvgIcon.vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
 const props = defineProps({
@@ -62,7 +62,7 @@ watch(active, value => sessionStorage.setItem(storageKey, String(props.files[val
           @click="active = index"
         >
           <span class="d-flex align-items-start">
-            <FeatherIcon
+            <SvgIcon
               name="file-text"
               class="mr-2 flex-shrink-0"
             />

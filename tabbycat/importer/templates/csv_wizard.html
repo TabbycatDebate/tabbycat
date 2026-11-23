@@ -10,7 +10,7 @@
     <div class="mb-3">
       <button class="btn btn-outline-primary" type="submit" name="wizard_goto_step"
               value="{{ wizard.steps.prev|default:'upload' }}" formnovalidate>
-        <i data-feather="chevron-left"></i>{% trans "Previous Step" %}
+        <i data-icon="chevron-left"></i>{% trans "Previous Step" %}
       </button>
     </div>
   {% endif %}
@@ -29,7 +29,7 @@
         {% for file in file_groups %}
           <div class="list-group-item row mx-0 align-items-center">
             <div class="col-md-7 pl-0">
-              <i data-feather="file-text" class="mr-2"></i><strong>{{ file.name }}</strong>
+              <i data-icon="file-text" class="mr-2"></i><strong>{{ file.name }}</strong>
               <span class="text-muted ml-2">
                 {% blocktrans count count=file.row_count %}{{ count }} row{% plural %}{{ count }} rows{% endblocktrans %}
               </span>

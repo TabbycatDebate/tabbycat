@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import FeatherIcon from '../../../templates/components/FeatherIcon.vue'
+import SvgIcon from '../../../templates/components/SvgIcon.vue'
 import { useDjangoI18n } from '../../../templates/composables/useDjangoI18n.js'
 
 const props = defineProps({
@@ -81,7 +81,7 @@ function dropFiles (event) {
       @drop.prevent="dropFiles"
     >
       <span class="d-flex align-items-center flex-wrap">
-        <span class="csv-upload-icon text-primary mr-3"><FeatherIcon name="upload" /></span>
+        <span class="csv-upload-icon text-primary mr-3"><SvgIcon name="upload" /></span>
         <span class="mr-auto">
           <strong class="d-block">{{ gettext('Drop your CSV files here') }}</strong>
           <span class="text-muted">{{ gettext('or click to choose files from your computer') }}</span>
