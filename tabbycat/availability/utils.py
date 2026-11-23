@@ -12,8 +12,8 @@ from venues.models import Venue
 logger = logging.getLogger(__name__)
 
 MATRIX_PAGES = (
-    ('availability-matrix-teams', _("Teams"), Permission.VIEW_ROUNDAVAILABILITIES_TEAM),
     ('availability-matrix-adjudicators', _("Adjudicators"), Permission.VIEW_ROUNDAVAILABILITIES_ADJ),
+    ('availability-matrix-teams', _("Teams"), Permission.VIEW_ROUNDAVAILABILITIES_TEAM),
     ('availability-matrix-venues', _("Rooms"), Permission.VIEW_ROUNDAVAILABILITIES_VENUE),
 )
 
@@ -24,12 +24,6 @@ def get_matrix_pages(user, tournament):
         (url_name, label) for url_name, label, permission in MATRIX_PAGES
         if can_edit or has_permission(user, permission, tournament)
     ]
-
-
-def can_view_availability_setup(user, tournament):
-    return has_permission(user, Permission.VIEW_ROUNDAVAILABILITIES, tournament) or bool(
-        get_matrix_pages(user, tournament),
-    )
 
 
 def annotate_availability(queryset, round):

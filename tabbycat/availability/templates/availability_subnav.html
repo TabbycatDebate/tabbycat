@@ -2,9 +2,6 @@
 
 <nav class="btn-group availability-subnav mw-100" aria-label="{% trans 'Availabilities' %}">
   {% with current=request.resolver_match.url_name %}
-    <a class="btn btn-outline-primary {% if current == 'availability-setup-index' %}active{% endif %}"
-       {% if current == 'availability-setup-index' %}aria-current="page"{% endif %}
-       href="{% tournamenturl 'availability-setup-index' %}">{% trans "Overview" %}</a>
     {% for url_name, label in availability_matrix_pages %}
       <a class="btn btn-outline-primary {% if current == url_name %}active{% endif %}"
          {% if current == url_name %}aria-current="page"{% endif %}

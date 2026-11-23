@@ -9,6 +9,8 @@ from django.db import IntegrityError, transaction
 from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.utils.functional import cached_property
 from django.utils.html import escape, strip_tags
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
@@ -24,7 +26,7 @@ from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin, TournamentMixin
 from tournaments.models import Round
 from users.permissions import has_permission, Permission
-from utils.misc import reverse_round
+from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
@@ -305,12 +307,17 @@ class AvailabilitySetupMixin(TournamentMixin, AdministratorMixin):
         return super().get_context_data(**kwargs)
 
 
-class AvailabilitySetupIndexView(AvailabilitySetupMixin, TemplateView):
-    template_name = 'availability_setup_index.html'
-    page_title = gettext_lazy("Availabilities")
+class AvailabilitySetupIndexView(TournamentMixin, AdministratorMixin, View):
+    @cached_property
+    def matrix_pages(self):
+        return utils.get_matrix_pages(self.request.user, self.tournament)
 
     def test_func(self):
-        return utils.can_view_availability_setup(self.request.user, self.tournament)
+        return bool(self.matrix_pages)
+
+    def get(self, request, *args, **kwargs):
+        url_name, _label = self.matrix_pages[0]
+        return redirect(reverse_tournament(url_name, self.tournament))
 
 
 class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):

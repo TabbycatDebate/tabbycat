@@ -41,7 +41,7 @@ class AvailabilityMatrixTests(BaseMinimalTournamentTestCase):
 
     def test_setup_and_matrices_show_rounds_and_current_availability(self):
         response = self.client.get(reverse_tournament('availability-setup-index', self.tournament))
-        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, reverse_tournament('availability-matrix-adjudicators', self.tournament))
         for model, participant_type, _ in self.types:
             with self.subTest(participant_type=participant_type):
                 participants = model.objects.filter(tournament=self.tournament)
@@ -115,24 +115,27 @@ class AvailabilityMatrixTests(BaseMinimalTournamentTestCase):
         self.assertFalse(RoundAvailability.objects.exists())
 
     def test_setup_links_only_to_accessible_matrices(self):
-        overview_url = reverse_tournament('availability-setup-index', self.tournament)
+        setup_url = reverse_tournament('availability-setup-index', self.tournament)
         teams_url = reverse_tournament('availability-matrix-teams', self.tournament)
         adjudicators_url = reverse_tournament('availability-matrix-adjudicators', self.tournament)
         rooms_url = reverse_tournament('availability-matrix-venues', self.tournament)
         reader = get_user_model().objects.create(username='reader')
         self.client.force_login(reader)
-        self.assertEqual(self.client.get(overview_url).status_code, 403)
+        self.assertEqual(self.client.get(setup_url).status_code, 403)
         dashboard = self.client.get(reverse_tournament('tournament-admin-home', self.tournament))
-        self.assertNotContains(dashboard, f'href="{overview_url}"')
+        self.assertNotContains(dashboard, f'href="{setup_url}"')
 
         UserPermission.objects.create(user=reader, tournament=self.tournament, permission=Permission.VIEW_ROUNDAVAILABILITIES_TEAM)
         dashboard = self.client.get(reverse_tournament('tournament-admin-home', self.tournament))
-        self.assertContains(dashboard, f'href="{overview_url}"')
-        for url in (overview_url, teams_url):
-            response = self.client.get(url)
-            self.assertContains(response, f'href="{teams_url}"')
-            self.assertNotContains(response, f'href="{adjudicators_url}"')
-            self.assertNotContains(response, f'href="{rooms_url}"')
+        self.assertContains(dashboard, f'href="{setup_url}"')
+        response = self.client.get(setup_url, follow=True)
+        self.assertRedirects(response, teams_url)
+        self.assertContains(response, f'href="{teams_url}"')
+        self.assertNotContains(response, f'href="{adjudicators_url}"')
+        self.assertNotContains(response, f'href="{rooms_url}"')
+
+        UserPermission.objects.create(user=reader, tournament=self.tournament, permission=Permission.VIEW_ROUNDAVAILABILITIES_ADJ)
+        self.assertRedirects(self.client.get(setup_url), adjudicators_url)
 
     def test_checkbox_labels_use_the_displayed_participant_name(self):
         adjudicator = self.tournament.adjudicator_set.first()
