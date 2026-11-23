@@ -32,7 +32,10 @@ if USE_REDIS_LOCALLY:
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [("localhost", 6379)],
+                "hosts": [{
+                    "address": "redis://localhost:6379",
+                    "socket_timeout": 10,
+                }],
             },
         },
     }

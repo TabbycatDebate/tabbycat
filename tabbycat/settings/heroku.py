@@ -90,6 +90,7 @@ CHANNEL_LAYERS = {
             "hosts": [{
                 "address": environ.get('REDIS_URL'),
                 "ssl_cert_reqs": None,
+                "socket_timeout": 10,
             }],
             # Remove channels from groups after 3 hours
             # This matches websocket_timeout in Daphne
