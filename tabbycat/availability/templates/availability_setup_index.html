@@ -8,12 +8,16 @@
 {% block content %}
   <div class="card">
     <div class="card-body">
-      <p>{% trans "Set availability across all rounds. Select a participant type to get started." %}</p>
-      <div class="list-group">
-        <a class="list-group-item list-group-item-action" href="{% tournamenturl 'availability-matrix-teams' %}">{% trans "Teams" %}</a>
-        <a class="list-group-item list-group-item-action" href="{% tournamenturl 'availability-matrix-adjudicators' %}">{% trans "Adjudicators" %}</a>
-        <a class="list-group-item list-group-item-action" href="{% tournamenturl 'availability-matrix-venues' %}">{% trans "Rooms" %}</a>
-      </div>
+      {% if availability_matrix_pages %}
+        <p>{% trans "Set availability across all rounds. Select a participant type to get started." %}</p>
+        <div class="list-group">
+          {% for url_name, label in availability_matrix_pages %}
+            <a class="list-group-item list-group-item-action" href="{% tournamenturl url_name %}">{{ label }}</a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="mb-0">{% trans "You do not have access to any availability grids." %}</p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

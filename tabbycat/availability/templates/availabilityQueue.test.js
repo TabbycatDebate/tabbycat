@@ -17,7 +17,7 @@ test('batches drag edits by round and sends the latest state of each checkbox', 
   }
   cells[0].checked = false
   queue.enqueue(cells[0])
-  await delay(80)
+  assert.equal(await queue.whenIdle(), true)
   assert.deepEqual(saves, [
     ['/round/1', { 1: false, 2: true }],
     ['/round/2', { 1: true }],
@@ -32,20 +32,23 @@ test('serializes edits made while a save is in flight', async () => {
   const queue = createAvailabilityQueue([cell], (...args) => {
     saves.push(args)
     return new Promise(resolve => { finishSave = resolve })
-  }, () => {}, () => { saved += 1 })
+  }, () => {}, (success) => { if (success) saved += 1 })
   cell.checked = true
   queue.enqueue(cell)
+  const settled = queue.whenIdle()
   await delay(80)
   cell.checked = false
   queue.enqueue(cell)
   assert.equal(saves.length, 1)
+  assert.equal(queue.whenIdle(), settled)
   finishSave()
   await delay(0)
   assert.deepEqual(saves, [['/round/1', { 1: true }], ['/round/1', { 1: false }]])
   assert.equal(saved, 0)
   finishSave()
-  await delay(0)
+  assert.equal(await settled, true)
   assert.equal(saved, 1)
+  assert.equal(queue.whenIdle(), null)
 })
 
 test('restores failed cells and keeps newer queued edits', async () => {
@@ -58,16 +61,17 @@ test('restores failed cells and keeps newer queued edits', async () => {
     calls += 1
     if (calls === 1) return new Promise((resolve, reject) => { failSave = reject })
     return Promise.resolve()
-  }, () => {}, () => { saved += 1 })
+  }, () => {}, (success) => { if (success) saved += 1 })
   first.checked = false
   second.checked = true
   queue.enqueue(first)
   queue.enqueue(second)
+  const settled = queue.whenIdle()
   await delay(80)
   second.checked = false
   queue.enqueue(second)
   failSave(new Error('offline'))
-  await delay(0)
+  assert.equal(await settled, false)
   assert.equal(first.checked, true)
   assert.equal(second.checked, false)
   assert.equal(calls, 2)

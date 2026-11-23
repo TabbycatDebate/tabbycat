@@ -89,10 +89,13 @@
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-icon="clock"></i>{% trans "Schedule" %}
       </a>
-      <a href="{% tournamenturl 'availability-setup-index' %}"
-         class="list-group-item {% if availability_setup_nav %}active{% endif %}" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-icon="square-check-big"></i>{% trans "Availabilities" %}
-      </a>
+      {% has_availability_setup_access as show_availability_setup %}
+      {% if show_availability_setup %}
+        <a href="{% tournamenturl 'availability-setup-index' %}"
+           class="list-group-item {% if availability_setup_nav %}active{% endif %}" data-parent="#setuph">
+          <span class="circle-icon small-circle"></span><i data-icon="square-check-big"></i>{% trans "Availabilities" %}
+        </a>
+      {% endif %}
       <a href="{% tournamenturl 'notifications-status' %}"
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-icon="mail"></i>{% trans "Emails" %}

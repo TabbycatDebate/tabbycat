@@ -1,13 +1,9 @@
-export function createAvailabilityQueue (cells, save, onPending, onSaved) {
+export function createAvailabilityQueue (cells, save, onPending, onSettled) {
   const confirmed = new Map(cells.map(cell => [cell, cell.checked]))
   const pending = new Map()
-  let saving = false
-  let scheduled = false
+  let saving = null
 
-  const flush = async () => {
-    scheduled = false
-    if (saving) return
-    saving = true
+  const flush = async (resolve) => {
     let failed = false
     while (pending.size) {
       const url = pending.keys().next().value.updateURL
@@ -27,18 +23,18 @@ export function createAvailabilityQueue (cells, save, onPending, onSaved) {
         }
       }
     }
-    saving = false
-    if (!failed) onSaved()
+    saving = null
+    onSettled(!failed)
+    resolve(!failed)
   }
 
   const enqueue = (cell) => {
     pending.set(cell, cell.checked)
-    onPending()
-    if (!saving && !scheduled) {
-      scheduled = true
-      setTimeout(flush, 50)
+    if (!saving) {
+      saving = new Promise(resolve => setTimeout(flush, 50, resolve))
+      onPending()
     }
   }
 
-  return { enqueue }
+  return { enqueue, whenIdle: () => saving }
 }

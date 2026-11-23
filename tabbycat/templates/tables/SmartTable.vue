@@ -1,7 +1,7 @@
 <script setup>
 import _ from 'lodash'
 import { mkConfig, generateCsv, download } from 'export-to-csv'
-import { computed, defineAsyncComponent, toRef } from 'vue'
+import { computed, defineAsyncComponent, inject, toRef } from 'vue'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import CheckCell from '../tables/CheckCell.vue'
@@ -33,6 +33,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['saved', 'toggle-checked'])
+const checkboxDrag = inject('checkboxDrag', null)
 
 const rows = computed(() => {
   const rows = []
@@ -90,10 +91,15 @@ const {
   externalFilterKey: toRef(props, 'externalFilterKey'),
 })
 
+// A change to the sort column must not move rows under the pointer during a drag.
+const displayedRows = computed(previous =>
+  checkboxDrag?.checked != null && previous ? previous : dataFilteredByKey.value,
+)
+
 const getCellDataWithHighlight = (cellData, _cellIndex, rowIndex) => {
   if (props.highlightColumn != null && rowIndex > 0) {
-    const currentRow = dataFilteredByKey.value[rowIndex]
-    const previousRow = dataFilteredByKey.value[rowIndex - 1]
+    const currentRow = displayedRows.value[rowIndex]
+    const previousRow = displayedRows.value[rowIndex - 1]
     const currentValue = getSortableProperty(currentRow, props.highlightColumn)
     const previousValue = getSortableProperty(previousRow, props.highlightColumn)
     if (currentValue !== previousValue) {
@@ -113,7 +119,7 @@ const copyTableData = async () => {
     decoder.innerHTML = html.replace(/<[^>]*>?/gm, '')
     return decoder.value
   }
-  const content = dataFilteredByKey.value.map(row =>
+  const content = displayedRows.value.map(row =>
     row.reduce((acc, cell, index) => {
       const header = props.tableHeaders[index]
       if (header.csvRounds) {
@@ -181,7 +187,7 @@ const resolveCellComponent = (cellData) => {
           </td>
         </tr>
         <tr
-          v-for="(row, rowIndex) in dataFilteredByKey"
+          v-for="(row, rowIndex) in displayedRows"
           :key="getRowKey(row)"
         >
           <component

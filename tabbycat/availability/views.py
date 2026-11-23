@@ -1,6 +1,7 @@
 import json
 import logging
 from collections import OrderedDict
+from html import unescape
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -8,7 +9,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
-from django.utils.html import escape
+from django.utils.html import escape, strip_tags
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
@@ -300,13 +301,16 @@ class AvailabilitySetupMixin(TournamentMixin, AdministratorMixin):
 
     def get_context_data(self, **kwargs):
         kwargs['availability_setup_nav'] = True
+        kwargs['availability_matrix_pages'] = utils.get_matrix_pages(self.request.user, self.tournament)
         return super().get_context_data(**kwargs)
 
 
 class AvailabilitySetupIndexView(AvailabilitySetupMixin, TemplateView):
     template_name = 'availability_setup_index.html'
     page_title = gettext_lazy("Availabilities")
-    view_permission = Permission.VIEW_ROUNDAVAILABILITIES
+
+    def test_func(self):
+        return utils.can_view_availability_setup(self.request.user, self.tournament)
 
 
 class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):
@@ -320,6 +324,8 @@ class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):
             queryset = queryset.select_related('institution')
         participants = list(queryset)
         self.add_description_columns(table, participants)
+        # Use the displayed name so code names and redactions also apply to checkbox labels.
+        names = [unescape(strip_tags(row[0]['text'])) for row in table.data]
 
         content_type = ContentType.objects.get_for_model(self.model)
         available = set(RoundAvailability.objects.filter(
@@ -328,6 +334,7 @@ class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):
         can_edit = has_permission(self.request.user, self.edit_permission, self.tournament)
 
         for round in self.tournament.round_set.order_by('seq'):
+            update_url = reverse_round(self.update_view, round)
             table.add_column({
                 'key': 'round-%s' % round.pk,
                 'title': escape(round.abbreviation),
@@ -339,9 +346,9 @@ class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):
                 'checked': (participant.pk, round.pk) in available,
                 'disabled': not can_edit,
                 'dragSelect': True,
-                'label': escape(_("Available in %(round)s") % {'round': round.name}),
-                'updateURL': reverse_round(self.update_view, round),
-            } for participant in participants])
+                'label': _("%(participant)s available in %(round)s") % {'participant': name, 'round': round.name},
+                'updateURL': update_url,
+            } for participant, name in zip(participants, names)])
         return table
 
 

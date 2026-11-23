@@ -5,6 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
 
 from actionlog.models import ActionLogEntry
+from availability.models import RoundAvailability
+from availability.utils import set_availability
 from participants.models import Adjudicator, Team
 from tournaments.models import Round, Tournament
 from users.models import UserPermission
@@ -12,9 +14,6 @@ from users.permissions import Permission
 from utils.misc import reverse_round, reverse_tournament
 from utils.tests import BaseMinimalTournamentTestCase
 from venues.models import Venue
-
-from ..models import RoundAvailability
-from ..utils import set_availability
 
 
 class AvailabilityMatrixTests(BaseMinimalTournamentTestCase):
@@ -27,8 +26,8 @@ class AvailabilityMatrixTests(BaseMinimalTournamentTestCase):
     def setUp(self):
         super().setUp()
         cache.clear()
-        self.round = Round.objects.create(tournament=self.tournament, seq=1, abbreviation='R1')
-        self.next_round = Round.objects.create(tournament=self.tournament, seq=2, abbreviation='R2')
+        self.round = Round.objects.create(tournament=self.tournament, seq=1, name='Round 1', abbreviation='R1')
+        self.next_round = Round.objects.create(tournament=self.tournament, seq=2, name='Round 2', abbreviation='R2')
         self.tournament.current_round = self.round
         self.tournament.save()
         self.user = get_user_model().objects.create(username='admin', is_superuser=True)
@@ -60,6 +59,7 @@ class AvailabilityMatrixTests(BaseMinimalTournamentTestCase):
                 self.assertEqual([(cell['id'], cell['round']) for cell in cells if cell['checked']],
                                  [(participant.pk, self.round.pk)])
                 self.assertTrue(all(not cell['disabled'] for cell in cells))
+                self.assertEqual(len({cell['label'] for cell in cells}), len(cells))
 
     def test_changes_preserve_other_participants_rounds_and_types(self):
         for model, participant_type, _ in self.types:
@@ -113,3 +113,36 @@ class AvailabilityMatrixTests(BaseMinimalTournamentTestCase):
                 participant = model.objects.filter(tournament=self.tournament).first()
                 self.assertEqual(self.post_changes(participant_type, {str(participant.pk): True}).status_code, 403)
         self.assertFalse(RoundAvailability.objects.exists())
+
+    def test_setup_links_only_to_accessible_matrices(self):
+        overview_url = reverse_tournament('availability-setup-index', self.tournament)
+        teams_url = reverse_tournament('availability-matrix-teams', self.tournament)
+        adjudicators_url = reverse_tournament('availability-matrix-adjudicators', self.tournament)
+        rooms_url = reverse_tournament('availability-matrix-venues', self.tournament)
+        reader = get_user_model().objects.create(username='reader')
+        self.client.force_login(reader)
+        self.assertEqual(self.client.get(overview_url).status_code, 403)
+        dashboard = self.client.get(reverse_tournament('tournament-admin-home', self.tournament))
+        self.assertNotContains(dashboard, f'href="{overview_url}"')
+
+        UserPermission.objects.create(user=reader, tournament=self.tournament, permission=Permission.VIEW_ROUNDAVAILABILITIES_TEAM)
+        dashboard = self.client.get(reverse_tournament('tournament-admin-home', self.tournament))
+        self.assertContains(dashboard, f'href="{overview_url}"')
+        for url in (overview_url, teams_url):
+            response = self.client.get(url)
+            self.assertContains(response, f'href="{teams_url}"')
+            self.assertNotContains(response, f'href="{adjudicators_url}"')
+            self.assertNotContains(response, f'href="{rooms_url}"')
+
+    def test_checkbox_labels_use_the_displayed_participant_name(self):
+        adjudicator = self.tournament.adjudicator_set.first()
+        adjudicator.anonymous = True
+        adjudicator.save()
+        reader = get_user_model().objects.create(username='reader')
+        UserPermission.objects.create(user=reader, tournament=self.tournament, permission=Permission.VIEW_ROUNDAVAILABILITIES_ADJ)
+        self.client.force_login(reader)
+        response = self.client.get(reverse_tournament('availability-matrix-adjudicators', self.tournament))
+        table = json.loads(response.context['tables_data'])[0]
+        cell = next(cell for row in table['data'] for cell in row
+                    if cell.get('id') == adjudicator.pk and cell.get('round') == self.round.pk)
+        self.assertEqual(cell['label'], 'Redacted available in Round 1')

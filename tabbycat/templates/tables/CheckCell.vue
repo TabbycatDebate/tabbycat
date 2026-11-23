@@ -39,6 +39,7 @@ const checkUpdate = (newChecked) => {
 const startDrag = (event) => {
   if (!props.cellData.dragSelect || !drag || props.cellData.disabled || event.button !== 0) return
   event.preventDefault()
+  event.currentTarget.querySelector('input').focus({ preventScroll: true })
   drag.checked = !props.cellData.checked
   checkUpdate(drag.checked)
 }
