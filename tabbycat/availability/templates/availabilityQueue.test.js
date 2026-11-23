@@ -3,7 +3,7 @@ import test from 'node:test'
 import { setTimeout as delay } from 'node:timers/promises'
 import { createAvailabilityQueue } from './availabilityQueue.js'
 
-test('batches drag edits by round and sends the latest state of each checkbox', async () => {
+test('batches edits by round and sends the latest state of each checkbox', async () => {
   const cells = [
     { id: 1, updateURL: '/round/1', checked: false },
     { id: 2, updateURL: '/round/1', checked: false },

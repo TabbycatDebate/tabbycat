@@ -345,7 +345,6 @@ class AvailabilityMatrixView(AvailabilitySetupMixin, VueTableTemplateView):
                 'round': round.pk,
                 'checked': (participant.pk, round.pk) in available,
                 'disabled': not can_edit,
-                'dragSelect': True,
                 'label': _("%(participant)s available in %(round)s") % {'participant': name, 'round': round.name},
                 'updateURL': update_url,
             } for participant, name in zip(participants, names)])
