@@ -3,12 +3,12 @@
 This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 
 import argparse
+import json
 import platform
 import re
 import shutil
 import subprocess
 import sys
-import time
 
 try:
     from django.core.management.utils import get_random_secret_key
@@ -159,16 +159,33 @@ if sys.version_info >= (3, 3) and shutil.which("heroku") is None:
 
 # Create the app with addons
 addons = ["papertrail", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30", "heroku-redis:mini"]
-command = ["heroku", "apps:create", "--stack", "heroku-22"]
+command = ["heroku", "apps:create", "--json", "--stack", "heroku-26"]
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
-match = re.search(r"https://([\w_-]+?)(?:-\w{12})?\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
-urlname = match.group(1)
-heroku_url = match.group(2)
+
+if args.urlname != "-":
+    urlname = args.urlname
+else:
+    # Parse the JSON app object rather than the human-readable summary, which
+    # can change between Heroku CLI versions
+    clean_output = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", output)
+    try:
+        app = json.loads(clean_output)
+        urlname = app["name"]
+    except (ValueError, KeyError, TypeError):
+        # Fall back to extracting the app name from the git remote URL
+        match = re.search(r"https://git\.heroku\.com/([\w_-]+)\.git", clean_output)
+        if not match:
+            print_yellow("Could not determine the Heroku app name from the CLI output:")
+            print(repr(output))
+            sys.exit(1)
+        urlname = match.group(1)
+
+heroku_url = "https://git.heroku.com/%s.git" % urlname
 
 # Set config variables
 command = ["config:set", "DISABLE_COLLECTSTATIC=1", "ON_HEROKU=1", "USING_NGINX=1"]
@@ -204,22 +221,13 @@ if args.git_remote:
 else:
     remote_name = heroku_url
 
-# Wait for Redis provisioning, which can take a significant amount of time
-redis_provisioned = False
-redis_status_command = make_heroku_command(["redis:info"])
-print_yellow("Waiting for Heroku Redis to provision (may take up to 5 minutes)...")
-
-while not redis_provisioned:
-    time.sleep(30)
-    redis_output = subprocess.check_output(redis_status_command).decode().split("\n")
-    for status in redis_output:
-        match = re.match(r"^Status:\s+available", status)
-        if match:
-            redis_provisioned = True
-            break
-
-
-print("Heroku Redis is available, starting deployment")
+# Wait for Postgres and Redis to finish provisioning. bin/post_compile runs
+# migrations during the build, which need DATABASE_URL to exist, so on a
+# fresh app the first build fails if we push before Postgres is ready.
+print_yellow("Waiting for Heroku Postgres and Redis to provision (may take a few minutes)...")
+run_heroku_command(["pg:wait"])
+run_heroku_command(["redis:wait"])
+print("Heroku Postgres and Redis are available, starting deployment")
 
 # Push source code to Heroku
 push_spec = get_git_push_spec()
