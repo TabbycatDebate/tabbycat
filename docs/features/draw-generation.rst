@@ -146,12 +146,7 @@ When sides are pre-allocated, each team needs a side allocation for each prelimi
 
 * On the **Sides** page, which appears in the admin menu when the *Side allocations method* draw rule is set to *Pre-allocated*. You can choose each team's side for the next round that doesn't have a draw yet, or copy the sides teams had in a finished round (either the same sides or the opposite ones) to an upcoming round all at once.
 * If you're using the :ref:`importtournament command <importtournament-command>`, it reads sides from the file sides.csv.
-* Through the :ref:`API <api>`, at ``/api/v1/tournaments/<slug>/rounds/<seq>/side-allocations``. Each allocation is given as an object with the team's URL and side, for example ``{"team": "https://example.com/api/v1/tournaments/demo/teams/1", "side": "aff"}``:
-
-  - ``GET`` lists the round's side allocations;
-  - ``PUT`` replaces all of the round's side allocations with the given list;
-  - ``PATCH`` only sets the sides of the teams in the given list, and removes a team's allocation if its side is ``null``;
-  - ``DELETE`` removes all of the round's side allocations.
+* Through the :ref:`API <api>`.
 
 * You can do this from the Django admin interface (under Setup > Edit Database) by going to the relevant team and adding a **team side allocation** entry. That is:
 
