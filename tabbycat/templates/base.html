@@ -39,7 +39,7 @@
   <link rel="icon" type="image/svg+xml" href="{% static 'logo.svg' %}" sizes="any" />
   <link rel="mask-icon" href="{% static 'safari-tab.svg' %}" color="rgb(102, 61, 160)">
   {% endif %}
-  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}{% if debug %}?v={% now 'U' %}{% endif %}" />
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
 

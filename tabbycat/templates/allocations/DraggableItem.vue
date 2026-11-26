@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useDragAndDropStore } from './DragAndDropStore.js'
 import { useDraggable } from '../composables/useDraggable.js'
 
@@ -25,6 +26,28 @@ const props = defineProps({
 
 const store = useDragAndDropStore()
 const { draggableClasses, dragStart, dragEnd, drag } = useDraggable(props)
+
+const selected = computed(() => props.dragPayload && store.isAllocationItemSelected(props.dragPayload))
+
+const selectItem = (event) => {
+  if (event.repeat) return
+  if (event.target.closest('a, button, input, select, textarea, [contenteditable="true"]')) return
+  if (props.locked || store.loading || !props.dragPayload) {
+    event.stopPropagation()
+    return
+  }
+  // An occupied destination can be tapped directly when another item is selected.
+  if (event.type === 'click' && store.selectedAllocationItem && !selected.value &&
+      event.currentTarget.closest('[data-allocation-destination="true"]')) return
+  event.stopPropagation()
+  event.preventDefault()
+  store.selectAllocationItem(props.dragPayload)
+}
+
+const startDrag = (event) => {
+  store.clearAllocationSelection()
+  dragStart(event)
+}
 
 const showHovers = () => {
   if (props.hoverPanel) {
@@ -60,8 +83,16 @@ const hideHovers = () => {
 <template>
   <div
     draggable="true"
-    :class="['d-flex m-1 align-items-center align-self-center', draggableClasses]"
-    @dragstart="dragStart"
+    :class="['d-flex m-1 align-items-center align-self-center', draggableClasses,
+             { 'allocation-selected': selected }]"
+    :tabindex="locked ? -1 : 0"
+    role="button"
+    :aria-pressed="selected"
+    :aria-disabled="locked || store.loading"
+    @click="selectItem"
+    @keydown.enter="selectItem"
+    @keydown.space="selectItem"
+    @dragstart="startDrag"
     @dragend="dragEnd"
     @mouseenter="showHovers"
     @mouseleave="hideHovers"

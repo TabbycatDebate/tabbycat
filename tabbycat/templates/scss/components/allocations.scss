@@ -278,3 +278,23 @@
     border-left: 0;
   }
 }
+
+.allocation-selected {
+  outline: 3px solid $purple;
+  outline-offset: 1px;
+}
+
+.vue-draggable.allocation-selected {
+  border-color: $purple !important;
+}
+
+.vue-droppable.allocation-selected {
+  outline-offset: -3px;
+  background-color: mix($purple, $white, 12%);
+}
+
+.vue-draggable:focus-visible,
+.vue-droppable:focus-visible {
+  outline: 3px dashed $primary;
+  outline-offset: -3px;
+}
