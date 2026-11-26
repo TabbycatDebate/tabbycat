@@ -95,6 +95,15 @@ class BaseDrawGenerator:
         flags = self.team_flags.setdefault(team, list())
         flags.append(flag)
 
+    def remove_team_flag(self, team, flag):
+        """Removes a previously-attached flag from a team, if present.
+        Used when a team's bracket placement changes after a flag was
+        provisionally added (e.g. bubble down swaps a team out of the
+        pullup role in an intermediate bracket)."""
+        flags = self.team_flags.get(team)
+        if flags and flag in flags:
+            flags.remove(flag)
+
     def annotate_team_flags(self, pairings):
         """Applies the team flags to the pairings given.
         Child classes that use team flags should call this method as the last
