@@ -291,6 +291,22 @@ class LatestFeedbackView(FeedbackCardsView):
         return queryset.order_by('-timestamp')[:30]
 
 
+class TesterFeedbackView(FeedbackCardsView):
+    page_title = gettext_lazy("Feedback from Testers")
+    page_emoji = '✅'
+    extra_context = {
+        'feedback_testers_nav': True,
+        'feedback_empty_message': gettext_lazy("No feedback from testers has been submitted yet"),
+    }
+
+    def get_feedback_queryset(self):
+        return super().get_feedback_queryset().filter(
+            Q(source_adjudicator__adjudicator__is_tester=True) |
+            Q(source_adjudicator__adjudicator__adj_core=True),
+            source_adjudicator__debate__round__tournament=self.tournament,
+        ).order_by('-timestamp', '-pk')
+
+
 class CommentsFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
     page_title = gettext_lazy("Only Comments")
