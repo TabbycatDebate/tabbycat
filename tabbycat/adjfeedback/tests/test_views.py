@@ -3,10 +3,9 @@ from django.core.cache import cache
 from django.db.models import Count
 from django.test import TestCase
 
+from adjfeedback.models import AdjudicatorFeedback
 from tournaments.models import Tournament
 from utils.tests import CompletedTournamentTestMixin, ConditionalTableViewTestsMixin
-
-from ..models import AdjudicatorFeedback
 
 
 class PublicAddFeedbackViewTestCase(ConditionalTableViewTestsMixin, TestCase):
