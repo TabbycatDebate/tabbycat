@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-21 10:27+1000\n"
-"PO-Revision-Date: 2026-09-21 00:38\n"
+"PO-Revision-Date: 2026-11-28 07:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -32,11 +32,11 @@ msgstr ""
 
 #: options/forms.py
 msgid "Draw strength pullups require 'Minimum cost matching (including pullups)' as the conflict avoidance method"
-msgstr ""
+msgstr "Для использования баланса по пул-апам необходимо выставить \"Минимальную стоимость паросочетания (включая пул-апы)\" как способ избегания конфликтов"
 
 #: options/forms.py
 msgid "Intermediate-type pullups require 'One-up-one-down' as the conflict avoidance method"
-msgstr ""
+msgstr "Intermediate-type пул-апы требуют \"Одна команда вниз по сетки, одна — вниз\" как способ избегания конфликтов"
 
 #: options/forms.py
 msgid "Four-team formats require consensus ballots"

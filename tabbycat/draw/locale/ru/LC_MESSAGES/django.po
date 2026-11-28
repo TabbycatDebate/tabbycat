@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-21 10:27+1000\n"
-"PO-Revision-Date: 2026-09-21 00:35\n"
+"PO-Revision-Date: 2026-11-28 09:20\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -28,7 +28,7 @@ msgstr[3] "%(count)d дебатов были отмечены как имеющ�
 
 #: draw/admin.py
 msgid "Mark sides as not confirmed"
-msgstr ""
+msgstr "Отметить стороны как неподтвержденные"
 
 #: draw/admin.py
 #, python-format
@@ -45,16 +45,16 @@ msgstr "Сетка"
 
 #: draw/forms.py
 msgid "Full round name"
-msgstr ""
+msgstr "Полное название раунда"
 
 #: draw/forms.py
 msgid "Overwrite preformed panels with current panels"
-msgstr ""
+msgstr "Заменить сформированные панели текущими панелями"
 
 #: draw/forms.py
 #, python-format
 msgid "You must type '%s' to confirm draw and results deletion."
-msgstr ""
+msgstr "Необходимо ввести %s, чтобы подтвердить удаление результатов или сетки."
 
 #: draw/generator/__init__.py
 msgid "Too many swaps"
@@ -122,7 +122,7 @@ msgstr "Места в частичном брейковом раунде ука�
 #: draw/generator/bpelimination.py
 #, python-format
 msgid "The room ranks of the partial elimination round indicate that %(nbypassing)d teams bypassed it, but %(nadvancing)d teams advanced from it."
-msgstr ""
+msgstr "Согласно результатам брейкового раунда %(nbypassing)d команды выбывают, но %(nadvancing)d команда проходят дальше."
 
 #: draw/generator/bpelimination.py
 #, python-format
@@ -160,11 +160,11 @@ msgstr "%(noninteger)d из %(total)d команд имеют не целое ч
 
 #: draw/generator/powerpair.py
 msgid "Draw strength pullups require 'Minimum cost matching (including pullups)' as the conflict avoidance method"
-msgstr ""
+msgstr "Для использования баланса по пул-апам необходимо выставить \"Минимальную стоимость паросочетания (включая пул-апы)\" как способ избегания конфликтов"
 
 #: draw/generator/powerpair.py
 msgid "Intermediate-type pullups require 'One-up-one-down' as the conflict avoidance method"
-msgstr ""
+msgstr "Intermediate-type пул-апы требуют \"Одна команда вниз по сетки, одна — вниз\" как способ избегания конфликтов"
 
 #: draw/generator/random.py
 #, python-format
@@ -177,27 +177,27 @@ msgstr "Одна или несколько команд получили сто�
 
 #: draw/generator/roundrobin.py
 msgid "Berger round-robin requires an even number of teams with no byes in the draw."
-msgstr ""
+msgstr "Для Раунд-Робине Бергена необходимо четное число команд без пропусков в сетке."
 
 #: draw/generator/roundrobin.py
 #, python-format
 msgid "This round's position in the round-robin schedule (%(rr)d) is not valid for %(n)d teams (expected between 1 and %(max)d)."
-msgstr ""
+msgstr "Позиции в Раунд-Робине (%(rr)d) недопустимы для %(n)d команды (ожидается между 1 и %(max)d)."
 
 #: draw/generator/roundrobin.py
 #, python-format
 msgid "British Parliamentary round-robin draws are only implemented for %(supported)s teams at the moment (this tournament has %(n)d)."
-msgstr ""
+msgstr "В Британском парламентском формате Раунд-Робина сетка применяется для %(supported)s команд в данный момент (на турнире есть%(n)d)."
 
 #: draw/generator/roundrobin.py
 #, python-format
 msgid "This round's position in the round-robin schedule (%(rr)d) is not valid — expected between 1 and %(max)d for %(n)d teams."
-msgstr ""
+msgstr "Позиции в Раунд-Робине (%(rr)d) недопустимы кроме как между 1 и %(max)d для %(n)d команд."
 
 #: draw/generator/roundrobin.py
 #, python-format
 msgid "Team seeds must be the integers 1 through %(n)d for BP round-robin."
-msgstr ""
+msgstr "Для Раунд-Робина команды должны быть пронумерованы от 1 до %(n)d."
 
 #: draw/manager.py
 #, python-format
@@ -216,7 +216,7 @@ msgstr "Опция «команды в дебатах» не распознан�
 
 #: draw/manager.py
 msgid "Every team must have a seed set for round-robin draws. Assign seeds before generating the draw."
-msgstr ""
+msgstr "У каждой команды должен брать назначенный номер для жеребьевки в Раунд-Робине. Выберите номера для команд перед генерацией сетки."
 
 #: draw/manager.py
 #, python-format
@@ -249,11 +249,11 @@ msgstr "аудитория"
 
 #: draw/models.py
 msgid "scheduled time"
-msgstr ""
+msgstr "запланированное время"
 
 #: draw/models.py
 msgid "Optional start time for this debate, if it differs from the round schedule."
-msgstr ""
+msgstr "Фактическое время начала дебатов, если оно отличается от времени в расписании."
 
 #: draw/models.py
 msgid "bracket"
@@ -306,7 +306,7 @@ msgstr "команда"
 
 #: draw/models.py
 msgid "side sequence"
-msgstr ""
+msgstr "побочная последовательность"
 
 #: draw/models.py
 msgid "debate team"
@@ -336,7 +336,7 @@ msgstr "проиграли"
 #: draw/models.py
 #, python-format
 msgid "Team %d"
-msgstr ""
+msgstr "Команда %d"
 
 #: draw/models.py
 msgid "team side allocation"
@@ -355,7 +355,7 @@ msgstr "%(side)s%(metric)s"
 
 #: draw/tables.py
 msgid "Bye"
-msgstr ""
+msgstr "До встречи"
 
 #: draw/tables.py
 #, python-format
@@ -387,7 +387,7 @@ msgstr "ПУ"
 
 #: draw/tables.py
 msgid "Number of pullups before this round"
-msgstr ""
+msgstr "Число пул-апов перед этим раундом"
 
 #: draw/tables.py
 msgid "Went from balanced to imbalanced"
@@ -435,7 +435,7 @@ msgstr "История сторон после этого раунда"
 
 #: draw/tables.py
 msgid "Position cost + pullup penalty"
-msgstr ""
+msgstr "Стоимость позиции + штраф за пул-ап"
 
 #: draw/tables.py
 msgid "Position cost"
@@ -469,7 +469,7 @@ msgstr "Стороны"
 
 #: draw/tables.py
 msgid "position cost + pullup penalty"
-msgstr ""
+msgstr "стоимость позиции + штраф за пул-ап"
 
 #: draw/tables.py
 msgid "position cost"
@@ -668,10 +668,10 @@ msgstr[3] "%(motions_count)s темы введены."
 #: draw/templates/draw_display_admin.html
 msgid "Edit the motion"
 msgid_plural "Edit motions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Изменить тему"
+msgstr[1] "Изменить темы"
+msgstr[2] "Изменить темы"
+msgstr[3] "Изменить темы"
 
 #: draw/templates/draw_display_admin.html
 msgid "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!"
@@ -679,15 +679,15 @@ msgstr "Ваша конфигурация/формат требует, чтоб�
 
 #: draw/templates/draw_display_admin.html
 msgid "A motion should be added if you want to display it during announcements, print it on your ballots, or to display it (later) on the public motions/statistics pages."
-msgstr ""
+msgstr "Внесите тему, если вы хотите вывести её во время объявления темы, напечатать на бэллоте (если вы пользуетесь бумажным бэллотом) или если вы хотите, чтобы после завершения турнира тема была выложена публично."
 
 #: draw/templates/draw_display_admin.html
 msgid "Enter a motion"
 msgid_plural "Enter motions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Введите тему"
+msgstr[1] "Введите темы"
+msgstr[2] "Введите темы"
+msgstr[3] "Введите темы"
 
 #: draw/templates/draw_display_admin.html
 msgid "Release Draw"
@@ -703,15 +703,15 @@ msgstr "Сетка на этот раунд все ещё в стадии соз
 
 #: draw/templates/draw_display_admin.html
 msgid "Unrelease draw (teams only)"
-msgstr ""
+msgstr "Отменить публикацию сетки (только команды)"
 
 #: draw/templates/draw_display_admin.html
 msgid "Release draw with adjudicators"
-msgstr ""
+msgstr "Опубликовать сетку с судьями"
 
 #: draw/templates/draw_display_admin.html
 msgid "The draw has been released publicly (teams only, without adjudicators)."
-msgstr ""
+msgstr "Сетка была выложена публично (только команды без судей)."
 
 #: draw/templates/draw_display_admin.html
 msgid "View public draw page"
@@ -720,7 +720,7 @@ msgstr "Посмотреть публичную страницу с сеткой
 #: draw/templates/draw_display_admin.html
 #, python-format
 msgid "You have released the draw (teams only), but it will not show to the public unless the \"public view of draw\" setting is enabled in <a class=\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
-msgstr ""
+msgstr "Вы опубликовали сетку (только для команд), но она не будет отображена публично для всех пользователей до тех пор, пока параметр \"Публичный просмотр сетки\" отключен <a class=\"alert-link\" href=\"%(alert_link)s\"> в настройках турнира </a>."
 
 #: draw/templates/draw_display_admin.html
 msgid "Unrelease draw to public"
@@ -746,7 +746,7 @@ msgstr "Показать сетку публично"
 
 #: draw/templates/draw_display_admin.html
 msgid "Release draw (teams only)"
-msgstr ""
+msgstr "Опубликовать сетку (только команды)"
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so."
@@ -771,50 +771,50 @@ msgstr "В ваших настройках нет публичной стран�
 #: draw/templates/draw_display_admin.html
 msgid "Release motion to public"
 msgid_plural "Release motions to public"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Выложить тему публично"
+msgstr[1] "Выложить темы публично"
+msgstr[2] "Выложить темы публично"
+msgstr[3] "Выложить темы публично"
 
 #: draw/templates/draw_display_admin.html
 msgid "Release info-slide to public"
 msgid_plural "Release info-slides to public"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Выложить инфо-слайд публично"
+msgstr[1] "Выложить инфо-слайды публично"
+msgstr[2] "Выложить инфо-слайды публично"
+msgstr[3] "Выложить инфо-слайды публично"
 
 #: draw/templates/draw_display_admin.html
 msgid "Unrelease motion to public"
 msgid_plural "Unrelease motions to public"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Убрать тему из публичного доступа"
+msgstr[1] "Убрать темы из публичного доступа"
+msgstr[2] "Убрать темы из публичного доступа"
+msgstr[3] "Убрать темы из публичного доступа"
 
 #: draw/templates/draw_display_admin.html
 msgid "Unrelease info-slide from public"
 msgid_plural "Unrelease info-slides from public"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Убрать инфо-слайд из публичного доступа"
+msgstr[1] "Убрать инфо-слайды из публичного доступа"
+msgstr[2] "Убрать инфо-слайды из публичного доступа"
+msgstr[3] "Убрать инфо-слайды из публичного доступа"
 
 #: draw/templates/draw_display_admin.html
 msgid "Release Motion"
 msgid_plural "Release Motions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Выложить тему"
+msgstr[1] "Выложить темы"
+msgstr[2] "Выложить темы"
+msgstr[3] "Выложить темы"
 
 #: draw/templates/draw_display_admin.html
 msgid "No motion is currently set for this round."
 msgid_plural "No motions are currently set for this round."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Нет темы для этого раунда."
+msgstr[1] "Нет тем для этих раундов."
+msgstr[2] "Нет тем для этих раундов."
+msgstr[3] "Нет тем для этих раундов."
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted."
@@ -827,34 +827,34 @@ msgstr "Ваш турнир настроен для того, чтобы раз�
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is configured to show the motion for each round on the public site. You'll need to first release the motion for it to show there."
 msgid_plural "Your tournament is configured to show the motions for each round on the public site. You'll need to first release the motions for it to show there."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
+msgstr[1] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
+msgstr[2] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
+msgstr[3] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is not configured to show the motion for each round on the public site. There's no need to release the motion."
 msgid_plural "Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
+msgstr[1] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
+msgstr[2] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
+msgstr[3] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
 
 #: draw/templates/draw_display_admin.html
 msgid "Info-slides have been released. You can now release the full motions."
 msgid_plural "Info-slides have been released. You can now release the full motions."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать тему полностью."
+msgstr[1] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать темы полностью."
+msgstr[2] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать темы полностью."
+msgstr[3] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать темы полностью."
 
 #: draw/templates/draw_display_admin.html
 msgid "The motion has been released publicly."
 msgid_plural "Motions have been released publicly."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Тема была выложена публично."
+msgstr[1] "Темы были выложены публично."
+msgstr[2] "Темы были выложены публично."
+msgstr[3] "Темы были выложены публично."
 
 #: draw/templates/draw_display_admin.html
 msgid "View public motions page"
@@ -953,11 +953,11 @@ msgstr "Очень медленно"
 
 #: draw/templates/draw_display_by.html
 msgid "Hide Adjudicators"
-msgstr ""
+msgstr "Спрятать судей"
 
 #: draw/templates/draw_display_by.html
 msgid "Show Adjudicators"
-msgstr ""
+msgstr "Показать судей"
 
 #: draw/templates/draw_display_by.html
 msgid "Text Size"
@@ -1002,11 +1002,11 @@ msgstr "В данный момент судей зарегистрировано
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Edit adjudicator allocations for all current rounds"
-msgstr ""
+msgstr "Изменить распределение судей для всех текущих раундов"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Edit adjudicator allocations for all panels in this schedule slot"
-msgstr ""
+msgstr "Изменить распределение судей по всем панелям в этом временном интервале"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Allocate adjudicators"
@@ -1022,7 +1022,7 @@ msgstr "Распределение аудиторий"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Edit room allocation for all current rounds"
-msgstr ""
+msgstr "Изменит распределение румов для всех текущих раундов"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Allocate rooms"
@@ -1361,7 +1361,7 @@ msgstr ""
 
 #: draw/views.py
 msgid "Unreleased the draw."
-msgstr "Отменить опубликование сетки."
+msgstr "Отменить публичную демонстрацию сетки."
 
 #: draw/views.py
 #, python-format
@@ -1374,7 +1374,7 @@ msgstr "Предварительное распределение по стор�
 
 #: draw/views.py
 msgid "Unallocated"
-msgstr ""
+msgstr "Нераспределенный"
 
 #: draw/views.py
 msgid "Set side pre-allocation"
@@ -1382,7 +1382,7 @@ msgstr ""
 
 #: draw/views.py
 msgid "Invalid team or round."
-msgstr ""
+msgstr "Недопустимая команда или сторона."
 
 #: draw/views.py
 msgid "Can't change a side pre-allocation once the draw for that round has been generated."
@@ -1390,15 +1390,15 @@ msgstr ""
 
 #: draw/views.py
 msgid "Invalid side."
-msgstr ""
+msgstr "Недопустимая сторона."
 
 #: draw/views.py
 msgid "Invalid round."
-msgstr ""
+msgstr "Недопустимый раунд."
 
 #: draw/views.py
 msgid "Can't set side pre-allocations for a round whose draw has already been generated."
-msgstr ""
+msgstr "Невозможно создать предварительное распределение сторон для раунда, чья сетка уже создана."
 
 #: draw/views.py
 msgid "The source round must be a finished round with a confirmed draw."
@@ -1408,10 +1408,10 @@ msgstr ""
 #, python-format
 msgid "Set the side pre-allocation for %(applied)d team (skipped %(skipped)d with no result in %(round)s)."
 msgid_plural "Set the side pre-allocation for %(applied)d teams (skipped %(skipped)d with no result in %(round)s)."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Установите предварительное распределение сторон для %(applied)d команды (пропущено %(skipped)d без результата в %(round)s)."
+msgstr[1] "Установите предварительное распределение сторон для %(applied)d команд (пропущено %(skipped)d без результата в %(round)s)."
+msgstr[2] "Установите предварительное распределение сторон для %(applied)d команд (пропущено %(skipped)d без результата в %(round)s)."
+msgstr[3] "Установите предварительное распределение сторон для %(applied)d команд (пропущено %(skipped)d без результата в %(round)s)."
 
 #: draw/views.py
 msgid "Edit Matchups"
