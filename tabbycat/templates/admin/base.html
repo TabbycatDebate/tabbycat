@@ -1,0 +1,108 @@
+{% extends "admin/base.html" %}
+{# Fixes for django-jet-reboot 1.3.10 on Django 6 #}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    ol.breadcrumbs {
+      list-style: none;
+      margin: 0;
+      padding: 10px 215px 10px 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 32px;
+      color: #6f7e95;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      min-height: 32px;
+    }
+    ol.breadcrumbs li {
+      display: inline;
+    }
+    ol.breadcrumbs a,
+    ol.breadcrumbs a:visited {
+      color: #c0d4e8;
+    }
+    ol.breadcrumbs a:focus,
+    ol.breadcrumbs a:hover {
+      color: #639af5;
+    }
+    ol.breadcrumbs li + li::before {
+      font-family: 'jet-icons';
+      content: "\e60b";
+      color: #c0d4e8;
+      margin: 0 6px;
+      font-weight: bold;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+
+    .paginator .pages-wrapper a[aria-current="page"],
+    .paginator .pages-wrapper a[aria-current="page"]:hover,
+    .paginator .pages-wrapper a[aria-current="page"]:focus {
+      background-color: #6f7e95;
+      color: #fff;
+      cursor: default;
+    }
+
+    /* Django 6 labels multi-input fields (e.g. date and time) with <legend> */
+    .aligned legend {
+      display: block;
+      float: left;
+      width: 160px;
+      padding: 8px 10px 0 0;
+      margin: 0;
+      line-height: 1;
+      word-wrap: break-word;
+    }
+    .aligned legend.required:after {
+      content: "*";
+    }
+    .aligned legend + p {
+      padding: 6px 0;
+      margin: 0 0 0 170px;
+    }
+    @media only screen and (max-width: 960px) {
+      .aligned legend {
+        float: none;
+        width: auto;
+        padding: 0 0 0 2px;
+        margin-bottom: 8px;
+      }
+      .aligned legend + p {
+        margin-left: 0;
+      }
+    }
+
+    .visually-hidden,
+    .form-row p.datetime > label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script>
+    // Move the "Add" button back inside #content-main, where Jet expects it
+    document.addEventListener('DOMContentLoaded', function () {
+      var tools = document.querySelector('#content > .object-tools');
+      var main = document.getElementById('content-main');
+      if (tools && main) {
+        main.insertBefore(tools, main.firstChild);
+      }
+    });
+  </script>
+{% endblock %}
+
+{# Django 6 moved object-tools out of the content block #}
+{% block content_title %}{{ block.super }}{% block object-tools %}{% endblock %}{% endblock %}
