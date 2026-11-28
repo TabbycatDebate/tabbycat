@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-21 10:27+1000\n"
-"PO-Revision-Date: 2026-09-21 00:35\n"
+"PO-Revision-Date: 2026-11-28 06:11\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -28,7 +28,7 @@ msgstr[3] "%(count)d дебатов были отмечены как имеющ�
 
 #: draw/admin.py
 msgid "Mark sides as not confirmed"
-msgstr ""
+msgstr "Отметить стороны как неподтвержденные"
 
 #: draw/admin.py
 #, python-format
@@ -45,11 +45,11 @@ msgstr "Сетка"
 
 #: draw/forms.py
 msgid "Full round name"
-msgstr ""
+msgstr "Полное название раунда"
 
 #: draw/forms.py
 msgid "Overwrite preformed panels with current panels"
-msgstr ""
+msgstr "Заменить сформированные панели текущими панелями"
 
 #: draw/forms.py
 #, python-format
@@ -249,7 +249,7 @@ msgstr "аудитория"
 
 #: draw/models.py
 msgid "scheduled time"
-msgstr ""
+msgstr "запланированное время"
 
 #: draw/models.py
 msgid "Optional start time for this debate, if it differs from the round schedule."
@@ -355,7 +355,7 @@ msgstr "%(side)s%(metric)s"
 
 #: draw/tables.py
 msgid "Bye"
-msgstr ""
+msgstr "До встречи"
 
 #: draw/tables.py
 #, python-format
@@ -387,7 +387,7 @@ msgstr "ПУ"
 
 #: draw/tables.py
 msgid "Number of pullups before this round"
-msgstr ""
+msgstr "Число пул-апов перед этим раундом"
 
 #: draw/tables.py
 msgid "Went from balanced to imbalanced"
@@ -435,7 +435,7 @@ msgstr "История сторон после этого раунда"
 
 #: draw/tables.py
 msgid "Position cost + pullup penalty"
-msgstr ""
+msgstr "Стоимость позиции + штраф за пул-ап"
 
 #: draw/tables.py
 msgid "Position cost"
@@ -774,7 +774,7 @@ msgid_plural "Release motions to public"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
+msgstr[3] "Выложить темы публично"
 
 #: draw/templates/draw_display_admin.html
 msgid "Release info-slide to public"
