@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-21 10:27+1000\n"
-"PO-Revision-Date: 2026-11-28 07:49\n"
+"PO-Revision-Date: 2026-11-28 09:20\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -192,12 +192,12 @@ msgstr "В Британском парламентском формате Рау
 #: draw/generator/roundrobin.py
 #, python-format
 msgid "This round's position in the round-robin schedule (%(rr)d) is not valid — expected between 1 and %(max)d for %(n)d teams."
-msgstr ""
+msgstr "Позиции в Раунд-Робине (%(rr)d) недопустимы кроме как между 1 и %(max)d для %(n)d команд."
 
 #: draw/generator/roundrobin.py
 #, python-format
 msgid "Team seeds must be the integers 1 through %(n)d for BP round-robin."
-msgstr ""
+msgstr "Для Раунд-Робина команды должны быть пронумерованы от 1 до %(n)d."
 
 #: draw/manager.py
 #, python-format
@@ -216,7 +216,7 @@ msgstr "Опция «команды в дебатах» не распознан�
 
 #: draw/manager.py
 msgid "Every team must have a seed set for round-robin draws. Assign seeds before generating the draw."
-msgstr ""
+msgstr "У каждой команды должен брать назначенный номер для жеребьевки в Раунд-Робине. Выберите номера для команд перед генерацией сетки."
 
 #: draw/manager.py
 #, python-format
@@ -253,7 +253,7 @@ msgstr "запланированное время"
 
 #: draw/models.py
 msgid "Optional start time for this debate, if it differs from the round schedule."
-msgstr ""
+msgstr "Фактическое время начала дебатов, если оно отличается от времени в расписании."
 
 #: draw/models.py
 msgid "bracket"
@@ -306,7 +306,7 @@ msgstr "команда"
 
 #: draw/models.py
 msgid "side sequence"
-msgstr ""
+msgstr "побочная последовательность"
 
 #: draw/models.py
 msgid "debate team"
@@ -811,10 +811,10 @@ msgstr[3] "Выложить темы"
 #: draw/templates/draw_display_admin.html
 msgid "No motion is currently set for this round."
 msgid_plural "No motions are currently set for this round."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Нет темы для этого раунда."
+msgstr[1] "Нет тем для этих раундов."
+msgstr[2] "Нет тем для этих раундов."
+msgstr[3] "Нет тем для этих раундов."
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted."
@@ -827,34 +827,34 @@ msgstr "Ваш турнир настроен для того, чтобы раз�
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is configured to show the motion for each round on the public site. You'll need to first release the motion for it to show there."
 msgid_plural "Your tournament is configured to show the motions for each round on the public site. You'll need to first release the motions for it to show there."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
+msgstr[1] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
+msgstr[2] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
+msgstr[3] "Ваш турнир настроен так, что темы должны публиковаться для каждого раунда. Вам стоит опубликовать темы, чтобы они отображались публично."
 
 #: draw/templates/draw_display_admin.html
 msgid "Your tournament is not configured to show the motion for each round on the public site. There's no need to release the motion."
 msgid_plural "Your tournament is not configured to show the motions for each round on the public site. There's no need to release the motions."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
+msgstr[1] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
+msgstr[2] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
+msgstr[3] "Ваш турнир настроен так, что темы не должны публиковаться для каждого раунда. Нет необходимости в публикации тем."
 
 #: draw/templates/draw_display_admin.html
 msgid "Info-slides have been released. You can now release the full motions."
 msgid_plural "Info-slides have been released. You can now release the full motions."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать тему полностью."
+msgstr[1] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать темы полностью."
+msgstr[2] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать темы полностью."
+msgstr[3] "Инфо-слайд был опубликован публично. Теперь вы можете опубликовать темы полностью."
 
 #: draw/templates/draw_display_admin.html
 msgid "The motion has been released publicly."
 msgid_plural "Motions have been released publicly."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Тема была выложена публично."
+msgstr[1] "Темы были выложены публично."
+msgstr[2] "Темы были выложены публично."
+msgstr[3] "Темы были выложены публично."
 
 #: draw/templates/draw_display_admin.html
 msgid "View public motions page"
@@ -953,11 +953,11 @@ msgstr "Очень медленно"
 
 #: draw/templates/draw_display_by.html
 msgid "Hide Adjudicators"
-msgstr ""
+msgstr "Спрятать судей"
 
 #: draw/templates/draw_display_by.html
 msgid "Show Adjudicators"
-msgstr ""
+msgstr "Показать судей"
 
 #: draw/templates/draw_display_by.html
 msgid "Text Size"
@@ -1002,11 +1002,11 @@ msgstr "В данный момент судей зарегистрировано
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Edit adjudicator allocations for all current rounds"
-msgstr ""
+msgstr "Изменить распределение судей для всех текущих раундов"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Edit adjudicator allocations for all panels in this schedule slot"
-msgstr ""
+msgstr "Изменить распределение судей по всем панелям в этом временном интервале"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Allocate adjudicators"
@@ -1022,7 +1022,7 @@ msgstr "Распределение аудиторий"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Edit room allocation for all current rounds"
-msgstr ""
+msgstr "Изменит распределение румов для всех текущих раундов"
 
 #: draw/templates/draw_status_confirmed.html
 msgid "Allocate rooms"
